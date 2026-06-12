@@ -1,0 +1,12 @@
+# Ignore everything by default
+*
+
+# Allow directories to be scanned
+!*/
+
+# Do not ignore these specific files
+!.gitignore
+!*.tex
+!*.md
+!*.cls
+!*.bib

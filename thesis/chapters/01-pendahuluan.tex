@@ -1,0 +1,18 @@
+\section{PENDAHULUAN}
+
+\subsection{Latar Belakang}
+Model kecerdasan buatan generatif musik simbolik mengalami perkembangan pesat dari arsitektur terarah secara struktural. Contoh utamanya adalah DeepBach \parencite{hadjeres2017} yang berbasis LSTM, Coconet \parencite{huang2017} yang berbasis CNN, hingga NotaGen \parencite{wang2025} yang menggunakan arsitektur LLM Transformer berskala besar. Meski demikian, evaluasi terhadap model-model tersebut seringkali hanya menggunakan pengujian persepsi subjektif maupun fungsi \textit{likelihood} secara statistik \parencite{le2025}. Model yang dilatih dengan metode \textit{Maximum Likelihood Estimation} (MLE) meniru probabilitas frekuensi, namun belum tentu mempelajari aturan deterministik secara ketat, seperti larangan penggunaan kuint sejajar \parencite{choi2023, fang2020}.
+
+\subsection{Rumusan Masalah}
+Masalah utama dalam penelitian ini diuraikan melalui tiga pertanyaan berikut:
+\begin{enumerate}
+    \item Sejauh mana tingkat kepatuhan masing-masing model terhadap kaidah harmoni fungsional Gustav Strube?
+    \item Apakah model keluaran tahun 2025 menunjukkan kemampuan harmoni fungsional yang lebih baik dibandingkan model tahun 2017?
+    \item Kondisi pemberian instruksi (\textit{prompting}) manakah yang menghasilkan tingkat kepatuhan tertinggi?
+\end{enumerate}
+
+\subsection{Tujuan Penelitian}
+Berdasarkan rumusan masalah, penelitian ini bertujuan untuk mengevaluasi kepatuhan formal menggunakan pedoman harmoni fungsional dari Gustav Strube \parencite{strube1928}. Evaluasi algoritma dilakukan secara terprogram menggunakan pustaka \textit{music21} \parencite{cuthbert2010} melalui skrip Python.
+
+\subsection{Manfaat Penelitian}
+Penelitian ini diharapkan mampu memberi gambaran empiris mengenai pemahaman arsitektur AI musik lintas generasi terhadap aturan \textit{voice leading} musik Barat, serta berkontribusi bagi program studi Musik dalam memanfaatkan komputasi algoritma sebagai alat uji teori musik klasik secara objektif dan presisi.

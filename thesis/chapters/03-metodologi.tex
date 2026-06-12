@@ -1,0 +1,17 @@
+\section{METODE PENELITIAN}
+
+\subsection{Paradigma Penelitian}
+Penelitian ini menerapkan kerangka Kuantitatif Komparatif dalam lingkup \textit{Research and Development} (R\&D). Alur utama terdiri atas perancangan skrip evaluasi otomatis dan aplikasinya terhadap ragam output model generatif.
+
+\subsection{Data dan Sampel}
+Penelitian ini dirancang untuk menganalisis sebanyak 120 berkas \textit{Musical Instrument Digital Interface} (MIDI). Sampel tersebut bersumber dari perhitungan matriks 3 model dikalikan dengan 4 kondisi perlakuan dikalikan dengan 10 sampel reproduksi per sel perlakuan.
+
+\subsection{Variabel Penelitian}
+Pemetaan variabel secara struktural pada penelitian ini dibedakan menjadi:
+\begin{itemize}
+    \item \textbf{Variabel Independen:} Empat tingkat pemberian \textit{prompting} secara berjenjang, meliputi \textit{A\_neutral}, \textit{B\_key}, \textit{C\_satb partial}, dan \textit{D\_full satb}.
+    \item \textbf{Variabel Dependen:} \textit{Strube Score}, yakni proporsi rasio matematis dari momen harmoni model yang diverifikasi terbebas dari cacat pergerakan kuint sejajar, oktaf sejajar, maupun kegagalan resolusi nada penuntun.
+\end{itemize}
+
+\subsection{Alat Evaluasi dan Uji Validitas}
+Kerja pengujian bertumpu pada alat deteksi berbasis logika pemrograman Python dengan integrasi penuh pustaka analitik \textit{music21}. Validasi kelayakan instrumen pengukur (\textit{face validity}) ditetapkan berdasarkan dua uji utama: pertama, diuji terhadap partitur koral asli karya J.S. Bach (BWV 66.6) yang harus membuahkan rentang nilai yang sangat tinggi; kedua, diuji menggunakan sampel MIDI yang dengan sengaja diinjeksi pelanggaran harmoni, yang mana sistem diwajibkan menjatuhkan penalti skor rendah sebagai bukti akurasi penalaran algoritma.

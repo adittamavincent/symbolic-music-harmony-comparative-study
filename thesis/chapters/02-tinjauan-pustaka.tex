@@ -1,0 +1,15 @@
+\section{TINJAUAN PUSTAKA DAN LANDASAN TEORI}
+
+\subsection{Perkembangan Model AI Generatif Musik}
+Penelitian ini memfokuskan komparasi pada tiga generasi model simbolik. DeepBach \parencite{hadjeres2017} menggunakan metode \textit{steerable generation} untuk menghasilkan gaya koral. Coconet \parencite{huang2017} menggunakan pendekatan \textit{orderless NADE}. Di era mutakhir, NotaGen \parencite{wang2025} mengimplementasikan DPO dan Transformers, namun kinerja harmoni formal model ini belum pernah diuji secara sistematis terkait kepatuhannya terhadap aturan harmoni klasik Barat.
+
+\subsection{Batasan Arsitektur dan Evaluasi Algoritmik}
+Arsitektur \textit{Long Short-Term Memory} (LSTM) memiliki keunggulan dalam menangani koherensi secara lokal, sementara arsitektur \textit{Transformers} efektif untuk memetakan struktur komprehensif atau global. Akan tetapi, tidak satu pun dari arsitektur tersebut yang secara inheren mampu menjamin batasan deterministik \textit{multi-voice} dengan mutlak \parencite{ghoshal2026}. Pendekatan pengujian komputasi menggunakan pustaka \textit{music21} telah dibuktikan efektif sebagai preseden untuk membongkar kesalahan tata \textit{voice leading} dari model-model \textit{State-of-The-Art} (SOTA) \parencite{fang2020}.
+
+\subsection{Teori Gustav Strube}
+Landasan evaluasi kelayakan harmoni pada penelitian ini bertumpu secara ketat pada kaidah teori Gustav Strube \parencite{strube1928}. Parameter utama yang dikuantifikasi meliputi:
+\begin{enumerate}
+    \item \textbf{Kuint Sejajar (\textit{Parallel Fifths}):} Pergerakan suara melodi secara paralel dalam interval kuint sempurna harus dihindari karena merusak independensi masing-masing jalur suara.
+    \item \textbf{Oktaf Sejajar (\textit{Parallel Octaves}):} Penggunaan oktaf sejajar antar jalur akan melebur tekstur suara serta mengurangi ketebalan struktur harmoni empat suara.
+    \item \textbf{Resolusi Nada Penuntun (\textit{Leading Tone Resolution}):} Nada ketujuh (derajat ke-7 skala diatonik) secara alamiah wajib menemukan resolusinya dengan bergerak naik menuju nada dasar (tonika).
+\end{enumerate}
