@@ -1,17 +1,73 @@
-\section{METODE PENELITIAN}
+\section{Metode Penelitian}
 
-\subsection{Paradigma Penelitian}
-Penelitian ini menerapkan kerangka Kuantitatif Komparatif dalam lingkup \textit{Research and Development} (R\&D). Alur utama terdiri atas perancangan skrip evaluasi otomatis dan aplikasinya terhadap ragam output model generatif.
+\subsection{Jenis Penelitian}
 
-\subsection{Data dan Sampel}
-Penelitian ini dirancang untuk menganalisis sebanyak 120 berkas \textit{Musical Instrument Digital Interface} (MIDI). Sampel tersebut bersumber dari perhitungan matriks 3 model dikalikan dengan 4 kondisi perlakuan dikalikan dengan 10 sampel reproduksi per sel perlakuan.
+Penelitian ini menggunakan pendekatan kuantitatif komparatif dengan paradigma \textit{Research and Development} (R\&D): tahap pertama membangun dan memvalidasi instrumen evaluasi otomatis berbasis music21, dan tahap kedua menerapkan instrumen tersebut untuk menghasilkan temuan komparatif lintas model dan lintas kondisi instruksi.
+
+\subsection{Objek Penelitian}
+
+Objek penelitian adalah output MIDI yang dihasilkan oleh tiga model AI generatif musik simbolik yang bersifat terbuka (\textit{open source}) dan memiliki fondasi akademis yang kuat: DeepBach \parencite{hadjeres2017}, Coconet \parencite{huang2017}, dan NotaGen \parencite{wang2025}.
 
 \subsection{Variabel Penelitian}
-Pemetaan variabel secara struktural pada penelitian ini dibedakan menjadi:
-\begin{itemize}
-    \item \textbf{Variabel Independen:} Empat tingkat pemberian \textit{prompting} secara berjenjang, meliputi \textit{A\_neutral}, \textit{B\_key}, \textit{C\_satb partial}, dan \textit{D\_full satb}.
-    \item \textbf{Variabel Dependen:} \textit{Strube Score}, yakni proporsi rasio matematis dari momen harmoni model yang diverifikasi terbebas dari cacat pergerakan kuint sejajar, oktaf sejajar, maupun kegagalan resolusi nada penuntun.
-\end{itemize}
 
-\subsection{Alat Evaluasi dan Uji Validitas}
-Kerja pengujian bertumpu pada alat deteksi berbasis logika pemrograman Python dengan integrasi penuh pustaka analitik \textit{music21}. Validasi kelayakan instrumen pengukur (\textit{face validity}) ditetapkan berdasarkan dua uji utama: pertama, diuji terhadap partitur koral asli karya J.S. Bach (BWV 66.6) yang harus membuahkan rentang nilai yang sangat tinggi; kedua, diuji menggunakan sampel MIDI yang dengan sengaja diinjeksi pelanggaran harmoni, yang mana sistem diwajibkan menjatuhkan penalti skor rendah sebagai bukti akurasi penalaran algoritma.
+Variabel independen adalah empat kondisi instruksi yang diberikan kepada masing-masing model, dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\ \hline
+A & Netral & Generasi tanpa batasan harmoni atau gaya eksplisit \\ \hline
+B & Kunci & Generasi dengan konteks kunci/periode musik Barat \\ \hline
+C & SATB Parsial & Suara Soprano ditetapkan sebagai batasan; model mengisi Alto, Tenor, Bass \\ \hline
+D & SATB Penuh & Soprano dan Bass ditetapkan; model mengisi Alto dan Tenor \\ \hline
+\end{tabular}
+\end{table}
+
+Catatan metodologis: setiap kondisi menerapkan \textit{equivalent conditioning level}, bukan prompt string yang identik. DeepBach dikontrol melalui tensor constraint, Coconet melalui injeksi seed nada, NotaGen melalui metadata teks --- sesuai antarmuka native masing-masing model. Standar ini konsisten dengan praktik penelitian evaluasi komparatif dalam MIR \parencite{hadjeres2017, huang2017}.
+
+Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai proporsi momen harmonis yang bebas dari pelanggaran ketiga kaidah Strube, dengan rentang nilai 0 (pelanggaran di setiap momen) hingga 1 (tidak ada pelanggaran sama sekali).
+
+\subsection{Jumlah Sampel}
+
+Sebanyak 120 file MIDI dikumpulkan: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen.
+
+\subsection{Instrumen Evaluasi dan Validasi}
+
+Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\textit{face validity}) melalui dua pengujian:
+
+\begin{enumerate}
+    \item \textbf{Uji positif:} Koral Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa koral Bach merupakan contoh penerapan kaidah Strube yang konsisten.
+    \item \textbf{Uji negatif:} Harmonisasi yang sengaja dibuat melanggar kaidah Strube --- dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit --- dievaluasi dan harus menghasilkan skor rendah.
+\end{enumerate}
+
+Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpenuhi.
+
+\subsection{Prosedur Penelitian}
+
+Prosedur penelitian berlangsung dalam enam tahap berurutan:
+
+\begin{enumerate}
+    \item \textbf{Pengembangan instrumen:} Penulisan dan pengujian skrip evaluasi Strube berbasis music21.
+    \item \textbf{Validasi instrumen:} Pengujian \textit{face validity} menggunakan koral Bach asli dan harmonisasi yang disengaja melanggar.
+    \item \textbf{Pengumpulan data:} Generasi 120 sampel output MIDI dari ketiga model di bawah empat kondisi instruksi.
+    \item \textbf{Evaluasi otomatis:} Seluruh 120 sampel MIDI dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
+    \item \textbf{Analisis data:} Statistik deskriptif (rata-rata Strube Score per model per kondisi) dan analisis komparatif lintas model dan kondisi.
+    \item \textbf{Visualisasi:} Penyajian hasil dalam bentuk grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
+\end{enumerate}
+
+\subsection{Diagram Alir Penelitian}
+
+Diagram alir menggambarkan keseluruhan alur penelitian dari pengembangan instrumen evaluasi hingga penyajian hasil, termasuk titik keputusan validasi instrumen dan tahapan generasi data yang dijalankan secara paralel untuk ketiga model.
+
+\section{Sistematika Penulisan}
+
+Naskah skripsi ini terdiri atas empat bab yang disusun secara sistematis untuk membentuk argumen penelitian yang koheren dari motivasi awal hingga interpretasi temuan.
+
+Bab I memuat pendahuluan yang mencakup latar belakang penelitian, rumusan masalah, tujuan penelitian, dan manfaat penelitian. Pada bab ini dibangun argumen mengapa evaluasi berbasis teori harmoni formal merupakan pendekatan yang tepat dan mengapa ketiga model yang dipilih merupakan representasi lintas generasi yang relevan. Bab ini juga menegaskan posisi penelitian dalam literatur MIR dan relevansinya bagi ${PROGRAM_STUDY} ${INSTITUTION_NAME}.
+
+Bab II berisi kajian pustaka dan landasan teori. Tinjauan pustaka menelaah secara kritis tiga model AI yang dievaluasi, penelitian-penelitian terkait dalam komunitas MIR yang menggunakan evaluasi harmoni algoritmis sebagai metrik utama, serta kebaruan penelitian ini dibanding studi yang telah ada. Landasan teori menguraikan tiga pilar konseptual penelitian: teori harmoni fungsional Strube sebagai alat ukur, paradigma musik simbolik sebagai objek evaluasi, dan prinsip evaluasi otomatis dalam MIR sebagai kerangka metodologis.
+
+Bab III memuat metode penelitian yang menjabarkan secara rinci desain eksperimen, variabel penelitian, prosedur pengumpulan data, instrumen evaluasi beserta prosedur validasinya, dan prosedur analisis data. Bab ini juga menyertakan diagram alir penelitian yang menggambarkan keseluruhan alur kerja dari validasi instrumen hingga visualisasi hasil, sebagai panduan replikasi penelitian.
+
+Bab IV berisi hasil penelitian dan pembahasan. Bagian hasil menyajikan temuan kuantitatif dalam bentuk tabel ringkasan dan grafik perbandingan ketiga model di bawah empat kondisi instruksi. Bagian pembahasan menginterpretasikan pola kepatuhan yang ditemukan dalam kerangka musikologis --- menjelaskan mengapa kondisi atau model tertentu menghasilkan skor yang berbeda, dan apa implikasinya terhadap pemahaman kemampuan harmonik AI. Naskah ditutup dengan bab penutup yang berisi kesimpulan yang merangkum jawaban atas ketiga rumusan masalah, serta saran untuk penelitian lanjutan yang dapat mengembangkan kerangka evaluasi ini lebih jauh.
