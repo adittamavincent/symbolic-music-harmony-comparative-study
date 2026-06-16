@@ -14,6 +14,7 @@
 !*.json
 !Makefile
 !.env.example
+!thesis/main.tex.template
 
 # Ignore sensitive and environment files
 .env

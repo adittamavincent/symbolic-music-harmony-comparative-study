@@ -86,6 +86,23 @@ Saat pertama kali dijalankan, program otomatis mengunduh resource yang belum ada
 
 ---
 
+## Kompilasi Proposal Skripsi (LaTeX)
+
+Kompilasi dokumen proposal skripsi (`thesis/main.tex`) memanfaatkan variabel lingkungan dari file konfigurasi:
+
+1. Salin `.env.example` menjadi `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+2. Isi variabel di dalam `.env.local` sesuai data diri (nama, NIM, dsb.).
+3. Jalankan kompilasi:
+   ```bash
+   make compile
+   ```
+   Perintah ini menggantikan variabel dalam `thesis/main.tex.template` menjadi `thesis/main.tex` via `envsubst`, lalu membangun `thesis/main.pdf` via `latexmk`.
+
+---
+
 ## Perintah lain yang berguna
 
 ```bash

@@ -1,0 +1,33 @@
+\documentclass{isi-proposal}
+
+\addbibresource{references.bib}
+
+% Redefine section numbering to A., B., C.
+\renewcommand{\thesection}{\Alph{section}}
+\titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.\quad}{0pt}{}
+
+% Environment Variables Macros
+\newcommand{\researchername}{${RESEARCHER_NAME}}
+\newcommand{\researchernim}{${RESEARCHER_NIM}}
+\newcommand{\institutionname}{${INSTITUTION_NAME}}
+\newcommand{\facultyname}{${FACULTY_NAME}}
+\newcommand{\departmentname}{${DEPARTMENT_NAME}}
+\newcommand{\programstudy}{${PROGRAM_STUDY}}
+\newcommand{\advisoracademic}{${ADVISOR_ACADEMIC}}
+\newcommand{\advisoracademicnip}{${ADVISOR_ACADEMIC_NIP}}
+\newcommand{\advisorthesis}{${ADVISOR_THESIS}}
+\newcommand{\advisorthesisnip}{${ADVISOR_THESIS_NIP}}
+
+\begin{document}
+
+\input{chapters/00-frontmatter}
+
+\doublespacing
+\input{chapters/01-pendahuluan}
+\input{chapters/02-tinjauan-pustaka}
+\input{chapters/03-metodologi}
+\input{chapters/04-jadwal}
+
+\printbibliography[title={DAFTAR PUSTAKA}]
+
+\end{document}
