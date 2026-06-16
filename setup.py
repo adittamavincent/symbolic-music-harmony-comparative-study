@@ -23,7 +23,10 @@ COCONET_RUNNER_JS = """/**
  */
 const fs   = require('fs');
 const path = require('path');
-const mm = require(path.join(__dirname, 'node_modules', '@magenta', 'music'));
+const { Coconet } = (
+  require(path.join(__dirname, 'node_modules', '@tensorflow', 'tfjs')),
+  require(path.join(__dirname, 'node_modules', '@magenta', 'music', 'node', 'coconet'))
+);
 
 const CONDITIONS    = (process.env.COCONET_CONDITIONS || 'A_neutral,B_key,C_satb,D_full').split(',');
 const SAMPLES       = parseInt(process.env.COCONET_SAMPLES || '10', 10);
@@ -67,7 +70,7 @@ async function main() {
     throw new Error('Seed file not found. Run Python orchestrator first.');
   }
   const seedData = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
-  const coconet = new mm.Coconet('https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach');
+  const coconet = new Coconet('https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach');
   await coconet.initialize();
   console.log('Coconet model loaded.');
 

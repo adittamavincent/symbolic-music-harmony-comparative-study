@@ -22,7 +22,7 @@ from tqdm import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DEEPBACH_DIR = PROJECT_ROOT / "models" / "deepbach"
 CONDITIONS_FILE = PROJECT_ROOT / "experiments" / "strube_conditions.json"
-DEEPBACH_RESOURCES_URL = "https://www.dropbox.com/s/iuz4ml857ycyyat/deepbach_pytorch_resources.tar.gz"
+DEEPBACH_RESOURCES_URL = "https://www.dropbox.com/scl/fi/26o7byo483tsm9k3jfbaj/deepbach_pytorch_resources.tar.gz?rlkey=fqkddap7on2ix81wlj8tsqklp&dl=1"
 sys.path.append(str(DEEPBACH_DIR))
 
 # Monkeypatch torch.load to bypass the weights_only default of PyTorch >= 2.6

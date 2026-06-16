@@ -12,8 +12,8 @@ Proyek ini adalah bagian dari penelitian skripsi S1 ${PROGRAM_STUDY}.
 
 Setiap model AI diminta menghasilkan musik paduan suara 4 suara (SATB)
 dalam empat kondisi berbeda — dari tanpa batasan hingga diberi banyak petunjuk.
-Hasilnya dianalisis secara otomatis: seberapa banyak pelanggaran *parallel fifths*,
-*parallel octaves*, dan *leading tone* yang dihasilkan?
+Hasilnya dianalisis secara otomatis: seberapa banyak pelanggaran _parallel fifths_,
+_parallel octaves_, dan _leading tone_ yang dihasilkan?
 Skor akhir mencerminkan kepatuhan terhadap prinsip harmoni fungsional Strube.
 
 ---
@@ -22,17 +22,19 @@ Skor akhir mencerminkan kepatuhan terhadap prinsip harmoni fungsional Strube.
 
 Sebelum mulai, pastikan semua software berikut sudah terinstal:
 
-| Software | Versi minimum | Cara cek di terminal    |
-|----------|---------------|--------------------------|
-| Git      | apa saja      | `git --version`          |
-| Python   | 3.10          | `python3 --version`      |
-| uv       | apa saja      | `uv --version`           |
-| Node.js  | 18 atau lebih baru | `node --version`    |
+| Software | Versi minimum      | Cara cek di terminal |
+| -------- | ------------------ | -------------------- |
+| Git      | apa saja           | `git --version`      |
+| Python   | 3.10               | `python3 --version`  |
+| uv       | apa saja           | `uv --version`       |
+| Node.js  | 18 atau lebih baru | `node --version`     |
 
 **Cara install `uv` (jika belum ada):**
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
 Setelah install, tutup dan buka ulang terminal.
 
 **Cara install Node.js:** Unduh dari [nodejs.org](https://nodejs.org).
@@ -52,13 +54,8 @@ cd <nama-folder-proyek>
 
 ```bash
 uv venv .venv --python 3.10
-
-uv pip install \
-  music21==9.3.0 \
-  numpy pandas matplotlib scipy \
-  pretty_midi midiutil tqdm \
-  torch transformers huggingface_hub \
-  miditoolkit
+source .venv/bin/activate
+uv pip install -r requirements.txt
 ```
 
 ### 3. Setup Model Otomatis
@@ -82,6 +79,7 @@ uv run python run_all.py
 ```
 
 Saat pertama kali dijalankan, program otomatis mengunduh resource yang belum ada:
+
 - **DeepBach:** pretrained weights (~beberapa ratus MB) diunduh dari Dropbox.
 - **NotaGen:** checkpoint (~1.5GB) diunduh dari Hugging Face.
 - **Coconet:** checkpoint diambil otomatis oleh `@magenta/music` saat model di-load.
@@ -121,11 +119,11 @@ outputs/
 
 ## Troubleshooting
 
-| Masalah | Solusi |
-| --- | --- |
-| `uv: command not found` | Jalankan install curl di atas, lalu buka terminal baru |
-| `python3: command not found` | Install Python 3.10 dari python.org |
-| `node: command not found` | Install Node.js dari nodejs.org |
-| `No module named 'DatasetManager'` | Pastikan kamu sudah sukses menjalankan `uv run python setup.py` |
-| Coconet `npm install` gagal | Pastikan koneksi internet stabil dan `node` terinstall, lalu coba jalankan `npm install` manual di `models/coconet` |
-| Proses generasi terlalu lama | Gunakan `--samples 1` untuk tes awal |
+| Masalah                            | Solusi                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `uv: command not found`            | Jalankan install curl di atas, lalu buka terminal baru                                                              |
+| `python3: command not found`       | Install Python 3.10 dari python.org                                                                                 |
+| `node: command not found`          | Install Node.js dari nodejs.org                                                                                     |
+| `No module named 'DatasetManager'` | Pastikan kamu sudah sukses menjalankan `uv run python setup.py`                                                     |
+| Coconet `npm install` gagal        | Pastikan koneksi internet stabil dan `node` terinstall, lalu coba jalankan `npm install` manual di `models/coconet` |
+| Proses generasi terlalu lama       | Gunakan `--samples 1` untuk tes awal                                                                                |
