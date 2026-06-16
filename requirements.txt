@@ -1,0 +1,12 @@
+music21==9.3.0
+numpy
+pandas
+matplotlib
+scipy
+pretty_midi
+midiutil
+tqdm
+torch
+transformers
+huggingface_hub
+miditoolkit
