@@ -24,9 +24,8 @@ outputs/
 data/raw/
 scratch/
 
-# Ignore large weights
-models/**/*.pth
-models/**/*.tar.gz
+# Ignore third-party models
+models/
 
 # Ignore generated LaTeX entrypoint
 thesis/main.tex
