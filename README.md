@@ -52,15 +52,13 @@ cd <nama-folder-proyek>
 
 ```bash
 uv venv .venv --python 3.10
-source .venv/bin/activate
-# Windows (PowerShell): .venv\Scripts\activate
 
 uv pip install \
   music21==9.3.0 \
   numpy pandas matplotlib scipy \
   pretty_midi midiutil tqdm \
   torch transformers huggingface_hub \
-  abcmidi miditoolkit
+  miditoolkit
 ```
 
 ### 3. Setup Model Otomatis
@@ -68,7 +66,7 @@ uv pip install \
 Jalankan script setup berikut untuk mengunduh, meng-clone, dan menyiapkan file-file model (`models/deepbach`, `models/coconet`, dan `models/notagen`):
 
 ```bash
-python setup.py
+uv run python setup.py
 ```
 
 > **Catatan:** Semua model dan dependensinya disimpan dalam folder `models/` yang telah di-exclude dari Git via `.gitignore` agar tidak mengotori repository.
@@ -77,10 +75,10 @@ python setup.py
 
 ## Langkah 4 — Jalankan seluruh eksperimen
 
-Pastikan lingkungan Python aktif (`source .venv/bin/activate`), lalu:
+Jalankan eksperimen menggunakan `uv run`:
 
 ```bash
-python run_all.py
+uv run python run_all.py
 ```
 
 Saat pertama kali dijalankan, program otomatis mengunduh resource yang belum ada:
@@ -94,13 +92,13 @@ Saat pertama kali dijalankan, program otomatis mengunduh resource yang belum ada
 
 ```bash
 # Tes cepat dengan 1 sampel saja (untuk memastikan setup benar).
-python run_all.py --samples 1
+uv run python run_all.py --samples 1
 
 # Lihat prompt yang akan digunakan tanpa menjalankan generasi apapun
-python run_all.py --dry-run
+uv run python run_all.py --dry-run
 
 # Jika output sudah ada, lewati generasi dan langsung evaluasi
-python run_all.py --skip-generation
+uv run python run_all.py --skip-generation
 ```
 
 ---
@@ -112,8 +110,8 @@ Setelah selesai, semua hasil tersimpan di folder `outputs/`:
 ```
 outputs/
 ├── deepbach/         ← MIDI per kondisi
-├── coconet/          ← MIDI per kondisi
-├── notagen/          ← MIDI per kondisi
+├── coconet/          ← MIDI per condition
+├── notagen/          ← MIDI per condition
 ├── MASTER_RESULTS.csv              ← semua 120 hasil individual
 ├── SUMMARY_TABLE.csv               ← rata-rata per model × kondisi
 └── strube_evaluation_results.png   ← grafik perbandingan
@@ -128,6 +126,6 @@ outputs/
 | `uv: command not found` | Jalankan install curl di atas, lalu buka terminal baru |
 | `python3: command not found` | Install Python 3.10 dari python.org |
 | `node: command not found` | Install Node.js dari nodejs.org |
-| `No module named 'DatasetManager'` | Pastikan kamu sudah sukses menjalankan `python setup.py` |
+| `No module named 'DatasetManager'` | Pastikan kamu sudah sukses menjalankan `uv run python setup.py` |
 | Coconet `npm install` gagal | Pastikan koneksi internet stabil dan `node` terinstall, lalu coba jalankan `npm install` manual di `models/coconet` |
 | Proses generasi terlalu lama | Gunakan `--samples 1` untuk tes awal |
