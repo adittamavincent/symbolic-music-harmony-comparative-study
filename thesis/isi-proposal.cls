@@ -22,7 +22,7 @@
       {\fontsize{16pt}{19.2pt}\selectfont\MakeUppercase{#1}\par}
       \vfill
       PROPOSAL SKRIPSI\par
-      ${PROGRAM_STUDY}\par
+      \programstudy\par
       \vspace{1cm}
       \includegraphics[width=4cm]{logo-isi.png}\par
       \vspace{1cm}
@@ -33,9 +33,9 @@
       Diajukan Untuk Mengikuti Proses Seleksi Proposal Tugas Akhir/Skripsi\par
       #4\par
       \vfill
-      JURUSAN \MakeUppercase{${DEPARTMENT_NAME}}\\
-      ${FACULTY_NAME}\\
-      ${INSTITUTION_NAME}\\
+      JURUSAN \MakeUppercase{\departmentname}\\
+      \MakeUppercase{\facultyname}\\
+      \MakeUppercase{\institutionname}\\
       #5\par
     \end{center}
     \vspace*{\fill}
