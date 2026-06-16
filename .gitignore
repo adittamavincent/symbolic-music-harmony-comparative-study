@@ -10,6 +10,32 @@
 !*.md
 !*.cls
 !*.bib
+!*.py
+!*.json
+!Makefile
+!.env.example
 
-# Ignore scratch directory
+# Ignore sensitive and environment files
+.env
+.env.local
+
+# Ignore experimental data, raw data, and outputs
+outputs/
+data/raw/
 scratch/
+
+# Ignore large weights
+models/**/*.pth
+models/**/*.tar.gz
+
+# Ignore generated LaTeX entrypoint
+thesis/main.tex
+
+# Ignore LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

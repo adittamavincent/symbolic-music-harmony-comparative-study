@@ -1,0 +1,80 @@
+{
+  "name": "strube_symbolic_music_generation",
+  "default_samples_per_condition": 10,
+  "conditions": {
+    "A_neutral": {
+      "description": "Minimal conditioning; model generates without explicit Strube, key, or SATB constraints.",
+      "models": {
+        "deepbach": {
+          "prompt": "random_init=True; no key metadata; no fixed voices; sequence_length_ticks=160; num_iterations=100"
+        },
+        "coconet": {
+          "prompt": "single C4 seed note at step 0; totalQuantizedSteps=32 by default; no key cadence; numIterations=20 by default"
+        },
+        "notagen": {
+          "prompt": {
+            "period": "Classical",
+            "composer": "Beethoven, Ludwig van",
+            "instrumentation": "Keyboard"
+          }
+        }
+      }
+    },
+    "B_key": {
+      "description": "Key-level conditioning toward C major / Baroque context.",
+      "models": {
+        "deepbach": {
+          "prompt": "C major key metadata constraint; tensor_metadata[:, :, 2] = 8; random_init=True; sequence_length_ticks=160; num_iterations=100"
+        },
+        "coconet": {
+          "prompt": "single C4 seed note plus final C major cadence chord: C3, G3, C4, E4 during final quarter; totalQuantizedSteps=32 by default; numIterations=20 by default"
+        },
+        "notagen": {
+          "prompt": {
+            "period": "Baroque",
+            "composer": "Beethoven, Ludwig van",
+            "instrumentation": "Keyboard"
+          }
+        }
+      }
+    },
+    "C_satb": {
+      "description": "SATB-style conditioning using soprano or SATB-style prompt where supported.",
+      "models": {
+        "deepbach": {
+          "prompt": "fixed soprano voice from first valid Bach chorale seed; generate Alto, Tenor, Bass; voice_index_range=[1, 4]; num_iterations=100"
+        },
+        "coconet": {
+
+          "prompt": "fixed soprano notes extracted from first valid Bach chorale seed; infer remaining voices; totalQuantizedSteps=32 by default; numIterations=20 by default"
+        },
+        "notagen": {
+          "prompt": {
+            "period": "Baroque",
+            "composer": "Bach, Johann Sebastian",
+            "instrumentation": "Choir SATB"
+          }
+        }
+      }
+    },
+    "D_full": {
+      "description": "Strongest available conditioning for Bach-style SATB generation.",
+      "models": {
+        "deepbach": {
+          "prompt": "fixed soprano and bass voices from first valid Bach chorale seed; generate Alto and Tenor; voice_index_range=[1, 3]; num_iterations=100"
+        },
+        "coconet": {
+          "prompt": "fixed soprano and bass notes extracted from first valid Bach chorale seed; infer Alto and Tenor; totalQuantizedSteps=32 by default; numIterations=20 by default"
+        },
+        "notagen": {
+          "prompt": {
+            "period": "Baroque",
+            "composer": "Bach, Johann Sebastian",
+            "instrumentation": "Choir SATB"
+          }
+        }
+      }
+    }
+  },
+  "methodology_note": "Prompt consistency design: Each condition (A-D) enforces an equivalent conditioning LEVEL across all three models, not an identical prompt string. DeepBach uses tensor constraints, Coconet uses note seeds, NotaGen uses metadata text tags — these are the native interfaces of each model. Equivalent conditioning level (not identical prompt text) is the correct standard for comparative evaluation in MIR research, consistent with Hadjeres et al. (2017), Huang et al. (2019), and similar papers."
+}
