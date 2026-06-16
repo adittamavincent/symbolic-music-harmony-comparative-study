@@ -10,3 +10,6 @@
 !*.md
 !*.cls
 !*.bib
+
+# Ignore scratch directory
+scratch/
