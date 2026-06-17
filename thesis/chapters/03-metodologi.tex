@@ -37,8 +37,8 @@ Sebanyak 120 file MIDI dikumpulkan: 3 model $\times$ 4 kondisi $\times$ 10 sampe
 Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\textit{face validity}) melalui dua pengujian:
 
 \begin{enumerate}
-    \item \textbf{Uji positif:} Koral Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa koral Bach merupakan contoh penerapan kaidah Strube yang konsisten.
-    \item \textbf{Uji negatif:} Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
+    \item Uji positif: Koral Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa koral Bach merupakan contoh penerapan kaidah Strube yang konsisten.
+    \item Uji negatif: Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
 Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpenuhi.
@@ -48,12 +48,12 @@ Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpen
 Prosedur penelitian berlangsung dalam enam tahap berurutan:
 
 \begin{enumerate}
-    \item \textbf{Pengembangan instrumen:} Penulisan dan pengujian skrip evaluasi Strube berbasis music21.
-    \item \textbf{Validasi instrumen:} Pengujian \textit{face validity} menggunakan koral Bach asli dan harmonisasi yang disengaja melanggar.
-    \item \textbf{Pengumpulan data:} Generasi 120 sampel output MIDI dari ketiga model di bawah empat kondisi instruksi.
-    \item \textbf{Evaluasi otomatis:} Seluruh 120 sampel MIDI dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
-    \item \textbf{Analisis data:} Statistik deskriptif (rata-rata Strube Score per model per kondisi) dan analisis komparatif lintas model dan kondisi.
-    \item \textbf{Visualisasi:} Penyajian hasil dalam bentuk grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
+    \item Pengembangan instrumen: Penulisan dan pengujian skrip evaluasi Strube berbasis music21.
+    \item Validasi instrumen: Pengujian \textit{face validity} menggunakan koral Bach asli dan harmonisasi yang disengaja melanggar.
+    \item Pengumpulan data: Generasi 120 sampel output MIDI dari ketiga model di bawah empat kondisi instruksi.
+    \item Evaluasi otomatis: Seluruh 120 sampel MIDI dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
+    \item Analisis data: Statistik deskriptif (rata-rata Strube Score per model per kondisi) dan analisis komparatif lintas model dan kondisi.
+    \item Visualisasi: Penyajian hasil dalam bentuk grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
 \end{enumerate}
 
 \subsection{Diagram Alir Penelitian}
