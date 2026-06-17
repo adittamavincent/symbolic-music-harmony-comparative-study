@@ -20,9 +20,11 @@
 
 \begin{document}
 
+\pagenumbering{roman}
 \input{chapters/00-frontmatter}
 
 \doublespacing
+\pagenumbering{arabic}
 \input{chapters/01-pendahuluan}
 \input{chapters/02-tinjauan-pustaka}
 \input{chapters/03-metodologi}
