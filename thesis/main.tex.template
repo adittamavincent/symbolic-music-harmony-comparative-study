@@ -21,6 +21,12 @@
 \newcommand{\advisorthesis}{${ADVISOR_THESIS}}
 \newcommand{\advisorthesisnip}{${ADVISOR_THESIS_NIP}}
 
+% Disable hyphenation while keeping justification (MS Word style)
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+
 \begin{document}
 
 \pagenumbering{roman}
