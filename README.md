@@ -1,7 +1,7 @@
 # Strube Harmonic Evaluation Framework
 
 Proyek ini membandingkan tiga model AI generasi musik simbolik —
-**DeepBach** (2017), **Coconet** (2019), dan **NotaGen** (2025) —
+**DeepBach** (2017), **Coconet** (2017), dan **NotaGen** (2025) —
 menggunakan aturan harmoni fungsional dari teori Gustav Strube sebagai alat ukur.
 
 Proyek ini adalah bagian dari penelitian skripsi S1 ${PROGRAM_STUDY}.

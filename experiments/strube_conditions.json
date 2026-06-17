@@ -76,5 +76,5 @@
       }
     }
   },
-  "methodology_note": "Prompt consistency design: Each condition (A-D) enforces an equivalent conditioning LEVEL across all three models, not an identical prompt string. DeepBach uses tensor constraints, Coconet uses note seeds, NotaGen uses metadata text tags — these are the native interfaces of each model. Equivalent conditioning level (not identical prompt text) is the correct standard for comparative evaluation in MIR research, consistent with Hadjeres et al. (2017), Huang et al. (2019), and similar papers."
+  "methodology_note": "Prompt consistency design: Each condition (A-D) enforces an equivalent conditioning LEVEL across all three models, not an identical prompt string. DeepBach uses tensor constraints, Coconet uses note seeds, NotaGen uses metadata text tags — these are the native interfaces of each model. Equivalent conditioning level (not identical prompt text) is the correct standard for comparative evaluation in MIR research, consistent with Hadjeres et al. (2017), Huang et al. (2017), and similar papers."
 }
