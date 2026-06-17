@@ -60,6 +60,43 @@ Prosedur penelitian berlangsung dalam enam tahap berurutan:
 
 Diagram alir menggambarkan keseluruhan alur penelitian dari pengembangan instrumen evaluasi hingga penyajian hasil, termasuk titik keputusan validasi instrumen dan tahapan generasi data yang dijalankan secara paralel untuk ketiga model.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=1.6cm, every node/.style={fill=white, font=\footnotesize}, align=center]
+  \tikzset{
+    startstop/.style={rectangle, rounded corners, minimum width=3.5cm, minimum height=0.7cm, text centered, draw=black},
+    process/.style={rectangle, minimum width=3.5cm, minimum height=0.7cm, text centered, draw=black},
+    decision/.style={diamond, aspect=2, minimum width=3.5cm, minimum height=0.7cm, text centered, draw=black},
+    arrow/.style={thick,->,>=stealth}
+  }
+
+  % Nodes
+  \node (start) [startstop] {Mulai};
+  \node (dev) [process, below of=start] {Pengembangan Skrip \\ Evaluasi Strube (music21)};
+  \node (val) [process, below of=dev] {Pengujian Validasi \\ (Uji Positif \& Negatif)};
+  \node (dec) [decision, below of=val, yshift=-0.1cm] {Apakah Valid?};
+  \node (gen) [process, below of=dec, yshift=-0.3cm] {Generasi Data \\ (120 Sampel MIDI)};
+  \node (eval) [process, below of=gen] {Evaluasi Otomatis \\ \& Simpan CSV};
+  \node (anal) [process, below of=eval] {Analisis Data \\ \& Visualisasi};
+  \node (stop) [startstop, below of=anal] {Selesai};
+
+  % Connections
+  \draw [arrow] (start) -- (dev);
+  \draw [arrow] (dev) -- (val);
+  \draw [arrow] (val) -- (dec);
+  \draw [arrow] (dec) -- node[anchor=east] {Ya} (gen);
+  \draw [arrow] (gen) -- (eval);
+  \draw [arrow] (eval) -- (anal);
+  \draw [arrow] (anal) -- (stop);
+  
+  % Feedback loop
+  \draw [arrow] (dec.east) -- ++(1.2,0) |- node[anchor=south, pos=0.25] {Tidak} (dev.east);
+
+\end{tikzpicture}
+\caption{Diagram Alir Prosedur Penelitian}
+\label{fig:diagram-alir}
+\end{figure}
+
 \section{Sistematika Penulisan}
 
 Naskah skripsi ini terdiri atas empat bab yang disusun secara sistematis untuk membentuk argumen penelitian yang koheren dari motivasi awal hingga interpretasi temuan.
