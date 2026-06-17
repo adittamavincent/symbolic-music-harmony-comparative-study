@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{isi-proposal}[2026/06/12 ${INSTITUTION_NAME} Proposal]
+\ProvidesClass{isi-proposal}[2026/06/12 ISI Proposal]
 \LoadClass[a4paper,12pt]{article}
 \RequirePackage{mathptmx}
 \RequirePackage[T1]{fontenc}

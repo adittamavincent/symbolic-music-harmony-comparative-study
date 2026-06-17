@@ -12,19 +12,19 @@ Objek penelitian adalah output MIDI yang dihasilkan oleh tiga model AI generatif
 
 Variabel independen adalah empat kondisi instruksi yang diberikan kepada masing-masing model, dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat:
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabularx}{\textwidth}{|l|l|X|}
 \hline
 \textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\ \hline
 A & Netral & Generasi tanpa batasan harmoni atau gaya eksplisit \\ \hline
 B & Kunci & Generasi dengan konteks kunci/periode musik Barat \\ \hline
 C & SATB Parsial & Suara Soprano ditetapkan sebagai batasan; model mengisi Alto, Tenor, Bass \\ \hline
 D & SATB Penuh & Soprano dan Bass ditetapkan; model mengisi Alto dan Tenor \\ \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-Catatan metodologis: setiap kondisi menerapkan \textit{equivalent conditioning level}, bukan prompt string yang identik. DeepBach dikontrol melalui tensor constraint, Coconet melalui injeksi seed nada, NotaGen melalui metadata teks --- sesuai antarmuka native masing-masing model. Standar ini konsisten dengan praktik penelitian evaluasi komparatif dalam MIR \parencite{hadjeres2017, huang2017}.
+Catatan metodologis: setiap kondisi menerapkan \textit{equivalent conditioning level}, bukan prompt string yang identik. DeepBach dikontrol melalui tensor constraint, Coconet melalui injeksi seed nada, NotaGen melalui metadata teks, sesuai dengan antarmuka native masing-masing model. Standar ini konsisten dengan praktik penelitian evaluasi komparatif dalam MIR \parencite{hadjeres2017, huang2017}.
 
 Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai proporsi momen harmonis yang bebas dari pelanggaran ketiga kaidah Strube, dengan rentang nilai 0 (pelanggaran di setiap momen) hingga 1 (tidak ada pelanggaran sama sekali).
 
@@ -38,7 +38,7 @@ Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parenc
 
 \begin{enumerate}
     \item \textbf{Uji positif:} Koral Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa koral Bach merupakan contoh penerapan kaidah Strube yang konsisten.
-    \item \textbf{Uji negatif:} Harmonisasi yang sengaja dibuat melanggar kaidah Strube --- dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit --- dievaluasi dan harus menghasilkan skor rendah.
+    \item \textbf{Uji negatif:} Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
 Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpenuhi.
@@ -64,10 +64,10 @@ Diagram alir menggambarkan keseluruhan alur penelitian dari pengembangan instrum
 
 Naskah skripsi ini terdiri atas empat bab yang disusun secara sistematis untuk membentuk argumen penelitian yang koheren dari motivasi awal hingga interpretasi temuan.
 
-Bab I memuat pendahuluan yang mencakup latar belakang penelitian, rumusan masalah, tujuan penelitian, dan manfaat penelitian. Pada bab ini dibangun argumen mengapa evaluasi berbasis teori harmoni formal merupakan pendekatan yang tepat dan mengapa ketiga model yang dipilih merupakan representasi lintas generasi yang relevan. Bab ini juga menegaskan posisi penelitian dalam literatur MIR dan relevansinya bagi ${PROGRAM_STUDY} ${INSTITUTION_NAME}.
+Bab I memuat pendahuluan yang mencakup latar belakang penelitian, rumusan masalah, tujuan penelitian, dan manfaat penelitian. Pada bab ini dibangun argumen mengapa evaluasi berbasis teori harmoni formal merupakan pendekatan yang tepat dan mengapa ketiga model yang dipilih merupakan representasi lintas generasi yang relevan. Bab ini juga menegaskan posisi penelitian dalam literatur MIR dan relevansinya bagi \programstudy{} \institutionname{}.
 
 Bab II berisi kajian pustaka dan landasan teori. Tinjauan pustaka menelaah secara kritis tiga model AI yang dievaluasi, penelitian-penelitian terkait dalam komunitas MIR yang menggunakan evaluasi harmoni algoritmis sebagai metrik utama, serta kebaruan penelitian ini dibanding studi yang telah ada. Landasan teori menguraikan tiga pilar konseptual penelitian: teori harmoni fungsional Strube sebagai alat ukur, paradigma musik simbolik sebagai objek evaluasi, dan prinsip evaluasi otomatis dalam MIR sebagai kerangka metodologis.
 
 Bab III memuat metode penelitian yang menjabarkan secara rinci desain eksperimen, variabel penelitian, prosedur pengumpulan data, instrumen evaluasi beserta prosedur validasinya, dan prosedur analisis data. Bab ini juga menyertakan diagram alir penelitian yang menggambarkan keseluruhan alur kerja dari validasi instrumen hingga visualisasi hasil, sebagai panduan replikasi penelitian.
 
-Bab IV berisi hasil penelitian dan pembahasan. Bagian hasil menyajikan temuan kuantitatif dalam bentuk tabel ringkasan dan grafik perbandingan ketiga model di bawah empat kondisi instruksi. Bagian pembahasan menginterpretasikan pola kepatuhan yang ditemukan dalam kerangka musikologis --- menjelaskan mengapa kondisi atau model tertentu menghasilkan skor yang berbeda, dan apa implikasinya terhadap pemahaman kemampuan harmonik AI. Naskah ditutup dengan bab penutup yang berisi kesimpulan yang merangkum jawaban atas ketiga rumusan masalah, serta saran untuk penelitian lanjutan yang dapat mengembangkan kerangka evaluasi ini lebih jauh.
+Bab IV berisi hasil penelitian dan pembahasan. Bagian hasil menyajikan temuan kuantitatif dalam bentuk tabel ringkasan dan grafik perbandingan ketiga model di bawah empat kondisi instruksi. Bagian pembahasan menginterpretasikan pola kepatuhan yang ditemukan dalam kerangka musikologis, menjelaskan mengapa kondisi atau model tertentu menghasilkan skor yang berbeda, dan apa implikasinya terhadap pemahaman kemampuan harmonik AI. Naskah ditutup dengan bab penutup yang berisi kesimpulan yang merangkum jawaban atas ketiga rumusan masalah, serta saran untuk penelitian lanjutan yang dapat mengembangkan kerangka evaluasi ini lebih jauh.
