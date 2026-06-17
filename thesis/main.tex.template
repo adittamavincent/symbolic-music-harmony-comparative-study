@@ -8,6 +8,8 @@
 % Redefine section numbering to A., B., C.
 \renewcommand{\thesection}{\Alph{section}}
 \titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.\quad}{0pt}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection\quad}{0pt}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection\quad}{0pt}{}
 
 % Environment Variables Macros
 \newcommand{\researchername}{${RESEARCHER_NAME}}
