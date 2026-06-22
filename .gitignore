@@ -15,6 +15,7 @@
 !Makefile
 !.env.example
 !thesis/main.tex.template
+!thesis/presentation.tex.template
 !requirements.txt
 !thesis/logo-isi.png
 
@@ -32,6 +33,7 @@ models/
 
 # Ignore generated LaTeX entrypoint
 thesis/main.tex
+thesis/presentation.tex
 
 # Ignore LaTeX build artifacts
 *.aux
@@ -41,3 +43,6 @@ thesis/main.tex
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+*.nav
+*.snm
+*.vrb

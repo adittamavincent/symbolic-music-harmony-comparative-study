@@ -1,0 +1,317 @@
+\documentclass[aspectratio=169, 12pt]{beamer}
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{mathptmx}
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+% Colors
+\definecolor{DeepNavy}{HTML}{1B2A4A}
+\definecolor{OffWhite}{HTML}{F0EDE6}
+\definecolor{GoldAmber}{HTML}{C9963A}
+\definecolor{SlateBlue}{HTML}{4A6B82}
+
+\definecolor{BlockBGA}{HTML}{23355C}
+\definecolor{BlockBGB}{HTML}{2B406E}
+\definecolor{BlockBGC}{HTML}{334C80}
+
+\definecolor{LightGreen}{HTML}{C5E1A5}
+\definecolor{LightRed}{HTML}{EF9A9A}
+\definecolor{DarkText}{HTML}{111111}
+
+% Beamer Settings
+\setbeamercolor{background canvas}{bg=DeepNavy}
+\setbeamercolor{normal text}{fg=OffWhite}
+\setbeamercolor{frametitle}{fg=GoldAmber}
+\setbeamercolor{footline}{fg=SlateBlue}
+\setbeamercolor{itemize item}{fg=GoldAmber}
+
+% Itemize
+\setbeamertemplate{itemize item}{$\cdot$}
+\setbeamertemplate{itemize subitem}{-}
+
+% Frame title
+\setbeamertemplate{frametitle}{
+  \vspace{0.4cm}
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\rmfamily\textbf{\insertframetitle}}
+  \par\vspace{-0.2cm}{\color{GoldAmber}\rule{\textwidth}{0.5pt}}\vspace{0.1cm}
+}
+\setbeamerfont{frametitle}{size=\LARGE}
+
+% Footline
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1ex,left,leftskip=3ex]{footline}%
+    \usebeamerfont{footline} Evaluasi Kepatuhan Harmoni Fungsional
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1ex,right,rightskip=3ex]{footline}%
+    \usebeamerfont{footline}\insertframenumber{}
+  \end{beamercolorbox}}%
+  \vskip2ex%
+}
+\setbeamerfont{footline}{size=\tiny}
+
+\begin{document}
+
+% --- Slide 1 ---
+\begin{frame}[plain]
+  \vfill
+  \begin{center}
+    \includegraphics[height=2.5cm]{logo-isi.png} \par \vspace{0.6cm}
+    {\rmfamily\Huge\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.2cm}
+    \textbf{\textcolor{GoldAmber}{OUTPUT MODEL GENERATIF MUSIK SIMBOLIK:}} \par \vspace{0.2cm}
+    \textbf{\textcolor{GoldAmber}{Studi Komparatif Teori Gustav Strube}}} \par
+    \vspace{0.8cm}
+    {\small
+    \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}} \par \vspace{0.2cm}
+    ${PROGRAM_STUDY} \par \vspace{0.1cm}
+    ${INSTITUTION_NAME} \par \vspace{0.1cm}
+    2026
+    }
+  \end{center}
+  \vfill
+\end{frame}
+
+% --- Slide 2 ---
+\begin{frame}{Latar Belakang \& Gap}
+  Evaluasi model AI musik selama ini didominasi dua pendekatan: \par \vspace{0.4cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Uji dengar subjektif} \par
+      \small (Turing test, preferensi pendengar)
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Metrik statistik distribusional} \par
+      \small (likelihood, pitch distribution)
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5cm}
+  Keterbatasan yang sudah didokumentasikan:
+  \begin{itemize}
+    \item Uji dengar: rentan variasi antar pendengar, sulit direplikasi, butuh sumber daya besar (Yang \& Lerch, 2020)
+    \item Metrik statistik: tidak mengukur apakah musik BENAR secara aturan teori harmoni yang spesifik (Fang et al., 2020)
+  \end{itemize}
+
+  \vspace{0.4cm}
+  \begin{center}
+    \textbf{\textcolor{GoldAmber}{$\downarrow$}}
+  \end{center}
+  \vspace{0.2cm}
+
+  Belum ada studi komparatif yang menggunakan kaidah harmoni formal sebagai variabel terukur lintas generasi model AI.
+\end{frame}
+
+% --- Slide 3 ---
+\begin{frame}{Rumusan Masalah \& Tujuan}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{SlateBlue}{RUMUSAN MASALAH}} \par \vspace{0.3cm}
+      \textbf{1.} Sejauh mana output DeepBach, Coconet, dan NotaGen memenuhi kaidah Strube di tiap kondisi? \par \vspace{0.3cm}
+      \textbf{2.} Apakah model yang lebih baru menghasilkan kepatuhan harmoni yang lebih tinggi? \par \vspace{0.3cm}
+      \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional?
+    \end{column}
+    \vrule{}
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{SlateBlue}{TUJUAN PENELITIAN}} \par \vspace{0.3cm}
+      \textbf{1.} Mengukur dan membandingkan tingkat kepatuhan harmoni ketiga model terhadap Strube. \par \vspace{0.3cm}
+      \textbf{2.} Mengidentifikasi pola perkembangan kepatuhan lintas generasi model AI. \par \vspace{0.3cm}
+      \textbf{3.} Menentukan kondisi instruksi yang paling efektif mendorong kepatuhan harmoni.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- Slide 4 ---
+\begin{frame}{Tinjauan Pustaka}
+  \textbf{\textcolor{GoldAmber}{Hadjeres et al. (2017)}} \textemdash{} \textbf{DeepBach, ICML} \par
+  \small Model generasi koral SATB berbasis LSTM. Titik awal komparatif historis dan preseden conditioning berbasis tensor. \par
+  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+
+  \textbf{\textcolor{GoldAmber}{Huang et al. (2017)}} \textemdash{} \textbf{Coconet, ISMIR} \par
+  \small Model infilling konvolusional. Naskah aslinya menggunakan music21 untuk mendeteksi pelanggaran kuint dan oktaf \textemdash{} preseden metodologis langsung. \par
+  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+
+  \textbf{\textcolor{GoldAmber}{Wang et al. (2025)}} \textemdash{} \textbf{NotaGen, IJCAI} \par
+  \small Model transformer simbolik terbaru. Belum pernah dievaluasi dalam konteks harmoni formal \textemdash{} ini salah satu kontribusi orisinal penelitian ini. \par
+  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+
+  \textbf{\textcolor{GoldAmber}{Fang et al. (2020)}} \textemdash{} \textbf{Bach or Mock?, ICML Workshop} \par
+  \small Sistem penilaian algoritmis koral Bach berbasis music21. Model mutakhir terbukti menghasilkan pelanggaran voice leading yang signifikan meskipun terdengar meyakinkan.
+\end{frame}
+
+% --- Slide 5 ---
+\begin{frame}{Landasan Teori}
+  \textbf{\textcolor{SlateBlue}{Teori Harmoni Fungsional Gustav Strube (1928)}} \par \vspace{0.4cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.31\textwidth}
+      \fcolorbox{BlockBGA}{BlockBGA}{\begin{minipage}{\linewidth}
+        \vspace{0.2cm}
+        \centering \textbf{Larangan Kuint Sejajar} \par \vspace{0.2cm}
+        \raggedright \small Dua suara dilarang bergerak paralel membentuk interval kuint sempurna berurutan.
+        \vspace{0.2cm}
+      \end{minipage}}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \fcolorbox{BlockBGB}{BlockBGB}{\begin{minipage}{\linewidth}
+        \vspace{0.2cm}
+        \centering \textbf{Larangan Oktaf Sejajar} \par \vspace{0.2cm}
+        \raggedright \small Dua suara dilarang bergerak paralel membentuk interval oktaf berurutan.
+        \vspace{0.2cm}
+      \end{minipage}}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \fcolorbox{BlockBGC}{BlockBGC}{\begin{minipage}{\linewidth}
+        \vspace{0.2cm}
+        \centering \textbf{Resolusi Nada Penuntun} \par \vspace{0.2cm}
+        \raggedright \small Nada ke-7 harus naik ke tonika saat resolusi harmonis terjadi. \par \tiny (Schoenberg, 1954; Harrison, 2020)
+        \vspace{0.2cm}
+      \end{minipage}}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6cm}
+  \textit{\small Dipilih karena: objektif, deterministik, dapat diformalkan secara komputasional, dan bagian dari kurikulum resmi program studi ini.}
+\end{frame}
+
+% --- Slide 6 ---
+\begin{frame}{Metode Penelitian}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Pendekatan}: Kuantitatif Komparatif \par \vspace{0.2cm}
+      \textbf{Paradigma}: Research and Development (R\&D) \par \vspace{0.2cm}
+      \textbf{Objek}: Output MIDI dari 3 model AI di 4 kondisi instruksi \par \vspace{0.2cm}
+      \textbf{Objek Formal}: Kepatuhan harmoni fungsional menurut teori Strube \par \vspace{0.2cm}
+      \textbf{Instrumen}: \texttt{strube\_evaluator.py} \par (Python + music21 9.3.0)
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{SlateBlue}{Dua Fase R\&D:}} \par \vspace{0.3cm}
+
+      \textbf{FASE 1 \textemdash{} Bangun \& Validasi Instrumen}
+      \begin{itemize}
+        \item Kembangkan \texttt{strube\_evaluator.py}
+        \item Uji face validity (positif + negatif)
+        \item Instrumen dinyatakan valid sebelum generasi dimulai
+      \end{itemize}
+
+      \vspace{0.1cm}
+      \begin{center}
+        \textbf{\textcolor{GoldAmber}{$\downarrow$}}
+      \end{center}
+      \vspace{0.1cm}
+
+      \textbf{FASE 2 \textemdash{} Terapkan \& Bandingkan}
+      \begin{itemize}
+        \item Generate 120 sampel MIDI
+        \item Evaluasi otomatis seluruh sampel
+        \item Analisis deskriptif komparatif lintas model dan kondisi
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- Slide 7 ---
+\begin{frame}{Desain Eksperimen: 4 Kondisi}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabularx}{\textwidth}{l l X}
+    \textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\
+    \hline
+    A & Netral & Tanpa batasan \textemdash{} model bebas sepenuhnya \\
+    B & Kunci & Konteks kunci dan periode Barat diberikan \\
+    C & SATB Parsial & Soprano ditetapkan, model mengisi A, T, B \\
+    \rowcolor{GoldAmber!30}
+    \textbf{\textcolor{DarkText}{D}} & \textbf{\textcolor{DarkText}{SATB Penuh}} & \textbf{\textcolor{DarkText}{Soprano + Bass ditetapkan, model mengisi A, T}} \\
+    \hline
+  \end{tabularx}
+
+  \vspace{0.6cm}
+  {\small \textcolor{gray}{\textbf{Catatan metodologis:} \par
+  Setiap kondisi menerapkan equivalent conditioning level, bukan prompt string yang identik. \par
+  DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks \textemdash{} sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}}
+\end{frame}
+
+% --- Slide 8 ---
+\begin{frame}{Instrumen Evaluasi \& Validasi}
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \textbf{Instrumen:} \texttt{strube\_evaluator.py} \par
+      \small Python + music21 9.3.0 \par \vspace{0.3cm}
+      Mengecek 3 kaidah Strube secara algoritmis pada setiap pasangan suara SATB di setiap momen harmonis. \par \vspace{0.3cm}
+      \textbf{6 kombinasi voice pair:} \par
+      S-A, S-T, S-B, A-T, A-B, T-B
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \textbf{\textcolor{SlateBlue}{Face Validity (sebelum data utama dikumpulkan):}} \par \vspace{0.3cm}
+
+      \fcolorbox{LightGreen}{LightGreen}{\begin{minipage}{\linewidth}
+        \textcolor{DarkText}{\textbf{Uji Positif}} \par \vspace{0.1cm}
+        \textcolor{DarkText}{\small BWV 66.6 dari corpus music21 \par $\rightarrow$ harus skor \textbf{TINGGI}}
+      \end{minipage}}
+
+      \vspace{0.3cm}
+
+      \fcolorbox{LightRed}{LightRed}{\begin{minipage}{\linewidth}
+        \textcolor{DarkText}{\textbf{Uji Negatif}} \par \vspace{0.1cm}
+        \textcolor{DarkText}{\small Harmonisasi yang sengaja melanggar kaidah Strube \par $\rightarrow$ harus skor \textbf{RENDAH}}
+      \end{minipage}}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6cm}
+  \textit{\small Skrip ini tidak menghakimi kualitas seni sebuah karya. Ini mengecek konsistensi output terhadap konvensi Strube \textemdash{} seperti linter yang membaca style guide, bukan juri yang menilai estetika.}
+\end{frame}
+
+% --- Slide 9 ---
+\begin{frame}{Output yang Diharapkan}
+  \begin{columns}[c]
+    \begin{column}{0.3\textwidth}
+      \begin{center}
+        {\fontsize{72pt}{80pt}\selectfont \textbf{120}} \par \vspace{0.2cm}
+        \textbf{file MIDI} \par
+        \small 3 model $\times$ 4 kondisi $\times$ 10 sampel
+      \end{center}
+    \end{column}
+    \begin{column}{0.65\textwidth}
+      \textbf{Output yang dihasilkan pipeline:} \par \vspace{0.3cm}
+
+      \texttt{MASTER\_RESULTS.csv} \par
+      \small $\rightarrow$ 120 baris hasil individual per sampel \par \vspace{0.3cm}
+
+      \texttt{SUMMARY\_TABLE.csv} \par
+      \small $\rightarrow$ rata-rata Strube Score per model per kondisi \par \vspace{0.3cm}
+
+      \texttt{strube\_evaluation\_results.png} \par
+      \small $\rightarrow$ grafik batang perbandingan ketiga model
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6cm}
+  \small Seluruh infrastruktur pipeline dan instrumen evaluasi sudah selesai dibangun dan divalidasi. \par
+  Pengumpulan data dilaksanakan pada Semester 7.
+\end{frame}
+
+% --- Slide 10 ---
+\begin{frame}{Penutup}
+  Penelitian ini akan menjawab: \par \vspace{0.4cm}
+
+  \textbf{1.} Seberapa patuh output DeepBach, Coconet, dan NotaGen terhadap 3 kaidah Strube di masing-masing kondisi? \par \vspace{0.3cm}
+
+  \textbf{2.} Apakah model yang lebih baru menghasilkan kepatuhan harmoni yang lebih tinggi? \par \vspace{0.3cm}
+
+  \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional? \par \vspace{0.5cm}
+
+  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi \textemdash{} menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.5cm}
+
+  \small Terima kasih. \par
+  \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}}
+\end{frame}
+
+\end{document}
