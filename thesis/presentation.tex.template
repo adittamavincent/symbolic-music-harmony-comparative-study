@@ -233,9 +233,9 @@
   \end{tabularx}
 
   \vspace{0.6cm}
-  {\small \textcolor{gray}{\textbf{Catatan metodologis:} \par
+  {\small \color{gray}\textbf{Catatan metodologis:} \par
   Setiap kondisi menerapkan equivalent conditioning level, bukan prompt string yang identik. \par
-  DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks \textemdash{} sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}}
+  DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks \textemdash{} sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}
 \end{frame}
 
 % --- Slide 8 ---
@@ -253,14 +253,14 @@
 
       \fcolorbox{LightGreen}{LightGreen}{\begin{minipage}{\linewidth}
         \textcolor{DarkText}{\textbf{Uji Positif}} \par \vspace{0.1cm}
-        \textcolor{DarkText}{\small BWV 66.6 dari corpus music21 \par $\rightarrow$ harus skor \textbf{TINGGI}}
+        {\color{DarkText}\small BWV 66.6 dari corpus music21 \par $\rightarrow$ harus skor \textbf{TINGGI}}
       \end{minipage}}
 
       \vspace{0.3cm}
 
       \fcolorbox{LightRed}{LightRed}{\begin{minipage}{\linewidth}
         \textcolor{DarkText}{\textbf{Uji Negatif}} \par \vspace{0.1cm}
-        \textcolor{DarkText}{\small Harmonisasi yang sengaja melanggar kaidah Strube \par $\rightarrow$ harus skor \textbf{RENDAH}}
+        {\color{DarkText}\small Harmonisasi yang sengaja melanggar kaidah Strube \par $\rightarrow$ harus skor \textbf{RENDAH}}
       \end{minipage}}
     \end{column}
   \end{columns}
