@@ -64,13 +64,13 @@
 \begin{frame}[plain]
   \vfill
   \begin{center}
-    \includegraphics[height=2.5cm]{logo-isi.png} \par \vspace{0.6cm}
-    {\rmfamily\Huge\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.2cm}
-    \textbf{\textcolor{GoldAmber}{OUTPUT MODEL GENERATIF MUSIK SIMBOLIK:}} \par \vspace{0.2cm}
+    \includegraphics[height=1.5cm]{logo-isi.png} \par \vspace{0.2cm}
+    {\rmfamily\LARGE\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.1cm}
+    \textbf{\textcolor{GoldAmber}{OUTPUT MODEL GENERATIF MUSIK SIMBOLIK:}} \par \vspace{0.1cm}
     \textbf{\textcolor{GoldAmber}{Studi Komparatif Teori Gustav Strube}}} \par
-    \vspace{0.8cm}
+    \vspace{0.3cm}
     {\small
-    \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}} \par \vspace{0.2cm}
+    \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}} \par \vspace{0.1cm}
     ${PROGRAM_STUDY} \par \vspace{0.1cm}
     ${INSTITUTION_NAME} \par \vspace{0.1cm}
     2026
@@ -81,31 +81,31 @@
 
 % --- Slide 2 ---
 \begin{frame}{Latar Belakang \& Gap}
-  Evaluasi model AI musik selama ini didominasi dua pendekatan: \par \vspace{0.4cm}
+  Evaluasi model AI musik selama ini didominasi dua pendekatan: \par \vspace{0.2cm}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \textbf{Uji dengar subjektif} \par
-      \small (Turing test, preferensi pendengar)
+      \footnotesize (Turing test, preferensi pendengar)
     \end{column}
     \begin{column}{0.48\textwidth}
       \textbf{Metrik statistik distribusional} \par
-      \small (likelihood, pitch distribution)
+      \footnotesize (likelihood, pitch distribution)
     \end{column}
   \end{columns}
 
-  \vspace{0.5cm}
+  \vspace{0.2cm}
   Keterbatasan yang sudah didokumentasikan:
   \begin{itemize}
     \item Uji dengar: rentan variasi antar pendengar, sulit direplikasi, butuh sumber daya besar (Yang \& Lerch, 2020)
     \item Metrik statistik: tidak mengukur apakah musik BENAR secara aturan teori harmoni yang spesifik (Fang et al., 2020)
   \end{itemize}
 
-  \vspace{0.4cm}
+  \vspace{0.1cm}
   \begin{center}
     \textbf{\textcolor{GoldAmber}{$\downarrow$}}
   \end{center}
-  \vspace{0.2cm}
+  \vspace{0.1cm}
 
   Belum ada studi komparatif yang menggunakan kaidah harmoni formal sebagai variabel terukur lintas generasi model AI.
 \end{frame}
@@ -132,19 +132,19 @@
 % --- Slide 4 ---
 \begin{frame}{Tinjauan Pustaka}
   \textbf{\textcolor{GoldAmber}{Hadjeres et al. (2017)}} \textemdash{} \textbf{DeepBach, ICML} \par
-  \small Model generasi koral SATB berbasis LSTM. Titik awal komparatif historis dan preseden conditioning berbasis tensor. \par
-  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+  \footnotesize Model generasi koral SATB berbasis LSTM. Titik awal komparatif historis dan preseden conditioning berbasis tensor. \par
+  \vspace{0.05cm}
 
   \textbf{\textcolor{GoldAmber}{Huang et al. (2017)}} \textemdash{} \textbf{Coconet, ISMIR} \par
-  \small Model infilling konvolusional. Naskah aslinya menggunakan music21 untuk mendeteksi pelanggaran kuint dan oktaf \textemdash{} preseden metodologis langsung. \par
-  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+  \footnotesize Model infilling konvolusional. Naskah aslinya menggunakan music21 untuk mendeteksi pelanggaran kuint dan oktaf \textemdash{} preseden metodologis langsung. \par
+  \vspace{0.05cm}
 
   \textbf{\textcolor{GoldAmber}{Wang et al. (2025)}} \textemdash{} \textbf{NotaGen, IJCAI} \par
-  \small Model transformer simbolik terbaru. Belum pernah dievaluasi dalam konteks harmoni formal \textemdash{} ini salah satu kontribusi orisinal penelitian ini. \par
-  \vspace{0.1cm} {\color{SlateBlue}\rule{\textwidth}{0.3pt}} \vspace{0.2cm}
+  \footnotesize Model transformer simbolik terbaru. Belum pernah dievaluasi dalam konteks harmoni formal \textemdash{} ini salah satu kontribusi orisinal penelitian ini. \par
+  \vspace{0.05cm}
 
   \textbf{\textcolor{GoldAmber}{Fang et al. (2020)}} \textemdash{} \textbf{Bach or Mock?, ICML Workshop} \par
-  \small Sistem penilaian algoritmis koral Bach berbasis music21. Model mutakhir terbukti menghasilkan pelanggaran voice leading yang signifikan meskipun terdengar meyakinkan.
+  \footnotesize Sistem penilaian algoritmis koral Bach berbasis music21. Model mutakhir terbukti menghasilkan pelanggaran voice leading yang signifikan meskipun terdengar meyakinkan.
 \end{frame}
 
 % --- Slide 5 ---
@@ -153,32 +153,32 @@
 
   \begin{columns}[T]
     \begin{column}{0.31\textwidth}
-      \fcolorbox{BlockBGA}{BlockBGA}{\begin{minipage}{\linewidth}
-        \vspace{0.2cm}
-        \centering \textbf{Larangan Kuint Sejajar} \par \vspace{0.2cm}
+      \fcolorbox{BlockBGA}{BlockBGA}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \vspace{0.1cm}
+        \centering \textbf{Larangan Kuint Sejajar} \par \vspace{0.1cm}
         \raggedright \small Dua suara dilarang bergerak paralel membentuk interval kuint sempurna berurutan.
-        \vspace{0.2cm}
+        \vspace{0.1cm}
       \end{minipage}}
     \end{column}
     \begin{column}{0.31\textwidth}
-      \fcolorbox{BlockBGB}{BlockBGB}{\begin{minipage}{\linewidth}
-        \vspace{0.2cm}
-        \centering \textbf{Larangan Oktaf Sejajar} \par \vspace{0.2cm}
+      \fcolorbox{BlockBGB}{BlockBGB}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \vspace{0.1cm}
+        \centering \textbf{Larangan Oktaf Sejajar} \par \vspace{0.1cm}
         \raggedright \small Dua suara dilarang bergerak paralel membentuk interval oktaf berurutan.
-        \vspace{0.2cm}
+        \vspace{0.1cm}
       \end{minipage}}
     \end{column}
     \begin{column}{0.31\textwidth}
-      \fcolorbox{BlockBGC}{BlockBGC}{\begin{minipage}{\linewidth}
-        \vspace{0.2cm}
-        \centering \textbf{Resolusi Nada Penuntun} \par \vspace{0.2cm}
+      \fcolorbox{BlockBGC}{BlockBGC}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \vspace{0.1cm}
+        \centering \textbf{Resolusi Nada Penuntun} \par \vspace{0.1cm}
         \raggedright \small Nada ke-7 harus naik ke tonika saat resolusi harmonis terjadi. \par \tiny (Schoenberg, 1954; Harrison, 2020)
-        \vspace{0.2cm}
+        \vspace{0.1cm}
       \end{minipage}}
     \end{column}
   \end{columns}
 
-  \vspace{0.6cm}
+  \vspace{0.4cm}
   \textit{\small Dipilih karena: objektif, deterministik, dapat diformalkan secara komputasional, dan bagian dari kurikulum resmi program studi ini.}
 \end{frame}
 
@@ -186,14 +186,16 @@
 \begin{frame}{Metode Penelitian}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \textbf{Pendekatan}: Kuantitatif Komparatif \par \vspace{0.2cm}
-      \textbf{Paradigma}: Research and Development (R\&D) \par \vspace{0.2cm}
-      \textbf{Objek}: Output MIDI dari 3 model AI di 4 kondisi instruksi \par \vspace{0.2cm}
-      \textbf{Objek Formal}: Kepatuhan harmoni fungsional menurut teori Strube \par \vspace{0.2cm}
+      \footnotesize
+      \textbf{Pendekatan}: Kuantitatif Komparatif \par \vspace{0.1cm}
+      \textbf{Paradigma}: Research and Development (R\&D) \par \vspace{0.1cm}
+      \textbf{Objek}: Output MIDI dari 3 model AI di 4 kondisi instruksi \par \vspace{0.1cm}
+      \textbf{Objek Formal}: Kepatuhan harmoni fungsional menurut teori Strube \par \vspace{0.1cm}
       \textbf{Instrumen}: \texttt{strube\_evaluator.py} \par (Python + music21 9.3.0)
     \end{column}
     \begin{column}{0.48\textwidth}
-      \textbf{\textcolor{SlateBlue}{Dua Fase R\&D:}} \par \vspace{0.3cm}
+      \footnotesize
+      \textbf{\textcolor{SlateBlue}{Dua Fase R\&D:}} \par \vspace{0.1cm}
 
       \textbf{FASE 1 \textemdash{} Bangun \& Validasi Instrumen}
       \begin{itemize}
@@ -202,11 +204,7 @@
         \item Instrumen dinyatakan valid sebelum generasi dimulai
       \end{itemize}
 
-      \vspace{0.1cm}
-      \begin{center}
-        \textbf{\textcolor{GoldAmber}{$\downarrow$}}
-      \end{center}
-      \vspace{0.1cm}
+      \vspace{0.05cm}
 
       \textbf{FASE 2 \textemdash{} Terapkan \& Bandingkan}
       \begin{itemize}
@@ -220,7 +218,7 @@
 
 % --- Slide 7 ---
 \begin{frame}{Desain Eksperimen: 4 Kondisi}
-  \renewcommand{\arraystretch}{1.5}
+  \renewcommand{\arraystretch}{1.2}
   \begin{tabularx}{\textwidth}{l l X}
     \textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\
     \hline
@@ -232,8 +230,8 @@
     \hline
   \end{tabularx}
 
-  \vspace{0.6cm}
-  {\small \color{gray}\textbf{Catatan metodologis:} \par
+  \vspace{0.3cm}
+  {\footnotesize \color{gray}\textbf{Catatan metodologis:} \par
   Setiap kondisi menerapkan equivalent conditioning level, bukan prompt string yang identik. \par
   DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks \textemdash{} sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}
 \end{frame}
@@ -242,25 +240,27 @@
 \begin{frame}{Instrumen Evaluasi \& Validasi}
   \begin{columns}[T]
     \begin{column}{0.4\textwidth}
+      \footnotesize
       \textbf{Instrumen:} \texttt{strube\_evaluator.py} \par
-      \small Python + music21 9.3.0 \par \vspace{0.3cm}
-      Mengecek 3 kaidah Strube secara algoritmis pada setiap pasangan suara SATB di setiap momen harmonis. \par \vspace{0.3cm}
+      Python + music21 9.3.0 \par \vspace{0.2cm}
+      Mengecek 3 kaidah Strube secara algoritmis pada setiap pasangan suara SATB di setiap momen harmonis. \par \vspace{0.2cm}
       \textbf{6 kombinasi voice pair:} \par
       S-A, S-T, S-B, A-T, A-B, T-B
     \end{column}
     \begin{column}{0.55\textwidth}
-      \textbf{\textcolor{SlateBlue}{Face Validity (sebelum data utama dikumpulkan):}} \par \vspace{0.3cm}
+      \footnotesize
+      \textbf{\textcolor{SlateBlue}{Face Validity (sebelum data utama dikumpulkan):}} \par \vspace{0.2cm}
 
-      \fcolorbox{LightGreen}{LightGreen}{\begin{minipage}{\linewidth}
-        \textcolor{DarkText}{\textbf{Uji Positif}} \par \vspace{0.1cm}
-        {\color{DarkText}\small BWV 66.6 dari corpus music21 \par $\rightarrow$ harus skor \textbf{TINGGI}}
+      \fcolorbox{LightGreen}{LightGreen}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \textcolor{DarkText}{\textbf{Uji Positif}} \par \vspace{0.05cm}
+        {\color{DarkText}\scriptsize BWV 66.6 dari corpus music21 \par $\rightarrow$ harus skor \textbf{TINGGI}}
       \end{minipage}}
 
-      \vspace{0.3cm}
+      \vspace{0.1cm}
 
-      \fcolorbox{LightRed}{LightRed}{\begin{minipage}{\linewidth}
-        \textcolor{DarkText}{\textbf{Uji Negatif}} \par \vspace{0.1cm}
-        {\color{DarkText}\small Harmonisasi yang sengaja melanggar kaidah Strube \par $\rightarrow$ harus skor \textbf{RENDAH}}
+      \fcolorbox{LightRed}{LightRed}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \textcolor{DarkText}{\textbf{Uji Negatif}} \par \vspace{0.05cm}
+        {\color{DarkText}\scriptsize Harmonisasi yang sengaja melanggar kaidah Strube \par $\rightarrow$ harus skor \textbf{RENDAH}}
       \end{minipage}}
     \end{column}
   \end{columns}
@@ -300,15 +300,15 @@
 
 % --- Slide 10 ---
 \begin{frame}{Penutup}
-  Penelitian ini akan menjawab: \par \vspace{0.4cm}
+  Penelitian ini akan menjawab: \par \vspace{0.2cm}
 
-  \textbf{1.} Seberapa patuh output DeepBach, Coconet, dan NotaGen terhadap 3 kaidah Strube di masing-masing kondisi? \par \vspace{0.3cm}
+  \textbf{1.} Seberapa patuh output DeepBach, Coconet, dan NotaGen terhadap 3 kaidah Strube di masing-masing kondisi? \par \vspace{0.2cm}
 
-  \textbf{2.} Apakah model yang lebih baru menghasilkan kepatuhan harmoni yang lebih tinggi? \par \vspace{0.3cm}
+  \textbf{2.} Apakah model yang lebih baru menghasilkan kepatuhan harmoni yang lebih tinggi? \par \vspace{0.2cm}
 
-  \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional? \par \vspace{0.5cm}
+  \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional? \par \vspace{0.2cm}
 
-  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi \textemdash{} menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.5cm}
+  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi \textemdash{} menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.2cm}
 
   \small Terima kasih. \par
   \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}}
