@@ -29,3 +29,5 @@ notes:
 clean:
 	rm -rf thesis/proposal/build thesis/slides/build
 	rm -f thesis/proposal/*.tex thesis/slides/*.tex
+	rm -f thesis/proposal/*.aux thesis/proposal/*.log thesis/proposal/*.fls thesis/proposal/*.fdb_latexmk thesis/proposal/*.bbl thesis/proposal/*.bcf thesis/proposal/*.blg thesis/proposal/*.run.xml thesis/proposal/*.out thesis/proposal/*.toc thesis/proposal/*.synctex.gz
+	rm -f thesis/slides/*.aux thesis/slides/*.log thesis/slides/*.fls thesis/slides/*.fdb_latexmk thesis/slides/*.nav thesis/slides/*.snm thesis/slides/*.out thesis/slides/*.toc thesis/slides/*.synctex.gz
