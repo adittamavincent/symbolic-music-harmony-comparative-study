@@ -16,3 +16,10 @@ present:
 	fi
 	envsubst < thesis/presentation.tex.template > thesis/presentation.tex
 	latexmk -pdf -cd -outdir=thesis thesis/presentation.tex
+
+notes:
+	@if [ ! -f .env.local ]; then \
+		echo "Warning: .env.local not found. Using empty environment variables."; \
+	fi
+	envsubst < thesis/presentation_notes.tex.template > thesis/presentation_notes.tex
+	latexmk -pdf -cd -outdir=thesis thesis/presentation_notes.tex
