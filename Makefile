@@ -7,19 +7,19 @@ compile:
 	@if [ ! -f .env.local ]; then \
 		echo "Warning: .env.local not found. Using empty environment variables."; \
 	fi
-	envsubst < thesis/main.tex.template > thesis/main.tex
-	latexmk -pdf -cd -outdir=thesis thesis/main.tex
+	envsubst < thesis/proposal/main.tex.template > thesis/proposal/main.tex
+	TEXINPUTS=.:../assets: latexmk -pdf -cd -outdir=. thesis/proposal/main.tex
 
 present:
 	@if [ ! -f .env.local ]; then \
 		echo "Warning: .env.local not found. Using empty environment variables."; \
 	fi
-	envsubst < thesis/presentation.tex.template > thesis/presentation.tex
-	latexmk -pdf -cd -outdir=thesis thesis/presentation.tex
+	envsubst < thesis/slides/presentation.tex.template > thesis/slides/presentation.tex
+	TEXINPUTS=.:../assets: latexmk -pdf -cd -outdir=. thesis/slides/presentation.tex
 
 notes:
 	@if [ ! -f .env.local ]; then \
 		echo "Warning: .env.local not found. Using empty environment variables."; \
 	fi
-	envsubst < thesis/presentation_notes.tex.template > thesis/presentation_notes.tex
-	latexmk -pdf -cd -outdir=thesis thesis/presentation_notes.tex
+	envsubst < thesis/slides/presentation_notes.tex.template > thesis/slides/presentation_notes.tex
+	TEXINPUTS=.:../assets: latexmk -pdf -cd -outdir=. thesis/slides/presentation_notes.tex

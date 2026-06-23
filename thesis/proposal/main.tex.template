@@ -3,7 +3,7 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 
-\addbibresource{references.bib}
+\addbibresource{../assets/references.bib}
 
 % Redefine section numbering to A., B., C.
 \renewcommand{\thesection}{\Alph{section}}

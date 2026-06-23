@@ -34,6 +34,7 @@ models/
 
 # No exceptions for PDFs
 
-# Ignore generated .tex files (these are built from .tex.template in the thesis root)
-# Note: files in thesis/chapters/ are still tracked natively
-/thesis/*.tex
+# Ignore generated .tex files (these are built from .tex.template in the subdirectories)
+# Note: files in thesis/proposal/chapters/ are still tracked natively
+thesis/proposal/*.tex
+thesis/slides/*.tex
