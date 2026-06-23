@@ -70,7 +70,7 @@
     \textbf{\textcolor{GoldAmber}{Studi Komparatif Teori Gustav Strube}}} \par
     \vspace{0.3cm}
     {\small
-    \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}} \par \vspace{0.1cm}
+    \textbf{${RESEARCHER_NAME}, ${RESEARCHER_NIM}} \par \vspace{0.1cm}
     ${PROGRAM_STUDY} \par \vspace{0.1cm}
     ${INSTITUTION_NAME} \par \vspace{0.1cm}
     2026
@@ -131,19 +131,19 @@
 
 % --- Slide 4 ---
 \begin{frame}{Tinjauan Pustaka}
-  \textbf{\textcolor{GoldAmber}{Hadjeres et al. (2017)}} \textemdash{} \textbf{DeepBach, ICML} \par
+  \textbf{\textcolor{GoldAmber}{Hadjeres et al. (2017)}}: \textbf{DeepBach, ICML} \par
   \footnotesize Model generasi koral SATB berbasis LSTM. Titik awal komparatif historis dan preseden conditioning berbasis tensor. \par
   \vspace{0.05cm}
 
-  \textbf{\textcolor{GoldAmber}{Huang et al. (2017)}} \textemdash{} \textbf{Coconet, ISMIR} \par
-  \footnotesize Model infilling konvolusional. Naskah aslinya menggunakan music21 untuk mendeteksi pelanggaran kuint dan oktaf \textemdash{} preseden metodologis langsung. \par
+  \textbf{\textcolor{GoldAmber}{Huang et al. (2017)}}: \textbf{Coconet, ISMIR} \par
+  \footnotesize Model infilling konvolusional. Naskah aslinya menggunakan music21 untuk mendeteksi pelanggaran kuint dan oktaf, preseden metodologis langsung. \par
   \vspace{0.05cm}
 
-  \textbf{\textcolor{GoldAmber}{Wang et al. (2025)}} \textemdash{} \textbf{NotaGen, IJCAI} \par
-  \footnotesize Model transformer simbolik terbaru. Belum pernah dievaluasi dalam konteks harmoni formal \textemdash{} ini salah satu kontribusi orisinal penelitian ini. \par
+  \textbf{\textcolor{GoldAmber}{Wang et al. (2025)}}: \textbf{NotaGen, IJCAI} \par
+  \footnotesize Model transformer simbolik terbaru. Belum pernah dievaluasi dalam konteks harmoni formal, ini salah satu kontribusi orisinal penelitian ini. \par
   \vspace{0.05cm}
 
-  \textbf{\textcolor{GoldAmber}{Fang et al. (2020)}} \textemdash{} \textbf{Bach or Mock?, ICML Workshop} \par
+  \textbf{\textcolor{GoldAmber}{Fang et al. (2020)}}: \textbf{Bach or Mock?, ICML Workshop} \par
   \footnotesize Sistem penilaian algoritmis koral Bach berbasis music21. Model mutakhir terbukti menghasilkan pelanggaran voice leading yang signifikan meskipun terdengar meyakinkan.
 \end{frame}
 
@@ -197,7 +197,7 @@
       \footnotesize
       \textbf{\textcolor{SlateBlue}{Dua Fase R\&D:}} \par \vspace{0.1cm}
 
-      \textbf{FASE 1 \textemdash{} Bangun \& Validasi Instrumen}
+      \textbf{FASE 1: Bangun \& Validasi Instrumen}
       \begin{itemize}
         \item Kembangkan \texttt{strube\_evaluator.py}
         \item Uji face validity (positif + negatif)
@@ -206,7 +206,7 @@
 
       \vspace{0.05cm}
 
-      \textbf{FASE 2 \textemdash{} Terapkan \& Bandingkan}
+      \textbf{FASE 2: Terapkan \& Bandingkan}
       \begin{itemize}
         \item Generate 120 sampel MIDI
         \item Evaluasi otomatis seluruh sampel
@@ -222,7 +222,7 @@
   \begin{tabularx}{\textwidth}{l l X}
     \textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\
     \hline
-    A & Netral & Tanpa batasan \textemdash{} model bebas sepenuhnya \\
+    A & Netral & Tanpa batasan, model bebas sepenuhnya \\
     B & Kunci & Konteks kunci dan periode Barat diberikan \\
     C & SATB Parsial & Soprano ditetapkan, model mengisi A, T, B \\
     \rowcolor{GoldAmber!30}
@@ -233,7 +233,7 @@
   \vspace{0.3cm}
   {\footnotesize \color{gray}\textbf{Catatan metodologis:} \par
   Setiap kondisi menerapkan equivalent conditioning level, bukan prompt string yang identik. \par
-  DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks \textemdash{} sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}
+  DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks, sesuai antarmuka native masing-masing. (Hadjeres et al., 2017; Huang et al., 2017)}
 \end{frame}
 
 % --- Slide 8 ---
@@ -266,7 +266,7 @@
   \end{columns}
 
   \vspace{0.6cm}
-  \textit{\small Skrip ini tidak menghakimi kualitas seni sebuah karya. Ini mengecek konsistensi output terhadap konvensi Strube \textemdash{} seperti linter yang membaca style guide, bukan juri yang menilai estetika.}
+  \textit{\small Skrip ini tidak menghakimi kualitas seni sebuah karya. Ini mengecek konsistensi output terhadap konvensi Strube, seperti linter yang membaca style guide, bukan juri yang menilai estetika.}
 \end{frame}
 
 % --- Slide 9 ---
@@ -299,7 +299,7 @@
 \end{frame}
 
 % --- Slide 10 ---
-\begin{frame}{Penutup}
+\begin{frame}{Penutup \& Tanya Jawab}
   Penelitian ini akan menjawab: \par \vspace{0.2cm}
 
   \textbf{1.} Seberapa patuh output DeepBach, Coconet, dan NotaGen terhadap 3 kaidah Strube di masing-masing kondisi? \par \vspace{0.2cm}
@@ -308,10 +308,10 @@
 
   \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional? \par \vspace{0.2cm}
 
-  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi \textemdash{} menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.2cm}
+  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi, menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.2cm}
 
   \small Terima kasih. \par
-  \textbf{${RESEARCHER_NAME} \textemdash{} ${RESEARCHER_NIM}}
+  \textbf{${RESEARCHER_NAME}, ${RESEARCHER_NIM}}
 \end{frame}
 
 \end{document}
