@@ -1,0 +1,161 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{colortbl}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+% Colors
+\definecolor{DeepNavy}{HTML}{1B2A4A}
+\definecolor{GoldAmber}{HTML}{C9963A}
+\definecolor{HighTrust}{HTML}{E8F5E9} % Light green
+\definecolor{MedTrust}{HTML}{FFFDE7}  % Light yellow
+\definecolor{LowTrust}{HTML}{FFEBEE}  % Light red
+
+\begin{document}
+
+\begin{center}
+    \LARGE\textbf{\textcolor{DeepNavy}{Anticipated QnA — Ujian Proposal}} \\
+    \vspace{0.2cm}
+    \large ${RESEARCHER_NAME} (${RESEARCHER_NIM})
+\end{center}
+\vspace{0.5cm}
+
+\setstretch{1.15}
+
+\section*{Daftar Pertanyaan dan Draft Jawaban}
+
+\begin{longtable}{@{} 
+    >{\raggedright\arraybackslash}p{0.22\textwidth} 
+    >{\raggedright\arraybackslash}p{0.1\textwidth} 
+    >{\raggedright\arraybackslash}p{0.55\textwidth} 
+    >{\centering\arraybackslash}p{0.08\textwidth} 
+@{}}
+\toprule
+\textbf{Pertanyaan} & \textbf{Kategori} & \textbf{Draft Jawaban} & \textbf{Kepercayaan} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Pertanyaan} & \textbf{Kategori} & \textbf{Draft Jawaban} & \textbf{Kepercayaan} \\
+\midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+% Row 1
+Apa objek formal dan objek material penelitian ini? & Teori & Objek material: output MIDI dari 3 model di 4 kondisi. Objek formal: kepatuhan harmoni fungsional menurut teori Strube, yaitu sudut pandang yang dipakai untuk menganalisis objek material tersebut. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 2
+Kenapa pakai teori Strube, bukan teori harmoni lain? & Teori & Strube adalah teori yang diajarkan di kurikulum resmi program studi ini, jadi relevansinya langsung ke institusi. Kaidahnya juga bersifat deterministik dan bisa diformalkan secara komputasional, berbeda dari teori yang lebih interpretif. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 3
+Apa itu paradigma R\&D, kenapa dipakai di sini? & Metode & R\&D dalam konteks ini berarti ada dua tahap: pertama membangun dan memvalidasi instrumen, baru kemudian menerapkan instrumen itu untuk menghasilkan temuan. Ini berbeda dari penelitian deskriptif yang langsung terjun ke data tanpa fase pengembangan instrumen. & \cellcolor{MedTrust}Sedang \\
+\midrule
+% Row 4
+Apa bedanya tekstual dan kontekstual dalam konteks ini? & Istilah & Tekstual: mengecek pola notasi sebagai simbol, interval, arah gerak nada. Kontekstual: menilai makna musikal, intent komposer, estetika. Penelitian ini hanya mengukur kepatuhan tekstual. Kalau ada pelanggaran yang disengaja secara artistik, itu valid secara kontekstual, tapi tetap tercatat sebagai pelanggaran tekstual di sini. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 5
+Apa itu "kepatuhan" di judul? Siapa yang mematuhi siapa? & Istilah & Kepatuhan berarti konsistensi output model terhadap konvensi yang didefinisikan teori Strube. Bukan penilaian artistik, bukan perbandingan dengan komposer manusia. Seberapa banyak outputnya sesuai dengan aturan tekstual yang tertulis di buku Strube. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 6
+Kenapa cuma 3 kaidah dari teori Strube yang jauh lebih luas (11 bab)? & Teori & Kriteria seleksi bukan soal akor sulit diklasifikasi atau tidak, tapi soal apakah kaidah tersebut butuh segmentasi nada akor vs nada hiasan (non-chord tone) terlebih dahulu. Begitu sebuah kaidah butuh tahu nada mana yang anggota akor (suspensi, cadential 6/4), instrumen harus menebak batas antar akor pada data simbolik yang teksturnya bisa jauh dari konvensi SATB klasik pada output AI. Larangan kuint sejajar, oktaf sejajar, dan resolusi nada penuntun tidak pernah butuh identitas akor sama sekali, hanya hubungan pitch dan arah gerak, sehingga lolos dari semua kegagalan tersebut sekaligus. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 7
+Kenapa Strube disebut landasan teori, bukan penelitian terdahulu? & Teori & Landasan teori adalah alat analisis yang dipakai untuk membedah objek penelitian; penelitian terdahulu adalah karya orang lain dengan topik mirip yang memetakan posisi penelitian ini di lapangan. Strube (1928) adalah instrumen analitik untuk mengukur objek (output AI), sehingga statusnya tepat sebagai landasan teori. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 8
+Di tinjauan pustaka, paper Hadjeres/Huang/Wang itu penelitian terdahulu atau paper yang membuat model? & Teori & Keduanya sekaligus. Karena objek penelitian ini adalah ketiga model AI itu sendiri, paper yang memperkenalkan DeepBach, Coconet, dan NotaGen otomatis berstatus penelitian terdahulu sekaligus paper yang membuat objek penelitian. Beda dari penelitian yang objeknya fenomena sosial/budaya. & \cellcolor{MedTrust}Sedang \\
+\midrule
+% Row 9
+Apakah penelitian ini membandingkan tiga generasi model (2017 vs 2025)? & Metode & Secara tahun publikasi ini dua klaster (2017 dan 2025), bukan rangkaian rata sepanjang waktu. "Generasi" merujuk pada pergantian paradigma arsitektur (LSTM/CNN vs Transformer berskala besar), bukan jumlah titik waktu kronologis. Keterbatasan dua-titik-waktu ini diakui terbuka sebagai saran penelitian lanjutan. & \cellcolor{MedTrust}Sedang \\
+\midrule
+% Row 10
+Skrip evaluasi kita itu cuma wrapper dari music21, bukan original? & Teknis & Bukan wrapper. music21 hanya menyediakan infrastruktur parsing dan representasi musik. Definisi formal kaidah Strube menjadi algoritma, desain formula Strube Score, dan kerangka evaluasi komparatif adalah hasil kerja orisinal di atas primitif music21, persis seperti posisi Fang et al. (2020). & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 11
+Apa itu MIR (Music Information Retrieval)? & Istilah & Bidang riset interdisipliner (ilmu komputer, sinyal digital, musikologi) yang fokus pada bagaimana komputer mengenali, menganalisis, dan mengekstrak informasi dari musik secara otomatis. Penelitian ini masuk ranah MIR karena mengevaluasi musik simbolik secara otomatis dan komputasional. & \cellcolor{MedTrust}Sedang \\
+\midrule
+% Row 12
+Prototipenya sudah ada belum? & Teknis & Sudah, dengan batasan yang jelas: instrumen evaluasi, tes validasi (4 tes termasuk kontrol positif BWV 66.6 dan kontrol negatif), pipeline lengkap, dan skrip generasi per model sudah ditulis dan bisa dieksekusi. Yang belum adalah eksekusi pengumpulan data sebenarnya (generate 120 sampel MIDI). & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 13
+Bagaimana cara kerja \texttt{check\_leading\_tone\_resolution}? & Teknis & Skrip memindai melodi Soprano nada per nada. Kunci nada dideteksi otomatis untuk mendapatkan pitch class tonika, lalu nada penuntun dihitung sebagai (tonic\_pc - 1) \% 12. Jika pitch class nada saat ini cocok dengan nada penuntun, skrip cek pitch class nada tepat setelahnya; jika bukan tonika, dicatat sebagai violation. Deteksi murni berbasis pola pitch class. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 14
+Kenapa leading tone resolution cuma dicek di suara Soprano? & Metode / Batasan & Simplifikasi desain yang konsisten dengan prinsip tekstual: cek dibatasi ke Soprano karena itu suara yang paling konsisten relevan secara musikal sebagai melodi utama, dan menghindari kebutuhan deteksi part-melodi otomatis yang ambigu. Opsi memperluas cek ke 4 suara juga sedang dipertimbangkan. & \cellcolor{MedTrust}Sedang \\
+\midrule
+% Row 15
+Kenapa promptnya beda per model? & Metode & Setiap model punya antarmuka native yang berbeda. DeepBach pakai tensor constraint, Coconet pakai seed nada, NotaGen pakai metadata teks. Yang disetarakan adalah tingkat batasan, bukan kata-katanya. Ini standar yang digunakan Hadjeres et al. dan Huang et al. sendiri. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 16
+Apakah skrip evaluasinya sudah teruji? & Teknis & Sudah, melalui face validity dua arah: BWV 66.6 dari corpus music21 sebagai uji positif, harmonisasi yang sengaja melanggar sebagai uji negatif. Pipeline otomatis menjalankan validasi ini sebagai langkah pertama sebelum generasi data apapun dimulai. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 17
+Datanya belum ada, kenapa bisa proposal? & Metode & Karena ini adalah proposal, bukan skripsi final. Fase pengumpulan data baru dimulai Semester 7 setelah proposal disetujui. Yang sudah selesai adalah seluruh infrastruktur pipeline dan instrumen evaluasinya. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 18
+Apa bedanya penelitian ini dengan Fang et al. 2020? & Teori & Fang et al. fokus pada satu model dengan kerangka evaluasi yang tidak menggunakan teori Strube secara eksplisit. Penelitian ini membandingkan tiga model lintas era menggunakan teori Strube sebagai alat ukur formal, dan memasukkan NotaGen. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 19
+Apakah Yang \& Lerch 2020 mengkritik metrik statistik? & Teori & Tidak persis. Yang \& Lerch 2020 mengusulkan metrik objektif baru sebagai alternatif uji dengar subjektif. Mereka disitasi spesifik untuk mendokumentasikan keterbatasan uji dengar subjektif. Yang mengkritik ketidakcukupan statistik untuk deteksi pelanggaran harmoni spesifik adalah Fang et al. 2020. & \cellcolor{HighTrust}Tinggi \\
+\midrule
+% Row 20
+Apa itu Turing test, bedanya dengan blind test? & Istilah & Turing test: manusia mencoba membedakan apakah output dibuat oleh mesin atau manusia. Blind test lebih luas: pendengar tidak tahu identitas sumber. Turing test selalu blind, tapi blind test tidak selalu Turing test. Dalam konteks Yang \& Lerch, keduanya masuk kategori subjektif dan punya masalah replikabilitas yang sama. & \cellcolor{HighTrust}Tinggi \\
+\end{longtable}
+
+\newpage
+
+\section*{Istilah Rawan Ditentang}
+
+\begin{longtable}{@{} 
+    >{\raggedright\arraybackslash}p{0.25\textwidth} 
+    >{\raggedright\arraybackslash}p{0.55\textwidth} 
+    >{\raggedright\arraybackslash}p{0.1\textwidth} 
+    >{\centering\arraybackslash}p{0.05\textwidth} 
+@{}}
+\toprule
+\textbf{Istilah} & \textbf{Definisi Singkat} & \textbf{Muncul Di} & \textbf{Risiko} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Istilah} & \textbf{Definisi Singkat} & \textbf{Muncul Di} & \textbf{Risiko} \\
+\midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+Kepatuhan & Konsistensi output model terhadap konvensi kaidah Strube (bukan penilaian artistik) & Judul, Abstrak, Rumusan Masalah, Bab III & \cellcolor{LowTrust}Tinggi \\
+\midrule
+Studi Komparatif & Membandingkan output 3 model menggunakan 1 alat ukur (Strube), bukan membandingkan antar teori & Judul & \cellcolor{LowTrust}Tinggi \\
+\midrule
+Tekstual & Mengecek pola notasi sebagai simbol (interval, arah gerak nada) — bukan makna musikal & Bab I, Bab III & \cellcolor{MedTrust}Sedang \\
+\midrule
+Kontekstual & Menilai makna musik, intent komposer, estetika — ini yang TIDAK dilakukan skrip ini & Bab I & \cellcolor{MedTrust}Sedang \\
+\midrule
+Face Validity & Validasi instrumen melalui uji positif (Bach asli) dan negatif (harmonisasi salah) & Bab III & \cellcolor{MedTrust}Sedang \\
+\midrule
+Equivalent Conditioning Level & Tingkat batasan yang setara antar model, bukan prompt string identik & Bab III, strube\_conditions.json & \cellcolor{MedTrust}Sedang \\
+\midrule
+R\&D (Research \& Development) & Dua fase: bangun instrumen dulu, baru terapkan untuk temuan & Bab III & \cellcolor{MedTrust}Sedang \\
+\midrule
+Generasi / Lintas Generasi & Merujuk pada pergantian paradigma arsitektur (LSTM/CNN generasi 2017 vs Transformer skala besar 2025), bukan rangkaian titik waktu kronologis yang rapat & Rumusan Masalah 2, Tujuan 2, Slide 3 & \cellcolor{LowTrust}Tinggi \\
+\midrule
+Segmentasi Harmoni / Non-chord Tone & Proses memisahkan nada anggota akor dari nada hiasan (passing tone, neighbor tone) pada satu momen waktu; ini akar masalah yang membuat sebagian besar kaidah Strube lain interpretatif & Anticipated QnA & \cellcolor{MedTrust}Sedang \\
+
+\end{longtable}
+
+\end{document}

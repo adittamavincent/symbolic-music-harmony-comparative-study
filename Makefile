@@ -3,7 +3,7 @@ export
 
 .PHONY: compile
 
-all: compile present notes
+all: compile present notes qna
 
 compile:
 	@if [ ! -f .env.local ]; then \
@@ -25,6 +25,13 @@ notes:
 	fi
 	envsubst < thesis/slides/presentation_notes.tex.template > thesis/slides/presentation_notes.tex
 	TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=. thesis/slides/presentation_notes.tex
+
+qna:
+	@if [ ! -f .env.local ]; then \
+		echo "Warning: .env.local not found. Using empty environment variables."; \
+	fi
+	envsubst < thesis/slides/qna.tex.template > thesis/slides/qna.tex
+	TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=. thesis/slides/qna.tex
 
 clean:
 	rm -rf thesis/proposal/build thesis/slides/build
