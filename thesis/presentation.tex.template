@@ -64,7 +64,7 @@
 \begin{frame}[plain,c]
   \begin{center}
     \includegraphics[height=1.5cm]{logo-isi-white.png} \par \vspace{0.2cm}
-    {\rmfamily\Large\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.1cm}
+    {\rmfamily\large\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.1cm}
     \textbf{\textcolor{GoldAmber}{OUTPUT MODEL GENERATIF MUSIK SIMBOLIK:}} \par \vspace{0.1cm}
     \textbf{\textcolor{GoldAmber}{Studi Komparatif Teori Gustav Strube}}} \par
     \vspace{0.3cm}
