@@ -6,6 +6,12 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
+% Disable hyphenation while keeping justification (MS Word style)
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+
 \begin{document}
 
 \begin{center}
