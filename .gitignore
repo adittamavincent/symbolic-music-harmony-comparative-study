@@ -1,41 +1,21 @@
-# Ignore everything by default
-*
-
-# Allow directories to be scanned
-!*/
-
-# Do not ignore these specific files
-!.gitignore
-!*.tex
-!*.md
-!*.cls
-!*.bib
-!*.py
-!*.json
-!Makefile
-!.env.example
-!thesis/main.tex.template
-!thesis/presentation.tex.template
-!requirements.txt
-!thesis/logo-isi.png
-
-# Ignore sensitive and environment files
+# Environment and Secrets
+.venv/
 .env
 .env.local
+__pycache__/
 
-# Ignore experimental data, raw data, and outputs
+# Output and Data Directories
 outputs/
 data/raw/
 scratch/
-
-# Ignore third-party models
 models/
 
-# Ignore generated LaTeX entrypoint
-thesis/main.tex
-thesis/presentation.tex
+# OS/System files
+.DS_Store
+*.swp
+*~
 
-# Ignore LaTeX build artifacts
+# LaTeX build artifacts
 *.aux
 *.log
 *.out
@@ -46,3 +26,14 @@ thesis/presentation.tex
 *.nav
 *.snm
 *.vrb
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.pdf
+
+# No exceptions for PDFs
+
+# Ignore generated .tex files (these are built from .tex.template in the thesis root)
+# Note: files in thesis/chapters/ are still tracked natively
+/thesis/*.tex

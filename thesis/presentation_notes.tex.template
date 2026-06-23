@@ -1,0 +1,120 @@
+\documentclass[a4paper,14pt]{extarticle}
+\usepackage[margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{setspace}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+
+\begin{center}
+    \Large\textbf{NASKAH PRESENTASI UJIAN PROPOSAL} \\
+    \large ${RESEARCHER_NAME}, ${RESEARCHER_NIM}
+\end{center}
+\vspace{0.5cm}
+
+\setstretch{1.2}
+\Large
+
+% Slide 1
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=1]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 1: Pembukaan \& Judul}\par
+"Terima kasih atas kesempatan yang diberikan. Assalamualaikum warahmatullahi wabarakatuh. Yang saya hormati Bapak/Ibu Dosen Pembimbing, Dosen Penguji 1, dan Dosen Penguji 2. Perkenalkan, saya ${RESEARCHER_NAME}, NIM ${RESEARCHER_NIM}, dari Program Studi Musik Institut Seni Indonesia Yogyakarta. Pada kesempatan kali ini saya akan mempresentasikan proposal skripsi saya yang berjudul Evaluasi Kepatuhan Harmoni Fungsional Output Model Generatif Musik Simbolik, dengan studi komparatif berbasis teori Gustav Strube."
+\vfill\newpage
+
+% Slide 2
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=2]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 2: Latar Belakang \& Gap}\par
+"Selama ini, evaluasi model AI musik didominasi dua cara. Pertama, uji dengar subjektif seperti Turing test atau survei preferensi pendengar. Kedua, metrik statistik distribusional yang mengukur seberapa mirip output model dengan data pelatihannya. Keduanya punya keterbatasan yang sudah didokumentasikan. Yang dan Lerch pada 2020 mencatat bahwa uji dengar sulit direplikasi secara konsisten dan rentan terhadap variasi antar pendengar. Fang et al. pada 2020 menunjukkan bahwa metrik statistik tidak bisa mendeteksi apakah musik yang dihasilkan patuh terhadap aturan harmoni yang spesifik, karena model bisa terdengar meyakinkan secara statistik tapi tetap melanggar kaidah seperti kuint sejajar secara konsisten. Dari sini muncul celahnya: belum ada studi komparatif yang menjadikan kaidah harmoni formal sebagai variabel terukur lintas generasi model AI."
+\vfill\newpage
+
+% Slide 3
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=3]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 3: Rumusan Masalah \& Tujuan}\par
+"Dari celah itu muncul tiga rumusan masalah. Pertama, sejauh mana output ketiga model memenuhi kaidah Strube di masing-masing kondisi? Kedua, apakah model yang lebih baru menghasilkan kepatuhan yang lebih tinggi? Ketiga, kondisi instruksi mana yang paling efektif? Ketiga tujuan penelitian ini menjawab langsung masing-masing rumusan tersebut: mengukur, mengidentifikasi pola lintas generasi, dan menentukan kondisi yang paling efektif."
+\vfill\newpage
+
+% Slide 4
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=4]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 4: Tinjauan Pustaka}\par
+"Ada empat penelitian yang menjadi fondasi langsung. DeepBach oleh Hadjeres et al. di ICML 2017 adalah titik awal historis, model SATB pertama yang terkelola. Coconet oleh Huang et al. di ISMIR 2017 penting karena naskah aslinya sendiri menggunakan music21 untuk mengecek pelanggaran harmoni, jadi ini bukan pendekatan baru, ini mengikuti preseden yang sudah diakui komunitas internasional. NotaGen oleh Wang et al. di IJCAI 2025 adalah model paling baru, dan belum pernah dievaluasi dalam konteks harmoni formal sebelumnya. Dan Fang et al. di workshop ICML 2020 membuktikan bahwa model mutakhir tetap menghasilkan pelanggaran voice leading yang terukur meskipun outputnya terdengar bagus."
+\vfill\newpage
+
+% Slide 5
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=5]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 5: Landasan Teori}\par
+"Alat ukur yang digunakan adalah teori harmoni fungsional Gustav Strube dari bukunya tahun 1928. Tiga kaidah yang dijadikan variabel: larangan kuint sejajar, larangan oktaf sejajar, dan kewajiban resolusi nada penuntun ke tonika. Ketiganya didukung juga oleh Schoenberg 1954 dan Harrison 2020. Alasan pemilihan ketiga kaidah ini ada tiga: sifatnya objektif dan tidak ambigu, bisa diverifikasi secara biner di setiap momen harmonis, dan merupakan bagian dari kurikulum resmi program studi kita di sini."
+\vfill\newpage
+
+% Slide 6
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=6]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 6: Metode Penelitian}\par
+"Pendekatan yang digunakan adalah kuantitatif komparatif dengan paradigma Research and Development, disingkat R\&D. Ini berarti ada dua fase. Fase pertama adalah membangun dan memvalidasi instrumen evaluasi, yaitu skrip Python yang disebut strube evaluator. Skrip ini menggunakan pustaka music21 untuk mengecek ketiga kaidah Strube secara algoritmis. Fase kedua adalah menerapkan instrumen itu untuk menghasilkan temuan komparatif: generate 120 sampel, evaluasi otomatis, lalu analisis dan bandingkan hasilnya. Objek materialnya adalah output MIDI dari ketiga model di empat kondisi. Objek formalnya adalah kepatuhan harmoni fungsional menurut sudut pandang teori Strube."
+\vfill\newpage
+
+% Slide 7
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=7]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 7: Desain Eksperimen}\par
+"Setiap model diuji dalam empat kondisi instruksi yang tingkat batasannya meningkat. Kondisi A netral tanpa batasan apapun. Kondisi B memberi konteks kunci dan periode musik Barat. Kondisi C menetapkan suara Soprano, model mengisi tiga suara lainnya. Kondisi D paling ketat: Soprano dan Bass ditetapkan, model hanya mengisi Alto dan Tenor. Yang perlu saya tegaskan: setiap kondisi menerapkan tingkat batasan yang setara, bukan prompt yang identik kata per kata. Karena masing-masing model punya antarmuka yang berbeda, DeepBach dikontrol lewat tensor, Coconet lewat seed nada, NotaGen lewat metadata teks. Ini adalah standar yang digunakan dalam penelitian MIR komparatif, konsisten dengan Hadjeres et al. dan Huang et al."
+\vfill\newpage
+
+% Slide 8
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=8]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 8: Instrumen Evaluasi \& Validasi}\par
+"Instrumen evaluasi dibangun menggunakan Python dan pustaka music21. Sebelum digunakan untuk data utama, instrumen ini menjalani face validity dua arah. Uji positif: koral Bach asli BWV 66.6 dari corpus music21 harus menghasilkan skor tinggi. Uji negatif: harmonisasi yang sengaja dibuat melanggar kaidah Strube harus menghasilkan skor rendah. Kalau salah satu gagal, pipeline berhenti dan tidak lanjut ke generasi data apapun. Satu hal yang perlu digarisbawahi: skrip ini tidak menghakimi apakah sebuah karya bagus atau jelek secara artistik. Skrip ini hanya mengecek konsistensi output terhadap konvensi yang didefinisikan Strube, seperti linter yang membaca style guide, bukan juri yang menilai estetika."
+\vfill\newpage
+
+% Slide 9
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=9]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 9: Output yang Diharapkan}\par
+"Total data yang dikumpulkan adalah 120 file MIDI, dari tiga model dikali empat kondisi dikali sepuluh sampel per sel eksperimen. Pipeline akan menghasilkan tiga output utama: MASTER RESULTS berisi 120 baris hasil individual, SUMMARY TABLE berisi rata-rata Strube Score per model per kondisi, dan grafik perbandingan visual. Yang penting untuk dicatat: seluruh infrastruktur pipeline dan instrumen evaluasi sudah selesai dibangun dan divalidasi. Pengumpulan data akan dilaksanakan pada Semester 7 setelah proposal ini disetujui."
+\vfill\newpage
+
+% Slide 10
+\noindent
+\begin{center}
+\fbox{\includegraphics[width=0.8\textwidth,page=10]{presentation.pdf}}
+\end{center}
+\vspace{0.5cm}
+\noindent\textbf{Slide 10: Penutup \& Tanya Jawab}\par
+"Jadi, ada tiga pertanyaan yang akan dijawab penelitian ini. Pertama, seberapa patuh output ketiga model terhadap tiga kaidah Strube di masing-masing kondisi? Kedua, apakah model yang lebih baru menghasilkan kepatuhan yang lebih tinggi? Ketiga, kondisi instruksi mana yang paling mendorong kepatuhan tersebut? Evaluasi dilakukan secara otomatis, terukur, dan dapat direplikasi, menggunakan teori yang memang diajarkan di institusi ini. Demikian proposal saya. Terima kasih, saya siap untuk sesi tanya jawab."
+\vfill\newpage
+
+\end{document}
