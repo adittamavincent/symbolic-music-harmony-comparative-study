@@ -9,6 +9,7 @@ outputs/
 data/raw/
 scratch/
 models/
+build/
 
 # OS/System files
 .DS_Store
