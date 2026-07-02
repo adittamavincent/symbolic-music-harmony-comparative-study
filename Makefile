@@ -134,3 +134,15 @@ diff: $(DIFF_SCRIPT)
 
 diff-clean:
 	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
+
+# Snap targets
+SNAP_SCRIPT := scripts/snap.py
+
+ifeq ($(firstword $(MAKECMDGOALS)),snap)
+  SNAP_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(SNAP_ARGS):;@:)
+endif
+
+snap: $(SNAP_SCRIPT)
+	@chmod +x $(SNAP_SCRIPT)
+	@python3 $(SNAP_SCRIPT) $(SNAP_ARGS)
