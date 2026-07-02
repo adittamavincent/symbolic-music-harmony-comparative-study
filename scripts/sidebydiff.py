@@ -49,6 +49,18 @@ def get_git_content(ref, path):
     return result.stdout
 
 
+def resolve_git_ref(ref):
+    res = subprocess.run(["git", "rev-parse", "--verify", ref], capture_output=True)
+    if res.returncode == 0:
+        return ref
+    if not ref.startswith("proposal/"):
+        alt_ref = f"proposal/{ref}"
+        res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
+        if res.returncode == 0:
+            return alt_ref
+    return ref
+
+
 def clean_latex_for_diff(text):
     """Strip page-level/environment structures that cross paragraph boundaries or break minipages."""
     text = replace_title_page(text)
@@ -784,6 +796,8 @@ def latex_to_pdf(tex_path, outdir):
 def main():
     tag1 = sys.argv[1] if len(sys.argv) > 1 else "proposal/v1"
     tag2 = sys.argv[2] if len(sys.argv) > 2 else "proposal/v2"
+    tag1 = resolve_git_ref(tag1)
+    tag2 = resolve_git_ref(tag2)
     outdir = sys.argv[3] if len(sys.argv) > 3 else "scratch"
 
     print(f"=== Building full proposal diff: {tag1} -> {tag2} ===")

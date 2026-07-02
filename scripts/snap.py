@@ -27,6 +27,17 @@ def get_git_content(ref, path):
         return ""
     return result.stdout
 
+def resolve_git_ref(ref):
+    res = subprocess.run(["git", "rev-parse", "--verify", ref], capture_output=True)
+    if res.returncode == 0:
+        return ref
+    if not ref.startswith("proposal/"):
+        alt_ref = f"proposal/{ref}"
+        res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
+        if res.returncode == 0:
+            return alt_ref
+    return ref
+
 def load_env_vars():
     env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
     defaults = {
@@ -55,6 +66,7 @@ def load_env_vars():
 
 def main():
     tag = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
+    tag = resolve_git_ref(tag)
     outdir = "scratch"
     os.makedirs(outdir, exist_ok=True)
     

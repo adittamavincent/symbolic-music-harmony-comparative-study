@@ -6,8 +6,19 @@
 
 cd "$(dirname "$0")/.." || exit 1
 
-TAG1="${1:-proposal/v1}"
-TAG2="${2:-proposal/v2}"
+resolve_ref() {
+    local ref="$1"
+    if git rev-parse --verify "$ref" >/dev/null 2>&1; then
+        echo "$ref"
+    elif [[ "$ref" != proposal/* ]] && git rev-parse --verify "proposal/$ref" >/dev/null 2>&1; then
+        echo "proposal/$ref"
+    else
+        echo "$ref"
+    fi
+}
+
+TAG1=$(resolve_ref "${1:-proposal/v1}")
+TAG2=$(resolve_ref "${2:-proposal/v2}")
 TMPDIR="/tmp/diff_$$"
 OUTDIR="scratch"
 
