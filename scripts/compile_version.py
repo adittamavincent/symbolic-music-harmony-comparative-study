@@ -78,7 +78,7 @@ def main():
         if os.path.exists(path):
             os.remove(path)
             
-    print(f"=== Snapping proposal version: {tag} ===")
+    print(f"=== Compiling proposal version: {tag} ===")
     
     # Fetch main.tex.template
     template_path = find_git_path(tag, "main.tex.template")

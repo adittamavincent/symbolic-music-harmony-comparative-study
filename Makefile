@@ -59,7 +59,12 @@ proposal-phase: proposal slides notes qna
 docs: proposal-phase
 
 proposal: $(PROPOSAL_TEX)
-	$(LATEXMK) $<
+	@if [ -n "$(PROPOSAL_ARGS)" ]; then \
+		chmod +x scripts/compile_version.py; \
+		python3 scripts/compile_version.py $(PROPOSAL_ARGS); \
+	else \
+		$(LATEXMK) $<; \
+	fi
 
 slides: $(SLIDES_TEX)
 	$(LATEXMK) $<
@@ -135,14 +140,8 @@ diff: $(DIFF_SCRIPT)
 diff-clean:
 	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
 
-# Snap targets
-SNAP_SCRIPT := scripts/snap.py
-
-ifeq ($(firstword $(MAKECMDGOALS)),snap)
-  SNAP_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  $(eval $(SNAP_ARGS):;@:)
+# If the first argument is "proposal", parse the rest as tag/ref
+ifeq ($(firstword $(MAKECMDGOALS)),proposal)
+  PROPOSAL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(PROPOSAL_ARGS):;@:)
 endif
-
-snap: $(SNAP_SCRIPT)
-	@chmod +x $(SNAP_SCRIPT)
-	@python3 $(SNAP_SCRIPT) $(SNAP_ARGS)
