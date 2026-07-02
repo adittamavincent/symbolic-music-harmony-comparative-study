@@ -44,5 +44,34 @@
     "*.out", "*.toc", "*.acn", "*.acr", "*.alg", "*.glg", "*.glo",
     "*.gls", "*.fls", "*.log", "*.fdb_latexmk", "*.snm", "*.synctex.gz",
     "*.nav", "*.bcf", "*.run.xml"
+  ],
+
+  // ─── Warning / message suppression (LaTeX Workshop UI level) ────────────
+  // Hide badbox (overfull/underfull hbox/vbox) decorations in the editor gutter
+  "latex-workshop.message.badbox.show": "none",
+
+  // Suppress LaTeX Workshop's own informational messages in the status bar
+  "latex-workshop.message.information.show": false,
+
+  // Suppress warning-level toast notifications from the extension
+  "latex-workshop.message.warning.show": false,
+
+  // Disable chktex linting (produces many style false-positives)
+  "latex-workshop.chktex.enabled": false,
+
+  // Filter specific patterns out of the Problems panel.
+  // Each entry is a regex matched against the log message text.
+  "latex-workshop.message.latexlog.exclude": [
+    "Overfull\\\\ \\\\[hv]box",
+    "Underfull\\\\ \\\\[hv]box",
+    "Marginpar on page",
+    "Token not found",
+    "Unable to apply",
+    "Patching footnotes",
+    "Package biblatex Warning",
+    "LaTeX Font Warning",
+    "Font shape",
+    "contains only floats",
+    "No positions in optional float specifier"
   ]
 }
