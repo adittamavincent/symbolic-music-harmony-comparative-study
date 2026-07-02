@@ -52,7 +52,7 @@ Deteksi kegagalan resolusi nada penuntun pada suara Soprano menerapkan dua filte
 
 \begin{multline}
 \text{Violation}_{\text{leading}}(t) = \mathds{1}\left(p_{i,t} \equiv L_{\text{pc}} \pmod{12}\right) \times \mathds{1}\left(p_{i,t+1} > p_{i,t}\right) \\
-\times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}\right) \times \mathds{1}\left(\text{mode} \neq \text{natural minor OR } L_{\text{pc}} \equiv (K_{\text{tonic}} - 1) \pmod{12}\right)
+\times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}\right) \times \mathds{1}\left(\text{mode} \neq \text{natural minor} \lor L_{\text{pc}} \equiv (K_{\text{tonic}} - 1) \pmod{12}\right)
 \end{multline}
 
 Pengecekan gerak paralel dan resolusi nada penuntun dijalankan pada seluruh enam kombinasi pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B.
