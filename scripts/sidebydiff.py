@@ -71,6 +71,13 @@ def clean_latex_for_diff(text):
     text = re.sub(r'\\end\{spacing\}', '', text)
     text = re.sub(r'\\begin\{center\}', '', text)
     text = re.sub(r'\\end\{center\}', '', text)
+    
+    # Strip minipage structures, hfill, and any following par/spacing commands on the same line to avoid breaking paragraphs
+    text = re.sub(r'^[ \t]*\\begin\{minipage\}(\[[^\]]*\])?\{[^{}]*\}[ \t]*\n?', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^[ \t]*\\end\{minipage\}(\\[a-zA-Z]+)?[ \t]*\n?', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^[ \t]*\\hfill[ \t]*\n?', '', text, flags=re.MULTILINE)
+    
+    # Fallback to inline cleaning
     text = re.sub(r'\\begin\{minipage\}(\[[^\]]*\])?\{[^{}]*\}', '', text)
     text = re.sub(r'\\end\{minipage\}', '', text)
     text = re.sub(r'\\hfill\b', '', text)
@@ -417,6 +424,8 @@ def classify_token_style(style, val):
         return None
         
     if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', val_clean):
+        if is_safe_to_highlight_token(val, is_box=True):
+            return style + "_box"
         return None
         
     if re.match(r'^\\(texttt)\{.*\}$', val_clean):

@@ -136,30 +136,30 @@ def test_leading_tone_resolution():
 
     soprano = stream.Part()
 
-    # B4 (leading tone in C major) resolving DOWN to A4 — VIOLATION
+    # B4 (leading tone in C major) resolving UP to D5 (non-tonic) — VIOLATION
     n1 = note.Note('B4')
     n1.offset = 0
     soprano.append(n1)
-
-    n2 = note.Note('A4')
+ 
+    n2 = note.Note('D5')
     n2.offset = 1
     soprano.append(n2)
-
+ 
     # B4 resolving UP to C5 — CORRECT (no violation)
     n3 = note.Note('B4')
     n3.offset = 2
     soprano.append(n3)
-
+ 
     n4 = note.Note('C5')
     n4.offset = 3
     soprano.append(n4)
-
+ 
     violations = check_leading_tone_resolution(soprano, key_midi_tonic=60)  # C major
     print(f"  Leading tone violations found: {len(violations)}")
     assert len(violations) == 1, f"Expected 1 LT violation, got {len(violations)}"
-
-    assert violations[0]['offset'] == 0.0, "Violation should be at offset 0 (B→A)"
-    print("  ✓ PASS — leading tone violation detected correctly (B→A is bad, B→C is good)")
+ 
+    assert violations[0]['offset'] == 0.0, "Violation should be at offset 0 (B→D)"
+    print("  ✓ PASS — leading tone violation detected correctly (B→D is bad, B→C is good)")
     return True
 
 def main():
