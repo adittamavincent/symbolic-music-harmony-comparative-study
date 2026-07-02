@@ -146,25 +146,91 @@ def compute_diff(old_paragraphs, new_paragraphs):
 
 
 # ---------------------------------------------------------------------------
-# Word-level diff (second pass) -- this is what makes it look like VSCode
-# instead of a block-colored diff. Same LCS machinery as paragraph-level,
+# Word-level diff (second pass). Same LCS machinery as paragraph-level,
 # just fed tokens instead of whole paragraphs.
+#
+# IMPORTANT: naive whitespace tokenization is UNSAFE for LaTeX source.
+# A "word" split purely on spaces can land mid-macro-argument, e.g.
+# `\makeisititle{...}{Semester Ganjil 2026/2027}{2026}` whitespace-splits
+# into a token like `2026/2027}{2026}` which has unbalanced braces on
+# its own. Wrapping that fragment in \colorbox{color}{...} desyncs brace
+# matching for the REST of the document and cascades into a fatal
+# "Missing \endgroup" / "Emergency stop" error.
+#
+# Fix: after whitespace-splitting, merge adjacent tokens until the
+# running brace balance returns to zero, so every token handed to
+# \colorbox is guaranteed self-balanced. This trades some highlight
+# granularity (a whole macro-argument may light up as one chunk instead
+# of word-by-word) for a document that actually compiles.
 # ---------------------------------------------------------------------------
+
+UNSAFE_HIGHLIGHT_PATTERNS = (
+    "\\\\",       # row breaks (tabularx, tikz) -- illegal in restricted h-mode
+    "\\begin",
+    "\\end",
+    "\\newpage",
+    "\\item",
+)
+
+
+def _is_safe_to_highlight(token_text):
+    """
+    Refuse to wrap a token in \\colorbox if it contains constructs that
+    are illegal inside a restricted-horizontal-mode box (\\colorbox is
+    built on \\getitemize), even when its braces are balanced. \\\\ / \\begin
+    / \\end / \\newpage all require paragraph or vertical mode.
+    """
+    return not any(pat in token_text for pat in UNSAFE_HIGHLIGHT_PATTERNS)
+
 
 def tokenize_words(text):
     """
-    Split a paragraph into word tokens, preserving internal line breaks
-    (needed for table rows / multi-line blocks) as explicit NL tokens so
-    they can be diffed and re-emitted as \\ line breaks in the right spot.
+    Split a paragraph into brace-safe tokens.
+
+    Pass 1: split on whitespace, tracking newlines as boundaries.
+    Pass 2: merge consecutive word-tokens whenever the running
+            '{' minus '}' count is nonzero, so every emitted token is
+            individually brace-balanced. A newline encountered while a
+            merge is "open" (balance != 0) is folded into a plain space
+            rather than kept as a hard line break, because \\newline
+            is itself illegal inside a \\colorbox argument -- losing the
+            exact line break there is a fine trade for not crashing.
     """
-    tokens = []
+    # Build a flat stream of ('W', word) / ('NL', None) first.
+    stream = []
     lines = text.split("\n")
     for idx, line in enumerate(lines):
         if idx > 0:
-            tokens.append(("NL", None))
+            stream.append(("NL", None))
         for word in line.split():
-            tokens.append(("W", word))
-    return tokens
+            stream.append(("W", word))
+
+    merged = []
+    buf = []
+    balance = 0
+
+    def flush():
+        if buf:
+            merged.append(("W", " ".join(buf)))
+            buf.clear()
+
+    for kind, val in stream:
+        if kind == "NL":
+            if balance != 0:
+                # Mid-merge: a hard newline here would need \newline
+                # inside a future \colorbox, which is illegal. Fold
+                # into a space instead of emitting a real NL token.
+                continue
+            flush()
+            merged.append(("NL", None))
+        else:
+            buf.append(val)
+            balance += val.count("{") - val.count("}")
+            if balance <= 0:
+                flush()
+                balance = 0
+    flush()
+    return merged
 
 
 def render_token(token, highlight=None):
@@ -172,7 +238,7 @@ def render_token(token, highlight=None):
     kind, value = token
     if kind == "NL":
         return "\\newline\n"
-    if highlight:
+    if highlight and _is_safe_to_highlight(value):
         return f"\\colorbox{{{highlight}}}{{{value}}} "
     return f"{value} "
 
@@ -181,8 +247,9 @@ def word_level_render(old_text, new_text):
     """
     Run word-level LCS between old_text and new_text. Return
     (old_rendered, new_rendered) where only the differing words are
-    wrapped in \\colorbox -- everything matching stays plain text on
-    BOTH sides, exactly like VSCode's inline word diff.
+    wrapped in \\colorbox (when safe to do so -- see _is_safe_to_highlight)
+    -- everything matching stays plain text on BOTH sides, exactly like
+    VSCode's inline word diff.
     """
     old_tokens = tokenize_words(old_text)
     new_tokens = tokenize_words(new_text)
@@ -237,15 +304,17 @@ def render_pair(old_text, new_text):
     )
 
 def render_equal(text):
-    """Paragraph unchanged in both versions -- plain text, no highlight
-    at all, both sides identical, exactly like VSCode's non-diffed lines."""
+    """Paragraph unchanged in both versions -- word-level render, no
+    highlight, so \\newline / unsafe constructs are handled properly
+    instead of being dumped raw into restricted h-mode minipage."""
+    rendered = "".join(render_token(t, highlight=None) for t in tokenize_words(text))
     return (
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"\\raggedright {text}\n"
+        f"\\raggedright {rendered}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"\\raggedright {text}\n"
+        f"\\raggedright {rendered}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
     )
@@ -331,10 +400,13 @@ def generate_diff_latex(tag1, tag2, outdir):
 
 def latex_to_pdf(tex_path, outdir):
     """Use latexmk (not a bare pdflatex loop) so biber/citation passes
-    that \\parencite needs actually run before the final PDF is produced."""
+    that \\parencite needs actually run before the final PDF is produced.
+    The -e flag overrides the repo .latexmkrc's $aux_dir=build so all
+    aux/pdf output stays inside outdir where isi-proposal.cls lives."""
     result = subprocess.run(
         ["latexmk", "-pdf", "-interaction=nonstopmode",
-         "-outdir=" + outdir, tex_path],
+         "-e", f"$aux_dir='{outdir}';$out_dir='{outdir}'",
+         tex_path],
         capture_output=True, text=True
     )
     pdf_path = os.path.join(outdir, "proposal_diff.pdf")
