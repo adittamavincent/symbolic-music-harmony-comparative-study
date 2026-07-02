@@ -288,11 +288,32 @@ def render_token(token, highlight=None):
     return f"{value} "
 
 
+def apply_highlight(style, text):
+    if not style:
+        return text + " "
+    
+    # Check if the text matches \macro{content} where the macro is simple formatting
+    # and the braces are balanced at the outer level.
+    pattern = r'^\\(textit|textbf|texttt|emph|underline)\{(.*)\}$'
+    match = re.match(pattern, text.strip())
+    if match:
+        macro_name = match.group(1)
+        content = match.group(2)
+        return f"\\{macro_name}{{{apply_highlight(style, content).strip()}}} "
+    
+    # Check safety
+    if any(pat in text for pat in UNSAFE_HIGHLIGHT_PATTERNS) or re.search(r'\\[^%_#$]', text) or re.search(r'(?<!\\)%', text) or re.search(r'(?<!\\)_', text) or re.search(r'(?<!\\)\^', text) or re.search(r'(?<!\\)\$', text):
+        return text + " "
+        
+    hl_cmd = "delhighlight" if style == "delhl" else "inhighlight"
+    return f"\\{hl_cmd}{{{text}}} "
+
+
 def word_level_render(old_text, new_text):
     """
     Run word-level LCS between old_text and new_text. Return
     (old_rendered, new_rendered) where only the differing words are
-    wrapped in \\colorbox (when safe to do so -- see _is_safe_to_highlight)
+    wrapped in highlight commands (when safe to do so)
     -- everything matching stays plain text on BOTH sides, exactly like
     VSCode's inline word diff.
     """
@@ -315,26 +336,22 @@ def word_level_render(old_text, new_text):
         elif kind == "delete":
             if kind_type == "NL":
                 old_actions.append((None, "\n"))
-            elif _is_safe_to_highlight(value):
-                old_actions.append(("delhl", value))
             else:
-                old_actions.append((None, value))
+                old_actions.append(("delhl", value))
         elif kind == "insert":
             if kind_type == "NL":
                 new_actions.append((None, "\n"))
-            elif _is_safe_to_highlight(value):
-                new_actions.append(("inshl", value))
             else:
-                new_actions.append((None, value))
+                new_actions.append(("inshl", value))
 
     def merge_runs(actions):
         if not actions:
             return []
         merged = []
-        cur_style, cur_words = actions[0]
-        cur_list = [cur_words]
+        cur_style, val = actions[0]
+        cur_list = [val]
         for style, val in actions[1:]:
-            if style == cur_style and val != "\n" and cur_words != "\n":
+            if style == cur_style and val != "\n" and cur_list[-1] != "\n":
                 cur_list.append(val)
             else:
                 merged.append((cur_style, " ".join(cur_list)))
@@ -351,10 +368,8 @@ def word_level_render(old_text, new_text):
         for style, val in runs:
             if val == "\n":
                 parts.append("\n")
-            elif style:
-                parts.append(f"\\colorbox{{{style}}}{{{val}}} ")
             else:
-                parts.append(f"{val} ")
+                parts.append(apply_highlight(style, val))
         return "".join(parts)
 
     return render_merged(old_merged), render_merged(new_merged)
@@ -633,6 +648,11 @@ def generate_diff_latex(tag1, tag2, outdir):
         # GitHub/VSCode diff colors -- NOT full-text coloring anymore.
         r"\definecolor{delhl}{RGB}{255,214,214}",
         r"\definecolor{inshl}{RGB}{204,244,206}",
+        # Use soul for line-wrapping highlights
+        r"\usepackage{soul}",
+        r"\sethlcolor{delhl}",
+        r"\newcommand{\delhighlight}[1]{{\sethlcolor{delhl}\hl{#1}}}",
+        r"\newcommand{\inhighlight}[1]{{\sethlcolor{inshl}\hl{#1}}}",
         r"\begin{document}",
         r"\thispagestyle{empty}",
         r"\begin{center}",
