@@ -62,6 +62,22 @@ def get_git_content(ref, path):
     return result.stdout
 
 
+def clean_latex_for_diff(text):
+    """Strip page-level/environment structures that cross paragraph boundaries or break minipages."""
+    text = re.sub(r'\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}', '[Diagram Tikz]', text, flags=re.DOTALL)
+    text = re.sub(r'(?<!\\)%.*', '', text)
+    text = re.sub(r'\\newpage\b', '', text)
+    text = re.sub(r'\\clearpage\b', '', text)
+    text = re.sub(r'\\begin\{spacing\}\{[^{}]*\}', '', text)
+    text = re.sub(r'\\end\{spacing\}', '', text)
+    text = re.sub(r'\\begin\{center\}', '', text)
+    text = re.sub(r'\\end\{center\}', '', text)
+    text = re.sub(r'\\begin\{minipage\}(\[[^\]]*\])?\{[^{}]*\}', '', text)
+    text = re.sub(r'\\end\{minipage\}', '', text)
+    text = re.sub(r'\\hfill\b', '', text)
+    return text
+
+
 def build_full_proposal(ref):
     """
     Concatenate all chapter files for a given git ref, in the exact order
@@ -74,7 +90,8 @@ def build_full_proposal(ref):
         content = get_git_content(ref, path)
         if content:
             parts.append(content.strip())
-    return "\n\n".join(parts)
+    full_text = "\n\n".join(parts)
+    return clean_latex_for_diff(full_text)
 
 
 def split_paragraphs(content):
@@ -170,6 +187,11 @@ UNSAFE_HIGHLIGHT_PATTERNS = (
     "\\end",
     "\\newpage",
     "\\item",
+    "&",          # alignment tab -- illegal in boxes
+    "\\hline",    # table lines
+    "\\cline",
+    "\\cellcolor", # table cell coloring
+    "\\multicolumn",
 )
 
 
@@ -180,7 +202,19 @@ def _is_safe_to_highlight(token_text):
     built on \\getitemize), even when its braces are balanced. \\\\ / \\begin
     / \\end / \\newpage all require paragraph or vertical mode.
     """
-    return not any(pat in token_text for pat in UNSAFE_HIGHLIGHT_PATTERNS)
+    if any(pat in token_text for pat in UNSAFE_HIGHLIGHT_PATTERNS):
+        return False
+    if re.search(r'\\[^%_#$]', token_text):
+        return False
+    if re.search(r'(?<!\\)%', token_text):
+        return False
+    if re.search(r'(?<!\\)_', token_text):
+        return False
+    if re.search(r'(?<!\\)\^', token_text):
+        return False
+    if re.search(r'(?<!\\)\$', token_text):
+        return False
+    return True
 
 
 def tokenize_words(text):
@@ -237,7 +271,7 @@ def render_token(token, highlight=None):
     """Render a single token. `highlight` is a color name or None."""
     kind, value = token
     if kind == "NL":
-        return "\\newline\n"
+        return "\n"
     if highlight and _is_safe_to_highlight(value):
         return f"\\colorbox{{{highlight}}}{{{value}}} "
     return f"{value} "
@@ -295,9 +329,11 @@ def render_pair(old_text, new_text):
     return (
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
+        "\\setlength{\\textwidth}{\\linewidth}\n"
         f"\\raggedright {old_rendered}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
+        "\\setlength{\\textwidth}{\\linewidth}\n"
         f"\\raggedright {new_rendered}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
@@ -311,9 +347,11 @@ def render_equal(text):
     return (
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
+        "\\setlength{\\textwidth}{\\linewidth}\n"
         f"\\raggedright {rendered}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
+        "\\setlength{\\textwidth}{\\linewidth}\n"
         f"\\raggedright {rendered}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
@@ -376,6 +414,17 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\usetikzlibrary{shapes.geometric, arrows}",
         r"\addbibresource{references.bib}",
         PLACEHOLDER_MACROS,
+        # Redefine page-breaking/floating environments to prevent compile crashes inside minipages
+        r"\renewenvironment{table}[1][]{}{}",
+        r"\renewenvironment{figure}[1][]{}{}",
+        r"\renewcommand{\caption}[1]{\par\vspace{0.2cm}\noindent\textbf{Caption:} #1\par}",
+        r"\renewcommand{\makeisititle}[5]{%",
+        r"  {\centering",
+        r"    {\Large \textbf{#1}}\par\vspace{1em}",
+        r"    \textbf{#2} (\texttt{#3})\par\vspace{1em}",
+        r"    #4\par\vspace{1em}",
+        r"    #5\par}",
+        r"}",
         # Soft pastel backgrounds for word-level highlighting, matching
         # GitHub/VSCode diff colors -- NOT full-text coloring anymore.
         r"\definecolor{delhl}{RGB}{255,214,214}",
