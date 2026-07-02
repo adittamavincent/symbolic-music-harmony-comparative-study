@@ -3,7 +3,6 @@
 \usecolortheme{default}
 \setbeamertemplate{navigation symbols}{}
 
-\usepackage{mathptmx}
 \usepackage[scaled]{helvet}
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage{xcolor}

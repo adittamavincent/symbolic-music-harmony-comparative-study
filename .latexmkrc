@@ -6,4 +6,4 @@ $aux_dir = 'build';
 $out_dir = '.';
 
 # Tell biber to look for the .bcf file inside the build directory
-$biber = 'biber --input-directory %D %O %B';
+$biber = 'biber %O %S';

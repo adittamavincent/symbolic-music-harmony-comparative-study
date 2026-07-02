@@ -38,20 +38,20 @@ Musik simbolik merujuk pada representasi musik dalam bentuk notasi yang dapat di
 
 \subsection{Formalisasi Matematis Ruang Kosakata dan Arsitektur Model}
 
-Sebuah sekuens musik simbolik $\mathbf{X}$ sepanjang $T$ dibentuk dari token diskrit yang merepresentasikan atribut musikal. Ruang kosakata multi-atribut $\mathcal{V}$ difaktorkan sebagai:
+Sebuah sekuens musik simbolik $\mathbf{X}$ sepanjang $T$ dibentuk dari token diskrit yang merepresentasikan atribut musikal. Ruang kosakata multi-atribut $\mathbf{V}$ difaktorkan sebagai:
 
 \[
-\mathcal{V} = \mathcal{P} \times \mathcal{D} \times \mathcal{V}_{\text{idx}} \times \mathcal{M}
+\mathbf{V} = \mathbf{P} \times \mathbf{D} \times \mathbf{V}_{\text{idx}} \times \mathbf{M}
 \]
 
-Di mana $\mathcal{P} = \{0, 1, \dots, 127\}$ adalah ruang pitch berdasarkan MIDI note number, $\mathcal{D}$ adalah ruang durasi diskrit, $\mathcal{V}_{\text{idx}} = \{0,1,2,3\}$ adalah indeks suara SATB, dan $\mathcal{M}$ adalah posisi metrikal dalam takar.
+Di mana $\mathbf{P} = \{0, 1, \dots, 127\}$ adalah ruang pitch berdasarkan MIDI note number, $\mathbf{D}$ adalah ruang durasi diskrit, $\mathbf{V}_{\text{idx}} = \{0,1,2,3\}$ adalah indeks suara SATB, dan $\mathbf{M}$ adalah posisi metrikal dalam takar.
 
 Ketiga arsitektur yang dibandingkan menyelesaikan masalah dependensi dua poros (horizontal melodi dan vertikal harmoni) dengan pendekatan matematis yang berbeda.
 
 Recurrent (DeepBach) mengestimasi distribusi probabilitas kondisional lokal per koordinat menggunakan LSTM dua arah:
 
 \[
-P(x_{v,t} \mid \mathbf{X}_{\backslash \{v,t\}}, \mathbf{M}) = \sigma\left(\Phi(h_{v,t}^{\rightarrow}, h_{v,t}^{\leftarrow}, \Omega(\mathbf{X}_{\text{concurrent}}))\right)
+P(x_{v,t} \mid \mathbf{X}_{\setminus \{v,t\}}, \mathbf{M}) = \sigma\left(\Phi(h_{v,t}^{\rightarrow}, h_{v,t}^{\leftarrow}, \Omega(\mathbf{X}_{\text{concurrent}}))\right)
 \]
 
 Konvolusional (Coconet) memperlakukan partitur sebagai matriks spasial dan melakukan infilling melalui Orderless Neural Autoregressive Density Estimator pada wilayah bermasker $\mathbf{M}_{\text{mask}}$:

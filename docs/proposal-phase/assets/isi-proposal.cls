@@ -1,7 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{isi-proposal}[2026/06/12 ISI Proposal]
 \LoadClass[a4paper,12pt]{article}
-\RequirePackage{mathptmx}
+\renewcommand{\rmdefault}{ptm}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{dsfont}
 \RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[top=4cm, left=4cm, bottom=3cm, right=3cm]{geometry}

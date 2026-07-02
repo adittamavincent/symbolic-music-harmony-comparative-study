@@ -1,0 +1,48 @@
+{
+  // ─── LaTeX Workshop ─────────────────────────────────────────────────────────
+  // Use latexmk as the single build tool. The local .latexmkrc in each
+  // proposal/ directory handles TEXINPUTS, aux/out dirs, and biber config,
+  // so no extra args are needed here.
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-pdf",
+        "%DOC%"
+      ],
+      "env": {}
+    }
+  ],
+
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk 🔃",
+      "tools": ["latexmk"]
+    }
+  ],
+
+  // PDF is emitted to the same directory as main.tex (out_dir = '.' in .latexmkrc)
+  "latex-workshop.latex.outDir": "%DIR%",
+
+  // Auto-build on save
+  "latex-workshop.latex.autoBuild.run": "onSave",
+
+  // Open PDF in a side tab
+  "latex-workshop.view.pdf.viewer": "tab",
+
+  // SyncTeX: jump to source on click in PDF
+  "latex-workshop.synctex.afterBuild.enabled": true,
+
+  // Clean up aux files on build failure
+  "latex-workshop.latex.autoClean.run": "onFailed",
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux", "*.bbl", "*.blg", "*.idx", "*.ind", "*.lof", "*.lot",
+    "*.out", "*.toc", "*.acn", "*.acr", "*.alg", "*.glg", "*.glo",
+    "*.gls", "*.fls", "*.log", "*.fdb_latexmk", "*.snm", "*.synctex.gz",
+    "*.nav", "*.bcf", "*.run.xml"
+  ]
+}

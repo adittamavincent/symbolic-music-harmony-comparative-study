@@ -43,13 +43,13 @@ Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai prop
 Deteksi pelanggaran gerak paralel antara dua suara aktif $i$ dan $j$ pada interval target $\Delta$ (kuint murni untuk $\Delta \equiv 7 \pmod{12}$, oktaf untuk $\Delta \equiv 0 \pmod{12}$) diformalkan sebagai:
 
 \[
-\text{Violation}_{\text{parallel}}(t) = \mathbb{1}\left(|p_{i,t} - p_{j,t}| \equiv \Delta\right) \times \mathbb{1}\left(|p_{i,t-1} - p_{j,t-1}| \equiv \Delta\right) \times \mathbb{1}\left(\text{sgn}(\Delta p_i) = \text{sgn}(\Delta p_j)\right) \times \mathbb{1}\left(\Delta p_i \neq 0\right)
+\text{Violation}_{\text{parallel}}(t) = \mathds{1}\left(|p_{i,t} - p_{j,t}| \equiv \Delta\right) \times \mathds{1}\left(|p_{i,t-1} - p_{j,t-1}| \equiv \Delta\right) \times \mathds{1}\left(\text{sgn}(\Delta p_i) = \text{sgn}(\Delta p_j)\right) \times \mathds{1}\left(\Delta p_i \neq 0\right)
 \]
 
 Deteksi kegagalan resolusi nada penuntun pada suara Soprano, dengan $L_{\text{pc}} = (K_{\text{tonic}} - 1) \bmod 12$ sebagai pitch class nada penuntun, diformalkan sebagai:
 
 \[
-\text{Violation}_{\text{leading}}(t) = \mathbb{1}\left(p_{i,t} \equiv L_{\text{pc}}\right) \times \mathbb{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}}\right)
+\text{Violation}_{\text{leading}}(t) = \mathds{1}\left(p_{i,t} \equiv L_{\text{pc}}\right) \times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}}\right)
 \]
 
 Pengecekan gerak paralel dan resolusi nada penuntun dijalankan pada seluruh enam kombinasi pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B.

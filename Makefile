@@ -25,7 +25,14 @@ QNA_PDF := $(PRESENTATION_DIR)/qna.pdf
 
 GENERATED_TEX := $(PROPOSAL_TEX) $(SLIDES_TEX) $(NOTES_TEX) $(QNA_TEX)
 PDF_OUTPUTS := $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF)
-LATEXMK := TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=.
+
+ifdef FORCE
+  LATEXMK_FORCE := -g
+else
+  LATEXMK_FORCE :=
+endif
+
+LATEXMK := TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=. $(LATEXMK_FORCE)
 
 .PHONY: all help proposal-phase docs proposal slides notes qna compile present clean clean-docs
 
@@ -49,13 +56,17 @@ proposal-phase: proposal slides notes qna
 
 docs: proposal-phase
 
-proposal: $(PROPOSAL_PDF)
+proposal: $(PROPOSAL_TEX)
+	$(LATEXMK) $<
 
-slides: $(SLIDES_PDF)
+slides: $(SLIDES_TEX)
+	$(LATEXMK) $<
 
-notes: $(NOTES_PDF)
+notes: $(NOTES_TEX) $(SLIDES_PDF)
+	$(LATEXMK) $<
 
-qna: $(QNA_PDF)
+qna: $(QNA_TEX)
+	$(LATEXMK) $<
 
 compile: proposal
 
@@ -85,16 +96,16 @@ $(QNA_TEX): $(QNA_TEMPLATE)
 	fi
 	envsubst < $< > $@
 
-$(PROPOSAL_PDF): $(PROPOSAL_TEX) $(wildcard $(PROPOSAL_DIR)/chapters/*.tex) $(ASSETS_DIR)/isi-proposal.cls $(ASSETS_DIR)/references.bib
+$(PROPOSAL_PDF): $(PROPOSAL_TEX) $(wildcard $(PROPOSAL_DIR)/chapters/*.tex) $(ASSETS_DIR)/isi-proposal.cls $(ASSETS_DIR)/references.bib .latexmkrc
 	$(LATEXMK) $<
 
-$(SLIDES_PDF): $(SLIDES_TEX) $(ASSETS_DIR)/logo-isi-white.png
+$(SLIDES_PDF): $(SLIDES_TEX) $(ASSETS_DIR)/logo-isi-white.png .latexmkrc
 	$(LATEXMK) $<
 
-$(NOTES_PDF): $(NOTES_TEX) $(SLIDES_PDF)
+$(NOTES_PDF): $(NOTES_TEX) $(SLIDES_PDF) .latexmkrc
 	$(LATEXMK) $<
 
-$(QNA_PDF): $(QNA_TEX)
+$(QNA_PDF): $(QNA_TEX) .latexmkrc
 	$(LATEXMK) $<
 
 clean: clean-docs
