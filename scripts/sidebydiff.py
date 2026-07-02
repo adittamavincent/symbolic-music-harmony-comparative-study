@@ -78,6 +78,20 @@ def clean_latex_for_diff(text):
     return text
 
 
+def find_git_path(ref, filename):
+    """Find the path of filename in a given git ref dynamically."""
+    result = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", ref],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        return None
+    for line in result.stdout.splitlines():
+        if line.endswith(filename):
+            return line
+    return None
+
+
 def build_full_proposal(ref):
     """
     Concatenate all chapter files for a given git ref, in the exact order
@@ -86,10 +100,19 @@ def build_full_proposal(ref):
     not a per-file diff with separate sections per chapter.
     """
     parts = []
-    for path in CHAPTER_ORDER:
-        content = get_git_content(ref, path)
-        if content:
-            parts.append(content.strip())
+    filenames = [
+        "00-frontmatter.tex",
+        "01-pendahuluan.tex",
+        "02-tinjauan-pustaka.tex",
+        "03-metodologi.tex",
+        "04-jadwal.tex",
+    ]
+    for fname in filenames:
+        path = find_git_path(ref, fname)
+        if path:
+            content = get_git_content(ref, path)
+            if content:
+                parts.append(content.strip())
     full_text = "\n\n".join(parts)
     return clean_latex_for_diff(full_text)
 
@@ -389,6 +412,12 @@ def render_ops(ops):
 def generate_diff_latex(tag1, tag2, outdir):
     os.makedirs(outdir, exist_ok=True)
 
+    # Clean old temp files to ensure biber runs correctly
+    for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex"]:
+        path = os.path.join(outdir, f"proposal_diff.{ext}")
+        if os.path.exists(path):
+            os.remove(path)
+
     old_full = build_full_proposal(tag1)
     new_full = build_full_proposal(tag2)
 
@@ -397,16 +426,30 @@ def generate_diff_latex(tag1, tag2, outdir):
 
     # Pull class/bib/logo assets so the diff compiles with the real
     # proposal styling instead of a bare article class.
-    cls_content = get_git_content(tag2, CLASS_PATH) or get_git_content(tag1, CLASS_PATH)
+    cls_path2 = find_git_path(tag2, "isi-proposal.cls")
+    cls_path1 = find_git_path(tag1, "isi-proposal.cls")
+    cls_content = get_git_content(tag2, cls_path2) if cls_path2 else ""
+    if not cls_content and cls_path1:
+        cls_content = get_git_content(tag1, cls_path1)
     with open(os.path.join(outdir, "isi-proposal.cls"), "w") as f:
         f.write(cls_content)
 
-    bib_content = get_git_content(tag2, BIB_PATH) or get_git_content(tag1, BIB_PATH)
+    bib_path2 = find_git_path(tag2, "references.bib")
+    bib_path1 = find_git_path(tag1, "references.bib")
+    bib_content = get_git_content(tag2, bib_path2) if bib_path2 else ""
+    if not bib_content and bib_path1:
+        bib_content = get_git_content(tag1, bib_path1)
     with open(os.path.join(outdir, "references.bib"), "w") as f:
         f.write(bib_content)
 
-    if os.path.exists(LOGO_PATH):
-        shutil.copy(LOGO_PATH, os.path.join(outdir, "logo-isi.png"))
+    # Find logo locally
+    local_logo_path = None
+    for root, dirs, files in os.walk("."):
+        if "logo-isi.png" in files:
+            local_logo_path = os.path.join(root, "logo-isi.png")
+            break
+    if local_logo_path:
+        shutil.copy(local_logo_path, os.path.join(outdir, "logo-isi.png"))
 
     latex = [
         r"\documentclass{isi-proposal}",
