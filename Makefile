@@ -34,7 +34,7 @@ endif
 
 LATEXMK := TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=. $(LATEXMK_FORCE)
 
-.PHONY: all help proposal-phase docs proposal slides notes qna compile present clean clean-docs
+.PHONY: all help proposal-phase docs proposal slides notes qna diff diff-clean compile present clean clean-docs
 
 all: proposal-phase
 
@@ -46,6 +46,8 @@ help:
 		"  make notes           Build naskah presentasi PDF" \
 		"  make qna             Build dokumen antisipasi tanya jawab PDF" \
 		"  make proposal-phase  Build semua artefak proposal" \
+		"  make diff            Generate diff PDF antara proposal/v1 dan proposal/v2" \
+		"  make diff-clean      Hapus artefak diff" \
 		"  make clean           Hapus file build artefak proposal" \
 		"" \
 		"Alias lama masih ada:" \
@@ -115,3 +117,14 @@ clean-docs:
 	rm -f $(GENERATED_TEX) $(PDF_OUTPUTS)
 	rm -f $(PROPOSAL_DIR)/*.aux $(PROPOSAL_DIR)/*.log $(PROPOSAL_DIR)/*.fls $(PROPOSAL_DIR)/*.fdb_latexmk $(PROPOSAL_DIR)/*.bbl $(PROPOSAL_DIR)/*.bcf $(PROPOSAL_DIR)/*.blg $(PROPOSAL_DIR)/*.run.xml $(PROPOSAL_DIR)/*.out $(PROPOSAL_DIR)/*.toc $(PROPOSAL_DIR)/*.synctex.gz
 	rm -f $(PRESENTATION_DIR)/*.aux $(PRESENTATION_DIR)/*.log $(PRESENTATION_DIR)/*.fls $(PRESENTATION_DIR)/*.fdb_latexmk $(PRESENTATION_DIR)/*.nav $(PRESENTATION_DIR)/*.snm $(PRESENTATION_DIR)/*.out $(PRESENTATION_DIR)/*.toc $(PRESENTATION_DIR)/*.synctex.gz
+
+# Diff targets
+DIFF_SCRIPT := scripts/sidebydiff.py
+DIFF_OUTPUTS := scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log
+
+diff: $(DIFF_SCRIPT)
+	@chmod +x $(DIFF_SCRIPT)
+	@python3 $(DIFF_SCRIPT)
+
+diff-clean:
+	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
