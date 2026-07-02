@@ -321,7 +321,10 @@ def tokenize_words(text):
         if idx > 0:
             stream.append(("NL", None))
         for word in line.split():
-            stream.append(("W", word))
+            parts = re.split(r'(\$.*?\$)', word)
+            for part in parts:
+                if part:
+                    stream.append(("W", part))
 
     merged = []
     buf = []
@@ -418,19 +421,14 @@ def classify_token_style(style, val):
             return style + "_math"
         return None
         
-    if re.match(r'^\\(textit|textbf|emph|underline|section|subsection|subsubsection)\{.*\}$', val_clean):
+    if re.match(r'^\\(section|subsection|subsubsection)\{.*\}$', val_clean):
         if is_safe_to_highlight_token(val):
             return style + "_format"
         return None
         
     if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', val_clean):
         if is_safe_to_highlight_token(val, is_box=True):
-            return style + "_box"
-        return None
-        
-    if re.match(r'^\\(texttt)\{.*\}$', val_clean):
-        if is_safe_to_highlight_token(val, is_box=True):
-            return style + "_box"
+            return style + "_text"
         return None
         
     if is_safe_to_highlight_token(val):
@@ -456,13 +454,19 @@ def apply_highlight(style, text):
         val_strip = val_strip[:-len(punc_end)]
     
     if style.endswith("_format"):
-        pattern = r'^\\(textit|textbf|emph|underline|section|subsection|subsubsection)\{(.*)\}$'
+        pattern = r'^\\(section|subsection|subsubsection)\{(.*)\}$'
         match = re.match(pattern, val_strip)
         if match:
             macro_name = match.group(1)
             content = match.group(2)
-            inner_style = classify_token_style(color, content)
-            return f"{punc_start}\\{macro_name}{{{apply_highlight(inner_style, content).strip()}}}{punc_end} "
+            the_cmd = f"\\the{macro_name}"
+            return (
+                f"{punc_start}"
+                f"{{\\let\\origthe{the_cmd}"
+                f"\\renewcommand{{{the_cmd}}}{{\\colorbox{{{color}}}{{\\origthe}}}}"
+                f"\\{macro_name}{{\\colorbox{{{color}}}{{{content}}}}}}}"
+                f"{punc_end} "
+            )
             
     if style.endswith("_box"):
         return f"{punc_start}\\colorbox{{{color}}}{{{val_strip}}}{punc_end} "
@@ -509,12 +513,20 @@ def word_level_render(old_text, new_text):
             if kind_type == "NL":
                 old_actions.append((None, "\n"))
             else:
-                old_actions.append((classify_token_style("delhl", value), value))
+                act_style = classify_token_style("delhl", value)
+                val_to_use = value
+                if act_style == "delhl_text" and re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', re.sub(r'[\.,;\?!\)]+$', '', value.strip()).strip()):
+                    val_to_use = f"\\mbox{{{value}}}"
+                old_actions.append((act_style, val_to_use))
         elif kind == "insert":
             if kind_type == "NL":
                 new_actions.append((None, "\n"))
             else:
-                new_actions.append((classify_token_style("inshl", value), value))
+                act_style = classify_token_style("inshl", value)
+                val_to_use = value
+                if act_style == "inshl_text" and re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', re.sub(r'[\.,;\?!\)]+$', '', value.strip()).strip()):
+                    val_to_use = f"\\mbox{{{value}}}"
+                new_actions.append((act_style, val_to_use))
 
     def merge_runs(actions):
         if not actions:
@@ -746,24 +758,19 @@ def generate_diff_latex(tag1, tag2, outdir):
         v2_nocite = f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else ""
         bib_diff = [
             r"\newpage",
-            r"\section*{Daftar Pustaka / References}",
-            r"\noindent",
-            r"\begin{minipage}[t]{0.48\textwidth}",
-            r"\setlength{\textwidth}{\linewidth}",
-            r"\raggedright",
+            r"\begin{paracol}{2}",
+            f"\\section*{{Daftar Pustaka ({tag1})}}",
             r"\begin{refsection}",
             v1_nocite,
             r"\printbibliography[heading=none]" if v1_keys else "",
             r"\end{refsection}",
-            r"\end{minipage}\hfill",
-            r"\begin{minipage}[t]{0.48\textwidth}",
-            r"\setlength{\textwidth}{\linewidth}",
-            r"\raggedright",
+            r"\switchcolumn",
+            f"\\section*{{Daftar Pustaka ({tag2})}}",
             r"\begin{refsection}",
             v2_nocite,
             r"\printbibliography[heading=none]" if v2_keys else "",
             r"\end{refsection}",
-            r"\end{minipage}"
+            r"\end{paracol}"
         ]
 
     ops = compute_diff(split_paragraphs(old_full), split_paragraphs(new_full))
@@ -801,6 +808,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\geometry{a3paper, margin=1.5cm}", # Set to A3 with generous margins
         r"\usepackage{tikz}",
         r"\usetikzlibrary{shapes.geometric, arrows}",
+        r"\usepackage{paracol}",
         r"\addbibresource{references.bib}",
         # Load local env macros dynamically
         load_env_macros(),
@@ -850,6 +858,12 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\definecolor{inshl}{RGB}{204,244,206}",
         # Use soul for line-wrapping highlights
         r"\usepackage{soul}",
+        r"\soulregister{\parencite}{1}",
+        r"\soulregister{\cite}{1}",
+        r"\soulregister{\textcite}{1}",
+        r"\soulregister{\citeauthor}{1}",
+        r"\soulregister{\citeyear}{1}",
+        r"\soulregister{\texttt}{1}",
         r"\sethlcolor{delhl}",
         r"\newcommand{\delhighlight}[1]{{\sethlcolor{delhl}\hl{#1}}}",
         r"\newcommand{\inhighlight}[1]{{\sethlcolor{inshl}\hl{#1}}}",
