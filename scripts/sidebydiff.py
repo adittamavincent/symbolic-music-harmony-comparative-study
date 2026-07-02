@@ -4,10 +4,17 @@ Generate side-by-side diff PDF for the FULL proposal (paragraph-level),
 concatenating all chapter files in main.tex.template's include order into
 one continuous document per git ref, then diffing paragraph-by-paragraph.
 
-Unlike a raw-text diff, changed/unchanged paragraphs are embedded as LIVE
-LaTeX (not escaped to typewriter text), so the diff PDF actually renders
-sections, italics, tables, and equations the way the real compiled
-proposal would -- just with red/green coloring layered on top.
+Both sides always show their FULL text (compiled, live LaTeX -- not
+escaped, not omitted). Diffing works in two passes, matching how VSCode's
+split diff editor behaves:
+
+  1. Paragraph-level LCS aligns "this old paragraph" with "this new
+     paragraph" (or flags it as pure delete / pure insert).
+  2. For any paragraph that changed, a SECOND word-level LCS pass finds
+     exactly which words differ. Only those words get a soft background
+     highlight (\colorbox) -- red on the left, green on the right.
+     Everything else renders as plain, normal-colored text, same as an
+     unchanged paragraph would.
 """
 
 import os
@@ -138,35 +145,107 @@ def compute_diff(old_paragraphs, new_paragraphs):
     return ops
 
 
+# ---------------------------------------------------------------------------
+# Word-level diff (second pass) -- this is what makes it look like VSCode
+# instead of a block-colored diff. Same LCS machinery as paragraph-level,
+# just fed tokens instead of whole paragraphs.
+# ---------------------------------------------------------------------------
+
+def tokenize_words(text):
+    """
+    Split a paragraph into word tokens, preserving internal line breaks
+    (needed for table rows / multi-line blocks) as explicit NL tokens so
+    they can be diffed and re-emitted as \\ line breaks in the right spot.
+    """
+    tokens = []
+    lines = text.split("\n")
+    for idx, line in enumerate(lines):
+        if idx > 0:
+            tokens.append(("NL", None))
+        for word in line.split():
+            tokens.append(("W", word))
+    return tokens
+
+
+def render_token(token, highlight=None):
+    """Render a single token. `highlight` is a color name or None."""
+    kind, value = token
+    if kind == "NL":
+        return "\\newline\n"
+    if highlight:
+        return f"\\colorbox{{{highlight}}}{{{value}}} "
+    return f"{value} "
+
+
+def word_level_render(old_text, new_text):
+    """
+    Run word-level LCS between old_text and new_text. Return
+    (old_rendered, new_rendered) where only the differing words are
+    wrapped in \\colorbox -- everything matching stays plain text on
+    BOTH sides, exactly like VSCode's inline word diff.
+    """
+    old_tokens = tokenize_words(old_text)
+    new_tokens = tokenize_words(new_text)
+    ops = compute_diff(old_tokens, new_tokens)
+
+    old_parts, new_parts = [], []
+    for kind, tok in ops:
+        if kind == "equal":
+            old_parts.append(render_token(tok))
+            new_parts.append(render_token(tok))
+        elif kind == "delete":
+            old_parts.append(render_token(tok, highlight="delhl"))
+        elif kind == "insert":
+            new_parts.append(render_token(tok, highlight="inshl"))
+
+    return "".join(old_parts), "".join(new_parts)
+
+
 def render_pair(old_text, new_text):
     """
-    Render one changed paragraph pair side-by-side. Content is emitted
-    RAW (not escaped) so \\section, \\textit, tables, and equations from
-    the actual proposal source compile and render normally -- \\color
-    just tints the rendered result red/green instead of flattening it
-    into escaped typewriter text.
+    Render one paragraph slot side-by-side.
+
+      - Both old_text and new_text present -> word-level diff: full text
+        both sides, only the changed words get a soft highlight box.
+      - Only old_text present (pure delete) -> full old text on the left,
+        every word highlighted red; right side left blank (there is no
+        "B" to show, same as VSCode leaving the opposite gutter empty).
+      - Only new_text present (pure insert) -> mirror of the above.
     """
-    old_block = f"{{\\color{{diffremove}}\n{old_text}\n}}" if old_text else ""
-    new_block = f"{{\\color{{diffadd}}\n{new_text}\n}}" if new_text else ""
+    if old_text and new_text:
+        old_rendered, new_rendered = word_level_render(old_text, new_text)
+    elif old_text:
+        old_rendered = "".join(
+            render_token(t, highlight="delhl") for t in tokenize_words(old_text)
+        )
+        new_rendered = ""
+    else:
+        old_rendered = ""
+        new_rendered = "".join(
+            render_token(t, highlight="inshl") for t in tokenize_words(new_text)
+        )
+
     return (
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"{old_block}\n"
+        f"\\raggedright {old_rendered}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"{new_block}\n"
+        f"\\raggedright {new_rendered}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
     )
 
 def render_equal(text):
+    """Paragraph unchanged in both versions -- plain text, no highlight
+    at all, both sides identical, exactly like VSCode's non-diffed lines."""
     return (
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"{text}\n"
+        f"\\raggedright {text}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        f"{text}\n"
+        f"\\raggedright {text}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
     )
@@ -228,8 +307,10 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\usetikzlibrary{shapes.geometric, arrows}",
         r"\addbibresource{references.bib}",
         PLACEHOLDER_MACROS,
-        r"\definecolor{diffremove}{RGB}{178,20,20}",
-        r"\definecolor{diffadd}{RGB}{20,120,20}",
+        # Soft pastel backgrounds for word-level highlighting, matching
+        # GitHub/VSCode diff colors -- NOT full-text coloring anymore.
+        r"\definecolor{delhl}{RGB}{255,214,214}",
+        r"\definecolor{inshl}{RGB}{204,244,206}",
         r"\begin{document}",
         r"\thispagestyle{empty}",
         r"\begin{center}",
