@@ -36,6 +36,8 @@ build/
 # No exceptions for PDFs
 
 # Ignore generated .tex files (these are built from .tex.template in the subdirectories)
-# Note: files in thesis/proposal/chapters/ are still tracked natively
-thesis/proposal/*.tex
-thesis/slides/*.tex
+# Note: files in docs/proposal-phase/proposal/chapters/ are still tracked natively
+docs/proposal-phase/proposal/main.tex
+docs/proposal-phase/presentation/presentation.tex
+docs/proposal-phase/presentation/presentation_notes.tex
+docs/proposal-phase/presentation/qna.tex

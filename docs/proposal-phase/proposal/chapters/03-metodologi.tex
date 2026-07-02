@@ -28,6 +28,32 @@ Catatan metodologis: setiap kondisi menerapkan \textit{equivalent conditioning l
 
 Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai proporsi momen harmonis yang bebas dari pelanggaran ketiga kaidah Strube, dengan rentang nilai 0 (pelanggaran di setiap momen) hingga 1 (tidak ada pelanggaran sama sekali).
 
+\subsection{Definisi Operasional Variabel}
+
+\textbf{Independent Variable 1: Generative Model Architecture.} Variabel kategorik dengan tiga indikator yang mewakili pergeseran paradigma arsitektur: Recurrent (DeepBach, LSTM dua arah), Convolutional (Coconet, deep residual CNN dengan Orderless NADE), dan Attention-based (NotaGen, hierarchical Transformer dengan global self-attention).
+
+\textbf{Independent Variable 2: Conditioning Level.} Tingkat batasan instruksi yang diberikan pada model saat generasi, dikontrol lewat \texttt{strube\_conditions.json}, terdiri atas empat tingkat: A (Neutral, tanpa batasan), B (Key, batasan kunci/periode), C (SATB Partial, Soprano ditetapkan), dan D (SATB Full, Soprano dan Bass ditetapkan).
+
+\textbf{Dependent Variable: Constraint Adherence Rate (Strube Score).} Rasio momen harmonis yang bebas dari pelanggaran terhadap total momen vertikal $M_{\text{total}}$ dalam sebuah sampel, dirumuskan sebagai:
+
+\[
+\text{Strube Score} = 1.0 - \min\left(1.0, \frac{\sum_{t=1}^{M_{\text{total}}} \left(\sum_{\text{pairs}} \text{Violation}_{\text{parallel}}(t) + \text{Violation}_{\text{leading}}(t)\right)}{M_{\text{total}}}\right)
+\]
+
+Deteksi pelanggaran gerak paralel antara dua suara aktif $i$ dan $j$ pada interval target $\Delta$ (kuint murni untuk $\Delta \equiv 7 \pmod{12}$, oktaf untuk $\Delta \equiv 0 \pmod{12}$) diformalkan sebagai:
+
+\[
+\text{Violation}_{\text{parallel}}(t) = \mathbb{1}\left(|p_{i,t} - p_{j,t}| \equiv \Delta\right) \times \mathbb{1}\left(|p_{i,t-1} - p_{j,t-1}| \equiv \Delta\right) \times \mathbb{1}\left(\text{sgn}(\Delta p_i) = \text{sgn}(\Delta p_j)\right) \times \mathbb{1}\left(\Delta p_i \neq 0\right)
+\]
+
+Deteksi kegagalan resolusi nada penuntun pada suara Soprano, dengan $L_{\text{pc}} = (K_{\text{tonic}} - 1) \bmod 12$ sebagai pitch class nada penuntun, diformalkan sebagai:
+
+\[
+\text{Violation}_{\text{leading}}(t) = \mathbb{1}\left(p_{i,t} \equiv L_{\text{pc}}\right) \times \mathbb{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}}\right)
+\]
+
+Pengecekan gerak paralel dan resolusi nada penuntun dijalankan pada seluruh enam kombinasi pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B.
+
 \subsection{Jumlah Sampel}
 
 Sebanyak 120 file MIDI dikumpulkan: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen.
@@ -37,11 +63,17 @@ Sebanyak 120 file MIDI dikumpulkan: 3 model $\times$ 4 kondisi $\times$ 10 sampe
 Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\textit{face validity}) melalui dua pengujian:
 
 \begin{enumerate}
-    \item Uji positif: Koral Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa koral Bach merupakan contoh penerapan kaidah Strube yang konsisten.
+    \item Uji positif: Chorale Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa chorale Bach merupakan contoh penerapan kaidah Strube yang konsisten.
     \item Uji negatif: Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
 Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpenuhi.
+
+Perlu digarisbawahi bahwa pengecekan leading tone resolution dalam penelitian ini dibatasi hanya pada suara Soprano, karena suara tersebut paling konsisten berperan sebagai melodi utama dalam tekstur SATB, sekaligus untuk menghindari kebutuhan deteksi otomatis suara mana yang berperan sebagai pembawa melodi pada output AI yang strukturnya bisa jauh dari konvensi SATB klasik. Konsekuensinya, resolusi nada penuntun yang terjadi pada suara Alto, Tenor, atau Bass tidak tercatat oleh instrumen ini. Batasan ini merupakan bagian dari definisi operasional instrumen dan menjadi salah satu arah pengembangan lanjutan yang disebutkan pada bab penutup.
+
+\subsection{Penanganan Bach Paradox}
+
+Penelitian ini memisahkan secara tegas antara evaluasi tekstual (textual syntax) dan penilaian estetika (aesthetic valuation). Fakta historis bahwa J.S. Bach maupun komponis klasik lain sesekali melanggar larangan kuint atau oktaf sejajar demi kepentingan artistik, umumnya di sekitar batas frasa, nada hias, atau kadens otentik sempurna, merupakan bentuk pilihan artistik manusia yang valid secara kontekstual. Pada model generatif AI, pelanggaran serupa muncul bukan dari pilihan artistik, melainkan dari keterbatasan sampling stokastis dalam memenuhi batasan formal. Oleh karena itu, instrumen evaluasi otomatis dalam penelitian ini tidak bertindak sebagai juri estetika yang menilai keindahan karya, melainkan sebagai automated rule checker yang murni mengecek konsistensi output terhadap konvensi tekstual yang telah dirumuskan Strube. Pelanggaran yang terdeteksi pada data pelatihan otentik, seperti korpus chorale Bach di dalam music21, tidak menggugurkan validitas instrumen, karena yang diukur adalah konsistensi tekstual, bukan kebenaran mutlak estetis.
 
 \subsection{Prosedur Penelitian}
 
@@ -49,7 +81,7 @@ Prosedur penelitian berlangsung dalam enam tahap berurutan:
 
 \begin{enumerate}
     \item Pengembangan instrumen: Penulisan dan pengujian skrip evaluasi Strube berbasis music21.
-    \item Validasi instrumen: Pengujian \textit{face validity} menggunakan koral Bach asli dan harmonisasi yang disengaja melanggar.
+    \item Validasi instrumen: Pengujian \textit{face validity} menggunakan chorale Bach asli dan harmonisasi yang disengaja melanggar.
     \item Pengumpulan data: Generasi 120 sampel output MIDI dari ketiga model di bawah empat kondisi instruksi.
     \item Evaluasi otomatis: Seluruh 120 sampel MIDI dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
     \item Analisis data: Statistik deskriptif (rata-rata Strube Score per model per kondisi) dan analisis komparatif lintas model dan kondisi.
@@ -101,10 +133,10 @@ Diagram alir menggambarkan keseluruhan alur penelitian dari pengembangan instrum
 
 Naskah skripsi ini terdiri atas empat bab yang disusun secara sistematis untuk membentuk argumen penelitian yang koheren dari motivasi awal hingga interpretasi temuan.
 
-Bab I memuat pendahuluan yang mencakup latar belakang penelitian, rumusan masalah, tujuan penelitian, dan manfaat penelitian. Pada bab ini dibangun argumen mengapa evaluasi berbasis teori harmoni formal merupakan pendekatan yang tepat dan mengapa ketiga model yang dipilih merupakan representasi lintas generasi yang relevan. Bab ini juga menegaskan posisi penelitian dalam literatur MIR dan relevansinya bagi \programstudy{} \institutionname{}.
+Bab I memuat pendahuluan yang mencakup latar belakang penelitian, rumusan masalah, tujuan penelitian, dan manfaat penelitian. Pada bab ini dibangun argumen mengapa evaluasi berbasis teori harmoni formal merupakan pendekatan yang tepat dan mengapa ketiga model yang dipilih merupakan representasi lintas paradigma arsitektur yang relevan. Bab ini juga menegaskan posisi penelitian dalam literatur MIR dan relevansinya bagi \programstudy{} \institutionname{}.
 
 Bab II berisi kajian pustaka dan landasan teori. Tinjauan pustaka menelaah secara kritis tiga model AI yang dievaluasi, penelitian-penelitian terkait dalam komunitas MIR yang menggunakan evaluasi harmoni algoritmis sebagai metrik utama, serta kebaruan penelitian ini dibanding studi yang telah ada. Landasan teori menguraikan tiga pilar konseptual penelitian: teori harmoni fungsional Strube sebagai alat ukur, paradigma musik simbolik sebagai objek evaluasi, dan prinsip evaluasi otomatis dalam MIR sebagai kerangka metodologis.
 
 Bab III memuat metode penelitian yang menjabarkan secara rinci desain eksperimen, variabel penelitian, prosedur pengumpulan data, instrumen evaluasi beserta prosedur validasinya, dan prosedur analisis data. Bab ini juga menyertakan diagram alir penelitian yang menggambarkan keseluruhan alur kerja dari validasi instrumen hingga visualisasi hasil, sebagai panduan replikasi penelitian.
 
-Bab IV berisi hasil penelitian dan pembahasan. Bagian hasil menyajikan temuan kuantitatif dalam bentuk tabel ringkasan dan grafik perbandingan ketiga model di bawah empat kondisi instruksi. Bagian pembahasan menginterpretasikan pola kepatuhan yang ditemukan dalam kerangka musikologis, menjelaskan mengapa kondisi atau model tertentu menghasilkan skor yang berbeda, dan apa implikasinya terhadap pemahaman kemampuan harmonik AI. Naskah ditutup dengan bab penutup yang berisi kesimpulan yang merangkum jawaban atas ketiga rumusan masalah, serta saran untuk penelitian lanjutan yang dapat mengembangkan kerangka evaluasi ini lebih jauh.
+Bab IV berisi hasil penelitian dan pembahasan. Bagian hasil menyajikan temuan kuantitatif dalam bentuk tabel ringkasan dan grafik perbandingan ketiga model di bawah empat kondisi instruksi. Bagian pembahasan menginterpretasikan pola constraint adherence yang ditemukan dalam kerangka musikologis, menjelaskan mengapa kondisi atau model tertentu menghasilkan skor yang berbeda, dan apa implikasinya terhadap pemahaman kemampuan harmonik AI. Naskah ditutup dengan bab penutup yang berisi kesimpulan yang merangkum jawaban atas ketiga rumusan masalah, serta saran untuk penelitian lanjutan yang dapat mengembangkan kerangka evaluasi ini lebih jauh.

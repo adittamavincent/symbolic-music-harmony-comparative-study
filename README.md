@@ -1,146 +1,175 @@
 # Strube Harmonic Evaluation Framework
 
-Proyek ini membandingkan tiga model AI generasi musik simbolik —
-**DeepBach** (2017), **Coconet** (2017), dan **NotaGen** (2025) —
-menggunakan aturan harmoni fungsional dari teori Gustav Strube sebagai alat ukur.
+Proyek ini membandingkan tiga model AI generasi musik simbolik, yaitu **DeepBach** (2017), **Coconet** (2017), dan **NotaGen** (2025), menggunakan aturan harmoni fungsional Gustav Strube sebagai alat ukur.
 
-Proyek ini adalah bagian dari penelitian skripsi S1 ${PROGRAM_STUDY}.
+Repositori ini sekarang dipisah jelas antara:
 
----
+- pipeline eksperimen Python untuk penelitian utama,
+- dokumen **fase proposal**,
+- ruang khusus untuk **skripsi final** nanti.
 
-## Apa yang dilakukan proyek ini?
+## Struktur Repo
 
-Setiap model AI diminta menghasilkan musik paduan suara 4 suara (SATB)
-dalam empat kondisi berbeda — dari tanpa batasan hingga diberi banyak petunjuk.
-Hasilnya dianalisis secara otomatis: seberapa banyak pelanggaran _parallel fifths_,
-_parallel octaves_, dan _leading tone_ yang dihasilkan?
-Skor akhir mencerminkan kepatuhan terhadap prinsip harmoni fungsional Strube.
-
----
+```text
+.
+├── docs/
+│   ├── proposal-phase/
+│   │   ├── assets/         # class, logo, bibliography
+│   │   ├── proposal/       # naskah proposal
+│   │   └── presentation/   # slides, notes, qna
+│   └── final-thesis/       # disiapkan untuk fase skripsi final
+├── experiments/            # script generasi, evaluasi, plotting
+├── tests/
+├── Makefile
+├── run_all.py
+├── setup.py
+└── strube_evaluator.py
+```
 
 ## Persyaratan Sistem
 
-Sebelum mulai, pastikan semua software berikut sudah terinstal:
+Pastikan software berikut sudah ada:
 
-| Software | Versi minimum      | Cara cek di terminal |
-| -------- | ------------------ | -------------------- |
-| Git      | apa saja           | `git --version`      |
-| Python   | 3.10               | `python3 --version`  |
-| uv       | apa saja           | `uv --version`       |
-| Node.js  | 18 atau lebih baru | `node --version`     |
+| Software | Versi minimum      | Cara cek |
+| -------- | ------------------ | -------- |
+| Git      | bebas              | `git --version` |
+| Python   | 3.10               | `python3 --version` |
+| uv       | bebas              | `uv --version` |
+| Node.js  | 18+                | `node --version` |
+| latexmk  | bebas              | `latexmk --version` |
+| envsubst | bebas              | `envsubst --version` |
 
-**Cara install `uv` (jika belum ada):**
+Install `uv` bila belum ada:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Setelah install, tutup dan buka ulang terminal.
+Install Node.js dari [nodejs.org](https://nodejs.org). Untuk LaTeX di macOS, paling gampang pakai MacTeX.
 
-**Cara install Node.js:** Unduh dari [nodejs.org](https://nodejs.org).
-
----
-
-## Langkah Cepat (Quick Start)
-
-### 1. Clone Proyek
+## Setup Python
 
 ```bash
 git clone <URL_REPO_KAMU>
 cd <nama-folder-proyek>
-```
 
-### 2. Buat Lingkungan Python & Install Library
-
-```bash
 uv venv .venv --python 3.10
 source .venv/bin/activate
 uv pip install -r requirements.txt
-```
-
-### 3. Setup Model Otomatis
-
-Jalankan script setup berikut untuk mengunduh, meng-clone, dan menyiapkan file-file model (`models/deepbach`, `models/coconet`, dan `models/notagen`):
-
-```bash
 uv run python setup.py
 ```
 
-> **Catatan:** Semua model dan dependensinya disimpan dalam folder `models/` yang telah di-exclude dari Git via `.gitignore` agar tidak mengotori repository.
+`setup.py` akan menyiapkan dependency model ke folder `models/`, yang memang sudah di-ignore Git.
 
----
+## Run Eksperimen
 
-## Langkah 4 — Jalankan seluruh eksperimen
-
-Jalankan eksperimen menggunakan `uv run`:
+Jalankan full pipeline:
 
 ```bash
 uv run python run_all.py
 ```
 
-Saat pertama kali dijalankan, program otomatis mengunduh resource yang belum ada:
-
-- **DeepBach:** pretrained weights (~beberapa ratus MB) diunduh dari Dropbox.
-- **NotaGen:** checkpoint (~1.5GB) diunduh dari Hugging Face.
-- **Coconet:** checkpoint diambil otomatis oleh `@magenta/music` saat model di-load.
-
----
-
-## Kompilasi Proposal Skripsi (LaTeX)
-
-Kompilasi dokumen proposal skripsi (`thesis/main.tex`) memanfaatkan variabel lingkungan dari file konfigurasi:
-
-1. Salin `.env.example` menjadi `.env.local`:
-   ```bash
-   cp .env.example .env.local
-   ```
-2. Isi variabel di dalam `.env.local` sesuai data diri (nama, NIM, dsb.).
-3. Jalankan kompilasi:
-   ```bash
-   make compile
-   ```
-   Perintah ini menggantikan variabel dalam `thesis/main.tex.template` menjadi `thesis/main.tex` via `envsubst`, lalu membangun `thesis/main.pdf` via `latexmk`.
-
----
-
-## Perintah lain yang berguna
+Command berguna lain:
 
 ```bash
-# Tes cepat dengan 1 sampel saja (untuk memastikan setup benar).
+# Tes awal ringan
 uv run python run_all.py --samples 1
 
-# Lihat prompt yang akan digunakan tanpa menjalankan generasi apapun
+# Lihat prompt/kondisi tanpa generate
 uv run python run_all.py --dry-run
 
-# Jika output sudah ada, lewati generasi dan langsung evaluasi
+# Lewati tahap generate, langsung evaluasi output yang sudah ada
 uv run python run_all.py --skip-generation
 ```
 
----
+Saat run pertama:
 
-## Hasil Output
+- DeepBach mengunduh pretrained weights,
+- NotaGen mengunduh checkpoint dari Hugging Face,
+- Coconet mengambil checkpoint saat model di-load.
 
-Setelah selesai, semua hasil tersimpan di folder `outputs/`:
+## Build Dokumen Proposal
 
+Semua artefak fase proposal ada di `docs/proposal-phase/`.
+
+### 1. Isi Metadata
+
+```bash
+cp .env.example .env.local
 ```
+
+Lalu isi `.env.local` dengan nama, NIM, institusi, dosen pembimbing, dan data lain.
+
+### 2. Lihat Semua Target `make`
+
+```bash
+make help
+```
+
+### 3. Build Sesuai Kebutuhan
+
+```bash
+# Naskah proposal
+make proposal
+
+# Slide presentasi ujian proposal
+make slides
+
+# Naskah presenter berbasis slide
+make notes
+
+# Dokumen antisipasi tanya jawab
+make qna
+
+# Build semua artefak fase proposal
+make proposal-phase
+```
+
+Alias lama masih didukung:
+
+```bash
+make compile   # alias make proposal
+make present   # alias make slides
+```
+
+### Output PDF
+
+PDF hasil build ada di:
+
+- `docs/proposal-phase/proposal/main.pdf`
+- `docs/proposal-phase/presentation/presentation.pdf`
+- `docs/proposal-phase/presentation/presentation_notes.pdf`
+- `docs/proposal-phase/presentation/qna.pdf`
+
+### Hapus File Build
+
+```bash
+make clean
+```
+
+## Output Eksperimen
+
+Hasil eksperimen tersimpan di `outputs/`:
+
+```text
 outputs/
-├── deepbach/         ← MIDI per kondisi
-├── coconet/          ← MIDI per condition
-├── notagen/          ← MIDI per condition
-├── MASTER_RESULTS.csv              ← semua 120 hasil individual
-├── SUMMARY_TABLE.csv               ← rata-rata per model × kondisi
-└── strube_evaluation_results.png   ← grafik perbandingan
+├── deepbach/
+├── coconet/
+├── notagen/
+├── MASTER_RESULTS.csv
+├── SUMMARY_TABLE.csv
+└── strube_evaluation_results.png
 ```
-
----
 
 ## Troubleshooting
 
-| Masalah                            | Solusi                                                                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `uv: command not found`            | Jalankan install curl di atas, lalu buka terminal baru                                                              |
-| `python3: command not found`       | Install Python 3.10 dari python.org                                                                                 |
-| `node: command not found`          | Install Node.js dari nodejs.org                                                                                     |
-| `No module named 'DatasetManager'` | Pastikan kamu sudah sukses menjalankan `uv run python setup.py`                                                     |
-| Coconet `npm install` gagal        | Pastikan koneksi internet stabil dan `node` terinstall, lalu coba jalankan `npm install` manual di `models/coconet` |
-| Proses generasi terlalu lama       | Gunakan `--samples 1` untuk tes awal                                                                                |
+| Masalah | Solusi |
+| ------- | ------ |
+| `uv: command not found` | Install `uv`, lalu buka terminal baru |
+| `python3: command not found` | Install Python 3.10 dari python.org |
+| `node: command not found` | Install Node.js dari nodejs.org |
+| `latexmk: command not found` | Install distribusi LaTeX, mis. MacTeX |
+| `envsubst: command not found` | Install `gettext`, lalu pastikan `envsubst` tersedia di PATH |
+| `No module named 'DatasetManager'` | Jalankan `uv run python setup.py` lagi |
+| Coconet `npm install` gagal | Pastikan internet stabil dan `node` terpasang |
+| Generasi terlalu lama | Mulai dari `--samples 1` |

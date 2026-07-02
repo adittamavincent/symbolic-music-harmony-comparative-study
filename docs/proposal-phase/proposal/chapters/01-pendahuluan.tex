@@ -1,0 +1,47 @@
+\section{Latar Belakang}
+
+Perkembangan model kecerdasan buatan (AI) untuk generasi musik telah berlangsung secara signifikan dalam satu dekade terakhir. Dalam ranah musik simbolik, yakni AI yang menghasilkan representasi notasi seperti MIDI atau partitur digital, bukan berkas audio, tiga pendekatan arsitektur yang berbeda menandai pergeseran paradigma tersebut. DeepBach \parencite{hadjeres2017} merepresentasikan pendekatan Recurrent (LSTM) yang memproses chorale empat suara secara sekuensial. Coconet \parencite{huang2017} merepresentasikan pendekatan Konvolusional (CNN) yang memperlakukan partitur sebagai matriks spasial dan melakukan infilling secara paralel. NotaGen \parencite{wang2025} merepresentasikan pendekatan Attention-based (Transformer) berskala besar, dilatih pada lebih dari 1,6 juta partitur klasik. Ketiga model ini tersedia secara terbuka, memiliki fondasi akademis yang kuat, dan mewakili tiga bias induktif arsitektur yang berbeda dalam memodelkan musik simbolik.
+
+Meskipun lompatan arsitektur dari era Recurrent dan Konvolusional (2017) menuju era Attention-based berskala besar (2025) menunjukkan peningkatan musikalitas yang signifikan, terdapat gap evaluasi yang mendasar dalam literatur MIR. NotaGen \parencite{wang2025}, misalnya, dievaluasi murni menggunakan metrik keselarasan semantik (Average CLaMP 2 Score) dan uji dengar subjektif, tanpa menyertakan audit voice leading formal. Asumsi bahwa model berskala besar otomatis menginternalisasi aturan formal secara implisit melalui pre-training belum pernah diuji secara langsung menggunakan kaidah harmoni fungsional Barat.
+
+Meskipun demikian, evaluasi terhadap model-model tersebut dalam literatur yang ada hampir seluruhnya bertumpu pada dua pendekatan: ukuran statistik distribusional yang mengukur seberapa mirip output model dengan data pelatihan, atau penilaian perseptual subjektif oleh pendengar \parencite{yang2020}. Keduanya memiliki keterbatasan metodologis yang mendasar. Pendekatan statistik tidak mengukur apakah musik yang dihasilkan benar secara teori harmoni; pendekatan perseptual rentan terhadap variabilitas antar pendengar dan sulit direplikasi secara konsisten. Kedua pendekatan ini pun tidak dirancang untuk mengisolasi akurasi terhadap kaidah harmoni spesifik sebagai variabel yang dapat diukur secara presisi.
+
+Dalam konteks ilmu komputer, model generatif berbasis deep learning, baik Recurrent, Konvolusional, maupun Attention-based, dilatih melalui pendekatan maximum likelihood estimation (MLE): model memaksimalkan probabilitas token berikutnya berdasarkan distribusi statistik data pelatihan. Pendekatan ini membuat model mempelajari apa yang sering muncul dalam data, tetapi tidak pernah mempelajari apa yang dilarang secara absolut. Pada data chorale historis, probabilitas kemunculan pelanggaran seperti kuint sejajar adalah nol murni, namun karena fungsi softmax pada lapisan keluaran tetap memberikan probabilitas non-nol untuk setiap token dalam ruang kosakata, pelanggaran tersebut tetap mungkin muncul saat proses sampling stokastis berlangsung. Fang et al. \parencite{fang2020}, yang mengembangkan fungsi penilaian chorale algoritmis berbasis music21, membuktikan bahwa model mutakhir menghasilkan pelanggaran voice leading pada tingkat yang signifikan bahkan ketika outputnya terdengar meyakinkan secara estetika bagi pendengar awam.
+
+Atas dasar inilah, dalam konteks sains komputer dan pemrosesan musik simbolik modern, kaidah harmoni fungsional Barat tidak lagi diposisikan sebagai dogma estetika yang membatasi kreativitas seni, melainkan sebagai deterministic constraint, yaitu batasan formal yang bersifat biner dan dapat diverifikasi secara algoritmik. Posisi ini menempatkan kaidah harmoni fungsional sebagai parameter uji tekanan (stress test) yang objektif untuk mengukur sejauh mana arsitektur AI mampu menaklukkan kelemahan struktural akibat pendekatan MLE. Untuk menyelaraskan kebutuhan parameter uji tersebut dengan konteks kurikuler penelitian ini, dipilih teori harmoni fungsional Gustav Strube \parencite{strube1928}, yang diajarkan sebagai bagian dari kurikulum \programstudy{} \institutionname{}. Tiga kaidah inti dari teori tersebut (larangan kuint sejajar, larangan oktaf sejajar, dan kewajiban resolusi nada penuntun) dipilih karena bersifat deterministik dan tidak membutuhkan segmentasi harmoni (identifikasi nada anggota akor versus nada hias) yang cenderung interpretatif pada data hasil generasi AI.
+
+Preseden untuk pendekatan metodologis ini telah diletakkan dalam komunitas Music Information Retrieval (MIR). Huang et al. \parencite{huang2017} dalam naskah asli Coconet menggunakan pustaka music21 untuk mendeteksi pelanggaran kuint sejajar dan oktaf sejajar pada output model mereka, membuktikan bahwa evaluasi berbasis kaidah harmoni formal merupakan metode yang diakui dalam riset AI musik tingkat konferensi internasional. Fang et al. \parencite{fang2020} mengembangkan pendekatan ini lebih jauh dengan memformulasikan metrik kuantitatif yang mengukur rasio pelanggaran terhadap total momen harmonis, yang secara konseptual paralel dengan Strube Score dalam penelitian yang diusulkan. Penelitian ini mengembangkan keduanya menjadi kerangka evaluasi komparatif yang sistematis, mencakup tiga paradigma arsitektur dan empat conditioning level yang dirancang untuk mengisolasi peran faktor kondisi terhadap constraint adherence.
+
+Urgensi penelitian ini bersifat ganda. Secara akademis, penelitian ini mengisi kekosongan studi komparatif lintas paradigma arsitektur model AI musik simbolik menggunakan kerangka teori musik formal, khususnya dengan memasukkan NotaGen \parencite{wang2025} yang belum pernah dievaluasi dalam konteks serupa. Secara kurikuler, penelitian ini membuktikan bahwa teori Strube sebagai bagian dari tradisi akademis \institutionname{} memiliki relevansi aktual dalam wacana teknologi musik kontemporer, dan bahwa kepekaan musikal yang dibentuk oleh pendidikan formal musik merupakan modal riset yang tidak dapat digantikan oleh latar belakang teknik semata.
+
+\section{Rumusan Masalah}
+
+\begin{enumerate}
+    \item Sejauh mana output model generatif musik simbolik DeepBach, Coconet, dan NotaGen memenuhi kaidah harmoni fungsional Gustav Strube pada masing-masing conditioning level?
+    \item Apakah terdapat perbedaan constraint adherence yang konsisten antara paradigma arsitektur Recurrent (LSTM), Konvolusional (CNN), dan Attention-based (Transformer)?
+    \item Conditioning level manakah yang paling berpengaruh terhadap constraint adherence output model?
+\end{enumerate}
+
+\section{Tujuan Penelitian}
+
+\begin{enumerate}
+    \item Mengukur dan membandingkan constraint adherence output ketiga model AI terhadap tiga kaidah teori Gustav Strube.
+    \item Mengidentifikasi pola constraint adherence lintas paradigma arsitektur AI musik simbolik (Recurrent, Konvolusional, dan Attention-based).
+    \item Menentukan conditioning level yang paling efektif dalam mendorong output model menuju constraint adherence yang lebih tinggi.
+\end{enumerate}
+
+\section{Manfaat Penelitian}
+
+Manfaat Teoretis:
+\begin{enumerate}
+    \item Menyediakan kerangka evaluasi berbasis teori harmoni formal yang dapat direplikasi untuk studi komparatif model AI generatif musik simbolik di masa mendatang.
+    \item Menghasilkan data empiris pertama yang mendokumentasikan constraint adherence NotaGen sebagai model simbolik mutakhir terhadap kaidah harmoni fungsional Strube.
+    \item Berkontribusi pada wacana akademik tentang relevansi teori harmoni formal dalam era kecerdasan buatan, sekaligus membuktikan bahwa prinsip Strube yang diajarkan di perguruan tinggi seni musik masih memiliki posisi operasional dalam riset teknologi mutakhir.
+\end{enumerate}
+
+Manfaat Praktis:
+\begin{enumerate}
+    \item Memberikan panduan berbasis bukti bagi komposer dan peneliti musik dalam mengevaluasi dan memilih model AI generatif berdasarkan constraint adherence yang terukur.
+    \item Menyediakan metodologi evaluasi otomatis yang dapat diadaptasi oleh peneliti lain untuk kriteria harmoni atau kerangka teori yang berbeda.
+    \item Memperkuat posisi \programstudy{} \institutionname{} sebagai institusi yang mampu menghasilkan penelitian di persimpangan tradisi teori musik akademis dan teknologi AI mutakhir.
+\end{enumerate}

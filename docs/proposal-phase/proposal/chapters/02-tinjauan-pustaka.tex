@@ -1,6 +1,6 @@
 \section{Tinjauan Pustaka}
 
-DeepBach \parencite{hadjeres2017} adalah model generatif musik simbolik berbasis arsitektur LSTM terarah yang dirancang khusus untuk menghasilkan koral empat suara SATB dalam gaya Bach. Dipresentasikan di ICML 2017, model ini memperkenalkan paradigma generasi musik terkelola (\textit{steerable generation}) di mana pengguna dapat menetapkan batasan pada suara atau posisi tertentu. Penelitian ini menempatkan DeepBach sebagai titik komparatif historis awal, mewakili standar generasi koral simbolik berbasis data pada era \textit{deep learning} generasi pertama.
+DeepBach \parencite{hadjeres2017} adalah model generatif musik simbolik berbasis arsitektur LSTM terarah yang dirancang khusus untuk menghasilkan four-part chorale SATB dalam gaya Bach. Dipresentasikan di ICML 2017, model ini memperkenalkan paradigma generasi musik terkelola (\textit{steerable generation}) di mana pengguna dapat menetapkan batasan pada suara atau posisi tertentu. Penelitian ini menempatkan DeepBach sebagai titik komparatif historis awal, mewakili standar generasi chorale simbolik berbasis data pada era \textit{deep learning} generasi pertama.
 
 Coconet \parencite{huang2017} dikembangkan oleh Google Magenta. Model ini menggunakan pendekatan distribusi simultan seluruh suara (\textit{orderless NADE}) yang memungkinkan pelengkapan suara secara fleksibel dari kondisi parsial apa pun. Relevansi langsung Coconet terhadap penelitian ini terletak pada preseden metodologisnya: naskah asli Coconet menggunakan pustaka music21 untuk mengukur jumlah pelanggaran kuint sejajar dan oktaf sejajar pada outputnya, membuktikan bahwa evaluasi berbasis kaidah harmoni formal merupakan metode yang valid dalam komunitas riset AI musik tingkat konferensi internasional.
 
@@ -12,7 +12,7 @@ Le et al. \parencite{le2025} dalam survei komprehensif tentang metode \textit{na
 
 music21 \parencite{cuthbert2010} adalah pustaka Python sumber terbuka untuk musikologi berbasis komputer yang dikembangkan di MIT. Digunakan secara luas dalam komunitas MIR untuk analisis, manipulasi, dan evaluasi representasi musik simbolik. Penggunaan music21 sebagai instrumen evaluasi dalam penelitian ini mengikuti preseden yang telah ditetapkan oleh Huang et al. \parencite{huang2017} dan Fang et al. \parencite{fang2020}, dan memungkinkan verifikasi algoritmis yang konsisten terhadap seluruh 120 sampel MIDI.
 
-Kebaruan Penelitian: Studi komparatif yang ada dalam literatur umumnya membandingkan model AI musik berdasarkan kualitas audio subjektif atau metrik statistik distribusional, bukan berdasarkan kepatuhan terhadap kaidah harmoni teori musik formal. Belum terdapat penelitian yang (1) membandingkan ketiga model ini secara bersamaan dalam satu kerangka evaluasi, (2) menggunakan teori Strube sebagai alat ukur, dan (3) menguji NotaGen dalam konteks evaluasi harmoni formal apa pun. Penelitian ini mengisi ketiga celah tersebut sekaligus.
+Kebaruan Penelitian: Studi komparatif yang ada dalam literatur umumnya membandingkan model AI musik berdasarkan kualitas audio subjektif atau metrik statistik distribusional, bukan berdasarkan constraint adherence terhadap kaidah harmoni teori musik formal. Belum terdapat penelitian yang (1) membandingkan ketiga model ini secara bersamaan dalam satu kerangka evaluasi, (2) menggunakan teori Strube sebagai alat ukur, dan (3) menguji NotaGen dalam konteks evaluasi harmoni formal apa pun. Penelitian ini mengisi ketiga celah tersebut sekaligus.
 
 \section{Landasan Teori}
 
@@ -35,3 +35,35 @@ Musik simbolik merujuk pada representasi musik dalam bentuk notasi yang dapat di
 \subsection{Evaluasi Otomatis dalam Music Information Retrieval (MIR)}
 
 \textit{Music Information Retrieval} adalah bidang interdisipliner yang mengembangkan metode komputasional untuk menganalisis, mengekstrak, dan mengklasifikasi informasi dari musik. Evaluasi berbasis kaidah harmoni formal dalam MIR memungkinkan analisis yang konsisten, terulang, dan berskala besar (dalam hal ini 120 sampel MIDI) tanpa bergantung pada subjektivitas pendengar sebagai sumber variabilitas. Pendekatan ini telah digunakan dalam penelitian fondasional seperti Coconet \parencite{huang2017} dan Bach or Mock \parencite{fang2020}, dan menjadi standar yang semakin diakui dalam komunitas MIR internasional sebagai respons terhadap keterbatasan inheren evaluasi perseptual subjektif \parencite{yang2020, le2025}.
+
+\subsection{Formalisasi Matematis Ruang Kosakata dan Arsitektur Model}
+
+Sebuah sekuens musik simbolik $\mathbf{X}$ sepanjang $T$ dibentuk dari token diskrit yang merepresentasikan atribut musikal. Ruang kosakata multi-atribut $\mathcal{V}$ difaktorkan sebagai:
+
+\[
+\mathcal{V} = \mathcal{P} \times \mathcal{D} \times \mathcal{V}_{\text{idx}} \times \mathcal{M}
+\]
+
+Di mana $\mathcal{P} = \{0, 1, \dots, 127\}$ adalah ruang pitch berdasarkan MIDI note number, $\mathcal{D}$ adalah ruang durasi diskrit, $\mathcal{V}_{\text{idx}} = \{0,1,2,3\}$ adalah indeks suara SATB, dan $\mathcal{M}$ adalah posisi metrikal dalam takar.
+
+Ketiga arsitektur yang dibandingkan menyelesaikan masalah dependensi dua poros (horizontal melodi dan vertikal harmoni) dengan pendekatan matematis yang berbeda.
+
+Recurrent (DeepBach) mengestimasi distribusi probabilitas kondisional lokal per koordinat menggunakan LSTM dua arah:
+
+\[
+P(x_{v,t} \mid \mathbf{X}_{\backslash \{v,t\}}, \mathbf{M}) = \sigma\left(\Phi(h_{v,t}^{\rightarrow}, h_{v,t}^{\leftarrow}, \Omega(\mathbf{X}_{\text{concurrent}}))\right)
+\]
+
+Konvolusional (Coconet) memperlakukan partitur sebagai matriks spasial dan melakukan infilling melalui Orderless Neural Autoregressive Density Estimator pada wilayah bermasker $\mathbf{M}_{\text{mask}}$:
+
+\[
+\hat{\mathbf{X}} = f_{\theta}(\mathbf{X} \odot \mathbf{M}_{\text{mask}} + \mathbf{M}_{\text{mask}})
+\]
+
+Attention-based (NotaGen) menserialisasikan partitur menjadi teks satu dimensi dan mengandalkan global self-attention untuk menangkap dependensi jarak jauh, baik vertikal maupun horizontal:
+
+\[
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\]
+
+Perbedaan pendekatan matematis ini menjadi dasar bahwa perbandingan ketiga model dalam penelitian ini adalah investigasi terhadap bias induktif arsitektur, bukan sekadar perbandingan kronologis tahun rilis.
