@@ -962,8 +962,8 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\AtEveryBibitem{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         r"\AtEveryCitekey{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         # Custom bibliography environment: tcolorbox wraps del/ins entries for background highlight
-        r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delhl,colframe=delhl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
-        r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inshl,colframe=inshl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delhl,colframe=delhl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inshl,colframe=inshl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
         r"\newcommand{\bibtcbend}{\end{tcolorbox}}",
         r"\defbibenvironment{bibliography}{\list{}{\setlength{\leftmargin}{\bibhang}\setlength{\itemindent}{-\leftmargin}\setlength{\itemsep}{4pt}\setlength{\parsep}{0pt}}}{\endlist}{\item}",
         r"\renewbibmacro*{begentry}{%",
