@@ -91,6 +91,50 @@ def find_git_path(ref, filename):
     return None
 
 
+def get_template_inputs(ref):
+    """
+    Extract list of tex filenames included via \\input in main.tex.template of the ref.
+    """
+    path = find_git_path(ref, "main.tex.template")
+    if not path:
+        return [
+            "00-frontmatter.tex",
+            "01-pendahuluan.tex",
+            "02-tinjauan-pustaka.tex",
+            "03-metodologi.tex",
+            "04-jadwal.tex",
+        ]
+    content = get_git_content(ref, path)
+    matches = re.findall(r'\\input\{([^}]+)\}', content)
+    filenames = []
+    for m in matches:
+        m = m.strip()
+        if not m.endswith(".tex"):
+            m = m + ".tex"
+        filenames.append(os.path.basename(m))
+    return filenames
+
+
+def extract_section_formatting(ref):
+    """
+    Find main.tex.template in git ref, and extract formatting commands:
+    \\renewcommand{\\thesection}...
+    \\titleformat{\\section}...
+    \\titleformat{\\subsection}...
+    \\titleformat{\\subsubsection}...
+    """
+    path = find_git_path(ref, "main.tex.template")
+    if not path:
+        return ""
+    content = get_git_content(ref, path)
+    commands = []
+    for line in content.splitlines():
+        line_strip = line.strip()
+        if any(pat in line_strip for pat in ["\\thesection", "\\titleformat{\\section}", "\\titleformat{\\subsection}", "\\titleformat{\\subsubsection}"]):
+            commands.append(line_strip)
+    return "\n  ".join(commands)
+
+
 def build_full_proposal(ref):
     """
     Concatenate all chapter files for a given git ref, in the exact order
@@ -99,13 +143,7 @@ def build_full_proposal(ref):
     not a per-file diff with separate sections per chapter.
     """
     parts = []
-    filenames = [
-        "00-frontmatter.tex",
-        "01-pendahuluan.tex",
-        "02-tinjauan-pustaka.tex",
-        "03-metodologi.tex",
-        "04-jadwal.tex",
-    ]
+    filenames = get_template_inputs(ref)
     for fname in filenames:
         path = find_git_path(ref, fname)
         if path:
@@ -507,11 +545,15 @@ def render_pair(old_text, new_text):
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
         "\\setlength{\\textwidth}{\\linewidth}\n"
+        "\\begin{leftside}\n"
         f"\\raggedright {old_rendered}\n"
+        "\\end{leftside}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
         "\\setlength{\\textwidth}{\\linewidth}\n"
+        "\\begin{rightside}\n"
         f"\\raggedright {new_rendered}\n"
+        "\\end{rightside}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
     )
@@ -525,11 +567,15 @@ def render_equal(text):
         "\\noindent\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
         "\\setlength{\\textwidth}{\\linewidth}\n"
+        "\\begin{leftside}\n"
         f"\\raggedright {rendered}\n"
+        "\\end{leftside}\n"
         "\\end{minipage}\\hfill\n"
         "\\begin{minipage}[t]{0.48\\textwidth}\n"
         "\\setlength{\\textwidth}{\\linewidth}\n"
+        "\\begin{rightside}\n"
         f"\\raggedright {rendered}\n"
+        "\\end{rightside}\n"
         "\\end{minipage}\n"
         "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
     )
@@ -666,6 +712,9 @@ def generate_diff_latex(tag1, tag2, outdir):
     old_full = build_full_proposal(tag1)
     new_full = build_full_proposal(tag2)
 
+    left_formatting = extract_section_formatting(tag1)
+    right_formatting = extract_section_formatting(tag2)
+
     # Extract citations
     v1_keys = extract_citation_keys(old_full)
     v2_keys = extract_citation_keys(new_full)
@@ -735,6 +784,33 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\addbibresource{references.bib}",
         # Load local env macros dynamically
         load_env_macros(),
+        # Counters for side-by-side sync
+        r"\newcounter{leftsection}",
+        r"\newcounter{leftsubsection}",
+        r"\newcounter{leftsubsubsection}",
+        r"\newcounter{rightsection}",
+        r"\newcounter{rightsubsection}",
+        r"\newcounter{rightsubsubsection}",
+        r"\newenvironment{leftside}{%",
+        r"  \setcounter{section}{\value{leftsection}}%",
+        r"  \setcounter{subsection}{\value{leftsubsection}}%",
+        r"  \setcounter{subsubsection}{\value{leftsubsubsection}}%",
+        f"  {left_formatting}%",
+        r"}{%",
+        r"  \setcounter{leftsection}{\value{section}}%",
+        r"  \setcounter{leftsubsection}{\value{subsection}}%",
+        r"  \setcounter{leftsubsubsection}{\value{subsubsection}}%",
+        r"}",
+        r"\newenvironment{rightside}{%",
+        r"  \setcounter{section}{\value{rightsection}}%",
+        r"  \setcounter{subsection}{\value{rightsubsection}}%",
+        r"  \setcounter{subsubsection}{\value{rightsubsubsection}}%",
+        f"  {right_formatting}%",
+        r"}{%",
+        r"  \setcounter{rightsection}{\value{section}}%",
+        r"  \setcounter{rightsubsection}{\value{subsection}}%",
+        r"  \setcounter{rightsubsubsection}{\value{subsubsection}}%",
+        r"}",
         # Redefine MakeUppercase to do nothing so colorbox inside it doesn't crash
         r"\renewcommand{\MakeUppercase}[1]{#1}",
         # Redefine page-breaking/floating environments to prevent compile crashes inside minipages
@@ -778,12 +854,13 @@ def generate_diff_latex(tag1, tag2, outdir):
 def latex_to_pdf(tex_path, outdir):
     """Use latexmk (not a bare pdflatex loop) so biber/citation passes
     that \\parencite needs actually run before the final PDF is produced.
-    The -e flag overrides the repo .latexmkrc's $aux_dir=build so all
-    aux/pdf output stays inside outdir where isi-proposal.cls lives."""
+    Runs inside outdir to prevent latexmk from losing the relative path on reruns."""
+    filename = os.path.basename(tex_path)
     result = subprocess.run(
         ["latexmk", "-pdf", "-interaction=nonstopmode",
-         "-e", f"$aux_dir='{outdir}';$out_dir='{outdir}'",
-         tex_path],
+         "-e", "$aux_dir='.';$out_dir='.'",
+         filename],
+        cwd=outdir,
         capture_output=True, text=True
     )
     pdf_path = os.path.join(outdir, "proposal_diff.pdf")
