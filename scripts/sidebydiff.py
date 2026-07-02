@@ -35,20 +35,7 @@ CLASS_PATH = "docs/proposal-phase/assets/isi-proposal.cls"
 BIB_PATH = "docs/proposal-phase/assets/references.bib"
 LOGO_PATH = "docs/proposal-phase/assets/logo-isi.png"
 
-# Placeholder identity macros so 00-frontmatter.tex's \makeisititle{...}
-# and \advisoracademic etc. compile without needing a real .env.local.
-PLACEHOLDER_MACROS = r"""
-\newcommand{\researchername}{[Nama Peneliti]}
-\newcommand{\researchernim}{[NIM]}
-\newcommand{\institutionname}{[Institusi]}
-\newcommand{\facultyname}{[Fakultas]}
-\newcommand{\departmentname}{[Jurusan]}
-\newcommand{\programstudy}{[Program Studi]}
-\newcommand{\advisoracademic}{[Dosen Pembimbing Akademik]}
-\newcommand{\advisoracademicnip}{[NIP]}
-\newcommand{\advisorthesis}{[Dosen Pembimbing Skripsi]}
-\newcommand{\advisorthesisnip}{[NIP]}
-"""
+# Placeholders are dynamically loaded from env files.
 
 
 def get_git_content(ref, path):
@@ -64,6 +51,7 @@ def get_git_content(ref, path):
 
 def clean_latex_for_diff(text):
     """Strip page-level/environment structures that cross paragraph boundaries or break minipages."""
+    text = replace_title_page(text)
     text = re.sub(r'\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}', '[Diagram Tikz]', text, flags=re.DOTALL)
     text = re.sub(r'(?<!\\)%.*', '', text)
     text = re.sub(r'\\newpage\b', '', text)
@@ -312,17 +300,64 @@ def word_level_render(old_text, new_text):
     new_tokens = tokenize_words(new_text)
     ops = compute_diff(old_tokens, new_tokens)
 
-    old_parts, new_parts = [], []
-    for kind, tok in ops:
-        if kind == "equal":
-            old_parts.append(render_token(tok))
-            new_parts.append(render_token(tok))
-        elif kind == "delete":
-            old_parts.append(render_token(tok, highlight="delhl"))
-        elif kind == "insert":
-            new_parts.append(render_token(tok, highlight="inshl"))
+    old_actions = []
+    new_actions = []
 
-    return "".join(old_parts), "".join(new_parts)
+    for kind, tok in ops:
+        kind_type, value = tok
+        if kind == "equal":
+            if kind_type == "NL":
+                old_actions.append((None, "\n"))
+                new_actions.append((None, "\n"))
+            else:
+                old_actions.append((None, value))
+                new_actions.append((None, value))
+        elif kind == "delete":
+            if kind_type == "NL":
+                old_actions.append((None, "\n"))
+            elif _is_safe_to_highlight(value):
+                old_actions.append(("delhl", value))
+            else:
+                old_actions.append((None, value))
+        elif kind == "insert":
+            if kind_type == "NL":
+                new_actions.append((None, "\n"))
+            elif _is_safe_to_highlight(value):
+                new_actions.append(("inshl", value))
+            else:
+                new_actions.append((None, value))
+
+    def merge_runs(actions):
+        if not actions:
+            return []
+        merged = []
+        cur_style, cur_words = actions[0]
+        cur_list = [cur_words]
+        for style, val in actions[1:]:
+            if style == cur_style and val != "\n" and cur_words != "\n":
+                cur_list.append(val)
+            else:
+                merged.append((cur_style, " ".join(cur_list)))
+                cur_style = style
+                cur_list = [val]
+        merged.append((cur_style, " ".join(cur_list)))
+        return merged
+
+    old_merged = merge_runs(old_actions)
+    new_merged = merge_runs(new_actions)
+
+    def render_merged(runs):
+        parts = []
+        for style, val in runs:
+            if val == "\n":
+                parts.append("\n")
+            elif style:
+                parts.append(f"\\colorbox{{{style}}}{{{val}}} ")
+            else:
+                parts.append(f"{val} ")
+        return "".join(parts)
+
+    return render_merged(old_merged), render_merged(new_merged)
 
 
 def render_pair(old_text, new_text):
@@ -409,9 +444,100 @@ def render_ops(ops):
     return "".join(out)
 
 
-def generate_diff_latex(tag1, tag2, outdir):
-    os.makedirs(outdir, exist_ok=True)
+def load_env_macros():
+    # Try .env.local first, then .env.example
+    env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
+    macros = []
+    defaults = {
+        "RESEARCHER_NAME": "[Nama Peneliti]",
+        "RESEARCHER_NIM": "[NIM]",
+        "INSTITUTION_NAME": "[Institusi]",
+        "FACULTY_NAME": "[Fakultas]",
+        "DEPARTMENT_NAME": "[Jurusan]",
+        "PROGRAM_STUDY": "[Program Studi]",
+        "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
+        "ADVISOR_ACADEMIC_NIP": "[NIP]",
+        "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
+        "ADVISOR_THESIS_NIP": "[NIP]"
+    }
+    
+    if os.path.exists(env_path):
+        with open(env_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if v:
+                        defaults[k] = v
 
+    macros.append(rf"\newcommand{{\researchername}}{{{defaults.get('RESEARCHER_NAME', '[Nama Peneliti]')}}}")
+    macros.append(rf"\newcommand{{\researchernim}}{{{defaults.get('RESEARCHER_NIM', '[NIM]')}}}")
+    macros.append(rf"\newcommand{{\institutionname}}{{{defaults.get('INSTITUTION_NAME', '[Institusi]')}}}")
+    macros.append(rf"\newcommand{{\facultyname}}{{{defaults.get('FACULTY_NAME', '[Fakultas]')}}}")
+    macros.append(rf"\newcommand{{\departmentname}}{{{defaults.get('DEPARTMENT_NAME', '[Jurusan]')}}}")
+    macros.append(rf"\newcommand{{\programstudy}}{{{defaults.get('PROGRAM_STUDY', '[Program Studi]')}}}")
+    macros.append(rf"\newcommand{{\advisoracademic}}{{{defaults.get('ADVISOR_ACADEMIC', '[Dosen Pembimbing Akademik]')}}}")
+    macros.append(rf"\newcommand{{\advisoracademicnip}}{{{defaults.get('ADVISOR_ACADEMIC_NIP', '[NIP]')}}}")
+    macros.append(rf"\newcommand{{\advisorthesis}}{{{defaults.get('ADVISOR_THESIS', '[Dosen Pembimbing Skripsi]')}}}")
+    macros.append(rf"\newcommand{{\advisorthesisnip}}{{{defaults.get('ADVISOR_THESIS_NIP', '[NIP]')}}}")
+    return "\n".join(macros)
+
+
+def replace_title_page(text):
+    idx = 0
+    while True:
+        match = re.search(r'\\makeisititle\b', text[idx:])
+        if not match:
+            break
+        start_pos = idx + match.start()
+        args = []
+        pos = start_pos + len("\\makeisititle")
+        success = True
+        for _ in range(5):
+            while pos < len(text) and text[pos].isspace():
+                pos += 1
+            if pos >= len(text) or text[pos] != '{':
+                success = False
+                break
+            balance = 1
+            arg_start = pos + 1
+            pos += 1
+            while pos < len(text) and balance > 0:
+                if text[pos] == '{':
+                    balance += 1
+                elif text[pos] == '}':
+                    balance -= 1
+                pos += 1
+            if balance > 0:
+                success = False
+                break
+            args.append(text[arg_start:pos-1])
+        
+        if success:
+            replacement = (
+                f"\\section*{{Judul Proposal}}\n{args[0]}\n\n"
+                f"\\section*{{Peneliti}}\n{args[1]} (NIM: {args[2]})\n\n"
+                f"\\section*{{Pendaftaran}}\n{args[3]} -- {args[4]}\n\n"
+            )
+            text = text[:start_pos] + replacement + text[pos:]
+            idx = start_pos + len(replacement)
+        else:
+            idx = start_pos + 1
+    return text
+
+
+def extract_citation_keys(text):
+    matches = re.findall(r'\\(?:parencite|cite|textcite|nocite)\{([^}]+)\}', text)
+    keys = set()
+    for match in matches:
+        for key in match.split(','):
+            keys.add(key.strip())
+    return sorted(list(keys))
+
+
+def generate_diff_latex(tag1, tag2, outdir):
     # Clean old temp files to ensure biber runs correctly
     for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex"]:
         path = os.path.join(outdir, f"proposal_diff.{ext}")
@@ -421,8 +547,39 @@ def generate_diff_latex(tag1, tag2, outdir):
     old_full = build_full_proposal(tag1)
     new_full = build_full_proposal(tag2)
 
+    # Extract citations
+    v1_keys = extract_citation_keys(old_full)
+    v2_keys = extract_citation_keys(new_full)
+
+    # Bibliography diff block
+    bib_diff = []
+    if v1_keys or v2_keys:
+        v1_nocite = f"\\nocite{{{', '.join(v1_keys)}}}" if v1_keys else ""
+        v2_nocite = f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else ""
+        bib_diff = [
+            r"\newpage",
+            r"\section*{Daftar Pustaka / References}",
+            r"\noindent",
+            r"\begin{minipage}[t]{0.48\textwidth}",
+            r"\setlength{\textwidth}{\linewidth}",
+            r"\raggedright",
+            r"\begin{refsection}",
+            v1_nocite,
+            r"\printbibliography[heading=none]" if v1_keys else "",
+            r"\end{refsection}",
+            r"\end{minipage}\hfill",
+            r"\begin{minipage}[t]{0.48\textwidth}",
+            r"\setlength{\textwidth}{\linewidth}",
+            r"\raggedright",
+            r"\begin{refsection}",
+            v2_nocite,
+            r"\printbibliography[heading=none]" if v2_keys else "",
+            r"\end{refsection}",
+            r"\end{minipage}"
+        ]
+
     ops = compute_diff(split_paragraphs(old_full), split_paragraphs(new_full))
-    body = render_ops(ops)
+    body = render_ops(ops) + "\n" + "\n".join(bib_diff)
 
     # Pull class/bib/logo assets so the diff compiles with the real
     # proposal styling instead of a bare article class.
@@ -453,10 +610,14 @@ def generate_diff_latex(tag1, tag2, outdir):
 
     latex = [
         r"\documentclass{isi-proposal}",
+        r"\geometry{a3paper, margin=1.5cm}", # Set to A3 with generous margins
         r"\usepackage{tikz}",
         r"\usetikzlibrary{shapes.geometric, arrows}",
         r"\addbibresource{references.bib}",
-        PLACEHOLDER_MACROS,
+        # Load local env macros dynamically
+        load_env_macros(),
+        # Redefine MakeUppercase to do nothing so colorbox inside it doesn't crash
+        r"\renewcommand{\MakeUppercase}[1]{#1}",
         # Redefine page-breaking/floating environments to prevent compile crashes inside minipages
         r"\renewenvironment{table}[1][]{}{}",
         r"\renewenvironment{figure}[1][]{}{}",
@@ -479,7 +640,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         rf"\texttt{{{tag1} $\rightarrow$ {tag2}}}\\[0.5em]",
         r"\today",
         r"\end{center}",
-        r"\newpage",
+        # Continuous flow, no newpage
         body,
         r"\end{document}",
     ]
