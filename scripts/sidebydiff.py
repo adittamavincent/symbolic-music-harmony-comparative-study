@@ -230,16 +230,12 @@ def _is_safe_to_highlight(token_text):
 
 def tokenize_words(text):
     """
-    Split a paragraph into brace-safe tokens.
+    Split a paragraph into brace-safe and math-safe tokens.
 
     Pass 1: split on whitespace, tracking newlines as boundaries.
     Pass 2: merge consecutive word-tokens whenever the running
-            '{' minus '}' count is nonzero, so every emitted token is
-            individually brace-balanced. A newline encountered while a
-            merge is "open" (balance != 0) is folded into a plain space
-            rather than kept as a hard line break, because \\newline
-            is itself illegal inside a \\colorbox argument -- losing the
-            exact line break there is a fine trade for not crashing.
+            '{' minus '}' count is nonzero or unescaped '$' is unbalanced,
+            so every emitted token is individually brace-balanced and math-balanced.
     """
     # Build a flat stream of ('W', word) / ('NL', None) first.
     stream = []
@@ -252,7 +248,8 @@ def tokenize_words(text):
 
     merged = []
     buf = []
-    balance = 0
+    brace_balance = 0
+    math_mode = False
 
     def flush():
         if buf:
@@ -261,19 +258,27 @@ def tokenize_words(text):
 
     for kind, val in stream:
         if kind == "NL":
-            if balance != 0:
-                # Mid-merge: a hard newline here would need \newline
-                # inside a future \colorbox, which is illegal. Fold
-                # into a space instead of emitting a real NL token.
+            if math_mode or brace_balance != 0:
+                # Mid-merge: fold newline into space
                 continue
             flush()
             merged.append(("NL", None))
         else:
             buf.append(val)
-            balance += val.count("{") - val.count("}")
-            if balance <= 0:
+            
+            # Count unescaped braces
+            unescaped_opens = len(re.findall(r'(?<!\\)\{', val))
+            unescaped_closes = len(re.findall(r'(?<!\\)\}', val))
+            brace_balance += unescaped_opens - unescaped_closes
+            
+            # Count unescaped dollars to toggle math mode
+            unescaped_dollars = len(re.findall(r'(?<!\\)\$', val))
+            if unescaped_dollars % 2 != 0:
+                math_mode = not math_mode
+                
+            if brace_balance <= 0 and not math_mode:
                 flush()
-                balance = 0
+                brace_balance = 0
     flush()
     return merged
 
@@ -300,6 +305,14 @@ def apply_highlight(style, text):
         macro_name = match.group(1)
         content = match.group(2)
         return f"\\{macro_name}{{{apply_highlight(style, content).strip()}}} "
+        
+    # Check if the text matches an inline math formula $content$
+    math_pattern = r'^\$(.*)\$$'
+    math_match = re.match(math_pattern, text.strip())
+    if math_match:
+        content = math_match.group(1)
+        color = "delhl" if style == "delhl" else "inshl"
+        return f"\\colorbox{{{color}}}{{\\ensuremath{{{content}}}}} "
     
     # Check safety
     if any(pat in text for pat in UNSAFE_HIGHLIGHT_PATTERNS) or re.search(r'\\[^%_#$]', text) or re.search(r'(?<!\\)%', text) or re.search(r'(?<!\\)_', text) or re.search(r'(?<!\\)\^', text) or re.search(r'(?<!\\)\$', text):
@@ -378,26 +391,8 @@ def word_level_render(old_text, new_text):
 def render_pair(old_text, new_text):
     """
     Render one paragraph slot side-by-side.
-
-      - Both old_text and new_text present -> word-level diff: full text
-        both sides, only the changed words get a soft highlight box.
-      - Only old_text present (pure delete) -> full old text on the left,
-        every word highlighted red; right side left blank (there is no
-        "B" to show, same as VSCode leaving the opposite gutter empty).
-      - Only new_text present (pure insert) -> mirror of the above.
     """
-    if old_text and new_text:
-        old_rendered, new_rendered = word_level_render(old_text, new_text)
-    elif old_text:
-        old_rendered = "".join(
-            render_token(t, highlight="delhl") for t in tokenize_words(old_text)
-        )
-        new_rendered = ""
-    else:
-        old_rendered = ""
-        new_rendered = "".join(
-            render_token(t, highlight="inshl") for t in tokenize_words(new_text)
-        )
+    old_rendered, new_rendered = word_level_render(old_text, new_text)
 
     return (
         "\\noindent\n"
