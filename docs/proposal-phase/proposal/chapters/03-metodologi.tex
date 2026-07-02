@@ -45,14 +45,14 @@ Deteksi pelanggaran gerak paralel antara dua suara aktif $i$ dan $j$ pada interv
 
 \begin{multline}
 \text{Violation}_{\text{parallel}}(t) = \mathds{1}\left(|p_{i,t} - p_{j,t}| \equiv \delta \pmod{12}\right) \times \mathds{1}\left(|p_{i,t-1} - p_{j,t-1}| \equiv \delta \pmod{12}\right) \\
-\times \mathds{1}\left(\text{sgn}(\Delta p_i) = \text{sgn}(\Delta p_j)\right) \times \mathds{1}\left(\Delta p_i \neq 0\right)
+\times \mathds{1}\left(\text{sgn}(p_{i,t} - p_{i,t-1}) = \text{sgn}(p_{j,t} - p_{j,t-1})\right) \times \mathds{1}\left((p_{i,t} - p_{i,t-1}) \neq 0\right)
 \end{multline}
 
-Deteksi kegagalan resolusi nada penuntun pada suara Soprano menerapkan dua filter kontekstual. \textit{Pertama}, filter modus: pada tangga nada minor, nada ke-7 hanya dianggap \textit{leading tone} jika merupakan \textit{raised seventh} (berjarak satu \textit{semitone} dari tonika, $L_{\text{pc}} = (K_{\text{tonic}} - 1) \bmod 12$); jika modus terdeteksi sebagai \textit{natural minor} dan nada ke-7 berjarak dua \textit{semitone} dari tonika (\textit{subtonic}), instrumen tidak menandainya sebagai pelanggaran. \textit{Kedua}, filter arah: pelanggaran hanya dicatat jika \textit{leading tone} bergerak \textbf{naik} ke nada non-tonika ($p_{i,t+1} > p_{i,t}$ dan $p_{i,t+1} \bmod 12 \neq K_{\text{tonic}} \bmod 12$); gerakan turun dari nada ke-7 tidak ditandai sebagai pelanggaran, karena \textit{passing tone} menurun (8-7-6-5) merupakan ornamentasi melodik yang tidak wajib resolusi ke atas. Secara formal:
+Deteksi kegagalan resolusi nada penuntun pada suara Soprano menerapkan dua filter kontekstual. \textit{Pertama}, filter modus: pada tangga nada minor, nada ke-7 hanya dianggap \textit{leading tone} jika merupakan \textit{raised seventh} (berjarak satu \textit{semitone} dari tonika, $L_{\text{pc}} \equiv (K_{\text{tonic}} - 1) \pmod{12}$); jika modus terdeteksi sebagai \textit{natural minor} dan nada ke-7 berjarak dua \textit{semitone} dari tonika (\textit{subtonic}), instrumen tidak menandainya sebagai pelanggaran. \textit{Kedua}, filter arah: pelanggaran hanya dicatat jika \textit{leading tone} bergerak \textbf{naik} ke nada non-tonika ($p_{i,t+1} > p_{i,t}$ dan $p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}$); gerakan turun dari nada ke-7 tidak ditandai sebagai pelanggaran, karena \textit{passing tone} menurun (8-7-6-5) merupakan ornamentasi melodik yang tidak wajib resolusi ke atas. Secara formal:
 
 \begin{multline}
 \text{Violation}_{\text{leading}}(t) = \mathds{1}\left(p_{i,t} \equiv L_{\text{pc}} \pmod{12}\right) \times \mathds{1}\left(p_{i,t+1} > p_{i,t}\right) \\
-\times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}\right) \times \mathds{1}\left(\text{mode} \neq \text{natural minor OR } L_{\text{pc}} = (K_{\text{tonic}} - 1) \bmod 12\right)
+\times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}\right) \times \mathds{1}\left(\text{mode} \neq \text{natural minor OR } L_{\text{pc}} \equiv (K_{\text{tonic}} - 1) \pmod{12}\right)
 \end{multline}
 
 Pengecekan gerak paralel dan resolusi nada penuntun dijalankan pada seluruh enam kombinasi pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B.
