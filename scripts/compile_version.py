@@ -70,7 +70,8 @@ def main():
     outdir = "scratch"
     os.makedirs(outdir, exist_ok=True)
     
-    tag_clean = tag.replace("/", "_")
+    fn_tag = tag[9:] if tag.startswith("proposal/") else tag
+    tag_clean = fn_tag.replace("/", "_")
     
     # Clean old temp files for this tag to ensure clean biber compilation
     for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex", "fdb_latexmk", "fls"]:

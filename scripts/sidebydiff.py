@@ -416,7 +416,10 @@ def classify_token_style(style, val):
             return style + "_format"
         return None
         
-    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear|texttt)\{.*\}$', val_clean):
+    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', val_clean):
+        return None
+        
+    if re.match(r'^\\(texttt)\{.*\}$', val_clean):
         if is_safe_to_highlight_token(val, is_box=True):
             return style + "_box"
         return None
@@ -623,7 +626,11 @@ def load_env_macros():
         "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
         "ADVISOR_ACADEMIC_NIP": "[NIP]",
         "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
-        "ADVISOR_THESIS_NIP": "[NIP]"
+        "ADVISOR_THESIS_NIP": "[NIP]",
+        "EXAMINER_1": "[Penguji 1]",
+        "EXAMINER_1_NIP": "[NIP]",
+        "EXAMINER_2": "[Penguji 2]",
+        "EXAMINER_2_NIP": "[NIP]"
     }
     
     if os.path.exists(env_path):
@@ -647,6 +654,10 @@ def load_env_macros():
     macros.append(rf"\newcommand{{\advisoracademicnip}}{{{defaults.get('ADVISOR_ACADEMIC_NIP', '[NIP]')}}}")
     macros.append(rf"\newcommand{{\advisorthesis}}{{{defaults.get('ADVISOR_THESIS', '[Dosen Pembimbing Skripsi]')}}}")
     macros.append(rf"\newcommand{{\advisorthesisnip}}{{{defaults.get('ADVISOR_THESIS_NIP', '[NIP]')}}}")
+    macros.append(rf"\newcommand{{\examinerone}}{{{defaults.get('EXAMINER_1', '[Penguji 1]')}}}")
+    macros.append(rf"\newcommand{{\examineronenip}}{{{defaults.get('EXAMINER_1_NIP', '[NIP]')}}}")
+    macros.append(rf"\newcommand{{\examinertwo}}{{{defaults.get('EXAMINER_2', '[Penguji 2]')}}}")
+    macros.append(rf"\newcommand{{\examinertwonip}}{{{defaults.get('EXAMINER_2_NIP', '[NIP]')}}}")
     return "\n".join(macros)
 
 
