@@ -122,9 +122,15 @@ clean-docs:
 DIFF_SCRIPT := scripts/sidebydiff.py
 DIFF_OUTPUTS := scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log
 
+# If the first argument is "diff", parse the rest as tags to pass to the script
+ifeq ($(firstword $(MAKECMDGOALS)),diff)
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
 diff: $(DIFF_SCRIPT)
 	@chmod +x $(DIFF_SCRIPT)
-	@python3 $(DIFF_SCRIPT)
+	@python3 $(DIFF_SCRIPT) $(RUN_ARGS)
 
 diff-clean:
 	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
