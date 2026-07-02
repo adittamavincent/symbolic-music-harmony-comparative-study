@@ -725,13 +725,121 @@ def replace_title_page(text):
     return text
 
 
-def extract_citation_keys(text):
+def extract_citation_keys(text, suffix=""):
     matches = re.findall(r'\\(?:parencite|cite|textcite|nocite)\{([^}]+)\}', text)
     keys = set()
     for match in matches:
         for key in match.split(','):
-            keys.add(key.strip())
+            k = key.strip()
+            if k:
+                keys.add(k + suffix)
     return sorted(list(keys))
+
+def parse_bib(content):
+    entries = {}
+    idx = 0
+    while True:
+        idx = content.find('@', idx)
+        if idx == -1: break
+        brace_idx = content.find('{', idx)
+        if brace_idx == -1: break
+        entry_type = content[idx+1:brace_idx].strip()
+        comma_idx = content.find(',', brace_idx)
+        if comma_idx == -1: break
+        key = content[brace_idx+1:comma_idx].strip()
+        balance = 1
+        pos = comma_idx + 1
+        while pos < len(content) and balance > 0:
+            if content[pos] == '{': balance += 1
+            elif content[pos] == '}': balance -= 1
+            pos += 1
+        if balance == 0:
+            fields_text = content[comma_idx+1:pos-1]
+            entries[key] = {
+                'type': entry_type,
+                'fields_text': fields_text,
+                'raw': content[idx:pos]
+            }
+        idx = pos
+    return entries
+
+def parse_fields_text(text):
+    fields = {}
+    idx = 0
+    while idx < len(text):
+        eq_idx = text.find('=', idx)
+        if eq_idx == -1: break
+        name = text[idx:eq_idx].strip().split(',')[-1].strip().lower()
+        idx = eq_idx + 1
+        while idx < len(text) and text[idx] in ' \t\n\r': idx += 1
+        if idx == len(text): break
+        if text[idx] == '{':
+            balance = 1
+            pos = idx + 1
+            while pos < len(text) and balance > 0:
+                if text[pos] == '{': balance += 1
+                elif text[pos] == '}': balance -= 1
+                pos += 1
+            val = text[idx+1:pos-1]
+            fields[name] = val
+            idx = pos
+        elif text[idx] == '"':
+            pos = idx + 1
+            while pos < len(text) and text[pos] != '"': pos += 1
+            val = text[idx+1:pos]
+            fields[name] = val
+            idx = pos + 1
+        else:
+            pos = idx
+            while pos < len(text) and text[pos] not in ',\n}': pos += 1
+            val = text[idx:pos].strip()
+            fields[name] = val
+            idx = pos
+    return fields
+
+def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
+    e1 = parse_bib(bib1_str)
+    e2 = parse_bib(bib2_str)
+    out1 = []
+    out2 = []
+    for key in set(keys1) | set(keys2):
+        if key in keys1 and key not in keys2:
+            if key in e1:
+                raw = e1[key]['raw'].strip()
+                raw = raw[:-1].rstrip() + ',\n  keywords = {v1},\n  userc = {del}\n}'
+                out1.append(raw)
+        elif key in keys2 and key not in keys1:
+            if key in e2:
+                raw = e2[key]['raw'].strip()
+                raw = raw[:-1].rstrip() + ',\n  keywords = {v2},\n  userc = {ins}\n}'
+                out2.append(raw)
+        else:
+            if key in e1 and key in e2:
+                fields1 = parse_fields_text(e1[key]['fields_text'])
+                fields2 = parse_fields_text(e2[key]['fields_text'])
+                new_f1 = []
+                new_f2 = []
+                all_fields = set(fields1.keys()) | set(fields2.keys())
+                for f in sorted(list(all_fields)):
+                    v1 = fields1.get(f)
+                    v2 = fields2.get(f)
+                    if v1 == v2:
+                        if v1 is not None:
+                            new_f1.append(f"{f} = {{{v1}}}")
+                            new_f2.append(f"{f} = {{{v1}}}")
+                    else:
+                        if v1 is not None:
+                            new_f1.append(f"{f} = {{\\textcolor{{deltext}}{{{v1}}}}}")
+                        if v2 is not None:
+                            new_f2.append(f"{f} = {{\\textcolor{{instext}}{{{v2}}}}}")
+                new_f1.append('keywords = {v1}')
+                new_f2.append('keywords = {v2}')
+                # Set userc so tcolorbox opens for modified entries too
+                new_f1.append('userc = {mod}')
+                new_f2.append('userc = {mod}')
+                out1.append(f"@{e1[key]['type']}{{{key},\n  " + ",\n  ".join(new_f1) + "\n}")
+                out2.append(f"@{e2[key]['type']}{{{key},\n  " + ",\n  ".join(new_f2) + "\n}")
+    return "\n".join(out1), "\n".join(out2)
 
 def generate_diff_latex(tag1, tag2, outdir):
     os.makedirs(outdir, exist_ok=True)
@@ -748,7 +856,8 @@ def generate_diff_latex(tag1, tag2, outdir):
     right_formatting = extract_section_formatting(tag2)
 
     # Extract citations
-    v1_keys = extract_citation_keys(old_full)
+    pure_v1_keys = extract_citation_keys(old_full)
+    v1_keys = extract_citation_keys(old_full, suffix="_v1")
     v2_keys = extract_citation_keys(new_full)
 
     # Bibliography diff block
@@ -758,41 +867,71 @@ def generate_diff_latex(tag1, tag2, outdir):
         v2_nocite = f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else ""
         bib_diff = [
             r"\newpage",
+            v1_nocite,
+            v2_nocite,
             r"\begin{paracol}{2}",
             f"\\section*{{Daftar Pustaka ({tag1})}}",
-            r"\begin{refsection}",
-            v1_nocite,
-            r"\printbibliography[heading=none]" if v1_keys else "",
-            r"\end{refsection}",
+            r"\printbibliography[heading=none, keyword=v1]" if v1_keys else "",
             r"\switchcolumn",
             f"\\section*{{Daftar Pustaka ({tag2})}}",
-            r"\begin{refsection}",
-            v2_nocite,
-            r"\printbibliography[heading=none]" if v2_keys else "",
-            r"\end{refsection}",
-            r"\end{paracol}"
+            r"\printbibliography[heading=none, keyword=v2]" if v2_keys else "",
+            r"\end{paracol}",
         ]
 
     ops = compute_diff(split_paragraphs(old_full), split_paragraphs(new_full))
-    body = render_ops(ops) + "\n" + "\n".join(bib_diff)
+    body = render_ops(ops)
+    
+    # Append _v1 to citation commands specifically inside the left column 
+    # to avoid biber duplicate key merging issues for v1
+    def leftside_repl(match):
+        content = match.group(1)
+        def cite_repl(m2):
+            cmd = m2.group(1)
+            keys = m2.group(2)
+            new_keys = ", ".join([k.strip() + "_v1" if k.strip() else "" for k in keys.split(",")])
+            return f"\\{cmd}{{{new_keys}}}"
+        new_content = re.sub(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)\{([^}]+)\}', cite_repl, content)
+        return f"\\begin{{leftside}}{new_content}\\end{{leftside}}"
+    
+    body = re.sub(r'\\begin\{leftside\}(.*?)\\end\{leftside\}', leftside_repl, body, flags=re.DOTALL)
+    body = body + "\n" + "\n".join(bib_diff)
 
     # Pull class/bib/logo assets so the diff compiles with the real
     # proposal styling instead of a bare article class.
-    cls_path2 = find_git_path(tag2, "isi-proposal.cls")
-    cls_path1 = find_git_path(tag1, "isi-proposal.cls")
-    cls_content = get_git_content(tag2, cls_path2) if cls_path2 else ""
-    if not cls_content and cls_path1:
-        cls_content = get_git_content(tag1, cls_path1)
-    with open(os.path.join(outdir, "isi-proposal.cls"), "w") as f:
-        f.write(cls_content)
+    local_cls = os.path.join("docs", "proposal-phase", "assets", "isi-proposal.cls")
+    if os.path.exists(local_cls):
+        shutil.copy(local_cls, os.path.join(outdir, "isi-proposal.cls"))
+    else:
+        cls_path2 = find_git_path(tag2, "isi-proposal.cls")
+        cls_path1 = find_git_path(tag1, "isi-proposal.cls")
+        cls_content = get_git_content(tag2, cls_path2) if cls_path2 else ""
+        if not cls_content and cls_path1:
+            cls_content = get_git_content(tag1, cls_path1)
+        with open(os.path.join(outdir, "isi-proposal.cls"), "w") as f:
+            f.write(cls_content)
 
-    bib_path2 = find_git_path(tag2, "references.bib")
+    # Write references_v1.bib (from tag1)
     bib_path1 = find_git_path(tag1, "references.bib")
-    bib_content = get_git_content(tag2, bib_path2) if bib_path2 else ""
-    if not bib_content and bib_path1:
-        bib_content = get_git_content(tag1, bib_path1)
-    with open(os.path.join(outdir, "references.bib"), "w") as f:
-        f.write(bib_content)
+    bib_content_v1 = get_git_content(tag1, bib_path1) if bib_path1 else ""
+
+    # Write references_v2.bib (from tag2 git state; fallback to local if not in git)
+    bib_path2 = find_git_path(tag2, "references.bib")
+    bib_content_v2 = get_git_content(tag2, bib_path2) if bib_path2 else ""
+    if not bib_content_v2:
+        local_bib = os.path.join("docs", "proposal-phase", "assets", "references.bib")
+        if os.path.exists(local_bib):
+            with open(local_bib, "r") as f:
+                bib_content_v2 = f.read()
+        
+    bib_content_v1, bib_content_v2 = diff_bib_files(bib_content_v1, bib_content_v2, pure_v1_keys, v2_keys)
+    
+    bib_content_v1 = re.sub(r'(@[a-zA-Z]+\s*\{)\s*([^,]+)\s*(,)', lambda m: f"{m.group(1)}{m.group(2).strip()}_v1{m.group(3)}", bib_content_v1)
+
+    with open(os.path.join(outdir, "references_v1.bib"), "w") as f:
+        f.write(bib_content_v1)
+
+    with open(os.path.join(outdir, "references_v2.bib"), "w") as f:
+        f.write(bib_content_v2)
 
     # Find logo locally
     local_logo_path = None
@@ -805,11 +944,36 @@ def generate_diff_latex(tag1, tag2, outdir):
 
     latex = [
         r"\documentclass{isi-proposal}",
-        r"\geometry{a3paper, margin=1.5cm}", # Set to A3 with generous margins
+        r"\geometry{a3paper, margin=2cm}", # Set to A3 with generous margins
         r"\usepackage{tikz}",
         r"\usetikzlibrary{shapes.geometric, arrows}",
         r"\usepackage{paracol}",
-        r"\addbibresource{references.bib}",
+        r"\usepackage{xurl}",
+        r"\usepackage{microtype}",
+        r"\usepackage{etoolbox}",
+        r"\usepackage[most]{tcolorbox}",
+        # Define diff colors early so defbibenvironment can reference them
+        r"\definecolor{delhl}{RGB}{255,214,214}",
+        r"\definecolor{inshl}{RGB}{204,244,206}",
+        r"\definecolor{deltext}{RGB}{180,0,0}",
+        r"\definecolor{instext}{RGB}{0,120,0}",
+        r"\addbibresource{references_v1.bib}",
+        r"\addbibresource{references_v2.bib}",
+        # Custom bibliography environment: tcolorbox wraps del/ins entries for background highlight
+        r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delhl,colframe=delhl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inshl,colframe=inshl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibtcbend}{\end{tcolorbox}}",
+        r"\defbibenvironment{bibliography}{\list{}{\setlength{\leftmargin}{\bibhang}\setlength{\itemindent}{-\leftmargin}\setlength{\itemsep}{4pt}\setlength{\parsep}{0pt}}}{\endlist}{\item}",
+        r"\renewbibmacro*{begentry}{%",
+        r"  \iffieldequalstr{userc}{del}{\bibdelbegin}{}%",
+        r"  \iffieldequalstr{userc}{ins}{\bibinsbegin}{}%",
+        r"}",
+        r"\renewbibmacro*{finentry}{%",
+        r"  \finentry",
+        r"  \iffieldequalstr{userc}{del}{\bibtcbend}{}%",
+        r"  \iffieldequalstr{userc}{ins}{\bibtcbend}{}%",
+        r"}",
+
         # Load local env macros dynamically
         load_env_macros(),
         # Counters for side-by-side sync
@@ -852,10 +1016,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"    #4\par\vspace{1em}",
         r"    #5\par}",
         r"}",
-        # Soft pastel backgrounds for word-level highlighting, matching
-        # GitHub/VSCode diff colors -- NOT full-text coloring anymore.
-        r"\definecolor{delhl}{RGB}{255,214,214}",
-        r"\definecolor{inshl}{RGB}{204,244,206}",
+        # (colors already defined earlier in preamble for defbibenvironment)
         # Use soul for line-wrapping highlights
         r"\usepackage{soul}",
         r"\soulregister{\parencite}{1}",
