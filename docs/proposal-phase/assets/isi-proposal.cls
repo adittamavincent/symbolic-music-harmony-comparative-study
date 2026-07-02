@@ -36,8 +36,8 @@
       Diajukan Untuk Mengikuti Proses Seleksi Proposal Tugas Akhir/Skripsi\par
       #4\par
       \vfill
-      JURUSAN \MakeUppercase{\departmentname}\\
-      \MakeUppercase{\facultyname}\\
+      \MakeUppercase{\programstudy}\\
+      JURUSAN \MakeUppercase{\departmentname} \MakeUppercase{\facultyname}\\
       \MakeUppercase{\institutionname}\\
       #5\par
     \end{center}

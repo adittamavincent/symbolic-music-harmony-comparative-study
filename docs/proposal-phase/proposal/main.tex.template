@@ -22,6 +22,10 @@
 \newcommand{\advisoracademicnip}{${ADVISOR_ACADEMIC_NIP}}
 \newcommand{\advisorthesis}{${ADVISOR_THESIS}}
 \newcommand{\advisorthesisnip}{${ADVISOR_THESIS_NIP}}
+\newcommand{\examinerone}{${EXAMINER_1}}
+\newcommand{\examineronenip}{${EXAMINER_1_NIP}}
+\newcommand{\examinertwo}{${EXAMINER_2}}
+\newcommand{\examinertwonip}{${EXAMINER_2_NIP}}
 
 % Disable hyphenation while keeping justification (MS Word style)
 \tolerance=1
