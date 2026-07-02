@@ -55,7 +55,7 @@
 Apa objek formal dan objek material penelitian ini? & Teori & Objek material: output MIDI dari 3 model di 4 kondisi. Objek formal: kepatuhan harmoni fungsional menurut teori Strube, yaitu sudut pandang yang dipakai untuk menganalisis objek material tersebut. & \cellcolor{HighTrust}Tinggi \\
 \midrule
 % Row 2
-Kenapa pakai teori Strube, bukan teori harmoni lain? & Teori & Strube adalah teori yang diajarkan di kurikulum resmi program studi ini, jadi relevansinya langsung ke institusi. Kaidahnya juga bersifat deterministik dan bisa diformalkan secara komputasional, berbeda dari teori yang lebih interpretif. & \cellcolor{HighTrust}Tinggi \\
+Kenapa pakai teori Strube, bukan teori harmoni lain? & Teori & Pemilihan teori Strube didasarkan pada sifat kaidahnya yang deterministik, objektif, dan dapat ditranslasikan langsung menjadi fungsi indikator matematis tanpa memerlukan segmentasi harmoni yang interpretatif. Kaidah tersebut dapat dieksekusi secara komputasional oleh linter algoritmis dengan tingkat kepastian 100\%. & \cellcolor{HighTrust}Tinggi \\
 \midrule
 % Row 3
 Apa itu paradigma R\&D, kenapa dipakai di sini? & Metode & R\&D dalam konteks ini berarti ada dua tahap: pertama membangun dan memvalidasi instrumen, baru kemudian menerapkan instrumen itu untuk menghasilkan temuan. Ini berbeda dari penelitian deskriptif yang langsung terjun ke data tanpa fase pengembangan instrumen. & \cellcolor{MedTrust}Sedang \\

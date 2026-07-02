@@ -176,7 +176,7 @@
   \end{columns}
 
   \vspace{0.4cm}
-  \textit{\small Dipilih karena: objektif, deterministik, dapat diformalkan secara komputasional, dan bagian dari kurikulum resmi program studi ini.}
+  \textit{\small Dipilih karena: objektif, deterministik, dapat diformalkan secara komputasional, serta terukur secara komputasional.}
 \end{frame}
 
 % --- Slide 6 ---
@@ -305,7 +305,7 @@
 
   \textbf{3.} Kondisi instruksi mana yang paling mendorong kepatuhan harmoni fungsional? \par \vspace{0.2cm}
 
-  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi, menggunakan teori yang diajarkan di institusi ini.} \par \vspace{0.2cm}
+  \textit{Evaluasi otomatis, terukur, dan dapat direplikasi, dengan justifikasi teoretis yang deterministik.} \par \vspace{0.2cm}
 
   \small Terima kasih. \par
   \textbf{${RESEARCHER_NAME}, ${RESEARCHER_NIM}}

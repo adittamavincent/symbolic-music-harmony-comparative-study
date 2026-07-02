@@ -70,7 +70,7 @@
 \end{center}
 \vspace{0.5cm}
 \noindent\textbf{Slide 5: Landasan Teori}\par
-"Alat ukur yang digunakan adalah teori harmoni fungsional Gustav Strube dari bukunya tahun 1928. Tiga kaidah yang dijadikan variabel: larangan kuint sejajar, larangan oktaf sejajar, dan kewajiban resolusi nada penuntun ke tonika. Ketiganya didukung juga oleh Schoenberg 1954 dan Harrison 2020. Alasan pemilihan ketiga kaidah ini ada tiga: sifatnya objektif dan tidak ambigu, bisa diverifikasi secara biner di setiap momen harmonis, dan merupakan bagian dari kurikulum resmi program studi kita di sini."
+"Alat ukur yang digunakan adalah teori harmoni fungsional Gustav Strube dari bukunya tahun 1928. Tiga kaidah yang dijadikan variabel: larangan kuint sejajar, larangan oktaf sejajar, dan kewajiban resolusi nada penuntun ke tonika. Ketiganya didukung juga oleh Schoenberg 1954 dan Harrison 2020. Alasan pemilihan ketiga kaidah ini ada tiga: sifatnya objektif dan tidak ambigu, bisa diverifikasi secara biner di setiap momen harmonis, dan karena sifatnya yang deterministik dan terukur secara komputasional."
 \vfill\newpage
 
 % Slide 6
@@ -120,7 +120,7 @@
 \end{center}
 \vspace{0.5cm}
 \noindent\textbf{Slide 10: Penutup \& Tanya Jawab}\par
-"Jadi, ada tiga pertanyaan yang akan dijawab penelitian ini. Pertama, seberapa patuh output ketiga model terhadap tiga kaidah Strube di masing-masing kondisi? Kedua, apakah model yang lebih baru menghasilkan kepatuhan yang lebih tinggi? Ketiga, kondisi instruksi mana yang paling mendorong kepatuhan tersebut? Evaluasi dilakukan secara otomatis, terukur, dan dapat direplikasi, menggunakan teori yang memang diajarkan di institusi ini. Demikian proposal saya. Terima kasih, saya siap untuk sesi tanya jawab."
+"Jadi, ada tiga pertanyaan yang akan dijawab penelitian ini. Pertama, seberapa patuh output ketiga model terhadap tiga kaidah Strube di masing-masing kondisi? Kedua, apakah model yang lebih baru menghasilkan kepatuhan yang lebih tinggi? Ketiga, kondisi instruksi mana yang paling mendorong kepatuhan tersebut? Evaluasi dilakukan secara otomatis, terukur, dan dapat direplikasi, dengan justifikasi teoretis yang deterministik. Demikian proposal saya. Terima kasih, saya siap untuk sesi tanya jawab."
 \vfill\newpage
 
 \end{document}
