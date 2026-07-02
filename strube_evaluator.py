@@ -7,17 +7,19 @@ Criteria implemented:
   3. Leading Tone Resolution (checks scale degree 7 → 8)
 """
 
-import music21
-from music21 import converter, stream, interval, note, chord
+from music21 import converter, stream, note, chord
 from pathlib import Path
 import pandas as pd
 
 import json
 
-def load_midi_as_satb(midi_path: str) -> list[stream.Part]:
+def load_midi_as_satb(midi_path: str) -> tuple[list[stream.Part], str]:
     """
-    Load a MIDI file and return a list of 4 Part objects [S, A, T, B].
-    Tries automatic voice separation first, falls back to track-based.
+    Load a MIDI file and return (parts[S,A,T,B], parse_quality).
+    parse_quality:
+      'ok'              – 4+ explicit parts found
+      'padded'          – 2-3 parts; last part duplicated to fill 4 slots
+      'duplicated_mono' – only 1 part; duplicated 4x (score will be unreliable)
     """
     score = converter.parse(midi_path)
     score = score.quantize([0.25], processOffsets=True, processDurations=True)
@@ -25,18 +27,17 @@ def load_midi_as_satb(midi_path: str) -> list[stream.Part]:
     parts = list(score.parts)
 
     if len(parts) >= 4:
-        return parts[:4]  # Take first 4 parts as S, A, T, B
+        return parts[:4], "ok"
     elif len(parts) == 1:
-        # Monophonic or single-track — attempt chordify then voice split
-        chordified = score.chordify()
-        voices = chordified.voiceLeading
-        # Fallback: return the single part 4x (will score zero violations, flag it)
-        return [parts[0]] * 4
+        # Monophonic or single-track — flag as duplicated_mono
+        return [parts[0]] * 4, "duplicated_mono"
     else:
         # Pad with available parts
+        original_len = len(parts)
         while len(parts) < 4:
             parts.append(parts[-1])
-        return parts[:4]
+        _ = original_len  # already captured above for clarity
+        return parts[:4], "padded"
 
 def get_notes_at_offsets(part: stream.Part) -> dict[float, int]:
     """Return {offset: midi_pitch} for all notes in a Part."""
@@ -112,12 +113,32 @@ def check_parallel_motion(part_a: stream.Part, part_b: stream.Part,
     return violations
 
 def check_leading_tone_resolution(soprano: stream.Part,
-                                  key_midi_tonic: int = 60) -> list[dict]:
+                                  key_midi_tonic: int = 60,
+                                  mode: str = "major") -> list[dict]:
     """
-    Check that scale degree 7 (leading tone) resolves upward to tonic (degree 8/1).
-    key_midi_tonic: MIDI pitch of tonic (default 60 = C4, but we use mod 12).
-    Leading tone = tonic - 1 semitone.
+    Check that scale degree 7 (leading tone) resolves upward to tonic.
+
+    Applies two contextual filters (Opsi B — pragmatic):
+
+    1. Mode-aware filter: In natural minor, the diatonic 7th degree is a
+       *subtonic* (whole step below tonic), NOT a leading tone. Only flag
+       pitch class (tonic - 1) % 12 regardless of mode — which naturally
+       skips the subtonic in natural minor because subtonic_pc != leading_pc.
+
+    2. Directional filter: Only flag when the note on the leading tone pitch
+       class moves UPWARD to a non-tonic note. Descending motion (passing tone
+       8-7-6-5) is exempt — a descending 7th does not carry an obligation to
+       resolve upward in any tonal tradition.
+
+    Args:
+        soprano:        The soprano Part stream.
+        key_midi_tonic: MIDI pitch of the tonic (we use mod 12 only).
+        mode:           "major" or "minor" as returned by music21 key analysis.
     """
+    # Leading tone is always (tonic - 1) % 12 (raised 7th).
+    # In natural minor the diatonic 7th is (tonic - 2) % 12 (subtonic).
+    # Because we only check leading_tone_pc = tonic-1, natural-minor subtonic
+    # notes are never flagged — the mode-aware filter is implicit.
     leading_tone_pc = (key_midi_tonic - 1) % 12
     tonic_pc = key_midi_tonic % 12
 
@@ -131,14 +152,17 @@ def check_leading_tone_resolution(soprano: stream.Part,
         offset, pitch = notes[i]
         next_offset, next_pitch = notes[i + 1]
         if pitch % 12 == leading_tone_pc:
-            expected = (leading_tone_pc + 1) % 12  # should resolve up to tonic
-            if next_pitch % 12 != expected:
+            # Directional filter: only flag ascending motion to non-tonic
+            is_ascending = next_pitch > pitch
+            resolves_to_tonic = next_pitch % 12 == tonic_pc
+            if is_ascending and not resolves_to_tonic:
                 violations.append({
                     "type": "leading_tone_violation",
                     "offset": offset,
                     "leading_tone_midi": pitch,
                     "resolved_to_midi": next_pitch,
-                    "expected_pc": expected,
+                    "expected_pc": tonic_pc,
+                    "mode": mode,
                 })
     return violations
 
@@ -148,16 +172,28 @@ def evaluate_satb(midi_path: str, key_tonic_pc: int = None) -> dict:
     key_tonic_pc: pitch class of tonic (0=C, 2=D, 4=E, 5=F, 7=G, 9=A, 11=B)
     If None, dynamically detects the key using music21's key analyzer.
     """
+    analyzed_key = None
     if key_tonic_pc is None:
         try:
             score = converter.parse(midi_path)
             analyzed_key = score.analyze('key')
-
             key_tonic_pc = analyzed_key.tonic.pitchClass
         except Exception:
             key_tonic_pc = 0  # Fallback to C
 
-    parts = load_midi_as_satb(midi_path)
+    # Detect mode for leading-tone filter
+    mode = "major"
+    if analyzed_key is not None:
+        mode = analyzed_key.mode  # "major" or "minor"
+    else:
+        try:
+            score_for_mode = converter.parse(midi_path)
+            k = score_for_mode.analyze('key')
+            mode = k.mode
+        except Exception:
+            mode = "major"
+
+    parts, parse_quality = load_midi_as_satb(midi_path)
     s, a, t, b = parts[0], parts[1], parts[2], parts[3]
 
     voice_pairs = [
@@ -178,7 +214,9 @@ def evaluate_satb(midi_path: str, key_tonic_pc: int = None) -> dict:
         all_p5.extend(p5)
         all_p8.extend(p8)
 
-    lt_violations = check_leading_tone_resolution(s, key_midi_tonic=key_tonic_pc + 60)
+    lt_violations = check_leading_tone_resolution(
+        s, key_midi_tonic=key_tonic_pc + 60, mode=mode
+    )
 
     # Estimate total vertical moments (chord slots)
     soprano_notes = list(s.flatten().notes)
@@ -186,6 +224,7 @@ def evaluate_satb(midi_path: str, key_tonic_pc: int = None) -> dict:
 
     report = {
         "file": str(midi_path),
+        "parse_quality": parse_quality,  # 'ok' | 'padded' | 'duplicated_mono'
         "total_moments": total_moments,
         "parallel_fifths": {
             "count": len(all_p5),
@@ -210,7 +249,11 @@ def evaluate_satb(midi_path: str, key_tonic_pc: int = None) -> dict:
 
 def batch_evaluate(midi_dir: str, output_csv: str = "results.csv",
                    key_tonic_pc: int = 0):
-    """Evaluate all MIDI files in a directory, save results to CSV."""
+    """Evaluate all MIDI files in a directory, save results to CSV.
+
+    Samples with parse_quality != 'ok' are flagged in the CSV and
+    excluded from the main comparative summary.
+    """
 
     midi_files = list(Path(midi_dir).glob("*.mid")) + list(Path(midi_dir).glob("*.midi"))
     rows = []
@@ -220,6 +263,7 @@ def batch_evaluate(midi_dir: str, output_csv: str = "results.csv",
             r = evaluate_satb(str(f), key_tonic_pc=key_tonic_pc)
             rows.append({
                 "file": f.name,
+                "parse_quality": r["parse_quality"],
                 "total_moments": r["total_moments"],
                 "parallel_fifths": r["parallel_fifths"]["count"],
                 "p5_rate": r["parallel_fifths"]["rate"],
@@ -230,12 +274,23 @@ def batch_evaluate(midi_dir: str, output_csv: str = "results.csv",
             })
         except Exception as e:
             print(f"    ERROR: {e}")
-            rows.append({"file": f.name, "error": str(e)})
+            rows.append({"file": f.name, "parse_quality": "error", "error": str(e)})
 
     df = pd.DataFrame(rows)
     df.to_csv(output_csv, index=False)
     print(f"\nSaved results to {output_csv}")
-    print(df.to_string())
+
+    # QC summary
+    flagged = df[df["parse_quality"].isin(["padded", "duplicated_mono", "error"])]
+    valid = df[df["parse_quality"] == "ok"]
+    print(f"\nQC Summary: {len(valid)}/{len(df)} samples OK, {len(flagged)} flagged")
+    if len(flagged) > 0:
+        print("  Flagged samples (excluded from comparative analysis):")
+        for _, row in flagged.iterrows():
+            print(f"    {row['file']} [{row['parse_quality']}]")
+
+    print("\nValid samples only:")
+    print(valid.to_string())
     return df
 
 if __name__ == "__main__":
