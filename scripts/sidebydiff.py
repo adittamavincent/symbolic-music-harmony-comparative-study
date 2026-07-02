@@ -52,7 +52,6 @@ def get_git_content(ref, path):
 def clean_latex_for_diff(text):
     """Strip page-level/environment structures that cross paragraph boundaries or break minipages."""
     text = replace_title_page(text)
-    text = re.sub(r'\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}', '[Diagram Tikz]', text, flags=re.DOTALL)
     text = re.sub(r'(?<!\\)%.*', '', text)
     text = re.sub(r'\\newpage\b', '', text)
     text = re.sub(r'\\clearpage\b', '', text)
@@ -106,14 +105,34 @@ def build_full_proposal(ref):
 
 
 def split_paragraphs(content):
-    """Split into paragraph blocks, separated by 1+ blank lines. This is
-    the diff unit -- not raw source lines -- so a paragraph written as one
-    long .tex line, or a multi-line table/equation block, stays intact."""
+    """Split into paragraph blocks, separated by 1+ blank lines. Respects tikzpicture blocks to prevent formatting/compilation issues."""
     if not content:
         return []
     normalized = content.replace("\r\n", "\n")
-    blocks = re.split(r"\n\s*\n+", normalized.strip())
-    return [b for b in (blk.strip() for blk in blocks) if b]
+    paragraphs = []
+    current_para_lines = []
+    in_tikz = False
+    
+    lines = normalized.split("\n")
+    for line in lines:
+        line_strip = line.strip()
+        if "\\begin{tikzpicture}" in line_strip:
+            in_tikz = True
+        
+        if not line_strip and not in_tikz:
+            if current_para_lines:
+                paragraphs.append("\n".join(current_para_lines).strip())
+                current_para_lines = []
+        else:
+            current_para_lines.append(line)
+            
+        if "\\end{tikzpicture}" in line_strip:
+            in_tikz = False
+            
+    if current_para_lines:
+        paragraphs.append("\n".join(current_para_lines).strip())
+        
+    return [p for p in paragraphs if p]
 
 
 def compute_lcs(a, b):
@@ -234,8 +253,9 @@ def tokenize_words(text):
 
     Pass 1: split on whitespace, tracking newlines as boundaries.
     Pass 2: merge consecutive word-tokens whenever the running
-            '{' minus '}' count is nonzero or unescaped '$' is unbalanced,
-            so every emitted token is individually brace-balanced and math-balanced.
+            '{' minus '}' count is nonzero, unescaped '$' is unbalanced, or
+            inside a display math environment, so every emitted token is
+            individually brace-balanced and math-balanced.
     """
     # Build a flat stream of ('W', word) / ('NL', None) first.
     stream = []
@@ -250,6 +270,7 @@ def tokenize_words(text):
     buf = []
     brace_balance = 0
     math_mode = False
+    display_math = False
 
     def flush():
         if buf:
@@ -258,13 +279,17 @@ def tokenize_words(text):
 
     for kind, val in stream:
         if kind == "NL":
-            if math_mode or brace_balance != 0:
+            if math_mode or display_math or brace_balance != 0:
                 # Mid-merge: fold newline into space
                 continue
             flush()
             merged.append(("NL", None))
         else:
             buf.append(val)
+            
+            # Check display math start/end
+            if any(env in val for env in ["\\begin{equation}", "\\begin{multline}", "\\begin{align}", "\\begin{gather}", "\\["]):
+                display_math = True
             
             # Count unescaped braces
             unescaped_opens = len(re.findall(r'(?<!\\)\{', val))
@@ -276,7 +301,10 @@ def tokenize_words(text):
             if unescaped_dollars % 2 != 0:
                 math_mode = not math_mode
                 
-            if brace_balance <= 0 and not math_mode:
+            if any(env in val for env in ["\\end{equation}", "\\end{multline}", "\\end{align}", "\\end{gather}", "\\]"]):
+                display_math = False
+                
+            if brace_balance <= 0 and not math_mode and not display_math:
                 flush()
                 brace_balance = 0
     flush()
@@ -293,33 +321,102 @@ def render_token(token, highlight=None):
     return f"{value} "
 
 
+def is_safe_to_highlight_token(val, is_math=False, is_box=False):
+    if is_math:
+        if any(pat in val for pat in ["\\begin{equation}", "\\begin{multline}", "\\begin{align}", "\\begin{gather}"]):
+            return False
+        return True
+        
+    if any(pat in val for pat in UNSAFE_HIGHLIGHT_PATTERNS):
+        return False
+        
+    if re.search(r'(?<!\\)%', val):
+        return False
+        
+    if not is_box:
+        if re.search(r'(?<!\\)_', val) or re.search(r'(?<!\\)\^', val) or re.search(r'(?<!\\)\$', val):
+            return False
+            
+    macros = re.findall(r'\\([a-zA-Z\*]+)', val)
+    allowed_macros = {
+        "textit", "textbf", "emph", "underline", "section", "subsection", "subsubsection",
+        "parencite", "cite", "textcite", "citeauthor", "citeyear", "texttt"
+    }
+    for macro in macros:
+        if macro not in allowed_macros:
+            return False
+            
+    return True
+
+
+def classify_token_style(style, val):
+    if not style:
+        return None
+    val_strip = val.strip()
+    val_clean = re.sub(r'[\.,;\?!\)]+$', '', val_strip)
+    val_clean = re.sub(r'^\(', '', val_clean)
+    
+    if re.match(r'^\$(.*)\$$', val_clean):
+        if is_safe_to_highlight_token(val, is_math=True):
+            return style + "_math"
+        return None
+        
+    if re.match(r'^\\(textit|textbf|emph|underline|section|subsection|subsubsection)\{.*\}$', val_clean):
+        if is_safe_to_highlight_token(val):
+            return style + "_format"
+        return None
+        
+    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear|texttt)\{.*\}$', val_clean):
+        if is_safe_to_highlight_token(val, is_box=True):
+            return style + "_box"
+        return None
+        
+    if is_safe_to_highlight_token(val):
+        return style + "_text"
+        
+    return None
+
+
 def apply_highlight(style, text):
     if not style:
         return text + " "
     
-    # Check if the text matches \macro{content} where the macro is simple formatting
-    # and the braces are balanced at the outer level.
-    pattern = r'^\\(textit|textbf|texttt|emph|underline)\{(.*)\}$'
-    match = re.match(pattern, text.strip())
-    if match:
-        macro_name = match.group(1)
-        content = match.group(2)
-        return f"\\{macro_name}{{{apply_highlight(style, content).strip()}}} "
-        
-    # Check if the text matches an inline math formula $content$
-    math_pattern = r'^\$(.*)\$$'
-    math_match = re.match(math_pattern, text.strip())
-    if math_match:
-        content = math_match.group(1)
-        color = "delhl" if style == "delhl" else "inshl"
-        return f"\\colorbox{{{color}}}{{\\ensuremath{{{content}}}}} "
+    color = "delhl" if style.startswith("delhl") else "inshl"
+    val_strip = text.strip()
+    punc_start = ""
+    if val_strip.startswith("("):
+        punc_start = "("
+        val_strip = val_strip[1:]
+    punc_end = ""
+    punc_match = re.search(r'[\.,;\?!\)]+$', val_strip)
+    if punc_match:
+        punc_end = punc_match.group(0)
+        val_strip = val_strip[:-len(punc_end)]
     
-    # Check safety
-    if any(pat in text for pat in UNSAFE_HIGHLIGHT_PATTERNS) or re.search(r'\\[^%_#$]', text) or re.search(r'(?<!\\)%', text) or re.search(r'(?<!\\)_', text) or re.search(r'(?<!\\)\^', text) or re.search(r'(?<!\\)\$', text):
-        return text + " "
+    if style.endswith("_format"):
+        pattern = r'^\\(textit|textbf|emph|underline|section|subsection|subsubsection)\{(.*)\}$'
+        match = re.match(pattern, val_strip)
+        if match:
+            macro_name = match.group(1)
+            content = match.group(2)
+            inner_style = classify_token_style(color, content)
+            return f"{punc_start}\\{macro_name}{{{apply_highlight(inner_style, content).strip()}}}{punc_end} "
+            
+    if style.endswith("_box"):
+        return f"{punc_start}\\colorbox{{{color}}}{{{val_strip}}}{punc_end} "
+            
+    if style.endswith("_math"):
+        math_pattern = r'^\$(.*)\$$'
+        match = re.match(math_pattern, val_strip)
+        if match:
+            content = match.group(1)
+            return f"{punc_start}\\colorbox{{{color}}}{{\\ensuremath{{{content}}}}}{punc_end} "
+            
+    if style.endswith("_text"):
+        hl_cmd = "delhighlight" if color == "delhl" else "inhighlight"
+        return f"{punc_start}\\{hl_cmd}{{{val_strip}}}{punc_end} "
         
-    hl_cmd = "delhighlight" if style == "delhl" else "inhighlight"
-    return f"\\{hl_cmd}{{{text}}} "
+    return text + " "
 
 
 def word_level_render(old_text, new_text):
@@ -350,12 +447,12 @@ def word_level_render(old_text, new_text):
             if kind_type == "NL":
                 old_actions.append((None, "\n"))
             else:
-                old_actions.append(("delhl", value))
+                old_actions.append((classify_token_style("delhl", value), value))
         elif kind == "insert":
             if kind_type == "NL":
                 new_actions.append((None, "\n"))
             else:
-                new_actions.append(("inshl", value))
+                new_actions.append((classify_token_style("inshl", value), value))
 
     def merge_runs(actions):
         if not actions:
@@ -546,10 +643,10 @@ def extract_citation_keys(text):
             keys.add(key.strip())
     return sorted(list(keys))
 
-
 def generate_diff_latex(tag1, tag2, outdir):
+    os.makedirs(outdir, exist_ok=True)
     # Clean old temp files to ensure biber runs correctly
-    for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex"]:
+    for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex", "fdb_latexmk", "fls"]:
         path = os.path.join(outdir, f"proposal_diff.{ext}")
         if os.path.exists(path):
             os.remove(path)
