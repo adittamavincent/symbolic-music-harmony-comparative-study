@@ -134,25 +134,25 @@ qna: $(QNA_TEX)
 compile: proposal
 present: slides
 
-$(PROPOSAL_TEX): $(PROPOSAL_TEMPLATE)
+$(PROPOSAL_TEX): $(PROPOSAL_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata proposal perlu diisi."; \
 	fi
 	envsubst < $< > $@
 
-$(SLIDES_TEX): $(SLIDES_TEMPLATE)
+$(SLIDES_TEX): $(SLIDES_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata presentasi perlu diisi."; \
 	fi
 	envsubst < $< > $@
 
-$(NOTES_TEX): $(NOTES_TEMPLATE)
+$(NOTES_TEX): $(NOTES_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata naskah presentasi perlu diisi."; \
 	fi
 	envsubst < $< > $@
 
-$(QNA_TEX): $(QNA_TEMPLATE)
+$(QNA_TEX): $(QNA_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata QnA perlu diisi."; \
 	fi
@@ -166,7 +166,7 @@ final-phase: thesis
 thesis: $(THESIS_TEX)
 	$(LATEXMK) $<
 
-$(THESIS_TEX): $(THESIS_TEMPLATE)
+$(THESIS_TEX): $(THESIS_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata skripsi perlu diisi."; \
 	fi
