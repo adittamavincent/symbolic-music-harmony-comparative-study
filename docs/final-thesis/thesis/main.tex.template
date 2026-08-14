@@ -3,9 +3,9 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 
-\addbibresource{../assets/references.bib}
+\addbibresource{../../proposal-phase/assets/references.bib}
 
-% Redefine section numbering to A., B., C.
+% Section formatting
 \renewcommand{\thesection}{\Alph{section}}
 \titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.\quad}{0pt}{}
 \titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection\quad}{0pt}{}
@@ -48,7 +48,8 @@
 \input{chapters/01-pendahuluan}
 \input{chapters/02-tinjauan-pustaka}
 \input{chapters/03-metodologi}
-\input{chapters/04-jadwal}
+\input{chapters/04-hasil-pembahasan}
+\input{chapters/05-kesimpulan-saran}
 
 \printbibliography[title={DAFTAR PUSTAKA}]
 

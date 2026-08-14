@@ -2,29 +2,38 @@
 export
 
 ENV_FILE ?= .env.local
-DOCS_DIR := docs/proposal-phase
-ASSETS_DIR := $(DOCS_DIR)/assets
-PROPOSAL_DIR := $(DOCS_DIR)/proposal
-PRESENTATION_DIR := $(DOCS_DIR)/presentation
 
+# Directories
+PROPOSAL_DOCS_DIR := docs/proposal-phase
+PROPOSAL_ASSETS_DIR := $(PROPOSAL_DOCS_DIR)/assets
+PROPOSAL_DIR := $(PROPOSAL_DOCS_DIR)/proposal
+PROPOSAL_PRES_DIR := $(PROPOSAL_DOCS_DIR)/presentation
+
+THESIS_DOCS_DIR := docs/final-thesis
+THESIS_DIR := $(THESIS_DOCS_DIR)/thesis
+THESIS_PRES_DIR := $(THESIS_DOCS_DIR)/presentation
+
+# Proposal Targets & Files
 PROPOSAL_TEMPLATE := $(PROPOSAL_DIR)/main.tex.template
 PROPOSAL_TEX := $(PROPOSAL_DIR)/main.tex
 PROPOSAL_PDF := $(PROPOSAL_DIR)/main.pdf
 
-SLIDES_TEMPLATE := $(PRESENTATION_DIR)/presentation.tex.template
-SLIDES_TEX := $(PRESENTATION_DIR)/presentation.tex
-SLIDES_PDF := $(PRESENTATION_DIR)/presentation.pdf
+SLIDES_TEMPLATE := $(PROPOSAL_PRES_DIR)/presentation.tex.template
+SLIDES_TEX := $(PROPOSAL_PRES_DIR)/presentation.tex
+SLIDES_PDF := $(PROPOSAL_PRES_DIR)/presentation.pdf
 
-NOTES_TEMPLATE := $(PRESENTATION_DIR)/presentation_notes.tex.template
-NOTES_TEX := $(PRESENTATION_DIR)/presentation_notes.tex
-NOTES_PDF := $(PRESENTATION_DIR)/presentation_notes.pdf
+NOTES_TEMPLATE := $(PROPOSAL_PRES_DIR)/presentation_notes.tex.template
+NOTES_TEX := $(PROPOSAL_PRES_DIR)/presentation_notes.tex
+NOTES_PDF := $(PROPOSAL_PRES_DIR)/presentation_notes.pdf
 
-QNA_TEMPLATE := $(PRESENTATION_DIR)/qna.tex.template
-QNA_TEX := $(PRESENTATION_DIR)/qna.tex
-QNA_PDF := $(PRESENTATION_DIR)/qna.pdf
+QNA_TEMPLATE := $(PROPOSAL_PRES_DIR)/qna.tex.template
+QNA_TEX := $(PROPOSAL_PRES_DIR)/qna.tex
+QNA_PDF := $(PROPOSAL_PRES_DIR)/qna.pdf
 
-GENERATED_TEX := $(PROPOSAL_TEX) $(SLIDES_TEX) $(NOTES_TEX) $(QNA_TEX)
-PDF_OUTPUTS := $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF)
+# Thesis Targets & Files
+THESIS_TEMPLATE := $(THESIS_DIR)/main.tex.template
+THESIS_TEX := $(THESIS_DIR)/main.tex
+THESIS_PDF := $(THESIS_DIR)/main.pdf
 
 ifdef FORCE
   LATEXMK_FORCE := -g
@@ -32,28 +41,75 @@ else
   LATEXMK_FORCE :=
 endif
 
-LATEXMK := TEXINPUTS=.:../assets: latexmk -pdf -cd -auxdir=build -outdir=. $(LATEXMK_FORCE)
+LATEXMK := TEXINPUTS=.:../assets:../../proposal-phase/assets: latexmk -pdf -interaction=nonstopmode -cd -auxdir=build -outdir=. $(LATEXMK_FORCE)
 
-.PHONY: all help proposal-phase docs proposal slides notes qna diff diff-clean compile present clean clean-docs
+.PHONY: all help \
+        setup setup-models test exp run-all eval plot \
+        proposal-phase docs proposal slides notes qna compile present \
+        thesis final-phase thesis-slides \
+        diff diff-clean clean clean-docs
 
-all: proposal-phase
+all: help
 
 help:
 	@printf "%s\n" \
-		"Targets dokumentasi fase proposal:" \
+		"==================================================================" \
+		"  Strube Harmonic Evaluation Framework & LaTeX Document Suite" \
+		"==================================================================" \
+		"" \
+		"🔬 PIPELINE RISET & EKSPERIMEN:" \
+		"  make setup           Bootstrap dependensi model (DeepBach, NotaGen, Coconet)" \
+		"  make test            Jalankan uji validitas instrumen (Face Validity)" \
+		"  make exp             Jalankan full pipeline eksperimen (run_all.py)" \
+		"  make eval            Jalankan evaluasi Strube batch pada file MIDI" \
+		"  make plot            Generate visualisasi hasil grafik" \
+		"" \
+		"📄 DOKUMEN FASE PROPOSAL (docs/proposal-phase/):" \
 		"  make proposal        Build naskah proposal PDF" \
-		"  make slides          Build slide presentasi PDF" \
-		"  make notes           Build naskah presentasi PDF" \
+		"  make slides          Build slide presentasi proposal PDF" \
+		"  make notes           Build naskah presenter PDF" \
 		"  make qna             Build dokumen antisipasi tanya jawab PDF" \
 		"  make proposal-phase  Build semua artefak proposal" \
-		"  make diff            Generate diff PDF antara proposal/v1 dan proposal/v2" \
-		"  make diff-clean      Hapus artefak diff" \
-		"  make clean           Hapus file build artefak proposal" \
 		"" \
-		"Alias lama masih ada:" \
-		"  make compile         Sama dengan make proposal" \
-		"  make present         Sama dengan make slides"
+		"🎓 DOKUMEN FASE SKRIPSI FINAL (docs/final-thesis/):" \
+		"  make thesis          Build naskah skripsi final (5 Bab) PDF" \
+		"  make final-phase     Build semua artefak skripsi final" \
+		"" \
+		"🔍 VERSIONING & DIFFING:" \
+		"  make diff <ref1> <ref2>  Generate side-by-side diff PDF" \
+		"                           Contoh: make diff proposal/v1 proposal/v2" \
+		"                           Contoh: make diff proposal/v2 thesis/v1" \
+		"  make diff-clean          Hapus file artefak diff" \
+		"" \
+		"🧹 CLEANUP:" \
+		"  make clean           Hapus seluruh file build & cache LaTeX" \
+		"=================================================================="
 
+# ==============================================================================
+# PIPELINE RISET
+# ==============================================================================
+setup: setup-models
+
+setup-models:
+	uv run python scripts/bootstrap_models.py
+
+test:
+	uv run python tests/test_strube_validity.py
+
+exp: run-all
+
+run-all:
+	uv run python run_all.py
+
+eval:
+	uv run python experiments/scripts/run_evaluation.py
+
+plot:
+	uv run python experiments/scripts/plot_results.py
+
+# ==============================================================================
+# FASE PROPOSAL
+# ==============================================================================
 proposal-phase: proposal slides notes qna
 
 docs: proposal-phase
@@ -76,7 +132,6 @@ qna: $(QNA_TEX)
 	$(LATEXMK) $<
 
 compile: proposal
-
 present: slides
 
 $(PROPOSAL_TEX): $(PROPOSAL_TEMPLATE)
@@ -103,31 +158,25 @@ $(QNA_TEX): $(QNA_TEMPLATE)
 	fi
 	envsubst < $< > $@
 
-$(PROPOSAL_PDF): $(PROPOSAL_TEX) $(wildcard $(PROPOSAL_DIR)/chapters/*.tex) $(ASSETS_DIR)/isi-proposal.cls $(ASSETS_DIR)/references.bib .latexmkrc
+# ==============================================================================
+# FASE SKRIPSI FINAL
+# ==============================================================================
+final-phase: thesis
+
+thesis: $(THESIS_TEX)
 	$(LATEXMK) $<
 
-$(SLIDES_PDF): $(SLIDES_TEX) $(ASSETS_DIR)/logo-isi-white.png .latexmkrc
-	$(LATEXMK) $<
+$(THESIS_TEX): $(THESIS_TEMPLATE)
+	@if [ ! -f "$(ENV_FILE)" ]; then \
+		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata skripsi perlu diisi."; \
+	fi
+	envsubst < $< > $@
 
-$(NOTES_PDF): $(NOTES_TEX) $(SLIDES_PDF) .latexmkrc
-	$(LATEXMK) $<
-
-$(QNA_PDF): $(QNA_TEX) .latexmkrc
-	$(LATEXMK) $<
-
-clean: clean-docs
-
-clean-docs:
-	rm -rf $(PROPOSAL_DIR)/build $(PRESENTATION_DIR)/build
-	rm -f $(GENERATED_TEX) $(PDF_OUTPUTS)
-	rm -f $(PROPOSAL_DIR)/*.aux $(PROPOSAL_DIR)/*.log $(PROPOSAL_DIR)/*.fls $(PROPOSAL_DIR)/*.fdb_latexmk $(PROPOSAL_DIR)/*.bbl $(PROPOSAL_DIR)/*.bcf $(PROPOSAL_DIR)/*.blg $(PROPOSAL_DIR)/*.run.xml $(PROPOSAL_DIR)/*.out $(PROPOSAL_DIR)/*.toc $(PROPOSAL_DIR)/*.synctex.gz
-	rm -f $(PRESENTATION_DIR)/*.aux $(PRESENTATION_DIR)/*.log $(PRESENTATION_DIR)/*.fls $(PRESENTATION_DIR)/*.fdb_latexmk $(PRESENTATION_DIR)/*.nav $(PRESENTATION_DIR)/*.snm $(PRESENTATION_DIR)/*.out $(PRESENTATION_DIR)/*.toc $(PRESENTATION_DIR)/*.synctex.gz
-
-# Diff targets
+# ==============================================================================
+# SIDE-BY-SIDE DIFF TARGETS
+# ==============================================================================
 DIFF_SCRIPT := scripts/sidebydiff.py
-DIFF_OUTPUTS := scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log
 
-# If the first argument is "diff", parse the rest as tags to pass to the script
 ifeq ($(firstword $(MAKECMDGOALS)),diff)
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
@@ -140,8 +189,21 @@ diff: $(DIFF_SCRIPT)
 diff-clean:
 	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
 
-# If the first argument is "proposal", parse the rest as tag/ref
+# Parse tag/ref for make proposal <ref>
 ifeq ($(firstword $(MAKECMDGOALS)),proposal)
   PROPOSAL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(PROPOSAL_ARGS):;@:)
 endif
+
+# ==============================================================================
+# CLEANUP
+# ==============================================================================
+clean: clean-docs diff-clean
+
+clean-docs:
+	rm -rf $(PROPOSAL_DIR)/build $(PROPOSAL_PRES_DIR)/build $(THESIS_DIR)/build
+	rm -f $(PROPOSAL_TEX) $(SLIDES_TEX) $(NOTES_TEX) $(QNA_TEX) $(THESIS_TEX)
+	rm -f $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF) $(THESIS_PDF)
+	rm -f $(PROPOSAL_DIR)/*.aux $(PROPOSAL_DIR)/*.log $(PROPOSAL_DIR)/*.fls $(PROPOSAL_DIR)/*.fdb_latexmk $(PROPOSAL_DIR)/*.bbl $(PROPOSAL_DIR)/*.bcf $(PROPOSAL_DIR)/*.blg $(PROPOSAL_DIR)/*.run.xml $(PROPOSAL_DIR)/*.out $(PROPOSAL_DIR)/*.toc $(PROPOSAL_DIR)/*.synctex.gz
+	rm -f $(PROPOSAL_PRES_DIR)/*.aux $(PROPOSAL_PRES_DIR)/*.log $(PROPOSAL_PRES_DIR)/*.fls $(PROPOSAL_PRES_DIR)/*.fdb_latexmk $(PROPOSAL_PRES_DIR)/*.nav $(PROPOSAL_PRES_DIR)/*.snm $(PROPOSAL_PRES_DIR)/*.out $(PROPOSAL_PRES_DIR)/*.toc $(PROPOSAL_PRES_DIR)/*.synctex.gz
+	rm -f $(THESIS_DIR)/*.aux $(THESIS_DIR)/*.log $(THESIS_DIR)/*.fls $(THESIS_DIR)/*.fdb_latexmk $(THESIS_DIR)/*.bbl $(THESIS_DIR)/*.bcf $(THESIS_DIR)/*.blg $(THESIS_DIR)/*.run.xml $(THESIS_DIR)/*.out $(THESIS_DIR)/*.toc $(THESIS_DIR)/*.synctex.gz

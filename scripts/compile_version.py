@@ -31,26 +31,36 @@ def resolve_git_ref(ref):
     res = subprocess.run(["git", "rev-parse", "--verify", ref], capture_output=True)
     if res.returncode == 0:
         return ref
-    if not ref.startswith("proposal/"):
-        alt_ref = f"proposal/{ref}"
-        res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
-        if res.returncode == 0:
-            return alt_ref
+    for prefix in ["thesis/", "proposal/"]:
+        if not ref.startswith(prefix):
+            alt_ref = f"{prefix}{ref}"
+            res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
+            if res.returncode == 0:
+                return alt_ref
     return ref
 
 def load_env_vars():
     env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
     defaults = {
+        "THESIS_TITLE": "EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER",
         "RESEARCHER_NAME": "[Nama Peneliti]",
         "RESEARCHER_NIM": "[NIM]",
         "INSTITUTION_NAME": "[Institusi]",
         "FACULTY_NAME": "[Fakultas]",
         "DEPARTMENT_NAME": "[Jurusan]",
         "PROGRAM_STUDY": "[Program Studi]",
+        "CITY_NAME": "[Kota]",
+        "SUBMISSION_DATE": "[Tanggal Pengesahan]",
+        "ACADEMIC_YEAR": "[Tahun Akademik]",
+        "GRADUATION_YEAR": "[Tahun Lulus]",
         "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
         "ADVISOR_ACADEMIC_NIP": "[NIP]",
         "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
-        "ADVISOR_THESIS_NIP": "[NIP]"
+        "ADVISOR_THESIS_NIP": "[NIP]",
+        "EXAMINER_1": "[Penguji 1]",
+        "EXAMINER_1_NIP": "[NIP]",
+        "EXAMINER_2": "[Penguji 2]",
+        "EXAMINER_2_NIP": "[NIP]"
     }
     if os.path.exists(env_path):
         with open(env_path, "r") as f:

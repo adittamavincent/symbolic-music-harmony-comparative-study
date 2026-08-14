@@ -1,175 +1,212 @@
-# Strube Harmonic Evaluation Framework
+# Strube Harmonic Evaluation Framework & Reproducible Research Suite
 
-Proyek ini membandingkan tiga model AI generasi musik simbolik, yaitu **DeepBach** (2017), **Coconet** (2017), dan **NotaGen** (2025), menggunakan aturan harmoni fungsional Gustav Strube sebagai alat ukur.
+Repositori ini berfungsi ganda (*dual-purpose reproducible research artifact*):
 
-Repositori ini sekarang dipisah jelas antara:
+1. 🔬 **Algorithmic Evaluation Framework**: Benchmark otomatis berbasis Python & `music21` untuk menguji kepatuhan model AI musik simbolik (**DeepBach**, **Coconet**, dan **NotaGen**) terhadap kaidah harmoni fungsional Barat menurut Gustav Strube (1928).
+2. 📄 **Parameterized LaTeX Document Suite**: Toolchain otomasi LaTeX untuk menghasilkan naskah akademik (Proposal & Skripsi), slide presentasi Beamer, catatan presenter, matriks QnA, serta generator *side-by-side diff* antar-versi revisi.
 
-- pipeline eksperimen Python untuk penelitian utama,
-- dokumen **fase proposal**,
-- ruang khusus untuk **skripsi final** nanti.
+---
 
-## Struktur Repo
+## Struktur Repositori
 
 ```text
 .
 ├── docs/
-│   ├── proposal-phase/
-│   │   ├── assets/         # class, logo, bibliography
-│   │   ├── proposal/       # naskah proposal
-│   │   └── presentation/   # slides, notes, qna
-│   └── final-thesis/       # disiapkan untuk fase skripsi final
-├── experiments/            # script generasi, evaluasi, plotting
-├── tests/
-├── Makefile
-├── run_all.py
-├── setup.py
-└── strube_evaluator.py
+│   ├── proposal-phase/         # Fase Proposal (Milestone: proposal/v1, proposal/v2)
+│   │   ├── assets/             # Class (.cls), logo ISI, bibliography (.bib)
+│   │   ├── proposal/           # Naskah proposal (Bab 1–3 + Jadwal)
+│   │   └── presentation/       # Beamer slides, presenter notes, QnA matrix
+│   └── final-thesis/           # Fase Skripsi Final (Milestone: thesis/v1, ...)
+│       ├── thesis/             # Naskah skripsi lengkap (Bab 1–5 + Lampiran)
+│       └── presentation/       # Slide beamer ujian sidang skripsi
+├── experiments/                # Pipeline generasi MIDI, evaluasi, & visualisasi
+│   ├── scripts/                # run_experiment, run_evaluation, plot_results
+│   └── strube_conditions.json  # Matriks kondisi batasan (A, B, C, D)
+├── scripts/                    # Helper scripts (bootstrap_models, compile, diff)
+├── tests/                      # Face validity unit tests (Bach vs Wrong harmony)
+├── outputs/                    # Output MIDI generasi, MASTER_RESULTS.csv, grafik
+├── Makefile                    # Target otomasi riset & build dokumen
+├── run_all.py                  # Single entrypoint pipeline eksperimen
+└── strube_evaluator.py         # Modul inti evaluasi kaidah harmoni Strube
 ```
+
+---
+
+## Siklus Hidup Dokumen & Strategi Versioning
+
+Repositori ini menerapkan **Namespaced Milestone Tags** untuk membedakan tahapan akademik:
+
+```mermaid
+gitGraph
+   commit id: "Inisiasi Repo"
+   commit id: "proposal/v1 (Seminar)" tag: "proposal/v1"
+   commit id: "Revisi Pasca Sempro"
+   commit id: "proposal/v2 (Proposal Final)" tag: "proposal/v2"
+   branch thesis
+   checkout thesis
+   commit id: "Init docs/final-thesis/ (5 Bab)"
+   commit id: "thesis/v1 (Draft Bimbingan 1)" tag: "thesis/v1"
+   commit id: "thesis/v2 (Draft Pra-Sidang)" tag: "thesis/v2"
+```
+
+- **`proposal/v1`**: Naskah yang diajukan ke seminar proposal.
+- **`proposal/v2`**: Naskah proposal **final** pasca revisi sempro & pengesahan pembimbing skripsi. *Fase proposal di-freeze di sini.*
+- **`thesis/v1`**: Draf pertama naskah skripsi 5 Bab yang diajukan ke Dosen Pembimbing Skripsi.
+- **`thesis/v2` / `thesis/v3`**: Draf revisi bimbingan menuju sidang tugas akhir.
+
+---
 
 ## Persyaratan Sistem
 
-Pastikan software berikut sudah ada:
+Pastikan perangkat lunak berikut telah terpasang di sistem:
 
-| Software | Versi minimum      | Cara cek |
-| -------- | ------------------ | -------- |
-| Git      | bebas              | `git --version` |
-| Python   | 3.10               | `python3 --version` |
-| uv       | bebas              | `uv --version` |
-| Node.js  | 18+                | `node --version` |
-| latexmk  | bebas              | `latexmk --version` |
-| envsubst | bebas              | `envsubst --version` |
+| Software | Versi Minimum | Keterangan & Cara Cek |
+| :--- | :--- | :--- |
+| **Git** | Bebas | `git --version` |
+| **Python** | 3.10 | `python3 --version` |
+| **uv** | Bebas | `uv --version` (Fast Python package manager) |
+| **Node.js** | 18+ | `node --version` (Diperlukan untuk runtime Magenta/Coconet) |
+| **latexmk** | Bebas | `latexmk --version` (Distribusi LaTeX, misal MacTeX / TeX Live) |
+| **envsubst** | Bebas | `envsubst --version` (Bagian dari paket `gettext`) |
 
-Install `uv` bila belum ada:
-
+Instalasi `uv` jika belum tersedia:
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Install Node.js dari [nodejs.org](https://nodejs.org). Untuk LaTeX di macOS, paling gampang pakai MacTeX.
+---
 
-## Setup Python
+## Instalasi & Setup Lingkungan
 
+1. **Clone Repositori**:
+   ```bash
+   git clone <URL_REPO>
+   cd symbolic-music-harmony-comparative-study
+   ```
+
+2. **Inisialisasi Virtual Environment & Dependensi**:
+   ```bash
+   uv venv .venv --python 3.10
+   source .venv/bin/activate
+   uv pip install -r requirements.txt
+   ```
+
+3. **Bootstrap Model & Library Pihak Ketiga**:
+   ```bash
+   make setup
+   ```
+   *Perintah ini akan mengunduh repositori DeepBach & NotaGen ke `models/` serta menginstal dependensi Node.js untuk Coconet.*
+
+4. **Konfigurasi Variabel Lingkungan / Metadata**:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Buka `.env.local` dan sesuaikan dengan identitas peneliti, nomor induk (NIM/NIP), serta institusi Anda. File `.env.local` bersifat lokal dan diabaikan oleh Git untuk melindungi privasi.
+
+---
+
+## Menjalankan Pipeline Riset & Eksperimen
+
+### 1. Uji Validitas Muka (Face Validity)
+Sebelum menjalankan generasi, pastikan instrumen evaluasi berfungsi dengan benar:
 ```bash
-git clone <URL_REPO_KAMU>
-cd <nama-folder-proyek>
-
-uv venv .venv --python 3.10
-source .venv/bin/activate
-uv pip install -r requirements.txt
-uv run python setup.py
+make test
 ```
+*Menguji Bach Chorale asli (BWV 66.6) $\rightarrow$ harus menghasilkan skor tinggi, dan harmonisasi paralel sengaja dibuat salah $\rightarrow$ harus terdeteksi pelanggaran.*
 
-`setup.py` akan menyiapkan dependency model ke folder `models/`, yang memang sudah di-ignore Git.
-
-## Run Eksperimen
-
-Jalankan full pipeline:
-
+### 2. Menjalankan Full Pipeline Riset
+Jalankan seluruh tahapan eksperimen secara end-to-end:
 ```bash
+make exp
+# atau
 uv run python run_all.py
 ```
 
-Command berguna lain:
-
+### 3. Opsi Eksperimen Lanjutan
 ```bash
-# Tes awal ringan
+# Smoke test cepat (1 sampel per kondisi per model)
 uv run python run_all.py --samples 1
 
-# Lihat prompt/kondisi tanpa generate
+# Dry-run: Cek matriks prompt tanpa melakukan generasi
 uv run python run_all.py --dry-run
 
-# Lewati tahap generate, langsung evaluasi output yang sudah ada
+# Evaluasi saja (lewati tahap generasi jika output MIDI sudah ada)
 uv run python run_all.py --skip-generation
+
+# Jalankan generasi model secara paralel (butuh RAM/VRAM cukup)
+uv run python run_all.py --parallel-models
 ```
 
-Saat run pertama:
+Output eksperimen tersimpan di direktori `outputs/`:
+- `outputs/deepbach/`, `outputs/coconet/`, `outputs/notagen/` : Berkas MIDI hasil generasi.
+- `outputs/MASTER_RESULTS.csv` : Hasil evaluasi detail per sampel.
+- `outputs/SUMMARY_TABLE.csv` : Rata-rata *Strube Score* per model per kondisi.
+- `outputs/strube_evaluation_results.png` : Grafik komparatif siap publikasi.
 
-- DeepBach mengunduh pretrained weights,
-- NotaGen mengunduh checkpoint dari Hugging Face,
-- Coconet mengambil checkpoint saat model di-load.
+---
 
-## Build Dokumen Proposal
+## Membangun Dokumen Akademik (LaTeX Pipeline)
 
-Semua artefak fase proposal ada di `docs/proposal-phase/`.
+Gunakan `make` untuk meng-compile dokumen LaTeX yang secara otomatis mengisi data dari `.env.local`:
 
-### 1. Isi Metadata
+### Fase Proposal (`docs/proposal-phase/`)
+```bash
+make proposal        # Build naskah proposal PDF (docs/proposal-phase/proposal/main.pdf)
+make slides          # Build slide presentasi Beamer (presentation.pdf)
+make notes           # Build naskah presenter berbasis slide (presentation_notes.pdf)
+make qna             # Build dokumen antisipasi tanya jawab ujian (qna.pdf)
+make proposal-phase  # Build seluruh artefak proposal sekaligus
+```
+
+### Fase Skripsi Final (`docs/final-thesis/`)
+```bash
+make thesis          # Build naskah skripsi lengkap 5 Bab (docs/final-thesis/thesis/main.pdf)
+make final-phase     # Build seluruh artefak fase skripsi
+```
+
+### Membersihkan Berkas Build
+```bash
+make clean           # Menghapus berkas cache dan temporary LaTeX
+```
+
+---
+
+## Visualisasi Perubahan & Side-by-Side Diffing
+
+Repositori ini dilengkapi *side-by-side diff generator* untuk membandingkan revisi naskah antar-versi Git secara visual:
 
 ```bash
-cp .env.example .env.local
+# Membandingkan revisi proposal versi 1 dengan versi 2
+make diff proposal/v1 proposal/v2
+
+# Membandingkan proposal final dengan draft skripsi awal
+make diff proposal/v2 thesis/v1
+
+# Membandingkan antar-draft bimbingan skripsi
+make diff thesis/v1 thesis/v2
 ```
+Hasil diff PDF akan disimpan di `scratch/proposal_diff.pdf`.
 
-Lalu isi `.env.local` dengan nama, NIM, institusi, dosen pembimbing, dan data lain.
+---
 
-### 2. Lihat Semua Target `make`
+## Menggunakan Repositori Ini Sebagai Template
 
-```bash
-make help
-```
+Jika Anda adalah peneliti atau mahasiswa yang ingin memanfaatkan framework ini:
 
-### 3. Build Sesuai Kebutuhan
+1. **Gunakan Evaluator untuk Model AI Anda**: Masukkan berkas MIDI model Anda ke `strube_evaluator.py`:
+   ```bash
+   uv run python strube_evaluator.py path/to/sample.mid
+   ```
+2. **Gunakan Template Dokumen**: Sesuaikan template LaTeX di `docs/` dengan pedoman penulisan institusi Anda, dan modifikasi variabel institusi di `.env.local`.
 
-```bash
-# Naskah proposal
-make proposal
-
-# Slide presentasi ujian proposal
-make slides
-
-# Naskah presenter berbasis slide
-make notes
-
-# Dokumen antisipasi tanya jawab
-make qna
-
-# Build semua artefak fase proposal
-make proposal-phase
-```
-
-Alias lama masih didukung:
-
-```bash
-make compile   # alias make proposal
-make present   # alias make slides
-```
-
-### Output PDF
-
-PDF hasil build ada di:
-
-- `docs/proposal-phase/proposal/main.pdf`
-- `docs/proposal-phase/presentation/presentation.pdf`
-- `docs/proposal-phase/presentation/presentation_notes.pdf`
-- `docs/proposal-phase/presentation/qna.pdf`
-
-### Hapus File Build
-
-```bash
-make clean
-```
-
-## Output Eksperimen
-
-Hasil eksperimen tersimpan di `outputs/`:
-
-```text
-outputs/
-├── deepbach/
-├── coconet/
-├── notagen/
-├── MASTER_RESULTS.csv
-├── SUMMARY_TABLE.csv
-└── strube_evaluation_results.png
-```
+---
 
 ## Troubleshooting
 
-| Masalah | Solusi |
-| ------- | ------ |
-| `uv: command not found` | Install `uv`, lalu buka terminal baru |
-| `python3: command not found` | Install Python 3.10 dari python.org |
-| `node: command not found` | Install Node.js dari nodejs.org |
-| `latexmk: command not found` | Install distribusi LaTeX, mis. MacTeX |
-| `envsubst: command not found` | Install `gettext`, lalu pastikan `envsubst` tersedia di PATH |
-| `No module named 'DatasetManager'` | Jalankan `uv run python setup.py` lagi |
-| Coconet `npm install` gagal | Pastikan internet stabil dan `node` terpasang |
-| Generasi terlalu lama | Mulai dari `--samples 1` |
+| Kendala | Penyebab & Solusi |
+| :--- | :--- |
+| `uv: command not found` | Pasang `uv` via installer resmi lalu restart terminal. |
+| `envsubst: command not found` | Pasang `gettext` (`brew install gettext` di macOS / `apt install gettext` di Linux). |
+| `latexmk: command not found` | Pastikan distribusi TeX (MacTeX / TeX Live) terpasang di PATH sistem. |
+| `No module named 'DatasetManager'` | Jalankan `make setup` untuk memastikan repositori model ter-clone. |
+| Coconet `npm install` gagal | Pastikan Node.js 18+ terpasang dan koneksi internet stabil. |

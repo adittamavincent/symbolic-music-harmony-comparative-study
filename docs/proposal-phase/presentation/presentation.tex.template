@@ -71,7 +71,7 @@
     \textbf{${RESEARCHER_NAME}, ${RESEARCHER_NIM}} \par \vspace{0.1cm}
     ${PROGRAM_STUDY} \par \vspace{0.1cm}
     ${INSTITUTION_NAME} \par \vspace{0.1cm}
-    2026
+    ${GRADUATION_YEAR}
     }
   \end{center}
 \end{frame}

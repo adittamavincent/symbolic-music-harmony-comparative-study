@@ -53,11 +53,12 @@ def resolve_git_ref(ref):
     res = subprocess.run(["git", "rev-parse", "--verify", ref], capture_output=True)
     if res.returncode == 0:
         return ref
-    if not ref.startswith("proposal/"):
-        alt_ref = f"proposal/{ref}"
-        res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
-        if res.returncode == 0:
-            return alt_ref
+    for prefix in ["thesis/", "proposal/"]:
+        if not ref.startswith(prefix):
+            alt_ref = f"{prefix}{ref}"
+            res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
+            if res.returncode == 0:
+                return alt_ref
     return ref
 
 
@@ -638,12 +639,17 @@ def load_env_macros():
     env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
     macros = []
     defaults = {
+        "THESIS_TITLE": "EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER",
         "RESEARCHER_NAME": "[Nama Peneliti]",
         "RESEARCHER_NIM": "[NIM]",
         "INSTITUTION_NAME": "[Institusi]",
         "FACULTY_NAME": "[Fakultas]",
         "DEPARTMENT_NAME": "[Jurusan]",
         "PROGRAM_STUDY": "[Program Studi]",
+        "CITY_NAME": "[Kota]",
+        "SUBMISSION_DATE": "[Tanggal Pengesahan]",
+        "ACADEMIC_YEAR": "[Tahun Akademik]",
+        "GRADUATION_YEAR": "[Tahun Lulus]",
         "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
         "ADVISOR_ACADEMIC_NIP": "[NIP]",
         "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
@@ -665,12 +671,17 @@ def load_env_macros():
                     if v:
                         defaults[k] = v
 
+    macros.append(rf"\newcommand{{\thesistitle}}{{{defaults.get('THESIS_TITLE', 'EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER')}}}")
     macros.append(rf"\newcommand{{\researchername}}{{{defaults.get('RESEARCHER_NAME', '[Nama Peneliti]')}}}")
     macros.append(rf"\newcommand{{\researchernim}}{{{defaults.get('RESEARCHER_NIM', '[NIM]')}}}")
     macros.append(rf"\newcommand{{\institutionname}}{{{defaults.get('INSTITUTION_NAME', '[Institusi]')}}}")
     macros.append(rf"\newcommand{{\facultyname}}{{{defaults.get('FACULTY_NAME', '[Fakultas]')}}}")
     macros.append(rf"\newcommand{{\departmentname}}{{{defaults.get('DEPARTMENT_NAME', '[Jurusan]')}}}")
     macros.append(rf"\newcommand{{\programstudy}}{{{defaults.get('PROGRAM_STUDY', '[Program Studi]')}}}")
+    macros.append(rf"\newcommand{{\cityname}}{{{defaults.get('CITY_NAME', '[Kota]')}}}")
+    macros.append(rf"\newcommand{{\submissiondate}}{{{defaults.get('SUBMISSION_DATE', '[Tanggal Pengesahan]')}}}")
+    macros.append(rf"\newcommand{{\academicyear}}{{{defaults.get('ACADEMIC_YEAR', '[Tahun Akademik]')}}}")
+    macros.append(rf"\newcommand{{\graduationyear}}{{{defaults.get('GRADUATION_YEAR', '[Tahun Lulus]')}}}")
     macros.append(rf"\newcommand{{\advisoracademic}}{{{defaults.get('ADVISOR_ACADEMIC', '[Dosen Pembimbing Akademik]')}}}")
     macros.append(rf"\newcommand{{\advisoracademicnip}}{{{defaults.get('ADVISOR_ACADEMIC_NIP', '[NIP]')}}}")
     macros.append(rf"\newcommand{{\advisorthesis}}{{{defaults.get('ADVISOR_THESIS', '[Dosen Pembimbing Skripsi]')}}}")

@@ -1,0 +1,38 @@
+\section{Hasil Penelitian dan Pembahasan}
+
+\subsection{Hasil Pengujian Validitas Instrumen (Face Validity)}
+
+Sebelum data utama dievaluasi, instrumen evaluasi Strube diuji melalui \textit{face validity} dua arah. Tabel berikut merangkum hasil pengujian pada korpus autentik Bach (BWV 66.6) dan sampel artifisial bermasalah:
+
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|c|c|X|}
+\hline
+\textbf{Uji} & \textbf{Sampel} & \textbf{Kuint/Oktaf Sejajar} & \textbf{Pelanggaran LT} & \textbf{Status} \\ \hline
+Positif & Bach BWV 66.6 & 0 & 0 & Lolos (Skor Tinggi) \\ \hline
+Negatif & Deliberate Parallel & Terdeteksi ($>0$) & Terdeteksi ($>0$) & Lolos (Skor Rendah) \\ \hline
+\end{tabularx}
+\caption{Hasil Validasi Instrumen Evaluasi Strube}
+\label{tab:validasi-instrumen}
+\end{table}
+
+\subsection{Hasil Evaluasi Komparatif Model}
+
+Evaluasi dilakukan terhadap 120 sampel MIDI dari DeepBach, Coconet, dan NotaGen di bawah empat kondisi instruksi (A, B, C, D). Ringkasan \textit{Strube Score} disajikan pada tabel dan grafik berikut:
+
+% Placeholder untuk tabel hasil dan visualisasi hasil eksperimen
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{../../../outputs/strube_evaluation_results.png}
+\caption{Perbandingan Kepatuhan Kaidah Harmoni Fungsional Lintas Tiga Generasi Model AI}
+\label{fig:hasil-strube}
+\end{figure}
+
+\subsection{Pembahasan Musikologis dan Komputasional}
+
+Bagian ini membahas interpretasi komparatif antara:
+\begin{enumerate}
+    \item Kepatuhan aturan harmoni fungsional pada arsitektur \textit{Recurrent} vs Konvolusional vs \textit{Transformer}.
+    \item Pengaruh penambahan batasan (\textit{conditioning levels} A $\rightarrow$ D) terhadap penurunan tingkat pelanggaran kuint sejajar, oktaf sejajar, dan resolusi nada penuntun.
+    \item Diskusi mengenai fenomena \textit{sampling} stokastis dan \textit{inductive bias}.
+\end{enumerate}
