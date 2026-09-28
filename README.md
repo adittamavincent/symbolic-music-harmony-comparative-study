@@ -266,6 +266,64 @@ git push origin thesis/v1
 
 Those commands are a recipe, not a record of a tag created here. Use `thesis/v2`, `thesis/v3`, and so on for later milestones. Keep published milestone tags fixed so each name continues to identify the same source.
 
+### Example: save the next proposal as v3
+
+`proposal/v3` is a name you attach to a committed draft. You choose when that draft deserves a milestone, usually when sending it for review or submitting it. Git does not increment the version automatically.
+
+The two document phases have separate numbering:
+
+| Draft being saved | Next tag, given the existing tags above |
+| --- | --- |
+| Another proposal revision | `proposal/v3` |
+| First saved thesis milestone | `thesis/v1` |
+| Later thesis revision, after `thesis/v1` exists | `thesis/v2` |
+
+For example, after revising proposal chapter 3:
+
+1. Edit `docs/proposal-phase/proposal/chapters/03-metodologi.tex`. Other proposal changes can be included in the same milestone.
+2. Build and inspect the current proposal:
+
+   ```bash
+   make proposal
+   git diff -- docs/proposal-phase
+   git diff --check
+   ```
+
+3. Once the draft is ready, save the source and give that commit its milestone name:
+
+   ```bash
+   git add docs/proposal-phase
+   git diff --cached
+   git commit -m "docs: revise proposal methodology for third review"
+   git tag -a proposal/v3 -m "Proposal revision 3 sent for review"
+   ```
+
+   Inspect the staged diff before committing, including anything already staged. If the intended revision was already committed, skip the add/commit steps and tag that commit. `git tag` without an explicit commit points to `HEAD`, the latest commit on your current branch; uncommitted edits are excluded.
+
+4. Back up the commit and tag to GitHub:
+
+   ```bash
+   git push origin main
+   git push origin proposal/v3
+   ```
+
+   This example assumes you are on `main`. Check with `git branch --show-current`; when working on another branch, push that branch instead.
+
+5. Copy the checked PDF to your submission archive as `proposal-v3-YYYY-MM-DD.pdf`, using the actual submission date, and preserve the matching metadata privately. Git ignores PDFs and `.env.local`.
+
+Confirm the saved milestone or compare its source:
+
+```bash
+git show --no-patch 'proposal/v3^{commit}'
+git diff proposal/v2 proposal/v3 -- docs/proposal-phase
+```
+
+After v3, keep editing and committing normally. Create `proposal/v4` when the next milestone is ready. Leave `proposal/v3` pointing to the draft you already sent.
+
+For the first thesis milestone, use the same sequence with `make thesis`, `git add docs/final-thesis`, a thesis-specific commit message, and `thesis/v1` in the tag/push commands. Include changed shared assets explicitly when they are part of that revision.
+
+The historical PDF helpers still need the path-resolution repair below before reliably rebuilding new tags that contain both document phases. The current-document build, source tag, archived PDF, and Git source comparison above work independently of those helpers.
+
 ### Build or compare a saved proposal
 
 ```bash
