@@ -78,7 +78,7 @@ help:
 		"🔍 VERSIONING & DIFFING:" \
 		"  make diff <ref1> <ref2>  Generate side-by-side diff PDF" \
 		"                           Contoh: make diff proposal/v1 proposal/v2" \
-		"                           Contoh: make diff proposal/v2 thesis/v1" \
+		"                           Gunakan tag proposal; dukungan ref skripsi belum terverifikasi" \
 		"  make diff-clean          Hapus file artefak diff" \
 		"" \
 		"🧹 CLEANUP:" \
@@ -125,7 +125,7 @@ proposal: $(PROPOSAL_TEX)
 slides: $(SLIDES_TEX)
 	$(LATEXMK) $<
 
-notes: $(NOTES_TEX) $(SLIDES_PDF)
+notes: $(NOTES_TEX) slides
 	$(LATEXMK) $<
 
 qna: $(QNA_TEX)
