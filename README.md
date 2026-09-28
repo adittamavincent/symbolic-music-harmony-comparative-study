@@ -203,7 +203,7 @@ make diff-clean   # Remove selected proposal_diff files in scratch/
 make clean        # Both of the above
 ```
 
-`make clean` removes current document PDFs. It leaves chapters, templates, `.env.local`, model downloads, experiment outputs, and historical `scratch/proposal_v*.pdf` files. `diff-clean` is partial: copied assets and some bibliography/auxiliary files remain.
+`make clean` removes current document PDFs. It leaves chapters, templates, `.env.local`, model downloads, experiment outputs, and historical `scratch/proposal_v*.pdf` files. `diff-clean` removes both legacy and ref-named diff files in `scratch/`; copied assets and legacy `references_v*.bib` files remain.
 
 Before a submission, copy the PDF to your submission archive. Keep a private backup of matching metadata and preserve experiment outputs separately. PDFs, local metadata, and experiment results are ignored by Git.
 
@@ -272,12 +272,14 @@ Use the diff command below to compare committed v3 sources with a proposal miles
 ```bash
 make proposal proposal/v1          # scratch/proposal_v1.pdf
 make proposal proposal/v2          # scratch/proposal_v2.pdf
-make diff proposal/v1 proposal/v2   # scratch/proposal_diff.pdf
+make diff proposal/v1 proposal/v2   # scratch/proposal_diff_proposal_v1_proposal_v2.pdf
 make diff proposal/v1 head          # Latest committed manuscript, no tag needed
 make diff proposal/v2 e87d47b       # Abbreviated or full commit ID
 ```
 
 The diff accepts tags, commit IDs, branches, and `head`/`HEAD`. Every untagged ref resolves to its full commit ID before source loading; the console and PDF show that ID. `head` follows the checked-out branch's latest commit and excludes uncommitted edits. Tags retain their names. A `proposal/` tag selects the proposal manuscript; other refs select the final thesis when present, falling back to the proposal in older snapshots. Chapters and nested inputs are read within the selected manuscript, including thesis chapters IV and V.
+
+Generated files use `scratch/proposal_diff_<ref1>_<ref2>.*`. Tag names keep their text with `/` and other filename-unsafe characters replaced by `_`; untagged refs use their full commit IDs. For example, `make diff proposal/v1 head` writes `proposal_diff_proposal_v1_<HEAD-commit-ID>.pdf`. The `.tex`, bibliography files, logs, and auxiliary files use the same pair prefix. Building another pair preserves previous comparisons; rebuilding the same pair replaces its generated files.
 
 Use complete names such as `proposal/v2`. Short names such as `v2` are resolved by trying `thesis/` before `proposal/`, which becomes ambiguous once both namespaces have versions.
 

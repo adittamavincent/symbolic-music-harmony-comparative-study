@@ -177,6 +177,7 @@ $(THESIS_TEX): $(THESIS_TEMPLATE) $(ENV_FILE)
 # SIDE-BY-SIDE DIFF TARGETS
 # ==============================================================================
 DIFF_SCRIPT := scripts/sidebydiff.py
+DIFF_EXTENSIONS := tex pdf aux log html bib bcf bbl blg run.xml fdb_latexmk fls out toc synctex.gz
 
 ifeq ($(firstword $(MAKECMDGOALS)),diff)
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -188,7 +189,7 @@ diff: $(DIFF_SCRIPT)
 	@python3 $(DIFF_SCRIPT) $(RUN_ARGS)
 
 diff-clean:
-	rm -f scratch/proposal_diff.tex scratch/proposal_diff.pdf scratch/proposal_diff.aux scratch/proposal_diff.log scratch/proposal_diff.html
+	rm -f $(foreach ext,$(DIFF_EXTENSIONS),scratch/proposal_diff*.$(ext))
 
 # Parse tag/ref for make proposal <ref>
 ifeq ($(firstword $(MAKECMDGOALS)),proposal)

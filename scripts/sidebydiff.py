@@ -887,11 +887,20 @@ def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
                 out2.append(f"@{e2[key]['type']}{{{key},\n  " + ",\n  ".join(new_f2) + "\n}")
     return "\n".join(out1), "\n".join(out2)
 
+def diff_output_stem(ref1, ref2):
+    """Keep resolved ref labels in filenames without creating tag subfolders."""
+    names = [re.sub(r'[^A-Za-z0-9._-]', '_', ref) for ref in (ref1, ref2)]
+    return f"proposal_diff_{names[0]}_{names[1]}"
+
+
 def generate_diff_latex(tag1, tag2, outdir):
     os.makedirs(outdir, exist_ok=True)
+    stem = diff_output_stem(tag1, tag2)
+    bib_filename1 = f"{stem}_references_v1.bib"
+    bib_filename2 = f"{stem}_references_v2.bib"
     # Clean old temp files to ensure biber runs correctly
     for ext in ["aux", "log", "bcf", "bbl", "blg", "run.xml", "pdf", "tex", "fdb_latexmk", "fls"]:
-        path = os.path.join(outdir, f"proposal_diff.{ext}")
+        path = os.path.join(outdir, f"{stem}.{ext}")
         if os.path.exists(path):
             os.remove(path)
 
@@ -973,10 +982,10 @@ def generate_diff_latex(tag1, tag2, outdir):
     
     bib_content_v1 = re.sub(r'(@[a-zA-Z]+\s*\{)\s*([^,]+)\s*(,)', lambda m: f"{m.group(1)}{m.group(2).strip()}_v1{m.group(3)}", bib_content_v1)
 
-    with open(os.path.join(outdir, "references_v1.bib"), "w") as f:
+    with open(os.path.join(outdir, bib_filename1), "w") as f:
         f.write(bib_content_v1)
 
-    with open(os.path.join(outdir, "references_v2.bib"), "w") as f:
+    with open(os.path.join(outdir, bib_filename2), "w") as f:
         f.write(bib_content_v2)
 
     # Find logo locally
@@ -1003,8 +1012,8 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\definecolor{inshl}{RGB}{204,244,206}",
         r"\definecolor{deltext}{RGB}{180,0,0}",
         r"\definecolor{instext}{RGB}{0,120,0}",
-        r"\addbibresource{references_v1.bib}",
-        r"\addbibresource{references_v2.bib}",
+        rf"\addbibresource{{{bib_filename1}}}",
+        rf"\addbibresource{{{bib_filename2}}}",
         r"\AtEveryBibitem{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         r"\AtEveryCitekey{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         # Custom bibliography environment: tcolorbox wraps del/ins entries for background highlight
@@ -1088,7 +1097,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\end{document}",
     ]
 
-    tex_path = os.path.join(outdir, "proposal_diff.tex")
+    tex_path = os.path.join(outdir, f"{stem}.tex")
     with open(tex_path, "w") as f:
         f.write("\n".join(latex))
     return tex_path
@@ -1106,7 +1115,7 @@ def latex_to_pdf(tex_path, outdir):
         cwd=outdir,
         capture_output=True, text=True
     )
-    pdf_path = os.path.join(outdir, "proposal_diff.pdf")
+    pdf_path = os.path.join(outdir, os.path.splitext(filename)[0] + ".pdf")
     if result.returncode != 0:
         print(result.stdout[-3000:])
         print(result.stderr[-3000:])
@@ -1131,7 +1140,7 @@ def main():
         size = os.path.getsize(pdf_path)
         print(f"=== Done: {pdf_path} ({size} bytes) ===")
     else:
-        print(f"PDF not generated -- check {outdir}/proposal_diff.log")
+        print(f"PDF not generated -- check {os.path.splitext(tex_path)[0]}.log")
         return 1
     return 0
 
