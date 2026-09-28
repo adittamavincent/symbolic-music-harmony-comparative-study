@@ -10,6 +10,9 @@ data/raw/
 scratch/
 models/
 build/
+research/outputs/
+research/models/
+research/data/raw/
 
 # OS/System files
 .DS_Store

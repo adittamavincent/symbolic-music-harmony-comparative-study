@@ -1,38 +1,28 @@
-\section{Hasil Penelitian dan Pembahasan}
+\section{Hasil Pengujian Instrumen}
 
-\subsection{Hasil Pengujian Validitas Instrumen (Face Validity)}
-
-Sebelum data utama dievaluasi, instrumen evaluasi Strube diuji melalui \textit{face validity} dua arah. Tabel berikut merangkum hasil pengujian pada korpus autentik Bach (BWV 66.6) dan sampel artifisial bermasalah:
+Pengujian perangkat lunak menggunakan \textit{chorale} Bach BWV 66.6, harmonisasi paralel artifisial, serta contoh terpisah untuk oktaf sejajar dan resolusi nada penuntun. Tabel~\ref{tab:pengujian-awal} menyajikan jumlah penandaan dan skor pada dua sampel pertama.
 
 \begin{table}[htbp]
 \centering
-\begin{tabularx}{\textwidth}{|l|l|c|c|X|}
+\small
+\begin{tabularx}{\textwidth}{|X|c|c|c|c|}
 \hline
-\textbf{Uji} & \textbf{Sampel} & \textbf{Kuint/Oktaf Sejajar} & \textbf{Pelanggaran LT} & \textbf{Status} \\ \hline
-Positif & Bach BWV 66.6 & 0 & 0 & Lolos (Skor Tinggi) \\ \hline
-Negatif & Deliberate Parallel & Terdeteksi ($>0$) & Terdeteksi ($>0$) & Lolos (Skor Rendah) \\ \hline
+\textbf{Sampel uji} & \textbf{Kuint} & \textbf{Oktaf} & \textbf{LT} & \textbf{Skor} \\ \hline
+Bach BWV 66.6 & 6 & 0 & 3 & 0,7568 \\ \hline
+Harmonisasi paralel artifisial & 14 & 7 & 0 & 0,0000 \\ \hline
 \end{tabularx}
-\caption{Hasil Validasi Instrumen Evaluasi Strube}
-\label{tab:validasi-instrumen}
+\caption{Hasil pengujian perangkat lunak pada dua sampel musikal}
+\label{tab:pengujian-awal}
 \end{table}
 
-\subsection{Hasil Evaluasi Komparatif Model}
+Angka pada Tabel~\ref{tab:pengujian-awal} berasal dari skrip \texttt{test\_strube\_validity.py} pada direktori \texttt{research/tests}. Pengujian BWV 66.6 menetapkan tonika C secara eksplisit. Kuint, oktaf, dan LT pada tabel adalah jumlah penandaan oleh kode yang ada, bukan pelanggaran yang telah dikonfirmasi melalui anotasi ahli. Uji oktaf terpisah menghasilkan satu penandaan; uji nada penuntun terpisah menghasilkan satu penandaan pada gerak B menuju D dalam konteks C mayor.
 
-Evaluasi dilakukan terhadap 120 sampel MIDI dari DeepBach, Coconet, dan NotaGen di bawah empat kondisi instruksi (A, B, C, D). Ringkasan \textit{Strube Score} disajikan pada tabel dan grafik berikut:
+Keempat pengujian lulus sesuai asersi yang digunakan. Namun, asersi pada sampel Bach hanya mensyaratkan skor positif. Pengujian tersebut belum membuktikan ketepatan definisi musikal, pemetaan suara, kuantisasi waktu, atau penyebut skor. Pemeriksaan awal menemukan bahwa kuantisasi \texttt{[0.25]} dapat menyatukan onset yang berbeda, pemeriksaan kuint juga menerima interval kuart, dan penyebut skor menggunakan jumlah peristiwa sopran. Pilihan representasi waktu, interval, dan penyebut memengaruhi hasil penandaan serta interpretasi skor.
 
-% Placeholder untuk tabel hasil dan visualisasi hasil eksperimen
-\begin{figure}[htbp]
-\centering
-% \includegraphics[width=0.85\textwidth]{../../../outputs/strube_evaluation_results.png}
-\caption{Perbandingan Kepatuhan Kaidah Harmoni Fungsional Lintas Tiga Generasi Model AI}
-\label{fig:hasil-strube}
-\end{figure}
+\section{Pembahasan Pengukuran}
 
-\subsection{Pembahasan Musikologis dan Komputasional}
+Skor BWV 66.6 sebesar 0,7568 menunjukkan keluaran indeks pada konfigurasi pengujian yang menetapkan tonika C. Penandaan pada sampel ini tidak dapat langsung ditafsirkan sebagai pelanggaran harmoni yang telah dikonfirmasi secara musikal. Konteks tonal, pemetaan suara, kuantisasi, dan definisi interval turut menentukan penandaan yang dihasilkan.
 
-Bagian ini membahas interpretasi komparatif antara:
-\begin{enumerate}
-    \item Kepatuhan aturan harmoni fungsional pada arsitektur \textit{Recurrent} vs Konvolusional vs \textit{Transformer}.
-    \item Pengaruh penambahan batasan (\textit{conditioning levels} A $\rightarrow$ D) terhadap penurunan tingkat pelanggaran kuint sejajar, oktaf sejajar, dan resolusi nada penuntun.
-    \item Diskusi mengenai fenomena \textit{sampling} stokastis dan \textit{inductive bias}.
-\end{enumerate}
+Sampel artifisial menghasilkan 14 penandaan kuint dan 7 penandaan oktaf, dengan skor 0,0000. Hasil ini menunjukkan bahwa instrumen mendeteksi gerak paralel pada kasus uji tersebut. Nilai nol juga memperlihatkan pembatasan indeks: jumlah penandaan dari beberapa pasangan suara dapat melebihi jumlah peristiwa sopran yang menjadi penyebut.
+
+Perbandingan keluaran model memerlukan pemisahan antara penandaan algoritmis dan interpretasi kontekstual atas gerak suara. Perbedaan data latih, checkpoint, antarmuka kendali, prosedur generasi, dan penguraian MIDI membatasi atribusi perbedaan skor pada arsitektur semata.

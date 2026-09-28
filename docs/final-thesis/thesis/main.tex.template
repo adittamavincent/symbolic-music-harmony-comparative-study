@@ -1,5 +1,18 @@
 \documentclass{isi-proposal}
 
+% Final-thesis revision v3 continues proposal v2.
+\newcommand{\thesisversion}{v3}
+\renewcommand{\contentsname}{DAFTAR ISI}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+\newcommand{\thesischapter}[2]{%
+  \clearpage
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  \addcontentsline{toc}{part}{BAB #1: #2}
+  \begin{center}\bfseries BAB #1\par #2\end{center}
+}
+
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 
@@ -43,14 +56,25 @@
 \pagenumbering{roman}
 \input{chapters/00-frontmatter}
 
+\clearpage
+\tableofcontents
+
 \doublespacing
+\clearpage
 \pagenumbering{arabic}
+\thesischapter{I}{PENDAHULUAN}
 \input{chapters/01-pendahuluan}
+\thesischapter{II}{TINJAUAN PUSTAKA}
 \input{chapters/02-tinjauan-pustaka}
+\thesischapter{III}{METODOLOGI PENELITIAN}
 \input{chapters/03-metodologi}
+\thesischapter{IV}{HASIL DAN PEMBAHASAN}
 \input{chapters/04-hasil-pembahasan}
+\thesischapter{V}{KESIMPULAN DAN SARAN}
 \input{chapters/05-kesimpulan-saran}
 
+\clearpage
+\addcontentsline{toc}{part}{DAFTAR PUSTAKA}
 \printbibliography[title={DAFTAR PUSTAKA}]
 
 \end{document}

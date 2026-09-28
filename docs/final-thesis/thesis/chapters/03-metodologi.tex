@@ -24,9 +24,9 @@ D & SATB Penuh & Soprano dan Bass ditetapkan; model mengisi Alto dan Tenor \\ \h
 \end{tabularx}
 \end{table}
 
-Catatan metodologis: setiap kondisi menerapkan \textit{equivalent conditioning level}, bukan \textit{prompt string} yang identik. DeepBach dikontrol melalui \textit{tensor constraint}, Coconet melalui injeksi \textit{seed} nada, NotaGen melalui metadata teks, sesuai dengan antarmuka \textit{native} masing-masing model. Standar ini konsisten dengan praktik penelitian evaluasi komparatif dalam MIR \parencite{hadjeres2017, huang2017}.
+DeepBach dan Coconet menerima batasan nada, sementara adaptor NotaGen menggunakan metadata periode, komponis, dan instrumentasi. Pada konfigurasi yang digunakan, kondisi C dan D NotaGen identik, dan kondisi B tidak menentukan C mayor. Dengan demikian, label kondisi tidak menunjukkan intervensi yang setara pada ketiga model.
 
-Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai proporsi momen harmonis yang bebas dari pelanggaran ketiga kaidah Strube, dengan rentang nilai 0 (pelanggaran di setiap momen) hingga 1 (tidak ada pelanggaran sama sekali).
+Variabel dependen adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti.
 
 \subsection{Definisi Operasional Variabel}
 
@@ -34,7 +34,7 @@ Variabel dependen adalah \textit{Strube Score} per sampel, dihitung sebagai prop
 
 \textit{Independent Variable} 2: \textit{Conditioning Level}. Tingkat batasan instruksi yang diberikan pada model saat generasi, dikontrol lewat \texttt{strube\_conditions.json}, terdiri atas empat tingkat: A (\textit{Neutral}, tanpa batasan), B (\textit{Key}, batasan kunci/periode), C (\textit{SATB Partial}, Soprano ditetapkan), dan D (\textit{SATB Full}, Soprano dan Bass ditetapkan).
 
-\textit{Dependent Variable}: \textit{Constraint Adherence Rate} (\textit{Strube Score}). Rasio momen harmonis yang bebas dari pelanggaran terhadap total momen vertikal $M_{\text{total}}$ dalam sebuah sampel, dirumuskan sebagai:
+\textit{Dependent Variable}: \textit{Constraint Adherence Rate} (\textit{Strube Score}). Indeks penalti terhadap $M_{\text{total}}$, yang pada kode saat ini adalah jumlah peristiwa nada/akor sopran dengan nilai minimum satu. Indeks dihitung dengan rumus berikut:
 
 {\small
 \begin{multline}
@@ -63,11 +63,11 @@ Deteksi kegagalan resolusi nada penuntun pada suara Soprano menerapkan dua filte
 \end{multline}
 }
 
-Pengecekan gerak paralel dan resolusi nada penuntun dijalankan pada seluruh enam kombinasi pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B.
+Pengecekan gerak paralel dijalankan pada enam pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B. Pengecekan resolusi nada penuntun hanya dijalankan pada sopran. Rumus kuint di atas memakai tujuh semiton modulo 12, sedangkan kode yang ada juga menerima lima semiton; perbedaan tersebut membatasi kesesuaian penandaan kode dengan definisi kuint pada rumus.
 
 \subsection{Jumlah Sampel}
 
-Sebanyak 120 file MIDI dikumpulkan: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen.
+Target jumlah sampel adalah 120 berkas MIDI: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen. Jumlah berkas yang dihasilkan dan jumlah sampel yang memenuhi kriteria analisis merupakan dua hitungan yang berbeda.
 
 \subsection{Instrumen Evaluasi dan Validasi}
 
@@ -78,15 +78,15 @@ Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parenc
     \item Uji negatif: Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
-Instrumen dinyatakan valid dan siap digunakan hanya setelah kedua uji ini terpenuhi.
+Kedua uji ini merupakan pemeriksaan awal. Validasi instrumen juga memerlukan definisi kaidah dari sumber yang dirujuk, contoh yang dianotasi secara independen, dan pemeriksaan kesalahan deteksi. Kelulusan uji perangkat lunak menunjukkan perilaku pada kasus uji, sedangkan validasi musikal menilai kesesuaian penandaan dengan kaidah dan konteksnya.
 
 Perlu digarisbawahi bahwa pengecekan \textit{leading tone resolution} dalam penelitian ini dibatasi hanya pada suara Soprano, karena suara tersebut paling konsisten berperan sebagai melodi utama dalam tekstur SATB, sekaligus untuk menghindari kebutuhan deteksi otomatis suara mana yang berperan sebagai pembawa melodi pada \textit{output} AI yang strukturnya bisa jauh dari konvensi SATB klasik. Konsekuensinya, resolusi nada penuntun yang terjadi pada suara Alto, Tenor, atau Bass tidak tercatat oleh instrumen ini. Batasan ini merupakan bagian dari definisi operasional instrumen dan menjadi salah satu arah pengembangan lanjutan yang disebutkan pada bab penutup.
 
-Kontrol Kualitas Sampel (\textit{Parse Quality Control}). Tidak semua model generatif menjamin \textit{output} dalam format MIDI empat suara yang terpisah secara eksplisit. Instrumen evaluasi secara otomatis menandai setiap sampel dengan label \texttt{parse\_quality}: \texttt{ok} (empat suara berhasil dipisah), \texttt{padded} (kurang dari empat suara, suara terakhir direplikasi untuk melengkapi), atau \texttt{duplicated\_mono} (hanya satu suara tersedia, direplikasi empat kali). Sampel dengan \texttt{parse\_quality} bukan \texttt{ok} dieksklusi dari analisis komparatif utama dan dianalisis secara terpisah sebagai \textit{generation failure rate} per model. Prosedur ini memastikan bahwa inflasi skor akibat sampel yang gagal \textit{generate} secara struktural tidak bercampur dengan data valid.
+Kontrol Kualitas Sampel (\textit{Parse Quality Control}). Tidak semua model generatif menjamin \textit{output} dalam format MIDI empat suara yang terpisah secara eksplisit. Instrumen evaluasi secara otomatis menandai setiap sampel dengan label \texttt{parse\_quality}: \texttt{ok} (empat suara berhasil dipisah), \texttt{padded} (kurang dari empat suara, suara terakhir direplikasi untuk melengkapi), atau \texttt{duplicated\_mono} (hanya satu suara tersedia, direplikasi empat kali). Protokol merencanakan eksklusi sampel dengan \texttt{parse\_quality} selain \texttt{ok} dari analisis utama serta pelaporan kegagalan penguraian secara terpisah. Skrip evaluasi batch saat ini belum mempertahankan label tersebut dalam ringkasannya. Ringkasan yang menggabungkan suara hasil replikasi membatasi interpretasi kepatuhan SATB.
 
-\subsection{Penanganan \textit{Bach Paradox}}
+\subsection{Interpretasi Penandaan pada Korpus Bach}
 
-Penelitian ini memisahkan secara tegas antara evaluasi tekstual (\textit{textual syntax}) dan penilaian estetika (\textit{aesthetic valuation}). Fakta historis bahwa J.S. Bach maupun komponis klasik lain sesekali melanggar larangan kuint atau oktaf sejajar demi kepentingan artistik, umumnya di sekitar batas frasa, nada hias, atau kadens otentik sempurna, merupakan bentuk pilihan artistik manusia yang valid secara kontekstual. Pada model generatif AI, pelanggaran serupa muncul bukan dari pilihan artistik, melainkan dari keterbatasan \textit{sampling} stokastis dalam memenuhi batasan formal. Oleh karena itu, instrumen evaluasi otomatis dalam penelitian ini tidak bertindak sebagai juri estetika yang menilai keindahan karya, melainkan sebagai \textit{automated rule checker} yang murni mengecek konsistensi \textit{output} terhadap konvensi tekstual yang telah dirumuskan Strube. Pelanggaran yang terdeteksi pada data pelatihan otentik, seperti korpus \textit{chorale} Bach di dalam music21, tidak menggugurkan validitas instrumen, karena yang diukur adalah konsistensi tekstual, bukan kebenaran mutlak estetis.
+Penandaan kaidah merupakan hasil penerapan definisi operasional. Pada korpus Bach maupun keluaran model, penandaan tersebut perlu diperiksa dalam konteks frasa, nada hias, kadens, dan kemungkinan kesalahan penguraian. Detektor tidak menentukan keindahan karya atau maksud komponis. Contoh autentik yang ditandai harus dianotasi dan dibahas, bukan langsung dianggap benar atau salah berdasarkan asalnya.
 
 \subsection{Limitasi Desain Komparatif}
 

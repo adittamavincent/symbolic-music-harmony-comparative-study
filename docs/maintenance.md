@@ -1,8 +1,8 @@
 # Maintenance audit
 
-Audit date: 2026-09-28. Source baseline: `c9bea49` on `main`. Findings below describe that baseline except for the small fixes listed under “Applied.”
+Audit date: 2026-09-28. Source baseline: `c9bea49` on `main`. Findings below started at that baseline. Links now use the `research/` workspace paths; subsequent v3 changes and verification are recorded below.
 
-The repo needs correctness work before a broad reorganization. Keep the document phases and chapter names; repair evaluation, run isolation, and historical file selection first.
+Research correctness remains open. Computational research has now moved into `research/` with behavior preserved; document phases and chapter names remain stable. Resolve the measurement and run-integrity findings before main data collection.
 
 ## Applied
 
@@ -11,19 +11,20 @@ The repo needs correctness work before a broad reorganization. Keep the document
 - Added generated `docs/final-thesis/thesis/main.tex` to `.gitignore`, matching the proposal entry points.
 - Replaced Make help's proposal-to-thesis diff example with a note about the unverified thesis-ref support.
 
-No experiment behavior, academic claims, chapter names, or milestone tags were changed.
+The original audit made no experiment-behavior or academic-claim changes. Later v3 preparation changed draft claims and research ownership as recorded below; no milestone tags were created.
 
 ## Research correctness
 
 | Priority | Evidence and consequence | Proposed repair |
 | --- | --- | --- |
-| Before reporting results | [Main batch evaluation](../experiments/scripts/run_evaluation.py) discards `parse_quality` and includes padded/duplicated voices in its averages. [Standalone batch evaluation](../strube_evaluator.py) retains flags, so the two entry points behave differently. | Preserve parse quality and errors in master results; summarize only eligible SATB samples and report exclusions/counts. Reuse one evaluation-row builder. |
-| Before reporting results | [Coconet MIDI reconstruction](../experiments/scripts/run_coconet.py), in `reconstruct_json_to_midi`, sets an offset and then calls `part.append(n)`. Append places the event at the part's end, shifting gaps or overlaps. A local probe changed requested offsets `[0, 2]` into `[0, 1]`. | Insert notes at their explicit offsets and verify a sequence with gaps, overlaps, and a nonzero first onset. Keep sample generation separate from this conversion test. |
-| Before reporting results | [Condition manifest](../experiments/strube_conditions.json) gives NotaGen C and D identical prompts. NotaGen B does not instruct C major. DeepBach/Coconet settings are partly hardcoded, and adapters do not receive the orchestrator's custom `--manifest` path. Recorded settings can differ from executed settings. | Decide which comparisons the model interfaces support. Pass the selected manifest/resolved settings into adapters and record effective settings. Do not claim identical or equivalent constraints without support. |
-| Before reporting results | [Generation adapters](../experiments/scripts/run_deepbach.py), [Coconet wrapper](../scripts/bootstrap_models.py), and [NotaGen adapter](../experiments/scripts/run_notagen.py) reuse fixed sample filenames. [Evaluation](../experiments/scripts/run_evaluation.py) scans every MIDI in those folders. A smaller rerun leaves old samples in the next summary. | Give each experiment its own run directory; bind evaluation and plotting to that run. Record requested and actual sample counts. Until then, archive `outputs/` before independent runs. |
-| Before reporting results | [Chapter 4](final-thesis/thesis/chapters/04-hasil-pembahasan.tex) says Bach has zero flags and presents 120 samples as evaluated; the chart inclusion is commented out. [Chapter 5](final-thesis/thesis/chapters/05-kesimpulan-saran.tex) asserts significant differences and reduced violations without a linked measured analysis. The test output below contradicts the zero-flag table. | Replace provisional results with verified measurements. Record how the key and rule definitions were chosen, include the actual sample counts, and support significance claims with the corresponding analysis. |
-| Instrument definition | [Evaluator](../strube_evaluator.py) folds perfect fourths into fifth checks, compares simultaneous onsets rather than sustained sonorities, and uses a restricted soprano leading-tone check. The Bach test explicitly forces tonic C and only asserts a positive score. | Review definitions against the intended musicological method. Add focused examples for accepted/rejected intervals, held notes, rests, leading-tone contexts, and voice mapping before changing scoring. Preserve the old definition/results if the instrument changes. |
-| Completion reporting | [NotaGen](../experiments/scripts/run_notagen.py) can return after generating too few samples. [Evaluation](../experiments/scripts/run_evaluation.py) skips failed files and returns normally when no rows exist. [Plotting](../experiments/scripts/plot_results.py) also returns normally for absent input. [run_all.py](../run_all.py) relies on exit codes, so it can report completion with incomplete or stale artifacts. | Fail required stages on missing data, record per-file failures, and check expected sample/artifact counts before announcing completion. |
+| Before reporting results | [Main batch evaluation](../research/experiments/scripts/run_evaluation.py) discards `parse_quality` and includes padded/duplicated voices in its averages. [Standalone batch evaluation](../research/strube_evaluator.py) retains flags, so the two entry points behave differently. | Preserve parse quality and errors in master results; summarize only eligible SATB samples and report exclusions/counts. Reuse one evaluation-row builder. |
+| Before reporting results | [Coconet MIDI reconstruction](../research/experiments/scripts/run_coconet.py), in `reconstruct_json_to_midi`, sets an offset and then calls `part.append(n)`. Append places the event at the part's end, shifting gaps or overlaps. A local probe changed requested offsets `[0, 2]` into `[0, 1]`. | Insert notes at their explicit offsets and verify a sequence with gaps, overlaps, and a nonzero first onset. Keep sample generation separate from this conversion test. |
+| Before reporting results | [Condition manifest](../research/experiments/strube_conditions.json) gives NotaGen C and D identical prompts. NotaGen B does not instruct C major. DeepBach/Coconet settings are partly hardcoded, and adapters do not receive the orchestrator's custom `--manifest` path. Recorded settings can differ from executed settings. | Decide which comparisons the model interfaces support. Pass the selected manifest/resolved settings into adapters and record effective settings. Do not claim identical or equivalent constraints without support. |
+| Before reporting results | [Generation adapters](../research/experiments/scripts/run_deepbach.py), [Coconet wrapper](../research/scripts/bootstrap_models.py), and [NotaGen adapter](../research/experiments/scripts/run_notagen.py) reuse fixed sample filenames. [Evaluation](../research/experiments/scripts/run_evaluation.py) scans every MIDI in those folders. A smaller rerun leaves old samples in the next summary. | Give each experiment its own run directory; bind evaluation and plotting to that run. Record requested and actual sample counts. Until then, archive `research/outputs/` before independent runs. |
+| Draft honesty repaired; main evidence still missing | [Chapter 4](final-thesis/thesis/chapters/04-hasil-pembahasan.tex) now reports actual software-check measurements and their interpretation. [Chapter 5](final-thesis/thesis/chapters/05-kesimpulan-saran.tex) no longer asserts measured comparative outcomes. | Replace draft completion prompts with run-linked main measurements and supported answers after instrument validation and data collection. |
+| Before reporting results | [Evaluator quantization](../research/strube_evaluator.py) uses `quantize([0.25])`. A local probe collapsed onsets `0, 0.25, 0.5, 1, 2` to zero and made quarter-beat durations four beats. music21 treats the argument as quarter-length divisors, not time-step lengths. | Set and justify a time grid; verify onsets, durations, held notes, ties, and rests. Preserve the earlier instrument/results and rerun affected measurements. See [official quantization documentation](https://music21.org/music21docs/moduleReference/moduleStreamBase.html). |
+| Instrument definition | [Evaluator](../research/strube_evaluator.py) folds perfect fourths into fifth checks, compares simultaneous onsets rather than sustained sonorities, and uses a restricted soprano leading-tone check. The Bach test explicitly forces tonic C and only asserts a positive score. | Review definitions against the intended musicological method. Add focused examples for accepted/rejected intervals, held notes, rests, leading-tone contexts, and voice mapping before changing scoring. Preserve the old definition/results if the instrument changes. |
+| Completion reporting | [NotaGen](../research/experiments/scripts/run_notagen.py) can return after generating too few samples. [Evaluation](../research/experiments/scripts/run_evaluation.py) skips failed files and returns normally when no rows exist. [Plotting](../research/experiments/scripts/plot_results.py) also returns normally for absent input. [run_all.py](../research/run_all.py) relies on exit codes, so it can report completion with incomplete or stale artifacts. | Fail required stages on missing data, record per-file failures, and check expected sample/artifact counts before announcing completion. |
 
 ## Document tooling
 
@@ -68,13 +69,13 @@ Performed locally on 2026-09-28:
 | Check | Result |
 | --- | --- |
 | Git history, tree, tags, Makefile, templates, adapters, evaluator review | Local `proposal/v1` → `ccb5d59`; `proposal/v2` → `ffdfed5`; no thesis tags. |
-| `.venv/bin/python tests/test_strube_validity.py` | All four checks passed with Python 3.10.20, music21 9.3.0, and pandas 2.3.3. |
+| `.venv/bin/python research/tests/test_strube_validity.py` | All four checks passed with Python 3.10.20, music21 9.3.0, and pandas 2.3.3. |
 | Bach fixture, explicitly evaluated with tonic C by the test | Score `0.7568`; 37 soprano events; 6 fifth flags; 0 octave flags; 3 leading-tone flags. |
 | Artificial parallel fixture | Score `0.0`; 14 fifth flags; 7 octave flags; 0 leading-tone flags. |
 | Fresh notes dependency, before fix | `make -n notes` failed: no rule for `presentation.pdf`. |
 | Fresh notes build, after fix | `make notes` exited successfully and generated both slides and presenter notes. Existing layout warnings remain; visual layout was not reviewed. |
 | Current thesis build | `make thesis` exited successfully and generated `docs/final-thesis/thesis/main.pdf`, including Biber processing. Visual layout and result claims were not validated. |
-| Generation-only dry run | `uv run --offline python experiments/scripts/run_experiment.py --dry-run` exited successfully using a temporary writable uv cache. It printed the matrix and wrote metadata; no models were loaded. |
+| Generation-only dry run | `uv run --offline python research/experiments/scripts/run_experiment.py --dry-run` exited successfully using a temporary writable uv cache. It printed the matrix and wrote metadata; no models were loaded. |
 | Thesis generated-source ignore | `git check-ignore -v docs/final-thesis/thesis/main.tex` matched the new rule. |
 | Historical lookup probe | Both `main.tex.template` and `00-frontmatter.tex` at `HEAD` resolved to the thesis tree. |
 | Coconet-style append timing probe | Requested offsets `[0, 2]` became `[0, 1]` after append, using two one-beat music21 notes. |
@@ -83,3 +84,33 @@ Performed locally on 2026-09-28:
 | `git diff --check` | Passed. |
 
 Model bootstrap, model downloads, full inference, historical PDF/diff compilation, and visual PDF review were not performed as part of this audit. The passing evaluator checks establish those four cases only.
+
+## v3 preparation and verification
+
+Prepared on 2026-09-28, continuing proposal v2. The researcher reports lecturer review during an in-class, one-to-one tutoring session; the comments themselves are still awaited.
+
+- Added persistent project context, v3 completion gates, feedback record, researcher guide, reading ledger, and a protocol worksheet.
+- Moved evaluator, pipeline, experiments, tests, dependency list, bootstrap, and existing local outputs into `research/`. Updated Make and current guides. Root evaluator/pipeline/bootstrap/dependency entry points delegate to the new owner.
+- Kept the instrument, tests, adapters, and condition definitions unchanged. This folder move does not resolve the scientific or pipeline findings above.
+- Added a final-thesis cover, explicit BAB I–V divisions, and a contents page; reused class/branding assets remain unchanged. Department format requirements are still unconfirmed.
+- Corrected verified DeepBach/Fang descriptions, removed unsupported mathematical model summaries and novelty/outcome claims, marked the inherited method as provisional, and replaced speculative abstracts with draft-status summaries. Chapters IV/V explicitly distinguish software checks from missing main results.
+
+Post-move checks completed:
+
+| Check | Result and boundary |
+| --- | --- |
+| Existing four software checks | Passed; same printed scores and flags as before the move |
+| Generation-only dry run | Passed with the current local Python environment; uses `research/outputs/`; no model inference |
+| Root pipeline compatibility dry run | Passed; invoked moved tests and condition runner |
+| Byte preservation | Evaluator/test/manifest SHA-256 matches before-move copies; all 12 moved source files also match their HEAD contents byte for byte |
+| Import and path checks | Root evaluator delegates to the canonical function; all three adapter paths, manifest, setup root, and output root resolve in `research/` |
+| Make research recipes | Dry-run points at canonical workspace entry points; `make test` also passed using offline uv and a temporary writable cache |
+| Thesis PDF build and rendering | Forced and incremental builds passed through pdfLaTeX/Biber; 31 rendered pages reviewed at overview scale, with cover, approval, contents, and preliminary result table inspected individually; no overfull boxes or unresolved-reference warnings in the final build |
+
+Full model setup/downloads, generation, instrument repairs/validation, main statistical analysis, historical PDF rebuilds, and final department compliance were not performed in this preparation.
+
+Python syntax, Markdown local file links, bibliography-ledger coverage, proposal-source preservation, generated-file ignore rules, and `git diff --check` passed. The PDF remains a research draft; bibliography source support and department format compliance are still open. Underfull spacing messages remain in the inherited layout.
+
+Front-matter correction requested by the researcher: removed cover draft labeling and restored the pre-v3 approval-page/date and bilingual abstract wording. Readiness commentary remains in the project documentation. The thesis rebuilt successfully after this correction.
+
+The researcher subsequently clarified that versioning carries revision status for the entire thesis. Removed visible draft notices, status headings, and editorial completion instructions from chapters I–V. Progress documentation retains the outstanding tasks. Chapters IV/V use ordinary academic prose limited to the measurements actually available.

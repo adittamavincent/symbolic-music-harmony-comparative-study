@@ -1,6 +1,8 @@
 # Symbolic Music Harmony Comparative Study
 
-This repository contains the proposal, thesis draft, and experiment code for comparing DeepBach, Coconet, and NotaGen against selected harmony rules from Gustav Strube. The academic text is in Indonesian.
+This repository contains proposal v1/v2, the continuing final-thesis v3 draft, and experiment code for comparing DeepBach, Coconet, and NotaGen against selected harmony rules from Gustav Strube. The academic text is in Indonesian.
+
+Start final-thesis work with [the researcher guide](docs/final-thesis/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/feedback.md).
 
 Use this README when returning to the project: it explains where to edit, how to build, what versions mean, and which parts still need work.
 
@@ -12,7 +14,7 @@ Run commands from the repository root.
 | --- | --- |
 | See my branch and uncommitted changes | `git status --short --branch` |
 | See saved milestones | `git tag --list --sort=version:refname` |
-| Build the current thesis draft | `make thesis` |
+| Build the current final-thesis v3 draft | `make thesis` |
 | Build the current proposal | `make proposal` |
 | Build all proposal documents | `make proposal-phase` |
 | Build presenter notes, including slides | `make notes` |
@@ -21,7 +23,7 @@ Run commands from the repository root.
 | Rebuild a saved proposal | `make proposal proposal/v2` |
 | Compare the two saved proposals | `make diff proposal/v1 proposal/v2` |
 | Check the evaluator | `make test` |
-| Preview generation settings without loading models | `uv run python experiments/scripts/run_experiment.py --dry-run` |
+| Preview generation settings without loading models | `uv run python research/experiments/scripts/run_experiment.py --dry-run` |
 | Evaluate existing generated MIDI | `make eval`, then `make plot` |
 | Find known problems and cleanup priorities | Read [the maintenance audit](docs/maintenance.md) |
 
@@ -33,14 +35,14 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 | --- | --- |
 | Proposal | Chapters 1–3, schedule, slides, presenter notes, and Q&A are present. |
 | Saved proposal versions | `proposal/v1` and `proposal/v2` exist. |
-| Thesis | Front matter and chapters 1–5 are present. Chapters 4–5 contain draft results and conclusions requiring verification against actual experiments. |
+| Thesis v3 | Front matter and chapters 1–5 are present. Chapters 4–5 report instrument-test measurements and their interpretation; main-model work is tracked in PROGRESS.md. |
 | Thesis versions | No `thesis/v*` tags exist yet. |
 | Thesis defense slides | No template or build recipe exists. `thesis-slides` is only a phony Make target and produces nothing. |
 | Evaluator | Parallel fifths, parallel octaves/unisons, and a restricted soprano leading-tone check are implemented. |
 | Experiments | Three adapters, a condition manifest, batch evaluation, and plotting are present. Evaluator tests do not establish successful model inference. |
 | Reproducibility | Requested run settings are recorded. Dependencies, model revisions, random seeds, and checkpoint checksums are not locked. |
 
-The test run recorded in the [audit](docs/maintenance.md#verification-record) produced a Bach score of `0.7568`, with 6 fifth flags and 3 leading-tone flags. The thesis draft's table currently says zero violations. Reconcile the draft with the evaluator and its test assumptions before using that table as a result.
+The four existing software checks passed before and after moving research into `research/`. They do not establish instrument validity or model-inference success. The Bach fixture produces score `0.7568`, with 6 fifth flags and 3 leading-tone flags under the current, unvalidated instrument. Chapter 4 records these as preliminary code outputs. Quantization, scoring, conditioning, and run integrity must be resolved before main collection; see [the progress gates](docs/final-thesis/PROGRESS.md#completion-gates).
 
 ## Contents
 
@@ -57,49 +59,37 @@ The test run recorded in the [audit](docs/maintenance.md#verification-record) pr
 
 ```text
 .
-├── .env.example                    Metadata keys; copy to .env.local
-├── .gitignore                      Local/generated file exclusions
-├── .latexmkrc                      Root LaTeX output configuration
-├── .vscode/settings.json            LaTeX Workshop recipe and warning filters
+├── AGENTS.md                       Continuing project context and writing rules
 ├── Makefile                        Document and research commands
-├── requirements.txt                Python dependencies; mostly unpinned
-├── run_all.py                      Tests → generation → evaluation → chart
-├── strube_evaluator.py              Rule checks, scoring, single-file CLI
-├── setup.py                        Compatibility wrapper for model bootstrap
+├── .env.example                    Metadata keys; local values in .env.local
+├── requirements.txt                Compatibility include of research dependencies
+├── run_all.py / strube_evaluator.py / setup.py
+│                                   Compatibility entry points
 ├── docs/
-│   ├── README.md                   Guide to document phases
-│   ├── maintenance.md              Known problems and cleanup order
-│   ├── proposal-phase/
-│   │   ├── assets/                 ISI class, logos, shared bibliography
-│   │   ├── proposal/
-│   │   │   ├── main.tex.template   Proposal entry point
-│   │   │   └── chapters/           Front matter, chapters 1–3, schedule
-│   │   └── presentation/           Slides, notes, and Q&A templates
+│   ├── README.md / maintenance.md   Document guide and technical findings
+│   ├── proposal-phase/             Proposal v1/v2 sources, slides, shared assets
 │   └── final-thesis/
-│       ├── README.md               Thesis editing guide
-│       └── thesis/
-│           ├── main.tex.template   Thesis entry point
-│           └── chapters/           Front matter and chapters 1–5
-├── experiments/
-│   ├── strube_conditions.json      A–D condition descriptions and prompts
-│   └── scripts/
-│       ├── run_experiment.py       Select models/conditions; record settings
-│       ├── run_deepbach.py         DeepBach generation adapter
-│       ├── run_coconet.py          Seed extraction, Node runner, MIDI conversion
-│       ├── run_notagen.py          NotaGen-X generation adapter
-│       ├── run_evaluation.py       All-model evaluation and CSV summaries
-│       └── plot_results.py         Chart from SUMMARY_TABLE.csv
-├── scripts/
-│   ├── bootstrap_models.py         Clone models; write/install Coconet runner
-│   ├── compile_version.py          Build a proposal from a committed Git ref
-│   ├── sidebydiff.py               Main side-by-side proposal diff tool
-│   └── proposal_diff.sh            Older latexdiff alternative; not used by make
-└── tests/test_strube_validity.py    Four evaluator checks
+│       ├── PROGRESS.md              v3 status, evidence, completion gates
+│       ├── feedback.md              Actual lecturer notes and actions
+│       ├── researcher-guide.md      Fundamentals, work sequence, readings
+│       ├── reading-notes.csv        Source verification and researcher reading
+│       └── thesis/                  Active v3 template, cover, chapters I–V
+├── research/
+│   ├── README.md / protocol.md      Research commands and design decisions
+│   ├── requirements.txt            Canonical Python dependencies
+│   ├── strube_evaluator.py          Canonical measurement instrument
+│   ├── run_all.py                   Research pipeline entry point
+│   ├── tests/                      Software checks
+│   ├── experiments/                Condition manifest and experiment scripts
+│   ├── scripts/bootstrap_models.py  Model setup and Coconet runner source
+│   ├── models/                     Local third-party code/checkpoints, ignored
+│   └── outputs/                    Local raw/derived artifacts, ignored
+└── scripts/                        Document Git/PDF tools; bootstrap wrapper
 ```
 
-Local directories such as `.venv/`, `models/`, `outputs/`, `scratch/`, and LaTeX `build/` directories are ignored. They may be absent in a fresh clone. Git does not back them up.
+Research code, tests, experiments, dependencies, and local artifacts have one owner: `research/`. See its [workspace guide](research/README.md) for the folder transition. The root `.venv/` remains the local Python environment. `scratch/` remains document-tool scratch space.
 
-The thesis currently shares the class, bibliography, and logos under `docs/proposal-phase/assets/`. Changes there can affect both phases.
+Local model/output directories and LaTeX build artifacts are ignored and may be absent in a fresh clone. Git does not back them up. The thesis still shares its class, bibliography, and logos under `docs/proposal-phase/assets/`; changes there can affect both phases.
 
 ## Setup
 
@@ -162,7 +152,7 @@ The commands below use `uv run python`. With the existing environment, `.venv/bi
 make setup
 ```
 
-This clones DeepBach and NotaGen into `models/`, writes Coconet's `package.json` and `run_coconet.js`, and runs `npm install` when npm is available. Re-running setup rewrites the Coconet wrapper. It does not install Python requirements or verify inference.
+This clones DeepBach and NotaGen into `research/models/`, writes Coconet's `package.json` and `run_coconet.js`, and runs `npm install` when npm is available. Re-running setup rewrites the Coconet wrapper. It does not install Python requirements or verify inference.
 
 DeepBach resources and NotaGen-X weights download on generation when missing. Coconet initializes a remote checkpoint through its Node runner. Coconet also uses DeepBach's dataset code to extract its seed. The pipeline normally runs DeepBach first.
 
@@ -256,73 +246,25 @@ git show --no-patch 'proposal/v2^{commit}'
 
 Use `docs:` for writing/documentation, `fix:` for incorrect behavior, `feat:` for new behavior, `refactor:` for restructuring, and `chore:` for maintenance. Example: `docs: revise thesis methodology after advisor feedback`.
 
-For the first thesis milestone, after committing and checking the PDF:
+### Save final-thesis v3
+
+The researcher uses one continuing revision sequence: proposal v1, proposal v2, then final thesis v3. The next milestone is `thesis/v3`. Do not restart the active manuscript at `thesis/v1` or call it proposal v3.
+
+Build and inspect the active manuscript with `make thesis`. Review `git diff` and the [completion gates](docs/final-thesis/PROGRESS.md#completion-gates), then commit the intended sources. Include research/protocol/shared-asset changes when they belong to the same reviewed snapshot.
+
+After committing a draft that is ready to preserve as a review milestone:
 
 ```bash
-git tag -a thesis/v1 -m "First thesis draft sent for advisor review"
+git tag -a thesis/v3 -m "Final-thesis v3 continuing proposal v2"
 git push origin main
-git push origin thesis/v1
+git push origin thesis/v3
 ```
 
-Those commands are a recipe, not a record of a tag created here. Use `thesis/v2`, `thesis/v3`, and so on for later milestones. Keep published milestone tags fixed so each name continues to identify the same source.
+These commands are a recipe, not a record of actions taken here. Check the branch before pushing; push the actual branch if it differs from `main`. Keep published tags fixed. A review milestone can be a draft; its readiness should be recorded explicitly.
 
-### Example: save the next proposal as v3
+Preserve the submitted/reviewed PDF as `thesis-v3-YYYY-MM-DD.pdf` with the actual date, matching metadata, and research evidence. These artifacts are ignored by Git. The next continuing thesis milestone would be `thesis/v4` when appropriate.
 
-`proposal/v3` is a name you attach to a committed draft. You choose when that draft deserves a milestone, usually when sending it for review or submitting it. Git does not increment the version automatically.
-
-The two document phases have separate numbering:
-
-| Draft being saved | Next tag, given the existing tags above |
-| --- | --- |
-| Another proposal revision | `proposal/v3` |
-| First saved thesis milestone | `thesis/v1` |
-| Later thesis revision, after `thesis/v1` exists | `thesis/v2` |
-
-For example, after revising proposal chapter 3:
-
-1. Edit `docs/proposal-phase/proposal/chapters/03-metodologi.tex`. Other proposal changes can be included in the same milestone.
-2. Build and inspect the current proposal:
-
-   ```bash
-   make proposal
-   git diff -- docs/proposal-phase
-   git diff --check
-   ```
-
-3. Once the draft is ready, save the source and give that commit its milestone name:
-
-   ```bash
-   git add docs/proposal-phase
-   git diff --cached
-   git commit -m "docs: revise proposal methodology for third review"
-   git tag -a proposal/v3 -m "Proposal revision 3 sent for review"
-   ```
-
-   Inspect the staged diff before committing, including anything already staged. If the intended revision was already committed, skip the add/commit steps and tag that commit. `git tag` without an explicit commit points to `HEAD`, the latest commit on your current branch; uncommitted edits are excluded.
-
-4. Back up the commit and tag to GitHub:
-
-   ```bash
-   git push origin main
-   git push origin proposal/v3
-   ```
-
-   This example assumes you are on `main`. Check with `git branch --show-current`; when working on another branch, push that branch instead.
-
-5. Copy the checked PDF to your submission archive as `proposal-v3-YYYY-MM-DD.pdf`, using the actual submission date, and preserve the matching metadata privately. Git ignores PDFs and `.env.local`.
-
-Confirm the saved milestone or compare its source:
-
-```bash
-git show --no-patch 'proposal/v3^{commit}'
-git diff proposal/v2 proposal/v3 -- docs/proposal-phase
-```
-
-After v3, keep editing and committing normally. Create `proposal/v4` when the next milestone is ready. Leave `proposal/v3` pointing to the draft you already sent.
-
-For the first thesis milestone, use the same sequence with `make thesis`, `git add docs/final-thesis`, a thesis-specific commit message, and `thesis/v1` in the tag/push commands. Include changed shared assets explicitly when they are part of that revision.
-
-The historical PDF helpers still need the path-resolution repair below before reliably rebuilding new tags that contain both document phases. The current-document build, source tag, archived PDF, and Git source comparison above work independently of those helpers.
+Use Git source comparisons and archived PDFs for v3. Historical PDF helpers still need phase-aware resolution before reliably rebuilding refs containing both phases.
 
 ### Build or compare a saved proposal
 
@@ -360,35 +302,35 @@ The planned full run is 3 models × 4 conditions × 10 samples = 120 MIDI files.
 
 These are different native interfaces. NotaGen's B condition has no explicit C-major instruction, and its C and D prompts are identical. The labels describe the experimental design to examine; they do not prove equivalent constraints across models.
 
-`experiments/strube_conditions.json` describes the design. NotaGen reads its prompt values, while DeepBach and Coconet implement many settings directly in code. `--manifest` affects the orchestrator's selection and metadata; adapters still read the default manifest. Editing a manifest entry alone does not reliably change all generation behavior.
+`research/experiments/strube_conditions.json` describes the design. NotaGen reads its prompt values, while DeepBach and Coconet implement many settings directly in code. `--manifest` affects the orchestrator's selection and metadata; adapters still read the default manifest. Editing a manifest entry alone does not reliably change all generation behavior.
 
 ### Commands
 
 ```bash
 # Check the evaluator, then print/save generation settings
-uv run python run_all.py --dry-run
+uv run python research/run_all.py --dry-run
 
 # Print/save settings alone; skip tests and model imports
-uv run python experiments/scripts/run_experiment.py --dry-run
+uv run python research/experiments/scripts/run_experiment.py --dry-run
 
 # Request one sample per condition per model (12 total)
-uv run python run_all.py --samples 1
+uv run python research/run_all.py --samples 1
 
 # Default pipeline: tests → generation → evaluation → chart
 make exp
 
 # Tests → evaluate existing MIDI → chart
-uv run python run_all.py --skip-generation
+uv run python research/run_all.py --skip-generation
 
 # Generation only: one model, two conditions
-uv run python experiments/scripts/run_experiment.py --models deepbach --conditions A_neutral,B_key --samples 2
+uv run python research/experiments/scripts/run_experiment.py --models deepbach --conditions A_neutral,B_key --samples 2
 
 # Evaluate and plot separately
 make eval
 make plot
 ```
 
-`--dry-run` writes metadata into `outputs/` but generates no MIDI. `--parallel-models` starts adapters together; it can expose dataset/resource dependencies and increase memory use. Start with the sequential default on a fresh model setup.
+`--dry-run` writes metadata into `research/outputs/` but generates no MIDI. `--parallel-models` starts adapters together; it can expose dataset/resource dependencies and increase memory use. Start with the sequential default on a fresh model setup.
 
 The `--download-notagen`/`--download-weights` flags remain for compatibility; missing NotaGen weights now download automatically.
 
@@ -396,21 +338,21 @@ The `--download-notagen`/`--download-weights` flags remain for compatibility; mi
 
 | Path | Contents |
 | --- | --- |
-| `outputs/<model>/<condition>/<model>_<label>_01.mid` | Sample, e.g. `outputs/deepbach/A_neutral/deepbach_neutral_01.mid` |
-| `outputs/RUN_METADATA_*.json` | Timestamped requested settings |
-| `outputs/LATEST_RUN_METADATA.json` | Most recently requested settings, including dry runs |
-| `outputs/MASTER_RESULTS.csv` | Per-file counts and scores from the main batch script |
-| `outputs/SUMMARY_TABLE.csv` | Per-model/per-condition means and sample counts |
-| `outputs/strube_evaluation_results.png` | Chart generated from the summary CSV |
+| `research/outputs/<model>/<condition>/<model>_<label>_01.mid` | Sample, e.g. `research/outputs/deepbach/A_neutral/deepbach_neutral_01.mid` |
+| `research/outputs/RUN_METADATA_*.json` | Timestamped requested settings |
+| `research/outputs/LATEST_RUN_METADATA.json` | Most recently requested settings, including dry runs |
+| `research/outputs/MASTER_RESULTS.csv` | Per-file counts and scores from the main batch script |
+| `research/outputs/SUMMARY_TABLE.csv` | Per-model/per-condition means and sample counts |
+| `research/outputs/strube_evaluation_results.png` | Chart generated from the summary CSV |
 | NotaGen condition folders | May contain failed `.abc` samples for debugging |
 
-Generation reuses fixed filenames. A smaller rerun overwrites early samples and leaves older higher-numbered samples. Evaluation scans all MIDI in these folders, including earlier runs. Move existing `outputs/` to a separate archive before an independent experiment; record the source commit, environment versions, model revisions, and settings with it.
+Generation reuses fixed filenames. A smaller rerun overwrites early samples and leaves older higher-numbered samples. Evaluation scans all MIDI in these folders, including earlier runs. Move existing `research/outputs/` to a separate archive before an independent experiment; record the source commit, environment versions, model revisions, and settings with it.
 
 Requested sample counts are not checked as a completion gate. NotaGen can finish with fewer samples after retries. Evaluation skips errors, and evaluation/plotting can return success when input is absent. Check counts and CSV contents before accepting a run. The main batch script currently omits parse-quality flags and includes padded/duplicated voices in averages; repair this before using its summary for the thesis.
 
 ## Understanding the evaluator
 
-`strube_evaluator.py` assumes the first four MIDI parts are soprano, alto, tenor, and bass in that order. It pads 2–3 parts by repeating the last part and repeats a single part four times, reporting `padded` or `duplicated_mono`. Four or more parts report `ok`; that flag alone does not establish correct voice order or monophonic SATB.
+`research/strube_evaluator.py` assumes the first four MIDI parts are soprano, alto, tenor, and bass in that order. It pads 2–3 parts by repeating the last part and repeats a single part four times, reporting `padded` or `duplicated_mono`. Four or more parts report `ok`; that flag alone does not establish correct voice order or monophonic SATB.
 
 It checks parallel motion across all six voice pairs and leading-tone motion in the soprano. The implemented score is:
 
@@ -423,6 +365,7 @@ The score ranges from 0 to 1 and measures the implemented flags. It does not cov
 
 Behavior to remember:
 
+- `quantize([0.25])` uses a four-beat grid, not a quarter-beat grid; a probe collapsed distinct onsets. Fix and validate the selected timing grid before final measurement.
 - Parallel checks compare shared note-onset offsets; they do not reconstruct every sustained vertical sonority.
 - Chords contribute their highest pitch to parallel checking.
 - The fifth check accepts both 7 and 5 semitones modulo 12, grouping fourths with fifths.
@@ -437,7 +380,7 @@ uv run python strube_evaluator.py path/to/sample.mid
 uv run python strube_evaluator.py path/to/sample.mid 2
 
 # One flat directory: writes strube_results.csv there
-uv run python strube_evaluator.py outputs/deepbach/A_neutral
+uv run python strube_evaluator.py research/outputs/deepbach/A_neutral
 ```
 
 The standalone directory command is nonrecursive. It keeps parse-quality/error rows and prints a valid-only view, but its CSV still contains flagged samples. The all-model `make eval` path is a separate implementation and currently drops those flags.
@@ -446,7 +389,7 @@ The standalone directory command is nonrecursive. It keeps parse-quality/error r
 
 ## Naming and maintenance
 
-Keep the phase folders, Indonesian chapter names, numeric chapter prefixes, Python `snake_case`, and uppercase metadata keys. Use full milestone names such as `proposal/v2` and `thesis/v1`.
+Keep the phase folders, Indonesian chapter names, numeric chapter prefixes, Python `snake_case`, and uppercase metadata keys. Use full milestone names such as `proposal/v2` and `thesis/v3`.
 
 Keep `A_neutral`, `B_key`, `C_satb`, `D_full`, output filenames, and CSV columns stable while scripts depend on them. For a submission archive, use a descriptive name such as `thesis-v1-2026-09-28.pdf`; this does not require renaming the build's `main.pdf`.
 
@@ -462,7 +405,7 @@ Correct evaluation validity and version-path selection first, then consolidate h
 | `envsubst`, `latexmk`, `pdflatex`, or `biber` absent | Check document tools and PATH. Model setup does not install TeX or gettext. |
 | Missing `isi-proposal.cls` or logo | Build from the root with Make; the thesis relies on proposal assets. |
 | Warnings seem absent in VS Code | Settings hide several warnings, including biblatex warnings. Read `build/main.log` and the Biber log. |
-| `No module named DatasetManager` | Check `models/deepbach/`; run `make setup` if the clone is absent. |
+| `No module named DatasetManager` | Check `research/models/deepbach/`; run `make setup` if the clone is absent. |
 | NotaGen cannot find `gradio` or `config` | Check model setup and upstream files; the adapter imports them before parsing arguments. |
 | Coconet cannot find Node | Configure a runtime; `COCONET_NODE=/absolute/path/to/node` selects one explicitly. |
 | Setup reported success but npm was absent | Bootstrap only warns in that case. Install npm and rerun setup before Coconet generation. |

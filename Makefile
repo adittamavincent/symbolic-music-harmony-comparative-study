@@ -91,21 +91,21 @@ help:
 setup: setup-models
 
 setup-models:
-	uv run python scripts/bootstrap_models.py
+	uv run python research/scripts/bootstrap_models.py
 
 test:
-	uv run python tests/test_strube_validity.py
+	uv run python research/tests/test_strube_validity.py
 
 exp: run-all
 
 run-all:
-	uv run python run_all.py
+	uv run python research/run_all.py
 
 eval:
-	uv run python experiments/scripts/run_evaluation.py
+	uv run python research/experiments/scripts/run_evaluation.py
 
 plot:
-	uv run python experiments/scripts/plot_results.py
+	uv run python research/experiments/scripts/plot_results.py
 
 # ==============================================================================
 # FASE PROPOSAL
