@@ -22,6 +22,7 @@ Run commands from the repository root.
 | Force metadata substitution too | `make -B thesis` |
 | Rebuild a saved proposal | `make proposal proposal/v2` |
 | Compare the two saved proposals | `make diff proposal/v1 proposal/v2` |
+| Compare a proposal with the latest commit | `make diff proposal/v1 head` |
 | Check the evaluator | `make test` |
 | Preview generation settings without loading models | `uv run python research/experiments/scripts/run_experiment.py --dry-run` |
 | Evaluate existing generated MIDI | `make eval`, then `make plot` |
@@ -264,7 +265,7 @@ These commands are a recipe, not a record of actions taken here. Check the branc
 
 Preserve the submitted/reviewed PDF as `thesis-v3-YYYY-MM-DD.pdf` with the actual date, matching metadata, and research evidence. These artifacts are ignored by Git. The next continuing thesis milestone would be `thesis/v4` when appropriate.
 
-Use Git source comparisons and archived PDFs for v3. Historical PDF helpers still need phase-aware resolution before reliably rebuilding refs containing both phases.
+Use the diff command below to compare committed v3 sources with a proposal milestone. The historical `make proposal <ref>` compiler still needs phase-aware resolution before reliably rebuilding refs containing both phases.
 
 ### Build or compare a saved proposal
 
@@ -272,13 +273,17 @@ Use Git source comparisons and archived PDFs for v3. Historical PDF helpers stil
 make proposal proposal/v1          # scratch/proposal_v1.pdf
 make proposal proposal/v2          # scratch/proposal_v2.pdf
 make diff proposal/v1 proposal/v2   # scratch/proposal_diff.pdf
+make diff proposal/v1 head          # Latest committed manuscript, no tag needed
+make diff proposal/v2 e87d47b       # Abbreviated or full commit ID
 ```
+
+The diff accepts tags, commit IDs, branches, and `head`/`HEAD`. Every untagged ref resolves to its full commit ID before source loading; the console and PDF show that ID. `head` follows the checked-out branch's latest commit and excludes uncommitted edits. Tags retain their names. A `proposal/` tag selects the proposal manuscript; other refs select the final thesis when present, falling back to the proposal in older snapshots. Chapters and nested inputs are read within the selected manuscript, including thesis chapters IV and V.
 
 Use complete names such as `proposal/v2`. Short names such as `v2` are resolved by trying `thesis/` before `proposal/`, which becomes ambiguous once both namespaces have versions.
 
 These commands read committed Git content and exclude uncommitted chapter edits. They also use current local metadata and some current assets; they do not guarantee identical reconstruction of a PDF submitted months ago.
 
-The helpers locate templates and chapters by filename. With both phases present, `HEAD` currently selects the thesis template first. The historical compiler also only knows the proposal chapter list. Use the two proposal tags above for these helpers; arbitrary thesis refs and proposal-to-thesis comparisons need the [path-resolution repair](docs/maintenance.md#document-tooling).
+The historical `make proposal <ref>` compiler still locates chapters by filename and only knows the proposal chapter list. Use saved proposal tags for that compiler until the remaining [path-resolution repair](docs/maintenance.md#document-tooling).
 
 For source comparisons:
 
@@ -411,5 +416,5 @@ Correct evaluation validity and version-path selection first, then consolidate h
 | Setup reported success but npm was absent | Bootstrap only warns in that case. Install npm and rerun setup before Coconet generation. |
 | NotaGen retries need inspection | Use `NOTAGEN_VERBOSE=1`; `NOTAGEN_MAX_ATTEMPTS` defaults to 5 per requested sample. Inspect failed ABC files. |
 | Empty or unexpectedly large result counts | Check missing folders and stale MIDI; archive outputs between independent experiments. |
-| Historical build uses wrong chapters | Use saved proposal tags. Helpers need explicit phase paths for refs containing both phases. |
-| Diff/build prints “Done” despite TeX errors | Read the log. Historical helpers can accept a PDF's existence despite a nonzero compiler exit. |
+| Historical build uses wrong chapters | Use saved proposal tags with `make proposal <ref>`. That compiler still needs explicit phase paths for refs containing both phases. |
+| Historical build prints “Done” despite TeX errors | Read the log. `compile_version.py` can accept a PDF's existence despite a nonzero compiler exit; the diff command now reports failure. |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 Generate side-by-side diff PDF for the FULL proposal (paragraph-level),
 concatenating all chapter files in main.tex.template's include order into
 one continuous document per git ref, then diffing paragraph-by-paragraph.
@@ -50,16 +50,25 @@ def get_git_content(ref, path):
 
 
 def resolve_git_ref(ref):
-    res = subprocess.run(["git", "rev-parse", "--verify", ref], capture_output=True)
-    if res.returncode == 0:
-        return ref
+    # Accept the convenient lowercase spelling without requiring a tag.
+    if ref.lower() == "head":
+        ref = "HEAD"
+    candidates = [ref]
     for prefix in ["thesis/", "proposal/"]:
         if not ref.startswith(prefix):
-            alt_ref = f"{prefix}{ref}"
-            res = subprocess.run(["git", "rev-parse", "--verify", alt_ref], capture_output=True)
-            if res.returncode == 0:
-                return alt_ref
-    return ref
+            candidates.append(f"{prefix}{ref}")
+    for candidate in candidates:
+        res = subprocess.run(
+            ["git", "rev-parse", "--verify", "--end-of-options", f"{candidate}^{{commit}}"],
+            capture_output=True, text=True,
+        )
+        if res.returncode == 0:
+            tag = subprocess.run(
+                ["git", "show-ref", "--verify", "--quiet", f"refs/tags/{candidate}"],
+                capture_output=True,
+            )
+            return candidate if tag.returncode == 0 else res.stdout.strip()
+    raise ValueError(f"Unknown Git ref: {ref}")
 
 
 def clean_latex_for_diff(text):
@@ -68,6 +77,8 @@ def clean_latex_for_diff(text):
     text = re.sub(r'(?<!\\)%.*', '', text)
     text = re.sub(r'\\newpage\b', '', text)
     text = re.sub(r'\\clearpage\b', '', text)
+    text = re.sub(r'\\(?:begin|end)\{titlepage\}', '', text)
+    text = re.sub(r'\\vfill\b|\\vspace\*\{\\fill\}', '', text)
     text = re.sub(r'\\begin\{spacing\}\{[^{}]*\}', '', text)
     text = re.sub(r'\\end\{spacing\}', '', text)
     text = re.sub(r'\\begin\{center\}', '', text)
@@ -93,25 +104,31 @@ def find_git_path(ref, filename):
     )
     if result.returncode != 0:
         return None
-    for line in result.stdout.splitlines():
-        if line.endswith(filename):
+    paths = result.stdout.splitlines()
+    if filename == "main.tex.template":
+        proposal_templates = [
+            "docs/proposal-phase/proposal/main.tex.template",
+            "thesis/proposal/main.tex.template",
+        ]
+        thesis_templates = ["docs/final-thesis/thesis/main.tex.template"]
+        candidates = (proposal_templates + thesis_templates
+                      if ref.startswith("proposal/")
+                      else thesis_templates + proposal_templates)
+        for path in candidates:
+            if path in paths:
+                return path
+        raise ValueError(f"No manuscript template found at {ref}")
+    for line in paths:
+        if os.path.basename(line) == filename:
             return line
     return None
 
 
 def get_template_inputs(ref):
     """
-    Extract list of tex filenames included via \\input in main.tex.template of the ref.
+    Extract exact chapter paths relative to the selected manuscript template.
     """
     path = find_git_path(ref, "main.tex.template")
-    if not path:
-        return [
-            "00-frontmatter.tex",
-            "01-pendahuluan.tex",
-            "02-tinjauan-pustaka.tex",
-            "03-metodologi.tex",
-            "04-jadwal.tex",
-        ]
     content = get_git_content(ref, path)
     matches = re.findall(r'\\input\{([^}]+)\}', content)
     filenames = []
@@ -119,7 +136,7 @@ def get_template_inputs(ref):
         m = m.strip()
         if not m.endswith(".tex"):
             m = m + ".tex"
-        filenames.append(os.path.basename(m))
+        filenames.append(os.path.normpath(os.path.join(os.path.dirname(path), m)))
     return filenames
 
 
@@ -151,13 +168,26 @@ def build_full_proposal(ref):
     not a per-file diff with separate sections per chapter.
     """
     parts = []
-    filenames = get_template_inputs(ref)
-    for fname in filenames:
-        path = find_git_path(ref, fname)
-        if path:
-            content = get_git_content(ref, path)
-            if content:
-                parts.append(content.strip())
+    document_root = os.path.dirname(find_git_path(ref, "main.tex.template"))
+
+    def read_input(path, stack=()):
+        if path in stack:
+            raise ValueError(f"Recursive LaTeX input at {ref}:{path}")
+        content = get_git_content(ref, path)
+        if not content:
+            raise ValueError(f"Missing or empty LaTeX input at {ref}:{path}")
+
+        def expand(match):
+            name = match.group(1).strip()
+            if not name.endswith(".tex"):
+                name += ".tex"
+            nested_path = os.path.normpath(os.path.join(document_root, name))
+            return read_input(nested_path, (*stack, path))
+
+        return re.sub(r'\\input\{([^}]+)\}', expand, content)
+
+    for path in get_template_inputs(ref):
+        parts.append(read_input(path).strip())
     full_text = "\n\n".join(parts)
     return clean_latex_for_diff(full_text)
 
@@ -383,6 +413,9 @@ def render_token(token, highlight=None):
 
 
 def is_safe_to_highlight_token(val, is_math=False, is_box=False):
+    # A trailing TeX space escape would escape the highlight's closing brace.
+    if val.endswith("\\"):
+        return False
     if is_math:
         if any(pat in val for pat in ["\\begin{equation}", "\\begin{multline}", "\\begin{align}", "\\begin{gather}"]):
             return False
@@ -429,7 +462,8 @@ def classify_token_style(style, val):
         
     if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', val_clean):
         if is_safe_to_highlight_token(val, is_box=True):
-            return style + "_text"
+            # Citation expansion is unsafe inside soul's text reconstruction.
+            return style + "_box"
         return None
         
     if is_safe_to_highlight_token(val):
@@ -536,7 +570,8 @@ def word_level_render(old_text, new_text):
         cur_style, val = actions[0]
         cur_list = [val]
         for style, val in actions[1:]:
-            if style == cur_style and val != "\n" and cur_list[-1] != "\n":
+            if (style == cur_style and val != "\n" and cur_list[-1] != "\n"
+                    and not (style and style.endswith("_box"))):
                 cur_list.append(val)
             else:
                 merged.append((cur_style, " ".join(cur_list)))
@@ -881,10 +916,10 @@ def generate_diff_latex(tag1, tag2, outdir):
             v1_nocite,
             v2_nocite,
             r"\begin{paracol}{2}",
-            f"\\section*{{Daftar Pustaka ({tag1})}}",
+            f"\\section*{{Daftar Pustaka\\\\{{\\normalsize\\texttt{{{tag1}}}}}}}",
             r"\printbibliography[heading=none, keyword=v1]" if v1_keys else "",
             r"\switchcolumn",
-            f"\\section*{{Daftar Pustaka ({tag2})}}",
+            f"\\section*{{Daftar Pustaka\\\\{{\\normalsize\\texttt{{{tag2}}}}}}}",
             r"\printbibliography[heading=none, keyword=v2]" if v2_keys else "",
             r"\end{paracol}",
         ]
@@ -1072,9 +1107,10 @@ def latex_to_pdf(tex_path, outdir):
         capture_output=True, text=True
     )
     pdf_path = os.path.join(outdir, "proposal_diff.pdf")
-    if result.returncode != 0 and not os.path.exists(pdf_path):
+    if result.returncode != 0:
         print(result.stdout[-3000:])
         print(result.stderr[-3000:])
+        return None
     return pdf_path if os.path.exists(pdf_path) else None
 
 
@@ -1096,7 +1132,13 @@ def main():
         print(f"=== Done: {pdf_path} ({size} bytes) ===")
     else:
         print(f"PDF not generated -- check {outdir}/proposal_diff.log")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        sys.exit(main())
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)

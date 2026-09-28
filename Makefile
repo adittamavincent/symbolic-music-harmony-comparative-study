@@ -78,7 +78,8 @@ help:
 		"🔍 VERSIONING & DIFFING:" \
 		"  make diff <ref1> <ref2>  Generate side-by-side diff PDF" \
 		"                           Contoh: make diff proposal/v1 proposal/v2" \
-		"                           Gunakan tag proposal; dukungan ref skripsi belum terverifikasi" \
+		"                           Contoh terbaru: make diff proposal/v1 head" \
+		"                           Ref: tag, ID commit, branch, head/HEAD (commit terakhir)" \
 		"  make diff-clean          Hapus file artefak diff" \
 		"" \
 		"🧹 CLEANUP:" \
