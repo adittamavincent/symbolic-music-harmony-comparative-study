@@ -21,7 +21,8 @@ Run commands from the repository root.
 | Build presenter notes, including slides | `make notes` |
 | Force LaTeX to rebuild | `make thesis FORCE=1` |
 | Force metadata substitution too | `make -B thesis` |
-| Rebuild a saved proposal | `make proposal proposal/v2` |
+| Rebuild a saved proposal | `make proposal v2` |
+| Rebuild the latest committed thesis | `make thesis head` |
 | Compare the two saved proposals | `make diff proposal/v1 proposal/v2` |
 | Compare a proposal with the latest commit | `make diff proposal/v1 head` |
 | Check the evaluator | `make test` |
@@ -37,14 +38,14 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 | --- | --- |
 | Proposal | Chapters 1–3, schedule, slides, presenter notes, and Q&A are present. |
 | Saved proposal versions | `proposal/v1` and `proposal/v2` exist. |
-| Thesis v3 | Front matter and chapters 1–5 are present. Chapters 4–5 report instrument-test measurements and their interpretation; main-model work is tracked in PROGRESS.md. |
+| Thesis v3 | Front matter and BAB I–III, following the department's 2026 research-proposal outline. Results and conclusion chapters wait for main data; the earlier five-chapter draft remains in Git history. |
 | Thesis versions | No `thesis/v*` tags exist yet. |
 | Thesis defense slides | No template or build recipe exists. `thesis-slides` is only a phony Make target and produces nothing. |
 | Evaluator | Parallel fifths, parallel octaves/unisons, and a restricted soprano leading-tone check are implemented. |
 | Experiments | Three adapters, a condition manifest, batch evaluation, and plotting are present. Evaluator tests do not establish successful model inference. |
 | Reproducibility | Requested run settings are recorded. Dependencies, model revisions, random seeds, and checkpoint checksums are not locked. |
 
-The four existing software checks passed before and after moving research into `research/`. They do not establish instrument validity or model-inference success. The Bach fixture produces score `0.7568`, with 6 fifth flags and 3 leading-tone flags under the current, unvalidated instrument. Chapter 4 records these as preliminary code outputs. Quantization, scoring, conditioning, and run integrity must be resolved before main collection; see [the progress gates](docs/final-thesis/PROGRESS.md#completion-gates).
+The four existing software checks passed before and after moving research into `research/`. They do not establish instrument validity or model-inference success. The Bach fixture produces score `0.7568`, with 6 fifth flags and 3 leading-tone flags under the current, unvalidated instrument. The earlier five-chapter draft recorded these as preliminary code outputs; they are not part of the current BAB I–III manuscript. Quantization, scoring, conditioning, and run integrity must be resolved before main collection; see [the progress gates](docs/final-thesis/PROGRESS.md#completion-gates).
 
 ## Contents
 
@@ -75,7 +76,7 @@ The four existing software checks passed before and after moving research into `
 │       ├── feedback.md              Actual lecturer notes and actions
 │       ├── researcher-guide.md      Fundamentals, work sequence, readings
 │       ├── reading-notes.csv        Source verification and researcher reading
-│       └── thesis/                  Active v3 template, cover, chapters I–V
+│       └── thesis/                  Active v3 template, cover, BAB I–III
 ├── research/
 │   ├── README.md / protocol.md      Research commands and design decisions
 │   ├── requirements.txt            Canonical Python dependencies
@@ -272,13 +273,20 @@ These commands are a recipe, not a record of actions taken here. Check the branc
 
 Preserve the submitted/reviewed PDF as `thesis-v3-YYYY-MM-DD.pdf` with the actual date, matching metadata, and research evidence. These artifacts are ignored by Git. The next continuing thesis milestone would be `thesis/v4` when appropriate.
 
-Use the diff command below to compare committed v3 sources with a proposal milestone. The historical `make proposal <ref>` compiler still needs phase-aware resolution before reliably rebuilding refs containing both phases.
+Use the diff command below to compare committed v3 sources with a proposal milestone.
 
-### Build or compare a saved proposal
+### Build or compare a saved revision
+
+Revisions v1 and v2 are proposals; v3 and later are thesis revisions. Each command accepts only its own phase and names the right command otherwise.
 
 ```bash
-make proposal proposal/v1          # scratch/proposal_v1.pdf
-make proposal proposal/v2          # scratch/proposal_v2.pdf
+make proposal v1                    # scratch/proposal_v1.pdf (also: proposal/v1)
+make proposal v2                    # scratch/proposal_v2.pdf
+make thesis v3                      # scratch/thesis_v3.pdf, once the thesis/v3 tag exists
+make thesis head                    # scratch/thesis_<commit-ID>.pdf, latest commit
+make thesis 9896cb5                 # any thesis-phase commit
+make proposal v3                    # rejected: v3 is a thesis revision
+make proposal head                  # rejected: HEAD is in the thesis phase
 make diff proposal/v1 proposal/v2   # scratch/proposal_diff_proposal_v1_proposal_v2.pdf
 make diff proposal/v1 head          # Latest committed manuscript, no tag needed
 make diff proposal/v2 e87d47b       # Abbreviated or full commit ID
@@ -290,11 +298,11 @@ The comparison aligns existing section and subsection headings, with word highli
 
 Diff PDFs use `scratch/proposal_diff_<ref1>_<ref2>.pdf`. Tag names keep their text with `/` and other filename-unsafe characters replaced by `_`; untagged refs use their full commit IDs. For example, `make diff proposal/v1 head` writes `proposal_diff_proposal_v1_<HEAD-commit-ID>.pdf`. Supporting files are temporary; a failed build retains a `.log` with the same pair prefix. Building another pair preserves previous comparisons; a successful rebuild replaces that pair's PDF.
 
-Use complete names such as `proposal/v2`. Short names such as `v2` are resolved by trying `thesis/` before `proposal/`, which becomes ambiguous once both namespaces have versions.
+`make proposal` and `make thesis` resolve short names such as `v2` by phase (v1–v2 proposal, v3+ thesis). The diff resolves short names by trying `thesis/` before `proposal/`; use complete names such as `proposal/v2` there.
 
 These commands read committed Git content and exclude uncommitted chapter edits. They also use current local metadata and some current assets; they do not guarantee identical reconstruction of a PDF submitted months ago.
 
-The historical `make proposal <ref>` compiler still locates chapters by filename and only knows the proposal chapter list. Use saved proposal tags for that compiler until the remaining [path-resolution repair](docs/maintenance.md#document-tooling).
+Historical builds use [compile_version.py](scripts/compile_version.py). It reads the manuscript template of the requested phase at that commit, inlines its `\input` files recursively, and stages the class, bibliography, and logo stored at that commit. Untagged commits are assigned a phase by the manuscript they contain: a commit with a thesis manuscript builds only with `make thesis`. Current local metadata and the current navigation package still apply.
 
 For source comparisons:
 
@@ -427,5 +435,5 @@ Correct evaluation validity and version-path selection first, then consolidate h
 | Setup reported success but npm was absent | Bootstrap only warns in that case. Install npm and rerun setup before Coconet generation. |
 | NotaGen retries need inspection | Use `NOTAGEN_VERBOSE=1`; `NOTAGEN_MAX_ATTEMPTS` defaults to 5 per requested sample. Inspect failed ABC files. |
 | Empty or unexpectedly large result counts | Check missing folders and stale MIDI; archive outputs between independent experiments. |
-| Historical build uses wrong chapters | Use saved proposal tags with `make proposal <ref>`. That compiler still needs explicit phase paths for refs containing both phases. |
+| Historical build rejected | Read the message: v1–v2 and pre-thesis commits use `make proposal <ref>`; v3+, `head`, and thesis-phase commits use `make thesis <ref>`. `thesis/v3` exists only after it is tagged. |
 | A PDF remains after a failed Make build | This is the previous successful PDF. Read the named failure log in `scratch/`; Make reports failure and does not publish a partial PDF. |

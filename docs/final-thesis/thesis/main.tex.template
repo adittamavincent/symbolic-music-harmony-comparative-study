@@ -75,14 +75,10 @@
 \pagenumbering{arabic}
 \thesischapter{I}{PENDAHULUAN}
 \input{chapters/01-pendahuluan}
-\thesischapter{II}{TINJAUAN PUSTAKA}
+\thesischapter{II}{TINJAUAN PUSTAKA DAN LANDASAN TEORI}
 \input{chapters/02-tinjauan-pustaka}
-\thesischapter{III}{METODOLOGI PENELITIAN}
+\thesischapter{III}{METODE PENELITIAN}
 \input{chapters/03-metodologi}
-\thesischapter{IV}{HASIL DAN PEMBAHASAN}
-\input{chapters/04-hasil-pembahasan}
-\thesischapter{V}{KESIMPULAN DAN SARAN}
-\input{chapters/05-kesimpulan-saran}
 
 \clearpage
 \phantomsection

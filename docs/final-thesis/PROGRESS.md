@@ -14,7 +14,7 @@ The lecturer comments, review date, submission deadline, and current department 
 
 ## What is evidenced now
 
-- The repository contains three generation adapters, one condition manifest, an evaluator, four executable software checks, and five draft chapters.
+- The repository contains three generation adapters, one condition manifest, an evaluator, four executable software checks, and draft BAB I–III following the department's 2026 research-proposal outline.
 - The four existing checks passed on 2026-09-28 before the folder move. They exercise specific cases; they do not establish full instrument validity.
 - The Bach fixture, forced to tonic C by the test, returned score `0.7568`, 6 fifth flags, 0 octave flags, and 3 leading-tone flags. The deliberately parallel fixture returned score `0.0`, 14 fifth flags, 7 octave flags, and 0 leading-tone flags. These are outputs of the current, unvalidated instrument.
 - At the start of this preparation, the local `outputs/` contained dry-run metadata only. No local generated MIDI dataset, master results, or summary CSV was found. These metadata files have been preserved under `research/outputs/`. Data outside this checkout have not been inspected.
@@ -33,7 +33,7 @@ These are this project's proposed completion criteria. Confirm department requir
 | G5. Pipeline integrity | Timing conversion fixed, quality exclusions applied, isolated runs, failed-file/count checks, reproducible records | Open | Work through [maintenance findings](../maintenance.md#research-correctness) before main generation |
 | G6. Pilot | Each retained model/condition can generate, parse, preserve constraints, and be manually checked; pilot kept separate | Not run here | Inspect scores and listen; record problems without selecting only good outputs |
 | G7. Main data and analysis | Frozen protocol, raw artifacts, all attempts, actual eligible counts, run-specific analysis and figures | Not run here | Collect and review the agreed dataset |
-| G8. Final manuscript | Chapters 1–3 match executed methods; chapter 4 cites measured artifacts; chapter 5 answers questions; abstracts and appendices complete | Working draft | Review interpretations and write conclusions from data |
+| G8. Final manuscript | BAB I–III match executed methods; results and conclusion chapters, added after main data, cite measured artifacts and answer the questions; abstracts and appendices complete | BAB I–III working draft; results/conclusion chapters not yet written | Review interpretations and write conclusions from data |
 | G9. Submission and defense | Department checklist, checked PDF, supervisor review, evidence archive, final presentation if required | Not ready | Confirm local requirements and rehearse the defense |
 
 ## Decisions that must be made before main data
@@ -116,3 +116,37 @@ Setelah analisis selesai, bagian ini harus menjawab setiap rumusan masalah denga
 Saran akhir akan disusun berdasarkan keterbatasan yang ditemukan selama penelitian. Kemungkinan pengembangan yang perlu ditinjau setelah analisis meliputi pemeriksaan resolusi nada penuntun pada suara lain, validasi konteks musikal, dan perbandingan model dengan tugas serta data latih yang lebih terkendali. Usulan tersebut merupakan arah kerja yang perlu dinilai dari temuan, bukan hasil yang telah dibuktikan oleh penelitian ini.
 
 ```
+
+## Outline change to BAB I–III (2026-09-30)
+
+The researcher asked for the v3 manuscript to follow the 2026 research-proposal template (*Riset – Template Proposal TA Penelitian 2026*, supplied locally under the Git-ignored `references/` folder; the "prodi lain" copy has identical text). The template defines BAB I Pendahuluan, BAB II Tinjauan Pustaka dan Landasan Teori, and BAB III Metode Penelitian. Results (BAB IV) and conclusions (BAB V) need main data, so they are not part of v3. The finished-thesis example in `references/Research Proposal Structure.txt` shows how a later five-chapter thesis can continue from this structure.
+
+Section mapping from the earlier five-chapter draft:
+
+| Template section | Content source |
+| --- | --- |
+| I.A Latar Belakang | Earlier I Latar Belakang, reordered into model facts, evaluation literature, interface differences, rule basis, and relevance |
+| I.B.1 Rumusan Masalah | New gap summary, bounded to sources reviewed in BAB II; scope limits placed here because the template has no *batasan* section |
+| I.B.2 / I.C | Earlier questions and objectives; objectives now map one-to-one to the questions, and the question and objective that implied architectural causation were reworded |
+| II.A Tinjauan Pustaka | Earlier II Tinjauan Pustaka, grouped as models, evaluation, and research position |
+| II.B.1 / II.B.2 | Earlier symbolic-music and representation subsections (object); Strube rules (analytical focus) |
+| II.C Asumsi dan Hipotesis | New: two stated assumptions; non-directional H0/H1 for the model and conditioning comparisons; the first question is descriptive |
+| III.A–E | Earlier III subsections regrouped into approach, population/sample, data collection (generation, instrument, validity/reliability, quality control), analysis, and research flow; validation by annotation, reliability by repeat measurement, and a pilot step added from `research/protocol.md` |
+| Removed | Earlier IV Hasil/Pembahasan and V Kesimpulan/Saran; preserved in Git history |
+
+Claims checked against full paper text during this change:
+
+- Huang et al. (Coconet, ISMIR 2017 PDF) evaluates with log-likelihood and human evaluation; the text contains no music21 or parallel-fifth/octave analysis. The earlier claim that Coconet measured parallel fifths/octaves with music21 was removed.
+- Fang et al. (arXiv 2006.13329v3) builds its grading function with music21 and includes a parallel-errors feature (parallel unisons, fifths, octaves).
+- Wang et al. (NotaGen, arXiv 2502.18008v5) reports CLaMP 2 scores and subjective A/B tests; the text contains no voice-leading or parallel-motion analysis.
+
+Removed or reduced because the cited sources were not shown to support them: the claim that evaluation relies "almost entirely" on two approaches, the DeBerardinis2022 "urgency" clause, the Le et al. "shift" claim, the Chen2020 and uncited LLM sentences, the Ji/Zhou "urgent" conclusion, the "standard increasingly recognized" MIR claim with sturm2020, choi2020, the "stagnant harmony" wording, the benefit claiming to prove Strube's operational relevance, and the institutional-positioning benefit.
+
+Still unverified (a citation audit had no web access and worked from memory; check before submission): dong2020 author list (possibly Berg-Kirkpatrick, not Dubnov), fang2020 workshop name (possibly Machine Learning for Media Discovery), le2025 author "Mathieu Keller" (possibly Mikaela Keller), Retkowski2024 arXiv ID, Ji2023 year/article number, harrison2020 and schoenberg1954 page support, strube1928 edition and rule pages. The shared bibliography is a proposal-phase asset and was not edited.
+
+Decisions for the researcher and supervisor:
+
+1. The template's LAMPIRAN items (survey permit, photos, questionnaire) do not fit this study. Candidates: condition manifest, rule-definition sheets, annotation form. No appendix was added.
+2. Scope limits sit at the end of I.B.1. A separate *Batasan Penelitian* section would depart from the template.
+3. Cover, approval page, and abstracts were preserved unchanged by instruction. They still say *Skripsi* and describe an architectural-paradigm comparison, which the revised BAB I–III no longer claim. Confirm the wording required for a thesis-phase proposal.
+4. The template lists only a contents page; the finished-thesis example also lists figures and tables. No lists were added.

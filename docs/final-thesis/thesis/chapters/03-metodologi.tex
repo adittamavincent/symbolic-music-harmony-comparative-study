@@ -1,16 +1,34 @@
-\section{Metode Penelitian}
-
-\subsection{Jenis Penelitian}
+\section{Metode Pendekatan}
 
 Penelitian ini menggunakan pendekatan kuantitatif komparatif dengan paradigma \textit{Research and Development} (R\&D): tahap pertama membangun dan memvalidasi instrumen evaluasi otomatis berbasis music21, dan tahap kedua menerapkan instrumen tersebut untuk menghasilkan temuan komparatif lintas model dan lintas kondisi instruksi.
 
-\subsection{Objek Penelitian}
+Penelitian ini diposisikan sebagai studi observasional komparatif, bukan eksperimen terkontrol penuh. Ketiga model tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan \textit{Strube Score} yang terukur antar model dapat mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara kedua penjelasan tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
 
-Objek penelitian adalah \textit{output} MIDI yang dihasilkan oleh tiga model AI generatif musik simbolik yang bersifat terbuka (\textit{open source}) dan memiliki fondasi akademis yang kuat: DeepBach \parencite{hadjeres2017}, Coconet \parencite{huang2017}, dan NotaGen \parencite{wang2025}.
+Interpretasi temuan akan membahas kedua penjelasan tersebut dan tidak mengatribusikan seluruh perbedaan skor pada faktor arsitektur semata. Temuan yang dihasilkan bersifat eksploratif dan berlaku pada model, checkpoint, dan kondisi yang diuji.
 
-\subsection{Variabel Penelitian}
+\section{Objek dan Subjek Penelitian}
 
-Variabel independen adalah empat kondisi instruksi yang diberikan kepada masing-masing model, dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat:
+Objek penelitian adalah \textit{output} simbolik (MIDI) yang dihasilkan oleh tiga model AI generatif musik simbolik yang bersifat terbuka (\textit{open source}): DeepBach \parencite{hadjeres2017}, Coconet \parencite{huang2017}, dan NotaGen \parencite{wang2025}. Penelitian ini tidak menjadikan manusia sebagai subjek penelitian. Peneliti dan pengajar harmoni berperan sebagai penganotasi contoh musikal untuk validasi instrumen.
+
+\subsection{Populasi}
+
+Populasi adalah seluruh keluaran yang dapat dihasilkan oleh checkpoint DeepBach, Coconet, dan NotaGen yang ditetapkan dalam protokol, pada setiap kondisi generasi yang dijalankan. Populasi ini tidak dapat dicacah secara lengkap. Karena itu, populasi didefinisikan melalui identitas model, checkpoint, pengaturan generasi, dan masukan yang digunakan.
+
+\subsection{Sampel}
+
+Target jumlah sampel adalah 120 berkas MIDI: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen. Jumlah berkas yang dihasilkan dan jumlah sampel yang memenuhi kriteria analisis merupakan dua hitungan yang berbeda. Setiap percobaan generasi, kegagalan, dan alasan eksklusi dicatat; keluaran yang gagal tidak diganti secara diam-diam.
+
+Masukan generasi (\textit{seed}) dipilih secara purposif berdasarkan kriteria yang ditetapkan dalam protokol. Beberapa keluaran yang dihasilkan dari satu masukan yang sama dapat saling bergantung. Oleh karena itu, jumlah masukan independen dilaporkan terpisah dari jumlah berkas yang dihasilkan, dan unit analisis ditetapkan sebelum pengumpulan data utama.
+
+\section{Metode Pengumpulan Data}
+
+Data dikumpulkan melalui generasi keluaran model dan pengukuran otomatis terhadap keluaran tersebut. Identitas model, checkpoint, versi perangkat lunak, pengaturan generasi, dan masukan setiap run dicatat agar pengukuran dapat diulang.
+
+\subsection{Generasi Keluaran Model}
+
+Model generatif merupakan variabel kategorik dengan tiga kategori: DeepBach (LSTM dua arah), Coconet (\textit{deep residual} CNN dengan \textit{Orderless} NADE), dan NotaGen (\textit{hierarchical Transformer} dengan \textit{global self-attention}). Kategori ini menunjukkan model dan checkpoint yang diuji, bukan arsitektur yang terisolasi dari data latih dan prosedur generasi.
+
+Variabel independen kedua adalah empat kondisi instruksi yang diberikan kepada masing-masing model, dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat. Kondisi dikontrol melalui berkas \texttt{strube\_conditions.json}.
 
 \begin{table}[ht]
 \centering
@@ -22,19 +40,17 @@ B & Kunci & Generasi dengan konteks kunci/periode musik Barat \\ \hline
 C & SATB Parsial & Suara Soprano ditetapkan sebagai batasan; model mengisi Alto, Tenor, Bass \\ \hline
 D & SATB Penuh & Soprano dan Bass ditetapkan; model mengisi Alto dan Tenor \\ \hline
 \end{tabularx}
+\caption{Kondisi generasi}
+\label{tab:kondisi-generasi}
 \end{table}
 
-DeepBach dan Coconet menerima batasan nada, sementara adaptor NotaGen menggunakan metadata periode, komponis, dan instrumentasi. Pada konfigurasi yang digunakan, kondisi C dan D NotaGen identik, dan kondisi B tidak menentukan C mayor. Dengan demikian, label kondisi tidak menunjukkan intervensi yang setara pada ketiga model.
+DeepBach dan Coconet menerima batasan nada, sementara adaptor NotaGen menggunakan metadata periode, komponis, dan instrumentasi. Pada konfigurasi yang digunakan, kondisi C dan D NotaGen identik, dan kondisi B tidak menentukan C mayor. Dengan demikian, label kondisi tidak menunjukkan intervensi yang setara pada ketiga model. Pelestarian nada yang ditetapkan pada kondisi C dan D diperiksa pada setiap keluaran.
 
-Variabel dependen adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti.
+\subsection{Instrumen Pengukuran}
 
-\subsection{Definisi Operasional Variabel}
+Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Variabel dependen adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti. Jumlah penandaan setiap kaidah juga dicatat secara terpisah.
 
-\textit{Independent Variable} 1: \textit{Generative Model Architecture}. Variabel kategorik dengan tiga indikator yang mewakili pergeseran paradigma arsitektur: \textit{Recurrent} (DeepBach, LSTM dua arah), \textit{Convolutional} (Coconet, \textit{deep residual} CNN dengan \textit{Orderless} NADE), dan \textit{Attention-based} (NotaGen, \textit{hierarchical Transformer} dengan \textit{global self-attention}).
-
-\textit{Independent Variable} 2: \textit{Conditioning Level}. Tingkat batasan instruksi yang diberikan pada model saat generasi, dikontrol lewat \texttt{strube\_conditions.json}, terdiri atas empat tingkat: A (\textit{Neutral}, tanpa batasan), B (\textit{Key}, batasan kunci/periode), C (\textit{SATB Partial}, Soprano ditetapkan), dan D (\textit{SATB Full}, Soprano dan Bass ditetapkan).
-
-\textit{Dependent Variable}: \textit{Constraint Adherence Rate} (\textit{Strube Score}). Indeks penalti terhadap $M_{\text{total}}$, yang pada kode saat ini adalah jumlah peristiwa nada/akor sopran dengan nilai minimum satu. Indeks dihitung dengan rumus berikut:
+Indeks penalti dihitung terhadap $M_{\text{total}}$, yang pada kode saat ini adalah jumlah peristiwa nada/akor sopran dengan nilai minimum satu:
 
 {\small
 \begin{multline}
@@ -65,53 +81,52 @@ Deteksi kegagalan resolusi nada penuntun pada suara Soprano menerapkan dua filte
 
 Pengecekan gerak paralel dijalankan pada enam pasangan suara SATB: S-A, S-T, S-B, A-T, A-B, T-B. Pengecekan resolusi nada penuntun hanya dijalankan pada sopran. Rumus kuint di atas memakai tujuh semiton modulo 12, sedangkan kode yang ada juga menerima lima semiton; perbedaan tersebut membatasi kesesuaian penandaan kode dengan definisi kuint pada rumus.
 
-\subsection{Jumlah Sampel}
+Pengecekan \textit{leading tone resolution} dibatasi pada suara Soprano, karena suara tersebut paling konsisten berperan sebagai melodi utama dalam tekstur SATB, sekaligus untuk menghindari kebutuhan deteksi otomatis suara mana yang berperan sebagai pembawa melodi pada \textit{output} AI yang strukturnya bisa jauh dari konvensi SATB klasik. Konsekuensinya, resolusi nada penuntun yang terjadi pada suara Alto, Tenor, atau Bass tidak tercatat oleh instrumen ini. Batasan ini merupakan bagian dari definisi operasional instrumen.
 
-Target jumlah sampel adalah 120 berkas MIDI: 3 model $\times$ 4 kondisi $\times$ 10 sampel per sel eksperimen. Jumlah berkas yang dihasilkan dan jumlah sampel yang memenuhi kriteria analisis merupakan dua hitungan yang berbeda.
+\subsection{Validitas dan Reliabilitas Instrumen}
 
-\subsection{Instrumen Evaluasi dan Validasi}
-
-Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\textit{face validity}) melalui dua pengujian:
+Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\textit{face validity}) melalui dua pengujian:
 
 \begin{enumerate}
     \item Uji positif: \textit{Chorale} Bach asli dari korpus music21 (BWV 66.6) dievaluasi dan harus menghasilkan skor tinggi, sesuai ekspektasi bahwa \textit{chorale} Bach merupakan contoh penerapan kaidah Strube yang konsisten.
     \item Uji negatif: Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
-Kedua uji ini merupakan pemeriksaan awal. Validasi instrumen juga memerlukan definisi kaidah dari sumber yang dirujuk, contoh yang dianotasi secara independen, dan pemeriksaan kesalahan deteksi. Kelulusan uji perangkat lunak menunjukkan perilaku pada kasus uji, sedangkan validasi musikal menilai kesesuaian penandaan dengan kaidah dan konteksnya.
+Kedua uji ini merupakan pemeriksaan awal. Kelulusan uji perangkat lunak menunjukkan perilaku pada kasus uji, sedangkan validasi musikal menilai kesesuaian penandaan dengan kaidah dan konteksnya. Validitas instrumen diperiksa dengan membandingkan penandaan algoritmis dengan kumpulan contoh musikal yang dianotasi secara independen. Setiap anotasi mencatat pasangan suara, konteks tonal, lokasi peristiwa, kaidah, dan alasan penandaan. Kesesuaian penandaan dilaporkan melalui jumlah positif palsu, negatif palsu, \textit{precision}, dan \textit{recall} untuk setiap kaidah.
 
-Perlu digarisbawahi bahwa pengecekan \textit{leading tone resolution} dalam penelitian ini dibatasi hanya pada suara Soprano, karena suara tersebut paling konsisten berperan sebagai melodi utama dalam tekstur SATB, sekaligus untuk menghindari kebutuhan deteksi otomatis suara mana yang berperan sebagai pembawa melodi pada \textit{output} AI yang strukturnya bisa jauh dari konvensi SATB klasik. Konsekuensinya, resolusi nada penuntun yang terjadi pada suara Alto, Tenor, atau Bass tidak tercatat oleh instrumen ini. Batasan ini merupakan bagian dari definisi operasional instrumen dan menjadi salah satu arah pengembangan lanjutan yang disebutkan pada bab penutup.
+Reliabilitas instrumen diperiksa melalui pengulangan pengukuran pada berkas yang sama dengan versi instrumen yang sama; pengukuran yang reliabel menghasilkan penandaan yang identik. Apabila anotasi dilakukan oleh lebih dari satu penganotasi, kesepakatan antar-penganotasi dilaporkan sebelum perbedaan anotasi diselesaikan. Perubahan kuantisasi, pemetaan suara, definisi kaidah, atau penyebut skor diperlakukan sebagai versi instrumen baru; hasil versi sebelumnya disimpan.
 
-Kontrol Kualitas Sampel (\textit{Parse Quality Control}). Tidak semua model generatif menjamin \textit{output} dalam format MIDI empat suara yang terpisah secara eksplisit. Instrumen evaluasi secara otomatis menandai setiap sampel dengan label \texttt{parse\_quality}: \texttt{ok} (empat suara berhasil dipisah), \texttt{padded} (kurang dari empat suara, suara terakhir direplikasi untuk melengkapi), atau \texttt{duplicated\_mono} (hanya satu suara tersedia, direplikasi empat kali). Protokol merencanakan eksklusi sampel dengan \texttt{parse\_quality} selain \texttt{ok} dari analisis utama serta pelaporan kegagalan penguraian secara terpisah. Skrip evaluasi batch saat ini belum mempertahankan label tersebut dalam ringkasannya. Ringkasan yang menggabungkan suara hasil replikasi membatasi interpretasi kepatuhan SATB.
+\subsection{Kontrol Kualitas Sampel}
 
-\subsection{Interpretasi Penandaan pada Korpus Bach}
+Tidak semua model generatif menjamin \textit{output} dalam format MIDI empat suara yang terpisah secara eksplisit. Instrumen evaluasi secara otomatis menandai setiap sampel dengan label \texttt{parse\_quality}: \texttt{ok} (empat suara berhasil dipisah), \texttt{padded} (kurang dari empat suara, suara terakhir direplikasi untuk melengkapi), atau \texttt{duplicated\_mono} (hanya satu suara tersedia, direplikasi empat kali). Sampel dengan \texttt{parse\_quality} selain \texttt{ok} dikeluarkan dari analisis utama, dan kegagalan penguraian dilaporkan secara terpisah. Ringkasan yang menggabungkan suara hasil replikasi membatasi interpretasi kepatuhan SATB.
 
-Penandaan kaidah merupakan hasil penerapan definisi operasional. Pada korpus Bach maupun keluaran model, penandaan tersebut perlu diperiksa dalam konteks frasa, nada hias, kadens, dan kemungkinan kesalahan penguraian. Detektor tidak menentukan keindahan karya atau maksud komponis. Contoh autentik yang ditandai harus dianotasi dan dibahas, bukan langsung dianggap benar atau salah berdasarkan asalnya.
+\section{Metode Analisis Data}
 
-\subsection{Limitasi Desain Komparatif}
+Analisis diawali dengan statistik deskriptif: jumlah percobaan, keluaran yang berhasil, kegagalan penguraian, dan sampel yang memenuhi kriteria pada setiap sel; jumlah penandaan setiap kaidah beserta penyebutnya; serta rata-rata dan deviasi standar \textit{Strube Score} per model per kondisi.
 
-Penelitian ini membandingkan tiga model yang tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih semata pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan \textit{Strube Score} yang terukur antar model kemungkinan mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur, sebagaimana dihipotesiskan, dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara dua penjelasan alternatif tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
+Selain statistik deskriptif, uji komparatif non-parametrik Kruskal-Wallis direncanakan untuk menguji hipotesis pada Bab II, yaitu apakah perbedaan distribusi skor antar model atau antar kondisi melampaui ambang signifikansi statistik. Uji non-parametrik dipilih karena ukuran sampel per sel ($n=10$) kecil dan distribusi skor tidak dapat diasumsikan normal tanpa verifikasi terlebih dahulu. Uji Kruskal-Wallis mensyaratkan observasi yang independen dan tidak menunjukkan pasangan kelompok yang berbeda. Uji lanjutan, ukuran efek, dan penanganan perbandingan berganda ditetapkan dalam protokol sebelum data utama dibaca. Apabila keluaran bergantung pada masukan yang sama, analisis menggunakan unit analisis dan uji yang sesuai dengan ketergantungan tersebut.
 
-Limitasi ini diakui secara eksplisit sebagai bagian dari desain penelitian, bukan sebagai kelemahan yang tidak diantisipasi. Interpretasi temuan pada Bab IV akan secara proaktif mendiskusikan kedua penjelasan alternatif ini dan menahan diri dari klaim kausal tunggal yang mengatribusikan seluruh perbedaan skor pada faktor arsitektur semata. Penelitian ini diposisikan sebagai studi observasional komparatif, bukan eksperimen terkontrol penuh, dan temuan yang dihasilkan bersifat eksploratif serta membuka agenda riset lebih lanjut yang dapat mengontrol faktor data pelatihan secara lebih ketat.
+Hasil disajikan dalam bentuk tabel dan grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
 
-\subsection{Prosedur Penelitian}
+Penandaan kaidah merupakan hasil penerapan definisi operasional. Pada korpus Bach maupun keluaran model, penandaan tersebut perlu diperiksa dalam konteks frasa, nada hias, kadens, dan kemungkinan kesalahan penguraian. Detektor tidak menentukan keindahan karya atau maksud komponis. Contoh yang ditandai dipilih melalui prosedur yang tercatat, dianotasi, dan dibahas bersama lokasi birama serta kutipan partiturnya.
 
-Prosedur penelitian berlangsung dalam enam tahap berurutan:
+\section{Rancangan Alur Penelitian}
+
+Penelitian berlangsung dalam tahap berikut:
 
 \begin{enumerate}
+    \item Perumusan kaidah: Penetapan edisi dan halaman kaidah Strube, contoh, pengecualian, dan definisi operasional.
     \item Pengembangan instrumen: Penulisan dan pengujian skrip evaluasi Strube berbasis music21.
-    \item Validasi instrumen: Pengujian \textit{face validity} menggunakan \textit{chorale} Bach asli dan harmonisasi yang disengaja melanggar.
-    \item Pengumpulan data: Generasi 120 sampel \textit{output} MIDI dari ketiga model di bawah empat kondisi instruksi.
-    \item Evaluasi otomatis: Seluruh 120 sampel MIDI dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
-    \item Analisis data: Statistik deskriptif (rata-rata dan deviasi standar \textit{Strube Score} per model per kondisi) dan analisis komparatif lintas model dan kondisi. Selain statistik deskriptif, uji komparatif non-parametrik Kruskal-Wallis direncanakan untuk menguji apakah perbedaan distribusi skor antar model atau antar kondisi melampaui ambang signifikansi statistik. Uji non-parametrik dipilih karena ukuran sampel per sel ($n=10$) kecil dan distribusi skor tidak dapat diasumsikan normal tanpa verifikasi terlebih dahulu.
-    \item Visualisasi: Penyajian hasil dalam bentuk grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
+    \item Validasi instrumen: Pengujian \textit{face validity} menggunakan \textit{chorale} Bach asli dan harmonisasi yang disengaja melanggar, serta perbandingan penandaan dengan contoh beranotasi.
+    \item Uji coba (\textit{pilot}): Generasi dan pemeriksaan sejumlah kecil keluaran dari setiap model dan kondisi untuk menemukan masalah sebelum protokol ditetapkan. Hasil uji coba dipisahkan dari data utama.
+    \item Pengumpulan data: Generasi sampel \textit{output} MIDI dari ketiga model di bawah empat kondisi instruksi sesuai protokol yang telah ditetapkan.
+    \item Evaluasi otomatis: Seluruh sampel yang memenuhi kriteria dievaluasi menggunakan instrumen yang telah divalidasi; hasil disimpan dalam format CSV terstruktur.
+    \item Analisis data: Statistik deskriptif, uji hipotesis, dan pembahasan contoh partitur.
 \end{enumerate}
-
-\subsection{Diagram Alir Penelitian}
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[node distance=1.6cm, every node/.style={fill=white, font=\footnotesize}, align=center]
+\begin{tikzpicture}[node distance=1.45cm, every node/.style={fill=white, font=\footnotesize}, align=center]
   \tikzset{
     startstop/.style={rectangle, rounded corners, minimum width=3.5cm, minimum height=0.7cm, text centered, draw=black},
     process/.style={rectangle, minimum width=3.5cm, minimum height=0.7cm, text centered, draw=black},
@@ -121,27 +136,31 @@ Prosedur penelitian berlangsung dalam enam tahap berurutan:
 
   % Nodes
   \node (start) [startstop] {Mulai};
-  \node (dev) [process, below of=start] {Pengembangan Skrip \\ Evaluasi Strube (music21)};
-  \node (val) [process, below of=dev] {Pengujian Validasi \\ (Uji Positif \& Negatif)};
+  \node (rule) [process, below of=start] {Perumusan Kaidah Strube \\ \& Definisi Operasional};
+  \node (dev) [process, below of=rule] {Pengembangan Skrip \\ Evaluasi Strube (music21)};
+  \node (val) [process, below of=dev] {Validasi Instrumen \\ (Uji Positif, Negatif, Anotasi)};
   \node (dec) [decision, below of=val, yshift=-0.1cm] {Apakah Valid?};
-  \node (gen) [process, below of=dec, yshift=-0.3cm] {Generasi Data \\ (120 Sampel MIDI)};
+  \node (pilot) [process, below of=dec, yshift=-0.3cm] {Uji Coba \\ \& Penetapan Protokol};
+  \node (gen) [process, below of=pilot] {Generasi Data Utama};
   \node (eval) [process, below of=gen] {Evaluasi Otomatis \\ \& Simpan CSV};
-  \node (anal) [process, below of=eval] {Analisis Data \\ \& Visualisasi};
+  \node (anal) [process, below of=eval] {Analisis Data \\ \& Uji Hipotesis};
   \node (stop) [startstop, below of=anal] {Selesai};
 
   % Connections
-  \draw [arrow] (start) -- (dev);
+  \draw [arrow] (start) -- (rule);
+  \draw [arrow] (rule) -- (dev);
   \draw [arrow] (dev) -- (val);
   \draw [arrow] (val) -- (dec);
-  \draw [arrow] (dec) -- node[anchor=east] {Ya} (gen);
+  \draw [arrow] (dec) -- node[anchor=east] {Ya} (pilot);
+  \draw [arrow] (pilot) -- (gen);
   \draw [arrow] (gen) -- (eval);
   \draw [arrow] (eval) -- (anal);
   \draw [arrow] (anal) -- (stop);
-  
+
   % Feedback loop
   \draw [arrow] (dec.east) -- ++(1.2,0) |- node[anchor=south, pos=0.25] {Tidak} (dev.east);
 
 \end{tikzpicture}
-\caption{Diagram Alir Prosedur Penelitian}
+\caption{Rancangan Alur Penelitian}
 \label{fig:diagram-alir}
 \end{figure}

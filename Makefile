@@ -65,14 +65,16 @@ help:
 		"  make plot            Generate visualisasi hasil grafik" \
 		"" \
 		"📄 DOKUMEN FASE PROPOSAL (docs/proposal-phase/):" \
-		"  make proposal        Build naskah proposal PDF" \
+		"  make proposal        Build naskah proposal PDF (working tree)" \
+		"  make proposal <v>    Build proposal tersimpan: v1, v2 (v3+ memakai make thesis)" \
 		"  make slides          Build slide presentasi proposal PDF" \
 		"  make notes           Build naskah presenter PDF" \
 		"  make qna             Build dokumen antisipasi tanya jawab PDF" \
 		"  make proposal-phase  Build semua artefak proposal" \
 		"" \
 		"🎓 DOKUMEN FASE SKRIPSI FINAL (docs/final-thesis/):" \
-		"  make thesis          Build naskah skripsi final (5 Bab) PDF" \
+		"  make thesis          Build naskah skripsi v3 (Bab I-III) PDF (working tree)" \
+		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, head, ID commit" \
 		"  make final-phase     Build semua artefak skripsi final" \
 		"" \
 		"🔍 VERSIONING & DIFFING:" \
@@ -119,8 +121,7 @@ docs: proposal-phase
 
 proposal: $(PROPOSAL_TEX)
 	@if [ -n "$(PROPOSAL_ARGS)" ]; then \
-		chmod +x scripts/compile_version.py; \
-		python3 scripts/compile_version.py $(PROPOSAL_ARGS); \
+		python3 scripts/compile_version.py proposal $(PROPOSAL_ARGS); \
 	else \
 		$(PDF_BUILD) $< $(PROPOSAL_PDF) $(PDF_BUILD_FLAGS); \
 	fi
@@ -167,7 +168,11 @@ $(QNA_TEX): $(QNA_TEMPLATE) $(ENV_FILE)
 final-phase: thesis
 
 thesis: $(THESIS_TEX)
-	$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS)
+	@if [ -n "$(THESIS_ARGS)" ]; then \
+		python3 scripts/compile_version.py thesis $(THESIS_ARGS); \
+	else \
+		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS); \
+	fi
 
 $(THESIS_TEX): $(THESIS_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
@@ -196,10 +201,14 @@ diff-clean:
 aux-clean:
 	$(PDF_BUILD) --clean-aux
 
-# Parse tag/ref for make proposal <ref>
+# Parse tag/ref for make proposal <ref> and make thesis <ref>
 ifeq ($(firstword $(MAKECMDGOALS)),proposal)
   PROPOSAL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(PROPOSAL_ARGS):;@:)
+endif
+ifeq ($(firstword $(MAKECMDGOALS)),thesis)
+  THESIS_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(THESIS_ARGS):;@:)
 endif
 
 # ==============================================================================

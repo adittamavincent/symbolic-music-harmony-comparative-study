@@ -25,7 +25,7 @@ def clean_auxiliary_files():
             for path in directory.glob(f"*.{ext}"):
                 path.unlink()
     scratch = ROOT / "scratch"
-    for prefix in ("proposal_",):
+    for prefix in ("proposal_", "thesis_"):
         for ext in (*AUX_EXTENSIONS, "tex", "bib", "bcf-SAVE-ERROR", "bbl-SAVE-ERROR"):
             for path in scratch.glob(f"{prefix}*.{ext}"):
                 path.unlink()

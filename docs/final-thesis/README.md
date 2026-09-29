@@ -1,6 +1,6 @@
 # Final thesis v3
 
-v3 continues proposal v2 as the final thesis. Proposal v1/v2 remain in `../proposal-phase/`. The active five-chapter manuscript is a draft; main data, analysis, conclusions, and department format approval remain open.
+v3 continues proposal v2 as the final thesis. Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
 
 Start with [the researcher guide](researcher-guide.md), [progress and completion gates](PROGRESS.md), and [lecturer feedback](feedback.md). The [reading ledger](reading-notes.csv) tracks source support and your own reading separately. Research code and the protocol worksheet live in [research/](../../research/README.md).
 
@@ -12,10 +12,8 @@ Start with [the researcher guide](researcher-guide.md), [progress and completion
 | `chapters/00-titlepage.tex` | Final-thesis cover |
 | `chapters/00-frontmatter.tex` | Approval page and bilingual abstracts |
 | `chapters/01-pendahuluan.tex` | Introduction |
-| `chapters/02-tinjauan-pustaka.tex` | Literature review and theory |
-| `chapters/03-metodologi.tex` | Methodology and operational definitions |
-| `chapters/04-hasil-pembahasan.tex` | Instrument-test results and measurement discussion |
-| `chapters/05-kesimpulan-saran.tex` | Conclusions from instrument tests and development suggestions |
+| `chapters/02-tinjauan-pustaka.tex` | Tinjauan pustaka, landasan teori, asumsi dan hipotesis |
+| `chapters/03-metodologi.tex` | Metode pendekatan, objek/populasi/sampel, pengumpulan data, validitas instrumen, analisis, alur penelitian |
 
 The class, logos, and bibliography remain shared with `../proposal-phase/assets/`. Thesis chapters are independent of proposal chapters. The reused class does not establish compliance with the department's final-thesis guide.
 

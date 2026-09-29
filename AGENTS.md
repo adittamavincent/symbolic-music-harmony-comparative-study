@@ -5,11 +5,11 @@ This repository contains one continuing undergraduate thesis project. The academ
 - `proposal/v1` and `proposal/v2` are proposal milestones.
 - v2 was reviewed by lecturers during an in-class, one-to-one tutoring session, according to the researcher. The actual feedback has not yet been supplied.
 - The active revision is **v3**, the final-thesis phase continuing from that proposal. Do not restart numbering as thesis v1 or call the active work proposal v3.
-- `docs/final-thesis/thesis/` owns the active manuscript. Its five chapters are a working draft, not evidence that the thesis is complete.
+- `docs/final-thesis/thesis/` owns the active manuscript. v3 follows the department's 2026 research proposal outline (Proposal Tugas Akhir Penelitian): BAB I Pendahuluan, BAB II Tinjauan Pustaka dan Landasan Teori, BAB III Metode Penelitian. Results and conclusion chapters are added only after main data exist. The chapters are a working draft, not evidence that the thesis is complete.
 - `docs/final-thesis/PROGRESS.md` records readiness, evidence, and unresolved decisions. `feedback.md` records lecturer comments once supplied.
 - `docs/proposal-phase/` preserves the proposal sources. Leave these unchanged during final-thesis work unless the user requests a proposal edit.
 - `research/` owns the evaluator, software tests, generation experiments, model setup, dependencies, and local research outputs. Root Python files are compatibility entry points.
-- Run Make commands from the repository root. `make thesis` builds v3. A future `thesis/v3` tag identifies a reviewed source snapshot; no such tag has been created yet.
+- Run Make commands from the repository root. `make thesis` builds v3 from the working tree. `make proposal v1|v2` and `make thesis v3|head|<commit>` rebuild committed revisions with the current tooling; v1–v2 are proposal revisions and v3 onward are thesis revisions, and each command rejects the other phase. A future `thesis/v3` tag identifies a reviewed source snapshot; no such tag has been created yet.
 
 # Research and writing rules
 
