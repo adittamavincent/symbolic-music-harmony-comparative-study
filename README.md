@@ -282,6 +282,8 @@ make diff proposal/v2 e87d47b       # Abbreviated or full commit ID
 
 The diff accepts tags, commit IDs, branches, and `head`/`HEAD`. Every untagged ref resolves to its full commit ID before source loading; the console and PDF show that ID. `head` follows the checked-out branch's latest commit and excludes uncommitted edits. Tags retain their names. A `proposal/` tag selects the proposal manuscript; other refs select the final thesis when present, falling back to the proposal in older snapshots. Chapters and nested inputs are read within the selected manuscript, including thesis chapters IV and V.
 
+The comparison aligns existing section and subsection headings. Text flows across pages within each section, with word highlights for changes. Front matter keeps each version's wording; proposal covers expand from the class stored at that ref. The renderer adds no cover labels or explanatory text. It uses current local metadata and logo assets when reconstructing the versions.
+
 Diff PDFs use `scratch/proposal_diff_<ref1>_<ref2>.pdf`. Tag names keep their text with `/` and other filename-unsafe characters replaced by `_`; untagged refs use their full commit IDs. For example, `make diff proposal/v1 head` writes `proposal_diff_proposal_v1_<HEAD-commit-ID>.pdf`. Supporting files are temporary; a failed build retains a `.log` with the same pair prefix. Building another pair preserves previous comparisons; a successful rebuild replaces that pair's PDF.
 
 Use complete names such as `proposal/v2`. Short names such as `v2` are resolved by trying `thesis/` before `proposal/`, which becomes ambiguous once both namespaces have versions.

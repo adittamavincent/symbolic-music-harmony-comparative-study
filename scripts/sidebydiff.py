@@ -1,22 +1,13 @@
 #!/usr/bin/env python3
 r"""
-Generate side-by-side diff PDF for the FULL proposal (paragraph-level),
-concatenating all chapter files in main.tex.template's include order into
-one continuous document per git ref, then diffing paragraph-by-paragraph.
-
-Both sides always show their FULL text (compiled, live LaTeX -- not
-escaped, not omitted). Diffing works in two passes, matching how VSCode's
-split diff editor behaves:
-
-  1. Paragraph-level LCS aligns "this old paragraph" with "this new
-     paragraph" (or flags it as pure delete / pure insert).
-  2. For any paragraph that changed, a SECOND word-level LCS pass finds
-     exactly which words differ. Only those words get a soft background
-     highlight (\colorbox) -- red on the left, green on the right.
-     Everything else renders as plain, normal-colored text, same as an
-     unchanged paragraph would.
+Generate a section-aligned side-by-side diff of committed manuscripts.
+Read chapters, nested inputs, and cover wording from each source version.
+Align existing headings, then compare paragraphs and words within each
+section. Columns flow across pages and synchronize at section boundaries.
+Both sides retain their full text; only changed words receive highlights.
 """
 
+from difflib import SequenceMatcher
 import os
 import re
 import subprocess
@@ -74,28 +65,18 @@ def resolve_git_ref(ref):
     raise ValueError(f"Unknown Git ref: {ref}")
 
 
-def clean_latex_for_diff(text):
-    """Strip page-level/environment structures that cross paragraph boundaries or break minipages."""
-    text = replace_title_page(text)
+def clean_latex_for_diff(text, class_source=None):
+    """Remove page commands while preserving source wording and local formatting."""
+    text = replace_title_page(text, class_source)
     text = re.sub(r'(?<!\\)%.*', '', text)
     text = re.sub(r'\\newpage\b', '', text)
     text = re.sub(r'\\clearpage\b', '', text)
-    text = re.sub(r'\\(?:begin|end)\{titlepage\}', '', text)
+    # Preserve the cover's font scope without forcing a standalone page.
+    text = text.replace(r"\begin{titlepage}", r"\begingroup")
+    text = text.replace(r"\end{titlepage}", r"\endgroup")
     text = re.sub(r'\\vfill\b|\\vspace\*\{\\fill\}', '', text)
-    text = re.sub(r'\\begin\{spacing\}\{[^{}]*\}', '', text)
-    text = re.sub(r'\\end\{spacing\}', '', text)
-    text = re.sub(r'\\begin\{center\}', '', text)
-    text = re.sub(r'\\end\{center\}', '', text)
-    
-    # Strip minipage structures, hfill, and any following par/spacing commands on the same line to avoid breaking paragraphs
-    text = re.sub(r'^[ \t]*\\begin\{minipage\}(\[[^\]]*\])?\{[^{}]*\}[ \t]*\n?', '', text, flags=re.MULTILINE)
-    text = re.sub(r'^[ \t]*\\end\{minipage\}(\\[a-zA-Z]+)?[ \t]*\n?', '', text, flags=re.MULTILINE)
-    text = re.sub(r'^[ \t]*\\hfill[ \t]*\n?', '', text, flags=re.MULTILINE)
-    
-    # Fallback to inline cleaning
-    text = re.sub(r'\\begin\{minipage\}(\[[^\]]*\])?\{[^{}]*\}', '', text)
-    text = re.sub(r'\\end\{minipage\}', '', text)
-    text = re.sub(r'\\hfill\b', '', text)
+    # A source page number must not reset the comparison's page counter.
+    text = re.sub(r'\\setcounter\{page\}\{[^{}]*\}', '', text)
     return text
 
 
@@ -158,8 +139,15 @@ def extract_section_formatting(ref):
     commands = []
     for line in content.splitlines():
         line_strip = line.strip()
-        if any(pat in line_strip for pat in ["\\thesection", "\\titleformat{\\section}", "\\titleformat{\\subsection}", "\\titleformat{\\subsubsection}"]):
+        if any(pat in line_strip for pat in ["\\thesection", "\\titleformat{\\section}", "\\titleformat{\\subsection}", "\\titleformat{\\subsubsection}", "\\renewcommand{\\figurename}", "\\renewcommand{\\tablename}"]):
             commands.append(line_strip)
+    chapter_definition = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', content)
+    if chapter_definition:
+        body, _ = read_braced_argument(content, chapter_definition.end())
+        body = re.sub(r'\\clearpage\b', '', body)
+        body = re.sub(r'\\addcontentsline\{[^{}]*\}\{[^{}]*\}\{[^{}]*\}', '', body)
+        body = re.sub(r'(?<!\\)%.*', '', body)
+        commands.append(r"\def\thesischapter#1#2{" + body + "}")
     return "\n  ".join(commands)
 
 
@@ -171,7 +159,9 @@ def build_full_proposal(ref):
     not a per-file diff with separate sections per chapter.
     """
     parts = []
-    document_root = os.path.dirname(find_git_path(ref, "main.tex.template"))
+    template_path = find_git_path(ref, "main.tex.template")
+    template = get_git_content(ref, template_path)
+    document_root = os.path.dirname(template_path)
 
     def read_input(path, stack=()):
         if path in stack:
@@ -189,10 +179,20 @@ def build_full_proposal(ref):
 
         return re.sub(r'\\input\{([^}]+)\}', expand, content)
 
-    for path in get_template_inputs(ref):
-        parts.append(read_input(path).strip())
+    # Keep chapter headings from the template in their original input order.
+    template_body = template.split(r"\begin{document}", 1)[-1]
+    for match in re.finditer(r'\\input\{([^}]+)\}|\\thesischapter\{([^}]+)\}\{([^}]+)\}', template_body):
+        if match.group(1):
+            name = match.group(1).strip()
+            if not name.endswith(".tex"):
+                name += ".tex"
+            parts.append(read_input(os.path.normpath(os.path.join(document_root, name))).strip())
+        else:
+            parts.append(match.group(0))
     full_text = "\n\n".join(parts)
-    return clean_latex_for_diff(full_text)
+    class_path = find_git_path(ref, "isi-proposal.cls")
+    class_source = get_git_content(ref, class_path) if class_path else ""
+    return clean_latex_for_diff(full_text, class_source)
 
 
 def split_paragraphs(content):
@@ -598,78 +598,98 @@ def word_level_render(old_text, new_text):
     return render_merged(old_merged), render_merged(new_merged)
 
 
-def render_pair(old_text, new_text):
-    """
-    Render one paragraph slot side-by-side.
-    """
-    old_rendered, new_rendered = word_level_render(old_text, new_text)
-
-    return (
-        "\\noindent\n"
-        "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        "\\setlength{\\textwidth}{\\linewidth}\n"
-        "\\begin{leftside}\n"
-        f"\\raggedright {old_rendered}\n"
-        "\\end{leftside}\n"
-        "\\end{minipage}\\hfill\n"
-        "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        "\\setlength{\\textwidth}{\\linewidth}\n"
-        "\\begin{rightside}\n"
-        f"\\raggedright {new_rendered}\n"
-        "\\end{rightside}\n"
-        "\\end{minipage}\n"
-        "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
-    )
-
-def render_equal(text):
-    """Paragraph unchanged in both versions -- word-level render, no
-    highlight, so \\newline / unsafe constructs are handled properly
-    instead of being dumped raw into restricted h-mode minipage."""
-    rendered = "".join(render_token(t, highlight=None) for t in tokenize_words(text))
-    return (
-        "\\noindent\n"
-        "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        "\\setlength{\\textwidth}{\\linewidth}\n"
-        "\\begin{leftside}\n"
-        f"\\raggedright {rendered}\n"
-        "\\end{leftside}\n"
-        "\\end{minipage}\\hfill\n"
-        "\\begin{minipage}[t]{0.48\\textwidth}\n"
-        "\\setlength{\\textwidth}{\\linewidth}\n"
-        "\\begin{rightside}\n"
-        f"\\raggedright {rendered}\n"
-        "\\end{rightside}\n"
-        "\\end{minipage}\n"
-        "\\par\\vspace{0.4cm}\\hrule\\vspace{0.4cm}\n"
-    )
+def split_sections(content):
+    """Use existing headings as anchors; retain front matter without naming it."""
+    boundaries = list(re.finditer(
+        r'^\s*\\(?:section|subsection|subsubsection)\*?\{[^\n]*|^\s*\\thesischapter\{[^\n]*',
+        content, re.MULTILINE,
+    ))
+    sections = []
+    chapter = ""
+    parent = ""
+    subsection = ""
+    start = 0
+    key = ("frontmatter",)
+    for match in boundaries:
+        if content[start:match.start()].strip():
+            sections.append((key, content[start:match.start()].strip()))
+        heading = match.group(0).strip()
+        if heading.startswith(r"\thesischapter"):
+            chapter = heading
+            parent = subsection = ""
+            key = ("chapter", chapter)
+        elif heading.startswith(r"\section"):
+            parent = heading
+            subsection = ""
+            key = ("section", parent)
+        elif heading.startswith(r"\subsection"):
+            subsection = heading
+            key = ("subsection", parent, subsection)
+        else:
+            key = ("subsubsection", parent, subsection, heading)
+        start = match.start()
+    if content[start:].strip():
+        sections.append((key, content[start:].strip()))
+    return sections
 
 
-def render_ops(ops):
-    """Pair up consecutive delete/insert runs as 'changed paragraph';
-    leftover delete-only or insert-only paragraphs render with an empty
-    opposite column."""
-    out = []
-    pending_delete, pending_insert = [], []
+def align_sections(old_sections, new_sections):
+    """Keep inserted sections separate instead of shifting subsequent matches."""
+    matcher = SequenceMatcher(None, [key for key, _ in old_sections],
+                              [key for key, _ in new_sections], autojunk=False)
+    pairs = []
+    for _, i, end_i, j, end_j in matcher.get_opcodes():
+        old_run, new_run = old_sections[i:end_i], new_sections[j:end_j]
+        for index in range(max(len(old_run), len(new_run))):
+            old = old_run[index][1] if index < len(old_run) else ""
+            new = new_run[index][1] if index < len(new_run) else ""
+            pairs.append((old, new))
+    return pairs
+
+
+def render_section_text(old_text, new_text):
+    """Highlight changed paragraphs without boxing or synchronizing each one."""
+    ops = compute_diff(split_paragraphs(old_text), split_paragraphs(new_text))
+    left, right = [], []
+    deletes, inserts = [], []
 
     def flush():
-        n = max(len(pending_delete), len(pending_insert))
-        for k in range(n):
-            old_p = pending_delete[k] if k < len(pending_delete) else ""
-            new_p = pending_insert[k] if k < len(pending_insert) else ""
-            out.append(render_pair(old_p, new_p))
-        pending_delete.clear()
-        pending_insert.clear()
+        for index in range(max(len(deletes), len(inserts))):
+            old = deletes[index] if index < len(deletes) else ""
+            new = inserts[index] if index < len(inserts) else ""
+            rendered_old, rendered_new = word_level_render(old, new)
+            if old:
+                left.append(rendered_old)
+            if new:
+                right.append(rendered_new)
+        deletes.clear()
+        inserts.clear()
 
     for kind, text in ops:
         if kind == "equal":
             flush()
-            out.append(render_equal(text))
+            left.append(text)
+            right.append(text)
         elif kind == "delete":
-            pending_delete.append(text)
-        elif kind == "insert":
-            pending_insert.append(text)
+            deletes.append(text)
+        else:
+            inserts.append(text)
     flush()
-    return "".join(out)
+    return "\n\n".join(left), "\n\n".join(right)
+
+
+def render_sections(old_full, new_full):
+    """Flow columns across pages, aligning only at source section boundaries."""
+    out = [r"\begin{paracol}{2}"]
+    for old_text, new_text in align_sections(split_sections(old_full), split_sections(new_full)):
+        left, right = render_section_text(old_text, new_text)
+        out.extend([
+            r"\begin{leftside}\raggedright", left, r"\par\end{leftside}",
+            r"\switchcolumn", r"\begin{rightside}\raggedright", right,
+            r"\par\end{rightside}", r"\switchcolumn*",
+        ])
+    out.append(r"\end{paracol}")
+    return "\n".join(out)
 
 
 def load_env_macros():
@@ -731,46 +751,51 @@ def load_env_macros():
     return "\n".join(macros)
 
 
-def replace_title_page(text):
+def read_braced_argument(text, pos):
+    """Read a nested TeX argument without treating escaped braces as groups."""
+    while pos < len(text) and text[pos].isspace():
+        pos += 1
+    if pos >= len(text) or text[pos] != "{":
+        raise ValueError("Expected a braced LaTeX argument")
+    start = pos + 1
+    balance = 1
+    pos += 1
+    while pos < len(text):
+        if text[pos] == "\\":
+            pos += 2
+            continue
+        if text[pos] == "{":
+            balance += 1
+        elif text[pos] == "}":
+            balance -= 1
+            if balance == 0:
+                return text[start:pos], pos + 1
+        pos += 1
+    raise ValueError("Unclosed LaTeX argument")
+
+
+def replace_title_page(text, class_source=None):
+    """Expand the cover from its version's class; never invent cover labels."""
+    if r"\makeisititle" not in text:
+        return text
+    if class_source is None:
+        with open(CLASS_PATH) as source:
+            class_source = source.read()
+    definition = re.search(r'\\newcommand\{\\makeisititle\}\[5\]', class_source)
+    if not definition:
+        raise ValueError("Source class has no five-argument makeisititle definition")
+    body, _ = read_braced_argument(class_source, definition.end())
     idx = 0
-    while True:
-        match = re.search(r'\\makeisititle\b', text[idx:])
-        if not match:
-            break
-        start_pos = idx + match.start()
+    while (match := re.search(r'\\makeisititle\b', text[idx:])):
+        start = idx + match.start()
+        pos = start + len(r"\makeisititle")
         args = []
-        pos = start_pos + len("\\makeisititle")
-        success = True
         for _ in range(5):
-            while pos < len(text) and text[pos].isspace():
-                pos += 1
-            if pos >= len(text) or text[pos] != '{':
-                success = False
-                break
-            balance = 1
-            arg_start = pos + 1
-            pos += 1
-            while pos < len(text) and balance > 0:
-                if text[pos] == '{':
-                    balance += 1
-                elif text[pos] == '}':
-                    balance -= 1
-                pos += 1
-            if balance > 0:
-                success = False
-                break
-            args.append(text[arg_start:pos-1])
-        
-        if success:
-            replacement = (
-                f"\\section*{{Judul Proposal}}\n{args[0]}\n\n"
-                f"\\section*{{Peneliti}}\n{args[1]} (NIM: {args[2]})\n\n"
-                f"\\section*{{Pendaftaran}}\n{args[3]} -- {args[4]}\n\n"
-            )
-            text = text[:start_pos] + replacement + text[pos:]
-            idx = start_pos + len(replacement)
-        else:
-            idx = start_pos + 1
+            arg, pos = read_braced_argument(text, pos)
+            args.append(arg)
+        replacement = re.sub(r'#([1-5])', lambda m: args[int(m.group(1)) - 1], body)
+        text = text[:start] + replacement + text[pos:]
+        idx = start + len(replacement)
     return text
 
 
@@ -910,8 +935,9 @@ def generate_diff_latex(tag1, tag2, outdir):
     old_full = build_full_proposal(tag1)
     new_full = build_full_proposal(tag2)
 
-    left_formatting = extract_section_formatting(tag1)
-    right_formatting = extract_section_formatting(tag2)
+    # Definitions nested inside newenvironment need doubled parameter markers.
+    left_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag1))
+    right_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag2))
 
     # Extract citations
     pure_v1_keys = extract_citation_keys(old_full)
@@ -924,20 +950,18 @@ def generate_diff_latex(tag1, tag2, outdir):
         v1_nocite = f"\\nocite{{{', '.join(v1_keys)}}}" if v1_keys else ""
         v2_nocite = f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else ""
         bib_diff = [
-            r"\newpage",
             v1_nocite,
             v2_nocite,
             r"\begin{paracol}{2}",
-            f"\\section*{{Daftar Pustaka\\\\{{\\normalsize\\texttt{{{tag1}}}}}}}",
+            r"\section*{DAFTAR PUSTAKA}",
             r"\printbibliography[heading=none, keyword=v1]" if v1_keys else "",
             r"\switchcolumn",
-            f"\\section*{{Daftar Pustaka\\\\{{\\normalsize\\texttt{{{tag2}}}}}}}",
+            r"\section*{DAFTAR PUSTAKA}",
             r"\printbibliography[heading=none, keyword=v2]" if v2_keys else "",
             r"\end{paracol}",
         ]
 
-    ops = compute_diff(split_paragraphs(old_full), split_paragraphs(new_full))
-    body = render_ops(ops)
+    body = render_sections(old_full, new_full)
     
     # Append _v1 to citation commands specifically inside the left column 
     # to avoid biber duplicate key merging issues for v1
@@ -1040,42 +1064,54 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\newcounter{leftsection}",
         r"\newcounter{leftsubsection}",
         r"\newcounter{leftsubsubsection}",
+        r"\newcounter{lefttable}",
+        r"\newcounter{leftfigure}",
+        r"\newcounter{leftequation}",
         r"\newcounter{rightsection}",
         r"\newcounter{rightsubsection}",
         r"\newcounter{rightsubsubsection}",
+        r"\newcounter{righttable}",
+        r"\newcounter{rightfigure}",
+        r"\newcounter{rightequation}",
         r"\newenvironment{leftside}{%",
+        r"  \setlength{\textwidth}{\linewidth}%",
         r"  \setcounter{section}{\value{leftsection}}%",
         r"  \setcounter{subsection}{\value{leftsubsection}}%",
         r"  \setcounter{subsubsection}{\value{leftsubsubsection}}%",
+        r"  \setcounter{table}{\value{lefttable}}%",
+        r"  \setcounter{figure}{\value{leftfigure}}%",
+        r"  \setcounter{equation}{\value{leftequation}}%",
         f"  {left_formatting}%",
         r"}{%",
         r"  \setcounter{leftsection}{\value{section}}%",
         r"  \setcounter{leftsubsection}{\value{subsection}}%",
         r"  \setcounter{leftsubsubsection}{\value{subsubsection}}%",
+        r"  \setcounter{lefttable}{\value{table}}%",
+        r"  \setcounter{leftfigure}{\value{figure}}%",
+        r"  \setcounter{leftequation}{\value{equation}}%",
         r"}",
         r"\newenvironment{rightside}{%",
+        r"  \setlength{\textwidth}{\linewidth}%",
         r"  \setcounter{section}{\value{rightsection}}%",
         r"  \setcounter{subsection}{\value{rightsubsection}}%",
         r"  \setcounter{subsubsection}{\value{rightsubsubsection}}%",
+        r"  \setcounter{table}{\value{righttable}}%",
+        r"  \setcounter{figure}{\value{rightfigure}}%",
+        r"  \setcounter{equation}{\value{rightequation}}%",
         f"  {right_formatting}%",
         r"}{%",
         r"  \setcounter{rightsection}{\value{section}}%",
         r"  \setcounter{rightsubsection}{\value{subsection}}%",
         r"  \setcounter{rightsubsubsection}{\value{subsubsection}}%",
+        r"  \setcounter{righttable}{\value{table}}%",
+        r"  \setcounter{rightfigure}{\value{figure}}%",
+        r"  \setcounter{rightequation}{\value{equation}}%",
         r"}",
-        # Redefine MakeUppercase to do nothing so colorbox inside it doesn't crash
-        r"\renewcommand{\MakeUppercase}[1]{#1}",
-        # Redefine page-breaking/floating environments to prevent compile crashes inside minipages
-        r"\renewenvironment{table}[1][]{}{}",
-        r"\renewenvironment{figure}[1][]{}{}",
-        r"\renewcommand{\caption}[1]{\par\vspace{0.2cm}\noindent\textbf{Caption:} #1\par}",
-        r"\renewcommand{\makeisititle}[5]{%",
-        r"  {\centering",
-        r"    {\Large \textbf{#1}}\par\vspace{1em}",
-        r"    \textbf{#2} (\texttt{#3})\par\vspace{1em}",
-        r"    #4\par\vspace{1em}",
-        r"    #5\par}",
-        r"}",
+        # Retain native caption wording/numbering without floating out of columns.
+        r"\makeatletter",
+        r"\renewenvironment{table}[1][]{\def\@captype{table}}{}",
+        r"\renewenvironment{figure}[1][]{\def\@captype{figure}}{}",
+        r"\makeatother",
         # (colors already defined earlier in preamble for defbibenvironment)
         # Use soul for line-wrapping highlights
         r"\usepackage{soul}",
@@ -1090,12 +1126,13 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\newcommand{\inhighlight}[1]{{\sethlcolor{inshl}\hl{#1}}}",
         r"\begin{document}",
         r"\thispagestyle{empty}",
-        r"\begin{center}",
-        r"{\Large \textbf{Proposal Diff Report}}\\[0.5em]",
-        rf"\texttt{{{tag1} $\rightarrow$ {tag2}}}\\[0.5em]",
-        r"\today",
-        r"\end{center}",
-        # Continuous flow, no newpage
+        r"\setlength{\columnsep}{0.8cm}",
+        r"\setlength{\columnseprule}{0.3pt}",
+        r"\begin{paracol}{2}",
+        rf"\noindent\texttt{{{tag1}}}",
+        r"\switchcolumn",
+        rf"\noindent\texttt{{{tag2}}}",
+        r"\end{paracol}",
         body,
         r"\end{document}",
     ]
