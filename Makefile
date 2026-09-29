@@ -16,38 +16,35 @@ THESIS_PRES_DIR := $(THESIS_DOCS_DIR)/presentation
 # Proposal Targets & Files
 PROPOSAL_TEMPLATE := $(PROPOSAL_DIR)/main.tex.template
 PROPOSAL_TEX := $(PROPOSAL_DIR)/main.tex
-PROPOSAL_PDF := $(PROPOSAL_DIR)/main.pdf
+PROPOSAL_PDF := scratch/proposal.pdf
 
 SLIDES_TEMPLATE := $(PROPOSAL_PRES_DIR)/presentation.tex.template
 SLIDES_TEX := $(PROPOSAL_PRES_DIR)/presentation.tex
-SLIDES_PDF := $(PROPOSAL_PRES_DIR)/presentation.pdf
+SLIDES_PDF := scratch/presentation.pdf
 
 NOTES_TEMPLATE := $(PROPOSAL_PRES_DIR)/presentation_notes.tex.template
 NOTES_TEX := $(PROPOSAL_PRES_DIR)/presentation_notes.tex
-NOTES_PDF := $(PROPOSAL_PRES_DIR)/presentation_notes.pdf
+NOTES_PDF := scratch/presentation_notes.pdf
 
 QNA_TEMPLATE := $(PROPOSAL_PRES_DIR)/qna.tex.template
 QNA_TEX := $(PROPOSAL_PRES_DIR)/qna.tex
-QNA_PDF := $(PROPOSAL_PRES_DIR)/qna.pdf
+QNA_PDF := scratch/qna.pdf
 
 # Thesis Targets & Files
 THESIS_TEMPLATE := $(THESIS_DIR)/main.tex.template
 THESIS_TEX := $(THESIS_DIR)/main.tex
-THESIS_PDF := $(THESIS_DIR)/main.pdf
+THESIS_PDF := scratch/thesis.pdf
 
+PDF_BUILD := python3 scripts/build_pdf.py
 ifdef FORCE
-  LATEXMK_FORCE := -g
-else
-  LATEXMK_FORCE :=
+  PDF_BUILD_FLAGS := --force
 endif
-
-LATEXMK := TEXINPUTS=.:../assets:../../proposal-phase/assets: latexmk -pdf -interaction=nonstopmode -cd -auxdir=build -outdir=. $(LATEXMK_FORCE)
 
 .PHONY: all help \
         setup setup-models test exp run-all eval plot \
         proposal-phase docs proposal slides notes qna compile present \
         thesis final-phase thesis-slides \
-        diff diff-clean clean clean-docs
+        diff diff-clean aux-clean clean clean-docs
 
 all: help
 
@@ -83,6 +80,8 @@ help:
 		"  make diff-clean          Hapus file artefak diff" \
 		"" \
 		"🧹 CLEANUP:" \
+		"  PDF hasil Make disimpan di scratch/; file bantu dibersihkan otomatis" \
+		"  make aux-clean       Hapus file bantu lama; pertahankan seluruh PDF" \
 		"  make clean           Hapus seluruh file build & cache LaTeX" \
 		"=================================================================="
 
@@ -120,17 +119,17 @@ proposal: $(PROPOSAL_TEX)
 		chmod +x scripts/compile_version.py; \
 		python3 scripts/compile_version.py $(PROPOSAL_ARGS); \
 	else \
-		$(LATEXMK) $<; \
+		$(PDF_BUILD) $< $(PROPOSAL_PDF) $(PDF_BUILD_FLAGS); \
 	fi
 
 slides: $(SLIDES_TEX)
-	$(LATEXMK) $<
+	$(PDF_BUILD) $< $(SLIDES_PDF) $(PDF_BUILD_FLAGS)
 
 notes: $(NOTES_TEX) slides
-	$(LATEXMK) $<
+	$(PDF_BUILD) $< $(NOTES_PDF) $(PDF_BUILD_FLAGS)
 
 qna: $(QNA_TEX)
-	$(LATEXMK) $<
+	$(PDF_BUILD) $< $(QNA_PDF) $(PDF_BUILD_FLAGS)
 
 compile: proposal
 present: slides
@@ -165,7 +164,7 @@ $(QNA_TEX): $(QNA_TEMPLATE) $(ENV_FILE)
 final-phase: thesis
 
 thesis: $(THESIS_TEX)
-	$(LATEXMK) $<
+	$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS)
 
 $(THESIS_TEX): $(THESIS_TEMPLATE) $(ENV_FILE)
 	@if [ ! -f "$(ENV_FILE)" ]; then \
@@ -191,6 +190,9 @@ diff: $(DIFF_SCRIPT)
 diff-clean:
 	rm -f $(foreach ext,$(DIFF_EXTENSIONS),scratch/proposal_diff*.$(ext))
 
+aux-clean:
+	$(PDF_BUILD) --clean-aux
+
 # Parse tag/ref for make proposal <ref>
 ifeq ($(firstword $(MAKECMDGOALS)),proposal)
   PROPOSAL_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -202,7 +204,7 @@ endif
 # ==============================================================================
 clean: clean-docs diff-clean
 
-clean-docs:
+clean-docs: aux-clean
 	rm -rf $(PROPOSAL_DIR)/build $(PROPOSAL_PRES_DIR)/build $(THESIS_DIR)/build
 	rm -f $(PROPOSAL_TEX) $(SLIDES_TEX) $(NOTES_TEX) $(QNA_TEX) $(THESIS_TEX)
 	rm -f $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF) $(THESIS_PDF)

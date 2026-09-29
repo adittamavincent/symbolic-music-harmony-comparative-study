@@ -3,12 +3,14 @@ import importlib.util
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "sidebydiff.py"
+sys.path.insert(0, str(SCRIPT.parent))
 spec = importlib.util.spec_from_file_location("sidebydiff", SCRIPT)
 diff = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(diff)
@@ -126,10 +128,9 @@ class RefAndSourceTests(unittest.TestCase):
 
     def test_compiler_returns_the_named_pdf(self):
         name = f"proposal_diff_proposal_v1_{self.sha}"
-        Path(f"{name}.pdf").write_bytes(b"compiled PDF")
-        with patch.object(diff.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, "", "")) as run:
+        with patch.object(diff, "compile_pdf", return_value=f"./{name}.pdf") as run:
             self.assertEqual(diff.latex_to_pdf(f"{name}.tex", "."), f"./{name}.pdf")
-            self.assertEqual(run.call_args.args[0][-1], f"{name}.tex")
+            run.assert_called_once_with(f"{name}.tex", f"./{name}.pdf")
 
     def test_diff_clean_removes_pair_files_and_preserves_unrelated_files(self):
         generated = ["proposal_diff.pdf", "proposal_diff_proposal_v1_proposal_v2.tex",

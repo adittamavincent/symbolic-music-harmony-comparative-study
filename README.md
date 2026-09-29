@@ -181,29 +181,32 @@ The build flow is `.env.local + .tex.template → generated .tex → latexmk/Bib
 
 | Command | Output |
 | --- | --- |
-| `make proposal` | `docs/proposal-phase/proposal/main.pdf` |
-| `make slides` | `docs/proposal-phase/presentation/presentation.pdf` |
-| `make notes` | `docs/proposal-phase/presentation/presentation_notes.pdf`; builds slides first |
-| `make qna` | `docs/proposal-phase/presentation/qna.pdf` |
+| `make proposal` | `scratch/proposal.pdf` |
+| `make slides` | `scratch/presentation.pdf` |
+| `make notes` | `scratch/presentation_notes.pdf`; builds slides first |
+| `make qna` | `scratch/qna.pdf` |
 | `make proposal-phase` | All four proposal PDFs |
-| `make thesis` | `docs/final-thesis/thesis/main.pdf` |
+| `make thesis` | `scratch/thesis.pdf` |
 | `make final-phase` | Thesis PDF only |
 
 Aliases: `make docs` means `make proposal-phase`; `make compile` means `make proposal`; `make present` means `make slides`. Bare `make` prints help.
 
-Templates regenerate when their template or `.env.local` changes. Every document target invokes `latexmk`, which tracks chapter and bibliography dependencies. If generated metadata looks stale, use `make -B thesis` to rerun substitution as well as compilation. `FORCE=1` forces LaTeX compilation but does not itself force substitution.
+Templates regenerate when their template or `.env.local` changes. Every document target performs a fresh `latexmk`/Biber build. If generated metadata looks stale, use `make -B thesis` to rerun substitution as well as compilation. `FORCE=1` forces LaTeX compilation but does not itself force substitution.
 
-Logs and auxiliary files go into a `build/` directory beside the document. In VS Code, build with Make once before opening generated `main.tex` in LaTeX Workshop. After changing metadata, run Make again. The editor's on-save recipe compiles LaTeX; it does not substitute metadata.
+Make builds compile in temporary directories and publish only successful PDFs to `scratch/`. Saved proposals and diffs also stage their generated TeX, bibliography, and assets temporarily. Temporary files are removed after the build. Failed builds preserve a named `.log` in `scratch/` and leave the previous successful PDF intact. Presenter notes read `scratch/presentation.pdf` after building slides. Generated current entry-point `.tex` files remain beside their templates.
+
+The VS Code on-save recipe still invokes `latexmk` directly with its editor configuration. Use Make for the temporary-file cleanup and `scratch/` output workflow; run Make again after changing metadata.
 
 ### Cleanup and backups
 
 ```bash
 make clean-docs   # Remove current generated .tex, PDFs, and LaTeX build files
+make aux-clean    # Remove legacy auxiliary/staging files; preserve all PDFs
 make diff-clean   # Remove selected proposal_diff files in scratch/
 make clean        # Both of the above
 ```
 
-`make clean` removes current document PDFs. It leaves chapters, templates, `.env.local`, model downloads, experiment outputs, and historical `scratch/proposal_v*.pdf` files. `diff-clean` removes both legacy and ref-named diff files in `scratch/`; copied assets and legacy `references_v*.bib` files remain.
+`make clean` removes current document PDFs. It leaves chapters, templates, `.env.local`, model downloads, experiment outputs, and historical `scratch/proposal_v*.pdf` files. `diff-clean` removes legacy and ref-named diff files in `scratch/`. `aux-clean` removes known legacy build/staging files from document folders and `scratch/`, including copied historical assets, while preserving PDFs and unrelated scratch files.
 
 Before a submission, copy the PDF to your submission archive. Keep a private backup of matching metadata and preserve experiment outputs separately. PDFs, local metadata, and experiment results are ignored by Git.
 
@@ -279,7 +282,7 @@ make diff proposal/v2 e87d47b       # Abbreviated or full commit ID
 
 The diff accepts tags, commit IDs, branches, and `head`/`HEAD`. Every untagged ref resolves to its full commit ID before source loading; the console and PDF show that ID. `head` follows the checked-out branch's latest commit and excludes uncommitted edits. Tags retain their names. A `proposal/` tag selects the proposal manuscript; other refs select the final thesis when present, falling back to the proposal in older snapshots. Chapters and nested inputs are read within the selected manuscript, including thesis chapters IV and V.
 
-Generated files use `scratch/proposal_diff_<ref1>_<ref2>.*`. Tag names keep their text with `/` and other filename-unsafe characters replaced by `_`; untagged refs use their full commit IDs. For example, `make diff proposal/v1 head` writes `proposal_diff_proposal_v1_<HEAD-commit-ID>.pdf`. The `.tex`, bibliography files, logs, and auxiliary files use the same pair prefix. Building another pair preserves previous comparisons; rebuilding the same pair replaces its generated files.
+Diff PDFs use `scratch/proposal_diff_<ref1>_<ref2>.pdf`. Tag names keep their text with `/` and other filename-unsafe characters replaced by `_`; untagged refs use their full commit IDs. For example, `make diff proposal/v1 head` writes `proposal_diff_proposal_v1_<HEAD-commit-ID>.pdf`. Supporting files are temporary; a failed build retains a `.log` with the same pair prefix. Building another pair preserves previous comparisons; a successful rebuild replaces that pair's PDF.
 
 Use complete names such as `proposal/v2`. Short names such as `v2` are resolved by trying `thesis/` before `proposal/`, which becomes ambiguous once both namespaces have versions.
 
@@ -398,7 +401,7 @@ The standalone directory command is nonrecursive. It keeps parse-quality/error r
 
 Keep the phase folders, Indonesian chapter names, numeric chapter prefixes, Python `snake_case`, and uppercase metadata keys. Use full milestone names such as `proposal/v2` and `thesis/v3`.
 
-Keep `A_neutral`, `B_key`, `C_satb`, `D_full`, output filenames, and CSV columns stable while scripts depend on them. For a submission archive, use a descriptive name such as `thesis-v1-2026-09-28.pdf`; this does not require renaming the build's `main.pdf`.
+Keep `A_neutral`, `B_key`, `C_satb`, `D_full`, output filenames, and CSV columns stable while scripts depend on them. For a submission archive, use a descriptive name such as `thesis-v3-2026-09-28.pdf`; this does not require renaming the build's `scratch/thesis.pdf`.
 
 Correct evaluation validity and version-path selection first, then consolidate helpers and dependency management. Moving folders or renaming every script now would add churn without resolving those problems. See the [maintenance audit](docs/maintenance.md) for locations and proposed changes.
 
@@ -419,4 +422,4 @@ Correct evaluation validity and version-path selection first, then consolidate h
 | NotaGen retries need inspection | Use `NOTAGEN_VERBOSE=1`; `NOTAGEN_MAX_ATTEMPTS` defaults to 5 per requested sample. Inspect failed ABC files. |
 | Empty or unexpectedly large result counts | Check missing folders and stale MIDI; archive outputs between independent experiments. |
 | Historical build uses wrong chapters | Use saved proposal tags with `make proposal <ref>`. That compiler still needs explicit phase paths for refs containing both phases. |
-| Historical build prints “Done” despite TeX errors | Read the log. `compile_version.py` can accept a PDF's existence despite a nonzero compiler exit; the diff command now reports failure. |
+| A PDF remains after a failed Make build | This is the previous successful PDF. Read the named failure log in `scratch/`; Make reports failure and does not publish a partial PDF. |

@@ -4,6 +4,9 @@ import sys
 import re
 import subprocess
 import shutil
+import tempfile
+
+from build_pdf import compile_pdf
 
 # Reuse git helpers
 def find_git_path(ref, filename):
@@ -74,10 +77,7 @@ def load_env_vars():
                         defaults[k] = v
     return defaults
 
-def main():
-    tag = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
-    tag = resolve_git_ref(tag)
-    outdir = "scratch"
+def build_version(tag, outdir, destination):
     os.makedirs(outdir, exist_ok=True)
     
     fn_tag = tag[9:] if tag.startswith("proposal/") else tag
@@ -151,20 +151,22 @@ def main():
         f.write(template_content)
         
     print("=== Compiling PDF ===")
-    result = subprocess.run(
-        ["latexmk", "-pdf", "-interaction=nonstopmode",
-         "-e", f"$aux_dir='{outdir}';$out_dir='{outdir}'",
-         tex_path],
-        capture_output=True, text=True
-    )
-    
-    pdf_path = os.path.join(outdir, f"proposal_{tag_clean}.pdf")
-    if os.path.exists(pdf_path):
+    pdf_path = compile_pdf(tex_path, destination)
+    if pdf_path:
         size = os.path.getsize(pdf_path)
         print(f"=== Done: {pdf_path} ({size} bytes) ===")
     else:
-        print(f"PDF not generated -- check {outdir}/proposal_{tag_clean}.log")
-        sys.exit(1)
+        return 1
+    return 0
+
+
+def main():
+    tag = resolve_git_ref(sys.argv[1] if len(sys.argv) > 1 else "HEAD")
+    os.makedirs("scratch", exist_ok=True)
+    fn_tag = tag[9:] if tag.startswith("proposal/") else tag
+    destination = os.path.join("scratch", f"proposal_{fn_tag.replace('/', '_')}.pdf")
+    with tempfile.TemporaryDirectory(prefix="proposal-", dir="scratch") as temporary:
+        return build_version(tag, temporary, destination)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

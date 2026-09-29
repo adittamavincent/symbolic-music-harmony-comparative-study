@@ -27,7 +27,7 @@ make thesis FORCE=1
 make -B thesis
 ```
 
-The PDF is `thesis/main.pdf`. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, PDFs, and build files.
+The PDF is `scratch/thesis.pdf` from the repository root. Make removes temporary auxiliary files after compiling. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, current PDFs, and legacy build files. `make aux-clean` preserves PDFs.
 
 `make final-phase` currently builds only the thesis. Final defense slides are not implemented. No `thesis/v3` tag has been created. Preserve a reviewed milestone using the [root version guide](../../README.md#save-final-thesis-v3) once its source and PDF have been checked.
 

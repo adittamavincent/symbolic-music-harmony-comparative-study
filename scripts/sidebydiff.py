@@ -22,6 +22,9 @@ import re
 import subprocess
 import sys
 import shutil
+import tempfile
+
+from build_pdf import compile_pdf
 
 CHAPTER_ORDER = [
     "docs/proposal-phase/proposal/chapters/00-frontmatter.tex",
@@ -1104,23 +1107,9 @@ def generate_diff_latex(tag1, tag2, outdir):
 
 
 def latex_to_pdf(tex_path, outdir):
-    """Use latexmk (not a bare pdflatex loop) so biber/citation passes
-    that \\parencite needs actually run before the final PDF is produced.
-    Runs inside outdir to prevent latexmk from losing the relative path on reruns."""
-    filename = os.path.basename(tex_path)
-    result = subprocess.run(
-        ["latexmk", "-pdf", "-interaction=nonstopmode",
-         "-e", "$aux_dir='.';$out_dir='.'",
-         filename],
-        cwd=outdir,
-        capture_output=True, text=True
-    )
-    pdf_path = os.path.join(outdir, os.path.splitext(filename)[0] + ".pdf")
-    if result.returncode != 0:
-        print(result.stdout[-3000:])
-        print(result.stderr[-3000:])
-        return None
-    return pdf_path if os.path.exists(pdf_path) else None
+    """Compile with the same temporary-output workflow as proposal builds."""
+    pdf_path = os.path.join(outdir, os.path.splitext(os.path.basename(tex_path))[0] + ".pdf")
+    return compile_pdf(tex_path, pdf_path)
 
 
 def main():
@@ -1131,16 +1120,17 @@ def main():
     outdir = sys.argv[3] if len(sys.argv) > 3 else "scratch"
 
     print(f"=== Building full proposal diff: {tag1} -> {tag2} ===")
-    tex_path = generate_diff_latex(tag1, tag2, outdir)
-
-    print("=== Compiling PDF ===")
-    pdf_path = latex_to_pdf(tex_path, outdir)
+    os.makedirs(outdir, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="diff-", dir=outdir) as temporary:
+        tex_path = generate_diff_latex(tag1, tag2, temporary)
+        print("=== Compiling PDF ===")
+        pdf_path = latex_to_pdf(tex_path, outdir)
 
     if pdf_path:
         size = os.path.getsize(pdf_path)
         print(f"=== Done: {pdf_path} ({size} bytes) ===")
     else:
-        print(f"PDF not generated -- check {os.path.splitext(tex_path)[0]}.log")
+        print(f"PDF not generated -- check {outdir}/{diff_output_stem(tag1, tag2)}.log")
         return 1
     return 0
 
