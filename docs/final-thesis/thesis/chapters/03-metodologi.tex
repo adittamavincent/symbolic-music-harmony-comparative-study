@@ -1,10 +1,12 @@
 \section{Metode Pendekatan}
 
-Penelitian ini menggunakan pendekatan kuantitatif komparatif dengan paradigma \textit{Research and Development} (R\&D): tahap pertama membangun dan memvalidasi instrumen evaluasi otomatis berbasis music21, dan tahap kedua menerapkan instrumen tersebut untuk menghasilkan temuan komparatif lintas model dan lintas kondisi instruksi.
+Penelitian ini menggunakan pendekatan kuantitatif komparatif. Penelitian kuantitatif menjawab pertanyaan tentang hubungan antarvariabel dengan tujuan menjelaskan, meramalkan, dan mengendalikan fenomena, sedangkan penelitian kualitatif menjawab pertanyaan tentang ciri-ciri fenomena untuk mendeskripsikan dan memahaminya dari sudut pandang partisipan \parencite{leedy2018}. Data penelitian ini berupa jumlah dan laju penandaan kaidah pada keluaran model, yang dibandingkan antar-model dan antar-\textit{conditioning level} melalui uji statistik. Karena itu, pendekatan kuantitatif sesuai dengan pertanyaan penelitian. Pemeriksaan contoh partitur pada tahap analisis berfungsi untuk menafsirkan penandaan, bukan sebagai sumber data utama.
 
-Penelitian ini diposisikan sebagai studi observasional komparatif, bukan eksperimen terkontrol penuh. Ketiga model tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan \textit{Strube Score} yang terukur antar model dapat mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara kedua penjelasan tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
+Penelitian berlangsung dalam dua tahap. Tahap pertama membangun dan memvalidasi instrumen evaluasi otomatis berbasis music21. Tahap kedua menerapkan instrumen tersebut untuk menghasilkan temuan komparatif lintas model dan lintas kondisi instruksi.
 
-Interpretasi temuan akan membahas kedua penjelasan tersebut dan tidak mengatribusikan seluruh perbedaan skor pada faktor arsitektur semata. Temuan yang dihasilkan bersifat eksploratif dan berlaku pada model, checkpoint, dan kondisi yang diuji.
+Penelitian ini diposisikan sebagai studi observasional komparatif, bukan eksperimen terkontrol penuh. Ketiga model tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan tingkat kepatuhan yang terukur antar model dapat mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara kedua penjelasan tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
+
+Interpretasi temuan akan membahas kedua penjelasan tersebut dan tidak mengatribusikan seluruh perbedaan skor pada faktor arsitektur semata. Temuan yang dihasilkan berlaku pada model, checkpoint, dan kondisi yang diuji.
 
 \section{Objek dan Subjek Penelitian}
 
@@ -24,11 +26,21 @@ Masukan generasi (\textit{seed}) dipilih secara purposif berdasarkan kriteria ya
 
 Data dikumpulkan melalui generasi keluaran model dan pengukuran otomatis terhadap keluaran tersebut. Identitas model, checkpoint, versi perangkat lunak, pengaturan generasi, dan masukan setiap run dicatat agar pengukuran dapat diulang.
 
+\subsection{Variabel Penelitian}
+
+Penelitian ini memiliki dua variabel bebas dan satu variabel terikat.
+
+\begin{enumerate}
+    \item Variabel bebas pertama ($X_1$): model generatif. Variabel kategorik dengan tiga kategori: DeepBach (LSTM dua arah), Coconet (\textit{deep residual} CNN dengan \textit{Orderless} NADE), dan NotaGen (\textit{hierarchical Transformer} dengan \textit{global self-attention}). Kategori ini menunjukkan model dan checkpoint yang diuji, bukan arsitektur yang terisolasi dari data latih dan prosedur generasi.
+    \item Variabel bebas kedua ($X_2$): \textit{conditioning level}. Variabel kategorik dengan empat tingkat kendali generasi, A sampai D, yang dijelaskan pada Tabel~\ref{tab:kondisi-generasi}.
+    \item Variabel terikat ($Y$): tingkat kepatuhan \textit{output} terhadap kaidah Strube. Indikatornya adalah jumlah penandaan kuint sejajar, jumlah penandaan oktaf sejajar, jumlah penandaan kegagalan resolusi nada penuntun, masing-masing beserta penyebutnya, dan \textit{Strube Score} sebagai indeks gabungan. Definisi operasional setiap indikator dijelaskan pada subbab Instrumen Pengukuran.
+\end{enumerate}
+
+Pertanyaan penelitian kedua menguji perbedaan $Y$ antar-kategori $X_1$ pada setiap tingkat $X_2$ yang mendukung perbandingan. Pertanyaan penelitian ketiga menguji pengaruh $X_2$ terhadap $Y$ pada setiap kategori $X_1$.
+
 \subsection{Generasi Keluaran Model}
 
-Model generatif merupakan variabel kategorik dengan tiga kategori: DeepBach (LSTM dua arah), Coconet (\textit{deep residual} CNN dengan \textit{Orderless} NADE), dan NotaGen (\textit{hierarchical Transformer} dengan \textit{global self-attention}). Kategori ini menunjukkan model dan checkpoint yang diuji, bukan arsitektur yang terisolasi dari data latih dan prosedur generasi.
-
-Variabel independen kedua adalah empat kondisi instruksi yang diberikan kepada masing-masing model, dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat. Kondisi dikontrol melalui berkas \texttt{strube\_conditions.json}.
+Keempat kondisi instruksi dirancang untuk mencerminkan tingkat keterbatasan (\textit{constraint level}) yang semakin meningkat. Kondisi dikontrol melalui berkas \texttt{strube\_conditions.json}.
 
 \begin{table}[ht]
 \centering
@@ -48,7 +60,7 @@ DeepBach dan Coconet menerima batasan nada, sementara adaptor NotaGen menggunaka
 
 \subsection{Instrumen Pengukuran}
 
-Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Variabel dependen adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti. Jumlah penandaan setiap kaidah juga dicatat secara terpisah.
+Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Indikator gabungan variabel terikat adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti. Jumlah penandaan setiap kaidah juga dicatat secara terpisah.
 
 Indeks penalti dihitung terhadap $M_{\text{total}}$, yang pada kode saat ini adalah jumlah peristiwa nada/akor sopran dengan nilai minimum satu:
 
@@ -92,7 +104,7 @@ Sebelum digunakan untuk data utama, instrumen ini menjalani validasi muka (\text
     \item Uji negatif: Harmonisasi yang sengaja dibuat melanggar kaidah Strube (dengan kuint sejajar dan resolusi nada penuntun yang salah secara eksplisit) dievaluasi dan harus menghasilkan skor rendah.
 \end{enumerate}
 
-Kedua uji ini merupakan pemeriksaan awal. Kelulusan uji perangkat lunak menunjukkan perilaku pada kasus uji, sedangkan validasi musikal menilai kesesuaian penandaan dengan kaidah dan konteksnya. Validitas instrumen diperiksa dengan membandingkan penandaan algoritmis dengan kumpulan contoh musikal yang dianotasi secara independen. Setiap anotasi mencatat pasangan suara, konteks tonal, lokasi peristiwa, kaidah, dan alasan penandaan. Kesesuaian penandaan dilaporkan melalui jumlah positif palsu, negatif palsu, \textit{precision}, dan \textit{recall} untuk setiap kaidah.
+Instrumen yang valid mengukur secara akurat apa yang hendak diukur, sedangkan instrumen yang reliabel memberikan hasil yang konsisten ketika digunakan berulang kali pada objek yang sama \parencite{leedy2018}. Kedua uji di atas merupakan pemeriksaan awal. Kelulusan uji perangkat lunak menunjukkan perilaku pada kasus uji, sedangkan validasi musikal menilai kesesuaian penandaan dengan kaidah dan konteksnya. Validitas instrumen diperiksa dengan membandingkan penandaan algoritmis dengan kumpulan contoh musikal yang dianotasi secara independen. Setiap anotasi mencatat pasangan suara, konteks tonal, lokasi peristiwa, kaidah, dan alasan penandaan. Kesesuaian penandaan dilaporkan melalui jumlah positif palsu, negatif palsu, \textit{precision}, dan \textit{recall} untuk setiap kaidah.
 
 Reliabilitas instrumen diperiksa melalui pengulangan pengukuran pada berkas yang sama dengan versi instrumen yang sama; pengukuran yang reliabel menghasilkan penandaan yang identik. Apabila anotasi dilakukan oleh lebih dari satu penganotasi, kesepakatan antar-penganotasi dilaporkan sebelum perbedaan anotasi diselesaikan. Perubahan kuantisasi, pemetaan suara, definisi kaidah, atau penyebut skor diperlakukan sebagai versi instrumen baru; hasil versi sebelumnya disimpan.
 
@@ -102,9 +114,9 @@ Tidak semua model generatif menjamin \textit{output} dalam format MIDI empat sua
 
 \section{Metode Analisis Data}
 
-Analisis diawali dengan statistik deskriptif: jumlah percobaan, keluaran yang berhasil, kegagalan penguraian, dan sampel yang memenuhi kriteria pada setiap sel; jumlah penandaan setiap kaidah beserta penyebutnya; serta rata-rata dan deviasi standar \textit{Strube Score} per model per kondisi.
+Analisis diawali dengan statistik deskriptif: jumlah percobaan, keluaran yang berhasil, kegagalan penguraian, dan sampel yang memenuhi kriteria pada setiap sel; jumlah penandaan setiap kaidah beserta penyebutnya; serta rata-rata dan deviasi standar \textit{Strube Score} per model per kondisi. Statistik deskriptif ini menjawab pertanyaan penelitian pertama.
 
-Selain statistik deskriptif, uji komparatif non-parametrik Kruskal-Wallis direncanakan untuk menguji hipotesis pada Bab II, yaitu apakah perbedaan distribusi skor antar model atau antar kondisi melampaui ambang signifikansi statistik. Uji non-parametrik dipilih karena ukuran sampel per sel ($n=10$) kecil dan distribusi skor tidak dapat diasumsikan normal tanpa verifikasi terlebih dahulu. Uji Kruskal-Wallis mensyaratkan observasi yang independen dan tidak menunjukkan pasangan kelompok yang berbeda. Uji lanjutan, ukuran efek, dan penanganan perbandingan berganda ditetapkan dalam protokol sebelum data utama dibaca. Apabila keluaran bergantung pada masukan yang sama, analisis menggunakan unit analisis dan uji yang sesuai dengan ketergantungan tersebut.
+Selain statistik deskriptif, uji komparatif non-parametrik Kruskal-Wallis direncanakan untuk menguji hipotesis pada Bab II, yaitu apakah perbedaan tingkat kepatuhan antar model (pertanyaan kedua) atau antar-\textit{conditioning level} (pertanyaan ketiga) melampaui ambang signifikansi statistik. Uji non-parametrik dipilih karena ukuran sampel per sel ($n=10$) kecil dan distribusi skor tidak dapat diasumsikan normal tanpa verifikasi terlebih dahulu. Uji Kruskal-Wallis mensyaratkan observasi yang independen dan tidak menunjukkan pasangan kelompok yang berbeda. Uji lanjutan, ukuran efek, dan penanganan perbandingan berganda ditetapkan dalam protokol sebelum data utama dibaca. Apabila keluaran bergantung pada masukan yang sama, analisis menggunakan unit analisis dan uji yang sesuai dengan ketergantungan tersebut.
 
 Hasil disajikan dalam bentuk tabel dan grafik batang kelompok (\textit{grouped bar chart}) yang membandingkan ketiga model di bawah empat kondisi.
 

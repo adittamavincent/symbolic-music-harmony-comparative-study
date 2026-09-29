@@ -2,7 +2,7 @@
 
 \subsection{Model Generatif Musik Simbolik}
 
-DeepBach \parencite{hadjeres2017} dirancang untuk menghasilkan \textit{chorale} empat suara dalam gaya Bach. Model memperkirakan distribusi nada dari konteks menggunakan jaringan yang mencakup LSTM dan melakukan generasi melalui \textit{pseudo-Gibbs sampling}. Pengguna dapat menetapkan batasan posisi seperti nada, ritme, atau kadens. Prosedur ini berbeda dari generasi sekuensial satu arah; perbedaan tersebut harus diperhitungkan dalam penjelasan model.
+DeepBach \parencite{hadjeres2017} dirancang untuk menghasilkan \textit{chorale} empat suara dalam gaya Bach. Model memperkirakan distribusi nada dari konteks menggunakan jaringan yang mencakup LSTM dan melakukan generasi melalui \textit{pseudo-Gibbs sampling}. Pengguna dapat menetapkan batasan posisi seperti nada, ritme, atau kadens. Prosedur ini berbeda dari generasi sekuensial satu arah; perbedaan tersebut harus diperhitungkan dalam penjelasan model. Pengembangnya mengevaluasi DeepBach melalui uji diskriminasi daring ``\textit{Bach or Computer}'' dan menganalisis contoh keluaran. Analisis contoh tersebut mencatat kesalahan komposisi seperti oktaf sejajar, tanpa menghitung frekuensinya pada seluruh keluaran.
 
 Coconet \parencite{huang2017} dikembangkan oleh peneliti MILA, Université de Montréal, dan Google Brain. Model ini menggunakan pendekatan distribusi simultan seluruh suara (\textit{orderless NADE}) yang memungkinkan pelengkapan suara secara fleksibel dari kondisi parsial apa pun. Naskah asli Coconet mengevaluasi model melalui \textit{log-likelihood} pada korpus \textit{chorale} Bach dan evaluasi oleh manusia.
 
@@ -34,9 +34,11 @@ Ketiga antarmuka tersebut tidak menyediakan kendali yang identik. Penetapan sopr
 
 Data pelatihan dan spesialisasi tugas juga berbeda. Hasil perbandingan akan menggambarkan keluaran model pada konfigurasi yang diuji, dengan mempertimbangkan faktor arsitektur, data latih, representasi, dan prosedur generasi. Pemisahan pengaruh masing-masing faktor memerlukan desain yang lebih terkendali daripada rancangan tiga model yang ada.
 
-\subsection{Teori Harmoni Fungsional Gustav Strube}
+\subsection{Teori Harmoni Fungsional dan Kaidah Gerak Suara Gustav Strube}
 
-Gustav Strube dalam \textit{The Theory and Use of Chords} \parencite{strube1928} menguraikan kaidah \textit{voice leading} dalam harmoni fungsional Barat. Tiga kaidah yang dijadikan variabel dependen dalam penelitian ini adalah sebagai berikut.
+Landasan teori fokus penelitian ini tersusun dalam tiga tingkat. Teori harmoni fungsional menjadi teori utama (\textit{grand theory}). Kaidah gerak suara Gustav Strube menjadi teori yang menurunkan teori utama tersebut ke dalam aturan penulisan empat suara. Definisi operasional pada Bab III menerapkan kaidah tersebut pada musik simbolik.
+
+Harmoni fungsional menjelaskan akor berdasarkan perannya dalam tonalitas, terutama fungsi tonika, dominan, dan subdominan, serta hubungan antar-akor yang membentuk progresi dan kadens \parencite{schoenberg1954}. Dalam kerangka ini, gerak setiap suara dari satu akor ke akor berikutnya mengikuti kaidah \textit{voice leading}. Gustav Strube dalam \textit{The Theory and Use of Chords} \parencite{strube1928} menguraikan kaidah tersebut dalam buku teks harmoni. Tiga kaidah yang menjadi dasar variabel terikat penelitian ini adalah sebagai berikut.
 
 Pertama, larangan kuint sejajar (\textit{parallel fifths}): dua suara dilarang bergerak secara paralel dalam arah yang sama membentuk interval kuint sempurna di dua momen berurutan. Kaidah ini berkaitan dengan prinsip independensi suara \parencite{harrison2020}.
 
@@ -54,15 +56,15 @@ Penelitian ini bertolak dari dua anggapan dasar. Pertama, ketiga kaidah Strube d
 
 \subsection{Hipotesis}
 
-Pertanyaan penelitian pertama bersifat deskriptif sehingga tidak dirumuskan dalam hipotesis. Hipotesis berikut diuji untuk setiap kaidah secara terpisah.
+Hipotesis adalah jawaban sementara terhadap masalah penelitian yang kebenarannya harus diuji secara empiris \parencite{rangkuti2016}. Pertanyaan penelitian pertama bersifat deskriptif sehingga dijawab dengan statistik deskriptif tanpa hipotesis. Pertanyaan kedua dan ketiga dijawab melalui hipotesis berikut. Setiap hipotesis diuji untuk masing-masing kaidah Strube secara terpisah, dengan tingkat kepatuhan sebagai variabel terikat.
 
 \begin{enumerate}
-    \item Perbandingan antar-model pada kondisi yang mendukung perbandingan: \\
-    $H_0$: distribusi hasil pengukuran kaidah tidak berbeda antara ketiga model. \\
-    $H_1$: distribusi hasil pengukuran kaidah berbeda pada sedikitnya satu model.
-    \item Perbandingan antar-\textit{conditioning level} pada masing-masing model: \\
-    $H_0$: distribusi hasil pengukuran kaidah tidak berbeda antar-\textit{conditioning level}. \\
-    $H_1$: distribusi hasil pengukuran kaidah berbeda pada sedikitnya satu \textit{conditioning level}.
+    \item Hipotesis untuk pertanyaan penelitian kedua, pada setiap kondisi yang mendukung perbandingan: \\
+    $H_0$: tidak terdapat perbedaan tingkat kepatuhan terhadap kaidah Strube antara \textit{output} DeepBach, Coconet, dan NotaGen. \\
+    $H_1$: terdapat perbedaan tingkat kepatuhan terhadap kaidah Strube pada sedikitnya satu model.
+    \item Hipotesis untuk pertanyaan penelitian ketiga, pada setiap model: \\
+    $H_0$: \textit{conditioning level} tidak berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube. \\
+    $H_1$: \textit{conditioning level} berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube.
 \end{enumerate}
 
-Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji. Hasil tersebut tidak menunjukkan bahwa perbedaan disebabkan oleh arsitektur model semata.
+Kedua hipotesis dirumuskan tanpa arah karena sumber yang ditinjau belum memberikan dasar untuk memperkirakan model atau \textit{conditioning level} mana yang menghasilkan kepatuhan lebih tinggi. Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji. Hasil tersebut tidak menunjukkan bahwa perbedaan disebabkan oleh arsitektur model semata. Pada hipotesis kedua, \textit{conditioning level} diberikan oleh peneliti pada model yang sama, sehingga perbedaan antar-\textit{conditioning level} dapat dibaca sebagai pengaruh kendali tersebut pada model dan checkpoint yang diuji.

@@ -2,7 +2,7 @@
 
 DeepBach \parencite{hadjeres2017}, Coconet \parencite{huang2017}, dan NotaGen \parencite{wang2025} menghasilkan musik simbolik, yaitu representasi notasi yang dapat diolah sebagai partitur digital atau MIDI. DeepBach menggunakan jaringan yang mencakup LSTM untuk memperkirakan nada dari konteks dan menghasilkan \textit{chorale} melalui \textit{pseudo-Gibbs sampling}. Coconet menggunakan jaringan konvolusional untuk melengkapi partitur parsial melalui \textit{blocked Gibbs sampling}. NotaGen menggunakan arsitektur \textit{Transformer}, dengan prapelatihan pada 1,6 juta karya dalam notasi ABC, penyesuaian pada sekitar 9.000 komposisi klasik, dan CLaMP-DPO. Perbedaan model mencakup arsitektur, data latih, representasi, dan prosedur generasi.
 
-Penelitian ini memusatkan evaluasi pada gerak antar-suara dalam keluaran model. Pada sumber yang ditinjau, evaluasi musik generatif banyak menggunakan ukuran distribusional yang membandingkan keluaran model dengan data acuan \parencite{Retkowski2024, yang2020} atau penilaian perseptual oleh pendengar. NotaGen \parencite{wang2025} melaporkan evaluasi keselarasan semantik dan uji subjektif. Kedua pendekatan memberi informasi tentang keluaran musik, tetapi tidak dengan sendirinya menjawab apakah suatu pasangan suara memenuhi kaidah yang dipilih. Penelitian ini berfokus pada pemeriksaan terhadap kuint sejajar, oktaf sejajar, dan resolusi nada penuntun.
+Penelitian ini memusatkan evaluasi pada gerak antar-suara dalam keluaran model. Pada sumber yang ditinjau, evaluasi musik generatif banyak menggunakan ukuran distribusional yang membandingkan keluaran model dengan data acuan \parencite{Retkowski2024, yang2020} atau penilaian perseptual oleh pendengar. NotaGen \parencite{wang2025} melaporkan evaluasi keselarasan semantik dan uji subjektif. Pengembang DeepBach menilai model melalui uji diskriminasi daring dan mencatat bahwa contoh keluarannya masih memuat kesalahan komposisi seperti oktaf sejajar \parencite{hadjeres2017}; catatan tersebut berupa analisis contoh, bukan pengukuran pada seluruh keluaran. Kedua pendekatan memberi informasi tentang keluaran musik, tetapi tidak dengan sendirinya menjawab apakah suatu pasangan suara memenuhi kaidah yang dipilih. Penelitian ini berfokus pada pemeriksaan terhadap kuint sejajar, oktaf sejajar, dan resolusi nada penuntun.
 
 Fang et al.\ \parencite{fang2020} mengembangkan penilaian \textit{chorale} berbasis fitur musikal, menggunakan jumlah berbobot jarak Wasserstein antara distribusi fitur keluaran dan korpus Bach. Pendekatan tersebut memberikan contoh evaluasi otomatis yang dapat diinterpretasikan, tetapi tidak menetapkan rumus skor yang digunakan dalam penelitian ini. Coconet dievaluasi melalui \textit{log-likelihood} data uji dan evaluasi oleh manusia \parencite{huang2017}.
 
@@ -10,7 +10,7 @@ Ketiga model tidak menyediakan kendali generasi yang sama. DeepBach dan Coconet 
 
 Penelitian ini menggunakan teori harmoni Gustav Strube \parencite{strube1928} sebagai sumber untuk merumuskan tiga pemeriksaan gerak suara. Sebelum diterapkan, setiap kaidah perlu dijelaskan melalui edisi dan halaman yang dirujuk, konteks musikal, serta pengecualiannya. Definisi operasional kemudian menentukan peristiwa yang dibandingkan dan kondisi yang dianggap sebagai pelanggaran. Pemeriksaan algoritmis menghasilkan penandaan menurut definisi tersebut; penandaan ini perlu diperiksa terhadap contoh yang dianotasi secara independen.
 
-Istilah \textit{akurasi} pada penelitian ini mengacu pada pengukuran kepatuhan terhadap kaidah yang dipilih. Instrumen menghitung indeks penalti yang dinormalisasi terhadap jumlah peristiwa sopran dan dibatasi pada rentang nol hingga satu. Indeks tersebut berbeda dari proporsi momen harmonis tanpa pelanggaran maupun akurasi klasifikasi terhadap anotasi acuan.
+Istilah \textit{akurasi} pada penelitian ini mengacu pada tingkat kepatuhan (\textit{constraint adherence}) keluaran model terhadap kaidah yang dipilih. Instrumen menghitung indeks penalti yang dinormalisasi terhadap jumlah peristiwa sopran dan dibatasi pada rentang nol hingga satu. Indeks tersebut berbeda dari proporsi momen harmonis tanpa pelanggaran maupun akurasi klasifikasi terhadap anotasi acuan.
 
 Kaidah gerak suara merupakan materi dasar dalam pembelajaran harmoni. Pengukuran yang terdokumentasi terhadap keluaran model memungkinkan pengajar, mahasiswa, dan peneliti memeriksa sejauh mana keluaran tersebut sesuai dengan kaidah yang diajarkan, disertai lokasi musikal setiap penandaan. Fokus penelitian ini adalah pengukuran keluaran model melalui definisi gerak suara yang terdokumentasi, disertai catatan kegagalan generasi dan batas interpretasinya. Perbedaan yang ditemukan akan berlaku pada model, checkpoint, dan kondisi yang diuji. Desain ini belum dapat mengisolasi pengaruh arsitektur dari perbedaan data latih dan prosedur generasi.
 
@@ -18,16 +18,16 @@ Kaidah gerak suara merupakan materi dasar dalam pembelajaran harmoni. Pengukuran
 
 \subsection{Rumusan Masalah}
 
-DeepBach, Coconet, dan NotaGen menghasilkan keluaran simbolik yang dapat diperiksa per suara. Evaluasi pada sumber yang ditinjau umumnya mengukur kedekatan distribusi fitur dengan data acuan atau penilaian pendengar. Pengukuran tersebut tidak menunjukkan di mana dan seberapa sering keluaran model memuat kuint sejajar, oktaf sejajar, atau kegagalan resolusi nada penuntun menurut kaidah harmoni yang dirujuk. Perbandingan ketiga model juga dibatasi oleh perbedaan kendali generasi yang tersedia. Pada sumber yang ditinjau, belum ditemukan pengukuran kepatuhan kaidah gerak suara Strube pada keluaran ketiga model dengan definisi operasional, kondisi generasi, dan batas perbandingan yang terdokumentasi. Pernyataan ini terbatas pada sumber yang ditinjau pada Bab II.
+DeepBach, Coconet, dan NotaGen menghasilkan keluaran simbolik yang dapat diperiksa per suara. Naskah asli ketiga model mengevaluasi keluarannya melalui uji diskriminasi oleh pendengar (DeepBach), \textit{log-likelihood} dan evaluasi manusia (Coconet), serta skor CLaMP 2 dan uji A/B subjektif (NotaGen). Pengukuran tersebut tidak menunjukkan di mana dan seberapa sering keluaran model memuat kuint sejajar, oktaf sejajar, atau kegagalan resolusi nada penuntun menurut kaidah harmoni yang dirujuk. Perbandingan ketiga model juga dibatasi oleh perbedaan kendali generasi yang tersedia. Pada sumber yang ditinjau dalam Bab II, belum ditemukan pengukuran tingkat kepatuhan keluaran ketiga model terhadap kaidah gerak suara Strube, maupun pengukuran pengaruh \textit{conditioning level} terhadap tingkat kepatuhan tersebut, dengan definisi operasional dan kondisi generasi yang terdokumentasi.
 
 Penelitian dibatasi pada keluaran simbolik empat suara dari checkpoint DeepBach, Coconet, dan NotaGen yang ditetapkan dalam protokol. Kaidah yang diperiksa adalah kuint sejajar, oktaf sejajar, dan resolusi nada penuntun pada suara sopran. Penelitian tidak menilai nilai estetis keluaran dan tidak mengatribusikan perbedaan hasil pada arsitektur model semata.
 
 \subsection{Pertanyaan Penelitian}
 
 \begin{enumerate}
-    \item Sejauh mana \textit{output} model generatif musik simbolik DeepBach, Coconet, dan NotaGen memenuhi kaidah harmoni fungsional Gustav Strube pada masing-masing \textit{conditioning level}?
-    \item Apakah terdapat perbedaan hasil pengukuran yang konsisten antara ketiga model pada kondisi yang mendukung perbandingan?
-    \item Bagaimana perbedaan \textit{constraint adherence} \textit{output} antar-\textit{conditioning level} yang tersedia pada masing-masing model?
+    \item Bagaimana tingkat kepatuhan \textit{output} DeepBach, Coconet, dan NotaGen terhadap kaidah larangan kuint sejajar, larangan oktaf sejajar, dan resolusi nada penuntun menurut Gustav Strube pada masing-masing \textit{conditioning level}?
+    \item Bagaimana perbedaan tingkat kepatuhan terhadap ketiga kaidah Strube antara \textit{output} DeepBach, Coconet, dan NotaGen pada kondisi yang mendukung perbandingan?
+    \item Bagaimana pengaruh \textit{conditioning level} terhadap tingkat kepatuhan \textit{output} masing-masing model pada ketiga kaidah Strube?
 \end{enumerate}
 
 \section{Tujuan dan Manfaat Penelitian}
@@ -35,9 +35,9 @@ Penelitian dibatasi pada keluaran simbolik empat suara dari checkpoint DeepBach,
 \subsection{Tujuan Penelitian}
 
 \begin{enumerate}
-    \item Mengukur \textit{constraint adherence} \textit{output} DeepBach, Coconet, dan NotaGen terhadap tiga kaidah teori Gustav Strube pada masing-masing \textit{conditioning level}.
-    \item Membandingkan hasil pengukuran ketiga model pada kondisi yang mendukung perbandingan.
-    \item Membandingkan \textit{constraint adherence} \textit{output} antar-\textit{conditioning level} yang tersedia pada masing-masing model.
+    \item Mengukur tingkat kepatuhan \textit{output} DeepBach, Coconet, dan NotaGen terhadap tiga kaidah Gustav Strube pada masing-masing \textit{conditioning level}.
+    \item Membandingkan tingkat kepatuhan terhadap ketiga kaidah Strube antara \textit{output} ketiga model pada kondisi yang mendukung perbandingan.
+    \item Menganalisis pengaruh \textit{conditioning level} terhadap tingkat kepatuhan \textit{output} masing-masing model pada ketiga kaidah Strube.
 \end{enumerate}
 
 \subsection{Manfaat Penelitian}
@@ -45,7 +45,7 @@ Penelitian dibatasi pada keluaran simbolik empat suara dari checkpoint DeepBach,
 Manfaat Teoretis:
 \begin{enumerate}
     \item Menyediakan kerangka evaluasi berbasis teori harmoni formal yang dapat direplikasi untuk studi komparatif model AI generatif musik simbolik di masa mendatang.
-    \item Menghasilkan data empiris yang mendokumentasikan \textit{constraint adherence} ketiga model, termasuk NotaGen sebagai model simbolik terbaru di antara ketiganya, terhadap kaidah harmoni fungsional Strube.
+    \item Menghasilkan data empiris yang mendokumentasikan tingkat kepatuhan keluaran ketiga model, termasuk NotaGen sebagai model simbolik terbaru di antara ketiganya, terhadap kaidah harmoni fungsional Strube.
     \item Menyediakan definisi operasional kaidah Strube yang dapat diperiksa, diperdebatkan, dan dikembangkan dalam kajian teori musik dan teknologi musik.
 \end{enumerate}
 

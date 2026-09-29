@@ -150,3 +150,20 @@ Decisions for the researcher and supervisor:
 2. Scope limits sit at the end of I.B.1. A separate *Batasan Penelitian* section would depart from the template.
 3. Cover, approval page, and abstracts were preserved unchanged by instruction. They still say *Skripsi* and describe an architectural-paradigm comparison, which the revised BAB I–III no longer claim. Confirm the wording required for a thesis-phase proposal.
 4. The template lists only a contents page; the finished-thesis example also lists figures and tables. No lists were added.
+
+## Revision after the researcher's review notes (2026-09-30)
+
+The researcher supplied notes from the v2 tutoring review; they are recorded verbatim with our interpretation in [feedback.md](feedback.md) (F01–F08). Changes made:
+
+- Research questions now start with *Bagaimana* (5W1H) and all name Strube's rules. Question 3 asks about the effect of conditioning level on rule adherence; objectives map one-to-one.
+- III.A states a quantitative comparative approach, cites the department template's methodology source, and drops the R&D label that mixed research types.
+- III.C.1 *Variabel Penelitian* defines X1 (model), X2 (conditioning level), and Y (rule adherence, with per-rule indicators and the composite Strube Score).
+- II.C.2 hypotheses match questions 2 and 3; question 1 is answered descriptively.
+- II.B.2 names functional harmony as the grand theory, Strube's voice-leading rules as the derived theory, and the operational definitions as their application.
+- Verified from the DeepBach paper (arXiv 1612.01010): evaluation by an online "Bach or Computer" discrimination test, and the authors' example analysis notes compositional errors such as parallel octaves. Added to I.A, I.B.1, and II.A.1.
+- Added `leedy2018` and `rangkuti2016` to the shared bibliography, using the metadata and paraphrases in the department template's reference list. The books were not opened; confirm edition and pages. The Schoenberg citation for tonic, dominant, and subdominant functions also needs a page.
+
+Open: the title (F01). The current title names LSTM, CNN, and Transformer. Options for the researcher and lecturer:
+
+1. EVALUASI MUSIK SIMBOLIK HASIL GENERASI DEEPBACH, COCONET, DAN NOTAGEN BERDASARKAN KAIDAH HARMONI FUNGSIONAL GUSTAV STRUBE
+2. PENGARUH CONDITIONING LEVEL TERHADAP KEPATUHAN KAIDAH HARMONI GUSTAV STRUBE PADA MUSIK SIMBOLIK HASIL GENERASI DEEPBACH, COCONET, DAN NOTAGEN
