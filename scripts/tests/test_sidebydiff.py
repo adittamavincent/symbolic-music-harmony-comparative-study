@@ -171,7 +171,7 @@ class RefAndSourceTests(unittest.TestCase):
 
     def test_changed_citations_use_boxes_separate_from_text_highlights(self):
         old, new = diff.word_level_render("Old text.", r"New \parencite{source} text.")
-        self.assertIn(r"\colorbox{inshl}{\parencite{source}}", new)
+        self.assertIn(r"\diffinline{inshl}{\parencite{source}}", new)
         self.assertNotIn(r"\inhighlight{\parencite", new)
 
     def test_tex_space_escape_stays_outside_highlights(self):
@@ -181,6 +181,37 @@ class RefAndSourceTests(unittest.TestCase):
 
 
 class SectionRenderingTests(unittest.TestCase):
+    def test_heading_format_change_highlights_only_the_formatted_phrase(self):
+        old = r"\subsection{Evaluasi Otomatis dalam Music Information Retrieval (MIR)}"
+        new = r"\subsection{Evaluasi Otomatis dalam \textit{Music Information Retrieval} (MIR)}"
+        left, right = diff.word_level_render(old, new)
+        self.assertEqual(left, r"\subsection{Evaluasi Otomatis dalam \delhighlight{Music}\diffspace{delhl}\delhighlight{Information}\diffspace{delhl}\delhighlight{Retrieval} (MIR)}")
+        self.assertEqual(right, r"\subsection{Evaluasi Otomatis dalam \textit{\inhighlight{Music}\diffspace{inshl}\inhighlight{Information}\diffspace{inshl}\inhighlight{Retrieval}} (MIR)}")
+        for rendered in (left, right):
+            self.assertNotIn(r"\renewcommand{\thesubsection}", rendered)
+            self.assertNotIn(r"\colorbox", rendered)
+
+    def test_heading_text_change_retains_unchanged_words_and_diffs_body_separately(self):
+        old = "\\section{Existing old title}\n\nOld body."
+        new = "\\section{Existing new title}\n\nNew body."
+        left, right = diff.render_section_text(old, new)
+        self.assertIn(r"\section{Existing \delhighlight{old} title}", left)
+        self.assertIn(r"\section{Existing \inhighlight{new} title}", right)
+        self.assertIn(r"\delhighlight{Old} body.", left)
+        self.assertIn(r"\inhighlight{New} body.", right)
+        self.assertNotIn(r"\renewcommand", left + right)
+
+    def test_heading_levels_starred_forms_and_optional_titles_keep_their_wrappers(self):
+        for command in ("section", "subsection", "subsubsection"):
+            for suffix in ("", "*", "[Short title]"):
+                with self.subTest(command=command, suffix=suffix):
+                    prefix = "\\" + command + suffix
+                    old = prefix + "{Same plain wording}"
+                    new = prefix + r"{Same \textit{plain} wording}"
+                    left, right = diff.word_level_render(old, new)
+                    self.assertEqual(left, prefix + r"{Same \delhighlight{plain} wording}")
+                    self.assertEqual(right, prefix + r"{Same \textit{\inhighlight{plain}} wording}")
+
     def test_cover_expands_original_class_wording_and_nested_arguments(self):
         class_source = r"""\newcommand{\makeisititle}[5]{
 \begin{titlepage}
@@ -225,7 +256,7 @@ Original approval.\end{spacing}"""
         cleaned = diff.clean_latex_for_diff(source)
         self.assertIn(r"\begin{center}\bfseries SKRIPSI\par Oleh:\\ Name\end{center}", cleaned)
         self.assertIn("Original approval.", cleaned)
-        self.assertNotIn(r"\newpage", cleaned)
+        self.assertIn(r"\newpage", cleaned)
         self.assertNotIn(r"\setcounter{page}", cleaned)
         self.assertEqual(diff.render_section_text(cleaned, cleaned), (cleaned, cleaned))
 
@@ -264,7 +295,7 @@ B text."""
         self.assertNotIn("minipage", rendered)
         self.assertNotIn(r"\hrule", rendered)
         self.assertNotIn(r"\newpage", rendered)
-        self.assertIn(r"\inhighlight{Additional paragraph}", rendered)
+        self.assertIn(r"\inhighlight{Additional}\diffspace{inshl}\inhighlight{paragraph.}", rendered)
         self.assertIn("Paragraph 79.", rendered)
 
     def test_deleted_section_and_renamed_section_keep_both_sources(self):
@@ -276,6 +307,223 @@ B text."""
         renamed = diff.align_sections(diff.split_sections(new), diff.split_sections(new.replace("{B}", "{C}")))
         self.assertIn("{B}", renamed[-1][0])
         self.assertIn("{C}", renamed[-1][1])
+
+
+class FrontmatterAlignmentTests(unittest.TestCase):
+    def abstract(self, language, body, header=True, heading_style="textbf"):
+        title, keywords = ("ABSTRAK", "Kata Kunci:") if language == "id" else ("ABSTRACT", "Keywords:")
+        heading = rf"\begin{{center}}\{heading_style}{{{title}}}\end{{center}}" if header else ""
+        return "\n".join((r"\begin{spacing}{1.15}", heading, "", body, "",
+                          rf"\textbf{{{keywords}}} Music, Harmony", r"\end{spacing}"))
+
+    def source(self, indo, english):
+        return ("\n" + r"\newpage" + "\n").join((
+            r"\begin{titlepage}\bfseries PROPOSAL SKRIPSI\end{titlepage}",
+            r"\begin{spacing}{1.15}HALAMAN PENGESAHAN\end{spacing}",
+            indo, english, r"\section{Latar Belakang}" + "\nBody text.",
+        ))
+
+    def test_each_abstract_pairs_by_language_with_its_header_and_body(self):
+        old = diff.clean_latex_for_diff(self.source(
+            self.abstract("id", "Indonesia old."), self.abstract("en", "English old.")))
+        new = diff.clean_latex_for_diff(self.source(
+            self.abstract("id", "Indonesia new. " * 50), self.abstract("en", "English new.")))
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual([key for key, _ in diff.split_sections(old)][:4], [
+            ("frontmatter", "cover"), ("frontmatter", "approval"),
+            ("frontmatter", "abstract-id"), ("frontmatter", "abstract-en"),
+        ])
+        for side in pairs[2]:
+            self.assertIn("ABSTRAK", side)
+            self.assertIn("Indonesia", side)
+            self.assertNotIn("English", side)
+        for side in pairs[3]:
+            self.assertIn("ABSTRACT", side)
+            self.assertIn("English", side)
+            self.assertNotIn("Indonesia", side)
+        # Container boundaries remain local to each compared unit.
+        for pair in pairs:
+            for text in pair:
+                self.assertEqual(text.count(r"\begin{spacing}"), text.count(r"\end{spacing}"))
+
+    def test_missing_heading_does_not_create_text_or_shift_language_alignment(self):
+        old = diff.clean_latex_for_diff(self.source(
+            self.abstract("id", "Same Indonesian body.", header=False),
+            self.abstract("en", "Same English body.", header=False)))
+        new = diff.clean_latex_for_diff(self.source(
+            self.abstract("id", "Same Indonesian body."), self.abstract("en", "Same English body.")))
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual(len(pairs), 5)
+        self.assertNotIn("ABSTRAK", pairs[2][0])
+        self.assertIn("Same Indonesian body.", pairs[2][0])
+        self.assertIn("ABSTRAK", pairs[2][1])
+        self.assertNotIn("ABSTRACT", pairs[3][0])
+        rendered_old, rendered_new = diff.render_section_text(*pairs[2])
+        self.assertNotIn("ABSTRAK", rendered_old)
+        self.assertIn(r"\textbf{\inhighlight{ABSTRAK}}", rendered_new)
+        self.assertIn("Same Indonesian body.", rendered_old)
+        self.assertIn("Same Indonesian body.", rendered_new)
+
+    def test_heading_style_changes_do_not_change_abstract_identity(self):
+        old = self.abstract("id", "Old body.", heading_style="textbf")
+        new = self.abstract("id", "New body.", heading_style="textsc")
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual(len(pairs), 1)
+        self.assertIn("Old body.", pairs[0][0])
+        self.assertIn("New body.", pairs[0][1])
+
+    def test_deleted_indonesian_abstract_does_not_pair_with_english(self):
+        old = diff.clean_latex_for_diff(self.source(self.abstract("id", "Indonesian."),
+                                                  self.abstract("en", "English.")))
+        new = diff.clean_latex_for_diff(self.source("", self.abstract("en", "English.")))
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertIn("Indonesian.", pairs[2][0])
+        self.assertEqual(pairs[2][1], "")
+        self.assertIn("English.", pairs[3][0])
+        self.assertIn("English.", pairs[3][1])
+
+    def test_source_page_breaks_apply_between_pairs_without_blank_duplicates(self):
+        source = diff.clean_latex_for_diff(self.source(self.abstract("id", "Indonesian."),
+                                                     self.abstract("en", "English.")))
+        source = source.replace(r"\newpage", "\\newpage\n\\clearpage")
+        rendered = diff.render_sections(source, source)
+        self.assertEqual(rendered.count("\\end{paracol}\n\\newpage\n\\begin{paracol}{2}"), 4)
+        self.assertNotIn(r"\clearpage", rendered)
+        for column in ("leftside", "rightside"):
+            import re
+            for text in re.findall(rf"\\begin\{{{column}\}}(.*?)\\end\{{{column}\}}", rendered, re.DOTALL):
+                self.assertNotIn(r"\newpage", text)
+
+    def test_break_on_only_one_side_still_starts_both_sections_on_same_page(self):
+        old = "\\section{A}\nFirst.\n\\section{B}\nSecond."
+        new = old.replace(r"\section{B}", "\\newpage\n\\section{B}")
+        rendered = diff.render_sections(old, new)
+        self.assertEqual(rendered.count(r"\newpage"), 1)
+        self.assertEqual(rendered.count(r"\section{B}"), 2)
+
+
+class MathAndSourceLayoutTests(unittest.TestCase):
+    LEADING_FORMULA = r"""{\small
+\begin{multline}
+\text{Violation}_{\text{leading}}(t) = \mathds{1}\left(p_{i,t} \equiv L_{\text{pc}} \pmod{12}\right) \times \mathds{1}\left(p_{i,t+1} > p_{i,t}\right) \\
+\times \mathds{1}\left(p_{i,t+1} \not\equiv K_{\text{tonic}} \pmod{12}\right) \\
+\times \mathds{1}\left(\text{mode} \neq \text{natural minor} \lor L_{\text{pc}} \equiv (K_{\text{tonic}} - 1) \pmod{12}\right)
+\end{multline}
+}"""
+
+    def test_added_multline_gets_a_block_background_and_preserves_the_formula(self):
+        old, new = diff.word_level_render("", self.LEADING_FORMULA)
+        self.assertEqual(old, "")
+        self.assertIn(r"\begin{diffmath}{inshl}", new)
+        self.assertEqual(new.count(r"\begin{multline}"), 1)
+        self.assertEqual(new.count(r"\end{multline}"), 1)
+        self.assertIn(r"{\small", new)
+        self.assertIn(r"\not\equiv K_{\text{tonic}}", new)
+        self.assertEqual(new.count(r"\\"), self.LEADING_FORMULA.count(r"\\"))
+        import re
+        content = re.search(r'\\begin\{diffmath\}\{inshl\}\n(.*?)\n\\end\{diffmath\}', new, re.DOTALL).group(1)
+        self.assertEqual(re.sub(r'\s+', ' ', content).strip(),
+                         re.sub(r'\s+', ' ', self.LEADING_FORMULA).strip())
+        self.assertNotIn(r"\inhighlight{", new)
+
+    def test_deleted_multline_gets_red_and_leaves_the_other_side_empty(self):
+        old, new = diff.word_level_render(self.LEADING_FORMULA, "")
+        self.assertIn(r"\begin{diffmath}{delhl}", old)
+        self.assertEqual(new, "")
+
+    def test_changed_formula_highlights_both_versions_and_unchanged_formula_does_not(self):
+        revised = self.LEADING_FORMULA.replace(" > ", " < ")
+        old, new = diff.word_level_render(self.LEADING_FORMULA, revised)
+        self.assertIn(r"\begin{diffmath}{delhl}", old)
+        self.assertIn(r"\begin{diffmath}{inshl}", new)
+        self.assertIn(" > ", old)
+        self.assertIn(" < ", new)
+        same_old, same_new = diff.word_level_render(self.LEADING_FORMULA, self.LEADING_FORMULA)
+        self.assertNotIn("diffmath", same_old)
+        self.assertNotIn("diffmath", same_new)
+
+    def test_display_environment_variants_and_alignment_tabs_remain_intact(self):
+        for env, body in (("equation", "x = 1"), ("equation*", "x = 1"),
+                          ("align", r"x &= 1 \\ y &= 2"), ("align*", r"x &= 1 \\ y &= 2"),
+                          ("gather", r"x = 1 \\ y = 2"), ("multline*", r"x = 1 \\ + 2"),
+                          ("alignat", r"{2} x &= 1 & y &= 2")):
+            with self.subTest(env=env):
+                source = rf"\begin{{{env}}}{body}\end{{{env}}}"
+                _, rendered = diff.word_level_render("", source)
+                self.assertIn(r"\begin{diffmath}{inshl}", rendered)
+                self.assertIn(body, rendered)
+                self.assertIn(rf"\begin{{{env}}}", rendered)
+                self.assertIn(rf"\end{{{env}}}", rendered)
+
+    def test_bracket_display_math_is_highlighted_as_a_block(self):
+        _, new = diff.word_level_render("", r"\[x = 1\]")
+        self.assertIn(r"\begin{diffmath}{inshl}", new)
+        self.assertIn(r"\[x = 1\]", new)
+
+    def test_highlighted_prose_leaves_spaces_breakable_including_inside_formatting(self):
+        _, new = diff.word_level_render("", r"Plain words \textit{Music \textbf{Information Retrieval}}.")
+        self.assertIn(r"\inhighlight{Plain}\diffspace{inshl}\inhighlight{words}", new)
+        self.assertIn(r"\textit{\inhighlight{Music}\diffspace{inshl}\textbf{\inhighlight{Information}\diffspace{inshl}\inhighlight{Retrieval}}}\inhighlight{.}", new)
+        self.assertNotIn(r"\inhighlight{Plain words}", new)
+        self.assertNotIn(r"\inhighlight{\textit", new)
+        _, grouped = diff.word_level_render("", "{Grouped words}")
+        self.assertEqual(grouped.strip(), r"{\inhighlight{Grouped}\diffspace{inshl}\inhighlight{words}}")
+
+    def test_adjacent_changes_connect_without_coloring_unchanged_neighbors(self):
+        old, new = diff.word_level_render("Stable old phrase stays.", "Stable new words stays.")
+        self.assertEqual(old, r"Stable \delhighlight{old}\diffspace{delhl}\delhighlight{phrase} stays. ")
+        self.assertEqual(new, r"Stable \inhighlight{new}\diffspace{inshl}\inhighlight{words} stays. ")
+        _, single = diff.word_level_render("Stable old stays.", "Stable new stays.")
+        self.assertNotIn(r"\diffspace", single)
+
+    def test_soft_source_lines_connect_but_paragraph_boundaries_do_not(self):
+        _, new = diff.word_level_render("", "First line\nsecond line.\n\nNext paragraph.")
+        self.assertIn("\\inhighlight{line}\\diffspace{inshl}%\n\\inhighlight{second}", new)
+        self.assertIn("\\inhighlight{line.} \n\n\\inhighlight{Next}", new)
+
+    def test_parentheses_and_punctuation_are_inside_highlights_including_math_and_citations(self):
+        phrase = r"(\textit{orderless NADE})"
+        old, new = diff.word_level_render(phrase, "")
+        self.assertEqual(new, "")
+        self.assertEqual(old.strip(), r"\delhighlight{(}\textit{\delhighlight{orderless}\diffspace{delhl}\delhighlight{NADE}}\delhighlight{)}")
+        _, new = diff.word_level_render("", phrase + ",")
+        self.assertIn(r"\inhighlight{(}", new)
+        self.assertTrue(new.endswith(r"\inhighlight{),} "))
+        _, math = diff.word_level_render("", "($x = 1$).")
+        self.assertIn(r"\diffinline{inshl}{(\ensuremath{x = 1}).}", math)
+        _, compact_math = diff.word_level_render("", "($x$),")
+        self.assertEqual(compact_math.strip(), r"\diffinline{inshl}{(\ensuremath{x}),}")
+        same, _ = diff.word_level_render("($x$),", "($x$),")
+        self.assertEqual(same.strip(), "($x$),")
+        _, cite = diff.word_level_render("", r"(\parencite{source}),")
+        self.assertIn(r"\diffinline{inshl}{(\parencite{source}),}", cite)
+
+    def test_adjacent_inline_formulas_keep_separate_math_boxes(self):
+        _, new = diff.word_level_render("", "$x = 1$ $y = 2$")
+        self.assertEqual(new.count(r"\diffinline{inshl}"), 2)
+        self.assertIn(r"\ensuremath{x = 1}", new)
+        self.assertIn(r"\ensuremath{y = 2}", new)
+
+    def test_source_paragraph_settings_are_preserved_without_forced_ragged_alignment(self):
+        template = r"""\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\begin{document}
+\doublespacing
+\end{document}"""
+        with patch.object(diff, "find_git_path", return_value="main.tex.template"), \
+             patch.object(diff, "get_git_content", return_value=template):
+            formatting = diff.extract_section_formatting("ref")
+        for line in template.splitlines():
+            if not line.startswith((r"\begin", r"\end")):
+                self.assertIn(line, formatting)
+        rendered = diff.render_sections(r"\section{A}" + "\nJustified paragraph.",
+                                        r"\section{A}" + "\nJustified paragraph.")
+        self.assertNotIn(r"\raggedright", rendered)
+        # Alignment explicitly chosen in the source is still kept.
+        signature = r"\begin{minipage}{0.48\textwidth}\raggedright Original signature.\end{minipage}"
+        self.assertIn(signature, diff.render_sections(signature, signature))
 
 
 if __name__ == "__main__":

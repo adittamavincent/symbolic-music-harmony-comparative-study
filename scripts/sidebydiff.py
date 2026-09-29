@@ -66,14 +66,12 @@ def resolve_git_ref(ref):
 
 
 def clean_latex_for_diff(text, class_source=None):
-    """Remove page commands while preserving source wording and local formatting."""
+    """Preserve source page boundaries, wording, and local formatting."""
     text = replace_title_page(text, class_source)
     text = re.sub(r'(?<!\\)%.*', '', text)
-    text = re.sub(r'\\newpage\b', '', text)
-    text = re.sub(r'\\clearpage\b', '', text)
-    # Preserve the cover's font scope without forcing a standalone page.
+    # The renderer handles page boundaries outside the comparison columns.
     text = text.replace(r"\begin{titlepage}", r"\begingroup")
-    text = text.replace(r"\end{titlepage}", r"\endgroup")
+    text = text.replace(r"\end{titlepage}", "\\endgroup\n\\newpage")
     text = re.sub(r'\\vfill\b|\\vspace\*\{\\fill\}', '', text)
     # A source page number must not reset the comparison's page counter.
     text = re.sub(r'\\setcounter\{page\}\{[^{}]*\}', '', text)
@@ -141,6 +139,10 @@ def extract_section_formatting(ref):
         line_strip = line.strip()
         if any(pat in line_strip for pat in ["\\thesection", "\\titleformat{\\section}", "\\titleformat{\\subsection}", "\\titleformat{\\subsubsection}", "\\renewcommand{\\figurename}", "\\renewcommand{\\tablename}"]):
             commands.append(line_strip)
+        elif re.match(r'\\(?:tolerance|emergencystretch|hyphenpenalty|exhyphenpenalty)\s*=', line_strip):
+            commands.append(line_strip)
+        elif line_strip in (r"\doublespacing", r"\onehalfspacing", r"\singlespacing"):
+            commands.append(line_strip)
     chapter_definition = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', content)
     if chapter_definition:
         body, _ = read_braced_argument(content, chapter_definition.end())
@@ -181,13 +183,17 @@ def build_full_proposal(ref):
 
     # Keep chapter headings from the template in their original input order.
     template_body = template.split(r"\begin{document}", 1)[-1]
-    for match in re.finditer(r'\\input\{([^}]+)\}|\\thesischapter\{([^}]+)\}\{([^}]+)\}', template_body):
+    chapter_break = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', template)
+    chapter_body = read_braced_argument(template, chapter_break.end())[0] if chapter_break else ""
+    for match in re.finditer(r'\\input\{([^}]+)\}|\\thesischapter\{([^}]+)\}\{([^}]+)\}|\\(?:newpage|clearpage)\b', template_body):
         if match.group(1):
             name = match.group(1).strip()
             if not name.endswith(".tex"):
                 name += ".tex"
             parts.append(read_input(os.path.normpath(os.path.join(document_root, name))).strip())
         else:
+            if match.group(2) and re.search(r'\\(?:newpage|clearpage)\b', chapter_body):
+                parts.append(r"\clearpage")
             parts.append(match.group(0))
     full_text = "\n\n".join(parts)
     class_path = find_git_path(ref, "isi-proposal.cls")
@@ -302,6 +308,11 @@ def compute_diff(old_paragraphs, new_paragraphs):
 # of word-by-word) for a document that actually compiles.
 # ---------------------------------------------------------------------------
 
+DISPLAY_MATH_ENVIRONMENTS = r"(?:equation|multline|align|alignat|flalign|gather|displaymath)\*?"
+DISPLAY_MATH_START = re.compile(r'\\begin\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\[')
+DISPLAY_MATH_END = re.compile(r'\\end\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\]')
+
+
 UNSAFE_HIGHLIGHT_PATTERNS = (
     "\\\\",       # row breaks (tabularx, tikz) -- illegal in restricted h-mode
     "\\begin",
@@ -348,6 +359,10 @@ def tokenize_words(text):
             inside a display math environment, so every emitted token is
             individually brace-balanced and math-balanced.
     """
+    # Keep compact environment wrappers separate from visible heading words.
+    # Include begin arguments so highlights cannot replace an environment's size.
+    text = re.sub(r'\\begin\{[^{}]+\}(?:\[[^\]]*\])?(?:\{[^{}]*\})*|\\end\{[^{}]+\}|\\(?:begingroup|endgroup)\b',
+                  lambda match: " " + match.group(0) + " ", text)
     # Build a flat stream of ('W', word) / ('NL', None) first.
     stream = []
     lines = text.split("\n")
@@ -355,10 +370,9 @@ def tokenize_words(text):
         if idx > 0:
             stream.append(("NL", None))
         for word in line.split():
-            parts = re.split(r'(\$.*?\$)', word)
-            for part in parts:
-                if part:
-                    stream.append(("W", part))
+            # Keep attached punctuation with inline math; splitting ($x$)
+            # into three words invents spaces next to the parentheses.
+            stream.append(("W", word))
 
     merged = []
     buf = []
@@ -382,7 +396,7 @@ def tokenize_words(text):
             buf.append(val)
             
             # Check display math start/end
-            if any(env in val for env in ["\\begin{equation}", "\\begin{multline}", "\\begin{align}", "\\begin{gather}", "\\["]):
+            if DISPLAY_MATH_START.search(val):
                 display_math = True
             
             # Count unescaped braces
@@ -395,7 +409,7 @@ def tokenize_words(text):
             if unescaped_dollars % 2 != 0:
                 math_mode = not math_mode
                 
-            if any(env in val for env in ["\\end{equation}", "\\end{multline}", "\\end{align}", "\\end{gather}", "\\]"]):
+            if DISPLAY_MATH_END.search(val):
                 display_math = False
                 
             if brace_balance <= 0 and not math_mode and not display_math:
@@ -449,11 +463,14 @@ def is_safe_to_highlight_token(val, is_math=False, is_box=False):
 def classify_token_style(style, val):
     if not style:
         return None
+    # Display math needs a block background, preserving AMS layout and row breaks.
+    if DISPLAY_MATH_START.search(val) and DISPLAY_MATH_END.search(val):
+        return style + "_display"
     val_strip = val.strip()
     val_clean = re.sub(r'[\.,;\?!\)]+$', '', val_strip)
     val_clean = re.sub(r'^\(', '', val_clean)
     
-    if re.match(r'^\$(.*)\$$', val_clean):
+    if re.match(r'^\$([^$]*)\$$', val_clean):
         if is_safe_to_highlight_token(val, is_math=True):
             return style + "_math"
         return None
@@ -475,11 +492,37 @@ def classify_token_style(style, val):
     return None
 
 
+def highlight_prose(text, command):
+    """Paint words and their connecting glue inside the source formatting."""
+    parts = []
+    pos = 0
+    formatting = re.compile(r'\\(?:textit|textbf|emph|underline|texttt)\{|(?<!\\)\{')
+    color = "delhl" if command == "delhighlight" else "inshl"
+
+    def paint_words(plain):
+        return "".join(f"\\diffspace{{{color}}}" if piece.isspace() else f"\\{command}{{{piece}}}"
+                       for piece in re.split(r'(\s+)', plain) if piece)
+
+    while match := formatting.search(text, pos):
+        parts.append(paint_words(text[pos:match.start()]))
+        content, end = read_braced_argument(text, match.end() - 1)
+        parts.append(text[match.start():match.end()] + highlight_prose(content, command) + "}")
+        pos = end
+    parts.append(paint_words(text[pos:]))
+    return "".join(parts)
+
+
 def apply_highlight(style, text):
     if not style:
         return text + " "
     
     color = "delhl" if style.startswith("delhl") else "inshl"
+    if style.endswith("_display"):
+        return f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}\n"
+    if style.endswith("_text"):
+        hl_cmd = "delhighlight" if color == "delhl" else "inhighlight"
+        # Parentheses and punctuation belong to the changed text as well.
+        return highlight_prose(text.strip(), hl_cmd) + " "
     val_strip = text.strip()
     punc_start = ""
     if val_strip.startswith("("):
@@ -507,18 +550,14 @@ def apply_highlight(style, text):
             )
             
     if style.endswith("_box"):
-        return f"{punc_start}\\colorbox{{{color}}}{{{val_strip}}}{punc_end} "
+        return f"\\diffinline{{{color}}}{{{punc_start}{val_strip}{punc_end}}} "
             
     if style.endswith("_math"):
-        math_pattern = r'^\$(.*)\$$'
+        math_pattern = r'^\$([^$]*)\$$'
         match = re.match(math_pattern, val_strip)
         if match:
             content = match.group(1)
-            return f"{punc_start}\\colorbox{{{color}}}{{\\ensuremath{{{content}}}}}{punc_end} "
-            
-    if style.endswith("_text"):
-        hl_cmd = "delhighlight" if color == "delhl" else "inhighlight"
-        return f"{punc_start}\\{hl_cmd}{{{val_strip}}}{punc_end} "
+            return f"\\diffinline{{{color}}}{{{punc_start}\\ensuremath{{{content}}}{punc_end}}} "
         
     return text + " "
 
@@ -531,6 +570,22 @@ def word_level_render(old_text, new_text):
     -- everything matching stays plain text on BOTH sides, exactly like
     VSCode's inline word diff.
     """
+    # A matched heading is a container, not one changed word. Compare its
+    # title separately so formatting changes do not color its unchanged
+    # wording or automatically generated section number.
+    heading_pattern = r'^(\s*\\(section|subsection|subsubsection)\*?(?:\[[^\]]*\])?)\{'
+    old_heading = re.match(heading_pattern, old_text)
+    new_heading = re.match(heading_pattern, new_text)
+    if old_heading and new_heading and old_heading.group(2) == new_heading.group(2):
+        old_title, old_end = read_braced_argument(old_text, old_heading.end() - 1)
+        new_title, new_end = read_braced_argument(new_text, new_heading.end() - 1)
+        left_title, right_title = word_level_render(old_title, new_title)
+        left_body, right_body = word_level_render(old_text[old_end:], new_text[new_end:])
+        return (
+            old_heading.group(1) + "{" + left_title.rstrip() + "}" + left_body,
+            new_heading.group(1) + "{" + right_title.rstrip() + "}" + right_body,
+        )
+
     old_tokens = tokenize_words(old_text)
     new_tokens = tokenize_words(new_text)
     ops = compute_diff(old_tokens, new_tokens)
@@ -573,8 +628,11 @@ def word_level_render(old_text, new_text):
         cur_style, val = actions[0]
         cur_list = [val]
         for style, val in actions[1:]:
-            if (style == cur_style and val != "\n" and cur_list[-1] != "\n"
-                    and not (style and style.endswith("_box"))):
+            # Keep highlighted tokens separate so ordinary inter-word glue can
+            # stretch and break under the source's justification settings. A
+            # long soul run otherwise overflows with \emergencystretch=\maxdimen.
+            if (style is None and cur_style is None
+                    and val != "\n" and cur_list[-1] != "\n"):
                 cur_list.append(val)
             else:
                 merged.append((cur_style, " ".join(cur_list)))
@@ -588,48 +646,100 @@ def word_level_render(old_text, new_text):
 
     def render_merged(runs):
         parts = []
-        for style, val in runs:
+        joined_newlines = set()
+
+        def inline_color(style):
+            if style and style.endswith(("_text", "_math", "_box")):
+                return "delhl" if style.startswith("delhl") else "inshl"
+            return None
+
+        for index, (style, val) in enumerate(runs):
             if val == "\n":
-                parts.append("\n")
+                parts.append("%\n" if index in joined_newlines else "\n")
             else:
-                parts.append(apply_highlight(style, val))
+                rendered = apply_highlight(style, val)
+                color = inline_color(style)
+                following = index + 1
+                if following < len(runs) and runs[following][1] == "\n":
+                    following += 1
+                if (color and following < len(runs)
+                        and color == inline_color(runs[following][0])):
+                    # Leaders paint the entire justified space and disappear
+                    # at a line break; they never box the surrounding phrase.
+                    rendered = rendered.removesuffix(" ") + f"\\diffspace{{{color}}}"
+                    if following == index + 2:
+                        joined_newlines.add(index + 1)
+                parts.append(rendered)
         return "".join(parts)
 
     return render_merged(old_merged), render_merged(new_merged)
 
 
+PAGE_BREAK = re.compile(r'\\(?:newpage|clearpage)\b')
+
+
+def frontmatter_identity(text):
+    """Match source roles independently of a visible heading or its TeX styling."""
+    plain = re.sub(r'\\(?:begin|end)\{[^{}]*\}', '', text)
+    plain = re.sub(r'\\[a-zA-Z]+\*?', '', plain)
+    plain = re.sub(r'[{}]', '', plain).casefold()
+    if re.search(r'^\s*abstrak\s*$|\bkata kunci\s*:', plain, re.MULTILINE):
+        return ("frontmatter", "abstract-id")
+    if re.search(r'^\s*abstract\s*$|\bkeywords\s*:', plain, re.MULTILINE):
+        return ("frontmatter", "abstract-en")
+    if "halaman pengesahan" in plain:
+        return ("frontmatter", "approval")
+    if r"\begingroup" in text and ("skripsi" in plain or "cover" in plain):
+        return ("frontmatter", "cover")
+    return None
+
+
 def split_sections(content):
-    """Use existing headings as anchors; retain front matter without naming it."""
-    boundaries = list(re.finditer(
-        r'^\s*\\(?:section|subsection|subsubsection)\*?\{[^\n]*|^\s*\\thesischapter\{[^\n]*',
-        content, re.MULTILINE,
-    ))
+    """Parse source pages and headings, keeping front-matter roles separate."""
     sections = []
-    chapter = ""
     parent = ""
     subsection = ""
-    start = 0
-    key = ("frontmatter",)
-    for match in boundaries:
-        if content[start:match.start()].strip():
-            sections.append((key, content[start:match.start()].strip()))
-        heading = match.group(0).strip()
-        if heading.startswith(r"\thesischapter"):
-            chapter = heading
-            parent = subsection = ""
-            key = ("chapter", chapter)
-        elif heading.startswith(r"\section"):
-            parent = heading
-            subsection = ""
-            key = ("section", parent)
-        elif heading.startswith(r"\subsection"):
-            subsection = heading
-            key = ("subsection", parent, subsection)
-        else:
-            key = ("subsubsection", parent, subsection, heading)
-        start = match.start()
-    if content[start:].strip():
-        sections.append((key, content[start:].strip()))
+    continuation = ("frontmatter",)
+    pending_break = ""
+    # Keep page commands as metadata on the next block, never as displayed text.
+    source_pages = PAGE_BREAK.split(content)
+    source_breaks = PAGE_BREAK.findall(content)
+    for page_index, page in enumerate(source_pages):
+        if page_index:
+            pending_break = source_breaks[page_index - 1]
+        boundaries = list(re.finditer(
+            r'^\s*\\(?:section|subsection|subsubsection)\*?\{[^\n]*|^\s*\\thesischapter\{[^\n]*',
+            page, re.MULTILINE,
+        ))
+        start = 0
+        key = frontmatter_identity(page[:boundaries[0].start()] if boundaries else page) or continuation
+
+        def append(end):
+            nonlocal pending_break
+            text = page[start:end].strip()
+            if text:
+                sections.append((key, (pending_break + "\n" + text).strip()))
+                pending_break = ""
+
+        for match in boundaries:
+            append(match.start())
+            heading = match.group(0).strip()
+            if heading.startswith(r"\thesischapter"):
+                parent = subsection = ""
+                key = ("chapter", heading)
+            elif heading.startswith(r"\section"):
+                parent = heading
+                subsection = ""
+                key = frontmatter_identity(heading) or ("section", parent)
+            elif heading.startswith(r"\subsection"):
+                subsection = heading
+                key = ("subsection", parent, subsection)
+            else:
+                key = ("subsubsection", parent, subsection, heading)
+            start = match.start()
+        append(len(page))
+        if sections:
+            continuation = sections[-1][0]
     return sections
 
 
@@ -679,16 +789,24 @@ def render_section_text(old_text, new_text):
 
 
 def render_sections(old_full, new_full):
-    """Flow columns across pages, aligning only at source section boundaries."""
+    """Align source sections and honor a page boundary requested by either side."""
     out = [r"\begin{paracol}{2}"]
+    has_content = False
     for old_text, new_text in align_sections(split_sections(old_full), split_sections(new_full)):
-        left, right = render_section_text(old_text, new_text)
+        if has_content and (PAGE_BREAK.search(old_text) or PAGE_BREAK.search(new_text)):
+            out.extend([r"\end{paracol}", r"\newpage", r"\begin{paracol}{2}"])
+        left, right = render_section_text(PAGE_BREAK.sub('', old_text).strip(),
+                                          PAGE_BREAK.sub('', new_text).strip())
         out.extend([
-            r"\begin{leftside}\raggedright", left, r"\par\end{leftside}",
-            r"\switchcolumn", r"\begin{rightside}\raggedright", right,
+            r"\begin{leftside}", left, r"\par\end{leftside}",
+            r"\switchcolumn", r"\begin{rightside}", right,
             r"\par\end{rightside}", r"\switchcolumn*",
         ])
+        has_content = True
     out.append(r"\end{paracol}")
+    # A trailing source break still precedes the bibliography.
+    if re.search(r'\\(?:newpage|clearpage)\s*$', old_full.strip()) or re.search(r'\\(?:newpage|clearpage)\s*$', new_full.strip()):
+        out.append(r"\newpage")
     return "\n".join(out)
 
 
@@ -1026,12 +1144,11 @@ def generate_diff_latex(tag1, tag2, outdir):
 
     latex = [
         r"\documentclass{isi-proposal}",
-        r"\geometry{a3paper, margin=2cm}", # Set to A3 with generous margins
+        r"\geometry{a3paper,landscape}", # Two A4 page areas; inherit the source class margins
         r"\usepackage{tikz}",
         r"\usetikzlibrary{shapes.geometric, arrows}",
         r"\usepackage{paracol}",
         r"\usepackage{xurl}",
-        r"\usepackage{microtype}",
         r"\usepackage{etoolbox}",
         r"\usepackage[most]{tcolorbox}",
         # Define diff colors early so defbibenvironment can reference them
@@ -1039,6 +1156,9 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\definecolor{inshl}{RGB}{204,244,206}",
         r"\definecolor{deltext}{RGB}{180,0,0}",
         r"\definecolor{instext}{RGB}{0,120,0}",
+        r"\newcommand{\diffinline}[2]{{\setlength{\fboxsep}{0pt}\colorbox{#1}{\strut #2}}}",
+        # No inset or added caption: retain the source equation's usable width.
+        r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",
         rf"\addbibresource{{{bib_filename1}}}",
         rf"\addbibresource{{{bib_filename2}}}",
         r"\AtEveryBibitem{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
@@ -1121,12 +1241,19 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\soulregister{\citeauthor}{1}",
         r"\soulregister{\citeyear}{1}",
         r"\soulregister{\texttt}{1}",
+        # Words and connecting spaces share the current font's strut bounds.
+        # An explicit legal break before the leaders retains normal wrapping
+        # even with the source's extremely large emergency stretch.
+        r"\makeatletter",
+        r"\def\SOUL@hlpreamble{\SOUL@uldp=\dp\strutbox\SOUL@ulht=\ht\strutbox\let\SOUL@ulcolor\SOUL@hlcolor\spaceskip\SOUL@spaceskip}",
+        r"\newcommand{\diffspace}[1]{{\color{#1}\penalty0\leaders\hrule height\ht\strutbox depth\dp\strutbox\hskip\fontdimen2\font plus\fontdimen3\font minus\fontdimen4\font}}",
+        r"\makeatother",
         r"\sethlcolor{delhl}",
         r"\newcommand{\delhighlight}[1]{{\sethlcolor{delhl}\hl{#1}}}",
         r"\newcommand{\inhighlight}[1]{{\sethlcolor{inshl}\hl{#1}}}",
         r"\begin{document}",
         r"\thispagestyle{empty}",
-        r"\setlength{\columnsep}{0.8cm}",
+        r"\setlength{\columnsep}{\dimexpr\paperwidth-\textwidth\relax}",
         r"\setlength{\columnseprule}{0.3pt}",
         r"\begin{paracol}{2}",
         rf"\noindent\texttt{{{tag1}}}",
