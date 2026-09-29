@@ -17,6 +17,7 @@ Run commands from the repository root.
 | Build the current final-thesis v3 draft | `make thesis` |
 | Build the current proposal | `make proposal` |
 | Build all proposal documents | `make proposal-phase` |
+| Build all current document PDFs | `make all` |
 | Build presenter notes, including slides | `make notes` |
 | Force LaTeX to rebuild | `make thesis FORCE=1` |
 | Force metadata substitution too | `make -B thesis` |
@@ -188,12 +189,15 @@ The build flow is `.env.local + .tex.template → generated .tex → latexmk/Bib
 | `make proposal-phase` | All four proposal PDFs |
 | `make thesis` | `scratch/thesis.pdf` |
 | `make final-phase` | Thesis PDF only |
+| `make all` | All four proposal PDFs and the thesis PDF |
 
-Aliases: `make docs` means `make proposal-phase`; `make compile` means `make proposal`; `make present` means `make slides`. Bare `make` prints help.
+Aliases: `make docs` means `make proposal-phase`; `make compile` means `make proposal`; `make present` means `make slides`. Bare `make` builds all current document PDFs; `make help` lists commands.
 
 Templates regenerate when their template or `.env.local` changes. Every document target performs a fresh `latexmk`/Biber build. If generated metadata looks stale, use `make -B thesis` to rerun substitution as well as compilation. `FORCE=1` forces LaTeX compilation but does not itself force substitution.
 
 Make builds compile in temporary directories and publish only successful PDFs to `scratch/`. Saved proposals and diffs also stage their generated TeX, bibliography, and assets temporarily. Temporary files are removed after the build. Failed builds preserve a named `.log` in `scratch/` and leave the previous successful PDF intact. Presenter notes read `scratch/presentation.pdf` after building slides. Generated current entry-point `.tex` files remain beside their templates.
+
+The shared builder adds embedded PDF bookmarks to current documents, saved proposals, and diffs, and requests the outline panel when opening in a supporting viewer. It loads `scripts/pdf-navigation.sty` in a temporary source copy, preserving the original source and historical Git snapshots. Slides and presenter notes define bookmarks for each slide; Q&A includes its unnumbered section headings.
 
 The VS Code on-save recipe still invokes `latexmk` directly with its editor configuration. Use Make for the temporary-file cleanup and `scratch/` output workflow; run Make again after changing metadata.
 

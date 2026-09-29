@@ -61,6 +61,7 @@
 
 % --- Slide 1 ---
 \begin{frame}[plain,c]
+\pdfbookmark[0]{Pembukaan \& Judul}{slide.1}
   \begin{center}
     \includegraphics[height=1.5cm]{../assets/logo-isi-white.png} \par \vspace{0.2cm}
     {\rmfamily\large\textbf{\textcolor{GoldAmber}{EVALUASI KEPATUHAN HARMONI FUNGSIONAL}} \par \vspace{0.1cm}
@@ -78,6 +79,7 @@
 
 % --- Slide 2 ---
 \begin{frame}{Latar Belakang \& Gap}
+\pdfbookmark[0]{Latar Belakang \& Gap}{slide.2}
   Evaluasi model AI musik selama ini didominasi dua pendekatan: \par \vspace{0.2cm}
 
   \begin{columns}[T]
@@ -109,6 +111,7 @@
 
 % --- Slide 3 ---
 \begin{frame}{Rumusan Masalah \& Tujuan}
+\pdfbookmark[0]{Rumusan Masalah \& Tujuan}{slide.3}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \textbf{\textcolor{SlateBlue}{RUMUSAN MASALAH}} \par \vspace{0.3cm}
@@ -128,6 +131,7 @@
 
 % --- Slide 4 ---
 \begin{frame}{Tinjauan Pustaka}
+\pdfbookmark[0]{Tinjauan Pustaka}{slide.4}
   \textbf{\textcolor{GoldAmber}{Hadjeres et al. (2017)}}: \textbf{DeepBach, ICML} \par
   \footnotesize Model generasi koral SATB berbasis LSTM. Titik awal komparatif historis dan preseden conditioning berbasis tensor. \par
   \vspace{0.05cm}
@@ -146,6 +150,7 @@
 
 % --- Slide 5 ---
 \begin{frame}{Landasan Teori}
+\pdfbookmark[0]{Landasan Teori}{slide.5}
   \textbf{\textcolor{SlateBlue}{Teori Harmoni Fungsional Gustav Strube (1928)}} \par \vspace{0.4cm}
 
   \begin{columns}[T]
@@ -181,6 +186,7 @@
 
 % --- Slide 6 ---
 \begin{frame}{Metode Penelitian}
+\pdfbookmark[0]{Metode Penelitian}{slide.6}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \footnotesize
@@ -215,6 +221,7 @@
 
 % --- Slide 7 ---
 \begin{frame}{Desain Eksperimen: 4 Kondisi}
+\pdfbookmark[0]{Desain Eksperimen: 4 Kondisi}{slide.7}
   \renewcommand{\arraystretch}{1.2}
   \begin{tabularx}{\textwidth}{l l X}
     \textbf{Kondisi} & \textbf{Label} & \textbf{Deskripsi} \\
@@ -235,6 +242,7 @@
 
 % --- Slide 8 ---
 \begin{frame}{Instrumen Evaluasi \& Validasi}
+\pdfbookmark[0]{Instrumen Evaluasi \& Validasi}{slide.8}
   \begin{columns}[T]
     \begin{column}{0.4\textwidth}
       \footnotesize
@@ -268,6 +276,7 @@
 
 % --- Slide 9 ---
 \begin{frame}{Output yang Diharapkan}
+\pdfbookmark[0]{Output yang Diharapkan}{slide.9}
   \begin{columns}[c]
     \begin{column}{0.3\textwidth}
       \begin{center}
@@ -297,6 +306,7 @@
 
 % --- Slide 10 ---
 \begin{frame}{Penutup \& Tanya Jawab}
+\pdfbookmark[0]{Penutup \& Tanya Jawab}{slide.10}
   Penelitian ini akan menjawab: \par \vspace{0.2cm}
 
   \textbf{1.} Seberapa patuh output DeepBach, Coconet, dan NotaGen terhadap 3 kaidah Strube di masing-masing kondisi? \par \vspace{0.2cm}

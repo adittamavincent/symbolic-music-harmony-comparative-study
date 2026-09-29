@@ -17,7 +17,7 @@ class PdfBuildTests(unittest.TestCase):
         self.root = Path(self.tmp.name).resolve()
         self.source = self.root / "docs/proposal-phase/proposal/main.tex"
         self.source.parent.mkdir(parents=True)
-        self.source.write_text("source")
+        self.source.write_text("\\documentclass{article}\n\\begin{document}\nsource\n\\end{document}\n")
         self.pdf = self.root / "scratch/proposal.pdf"
         self.patch = patch.object(build_pdf, "ROOT", self.root)
         self.patch.start()
@@ -31,6 +31,11 @@ class PdfBuildTests(unittest.TestCase):
             (output / "main.log").write_text("compiler log")
             self.assertEqual(kwargs["cwd"], self.source.parent)
             self.assertIn(str(self.pdf.parent), kwargs["env"]["TEXINPUTS"])
+            self.assertIn(str(self.root / "scripts"), kwargs["env"]["TEXINPUTS"])
+            staged = Path(command[-1])
+            self.assertEqual(staged.parent, output)
+            self.assertIn("\\usepackage{pdf-navigation}\n\\begin{document}", staged.read_text())
+            self.assertNotIn("pdf-navigation", self.source.read_text())
             return subprocess.CompletedProcess(command, code, "", "")
         return run
 

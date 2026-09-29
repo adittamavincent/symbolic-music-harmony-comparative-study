@@ -46,13 +46,16 @@ endif
         thesis final-phase thesis-slides \
         diff diff-clean aux-clean clean clean-docs
 
-all: help
+all: proposal-phase final-phase
 
 help:
 	@printf "%s\n" \
 		"==================================================================" \
 		"  Strube Harmonic Evaluation Framework & LaTeX Document Suite" \
 		"==================================================================" \
+		"" \
+		"  make all             Build seluruh PDF proposal dan skripsi final" \
+		"  make help            Tampilkan daftar perintah" \
 		"" \
 		"🔬 PIPELINE RISET & EKSPERIMEN:" \
 		"  make setup           Bootstrap dependensi model (DeepBach, NotaGen, Coconet)" \

@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{setspace}
+\usepackage[unicode,hidelinks]{hyperref}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -24,6 +25,7 @@
 \Large
 
 % Slide 1
+\pdfbookmark[0]{Slide 1: Pembukaan \& Judul}{notes.slide.1}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=1]{presentation.pdf}}
@@ -34,6 +36,7 @@
 \vfill\newpage
 
 % Slide 2
+\pdfbookmark[0]{Slide 2: Latar Belakang \& Gap}{notes.slide.2}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=2]{presentation.pdf}}
@@ -44,6 +47,7 @@
 \vfill\newpage
 
 % Slide 3
+\pdfbookmark[0]{Slide 3: Rumusan Masalah \& Tujuan}{notes.slide.3}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=3]{presentation.pdf}}
@@ -54,6 +58,7 @@
 \vfill\newpage
 
 % Slide 4
+\pdfbookmark[0]{Slide 4: Tinjauan Pustaka}{notes.slide.4}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=4]{presentation.pdf}}
@@ -64,6 +69,7 @@
 \vfill\newpage
 
 % Slide 5
+\pdfbookmark[0]{Slide 5: Landasan Teori}{notes.slide.5}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=5]{presentation.pdf}}
@@ -74,6 +80,7 @@
 \vfill\newpage
 
 % Slide 6
+\pdfbookmark[0]{Slide 6: Metode Penelitian}{notes.slide.6}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=6]{presentation.pdf}}
@@ -84,6 +91,7 @@
 \vfill\newpage
 
 % Slide 7
+\pdfbookmark[0]{Slide 7: Desain Eksperimen}{notes.slide.7}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=7]{presentation.pdf}}
@@ -94,6 +102,7 @@
 \vfill\newpage
 
 % Slide 8
+\pdfbookmark[0]{Slide 8: Instrumen Evaluasi \& Validasi}{notes.slide.8}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=8]{presentation.pdf}}
@@ -104,6 +113,7 @@
 \vfill\newpage
 
 % Slide 9
+\pdfbookmark[0]{Slide 9: Output yang Diharapkan}{notes.slide.9}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=9]{presentation.pdf}}
@@ -114,6 +124,7 @@
 \vfill\newpage
 
 % Slide 10
+\pdfbookmark[0]{Slide 10: Penutup \& Tanya Jawab}{notes.slide.10}
 \noindent
 \begin{center}
 \fbox{\includegraphics[width=0.8\textwidth,page=10]{presentation.pdf}}

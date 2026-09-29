@@ -125,6 +125,7 @@ class RefAndSourceTests(unittest.TestCase):
     def test_failed_compilation_rejects_existing_pdf(self):
         pdf = Path("proposal_diff.pdf")
         pdf.write_bytes(b"incomplete PDF")
+        Path("proposal_diff.tex").write_text("\\documentclass{article}\n\\begin{document}\n\\end{document}\n")
         with patch.object(diff.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, "", "")):
             self.assertIsNone(diff.latex_to_pdf("proposal_diff.tex", "."))
 

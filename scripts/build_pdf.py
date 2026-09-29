@@ -2,6 +2,7 @@
 """Compile a PDF in temporary storage and publish only a successful output."""
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -38,15 +39,25 @@ def compile_pdf(tex_path, pdf_path, force=False):
     destination.parent.mkdir(parents=True, exist_ok=True)
     failure_log = destination.with_suffix(".log")
     env = os.environ.copy()
-    search_paths = [source.parent, ROOT / "docs/proposal-phase/assets", destination.parent]
+    search_paths = [source.parent, ROOT / "scripts", ROOT / "docs/proposal-phase/assets", destination.parent]
     env["TEXINPUTS"] = os.pathsep.join(map(str, search_paths)) + os.pathsep + env.get("TEXINPUTS", "")
     with tempfile.TemporaryDirectory(prefix="latex-", dir=destination.parent) as temporary:
         work = Path(temporary)
+        # Stage the source so old Git snapshots also receive current navigation
+        # support without changing archived manuscripts or relative input paths.
+        staged_source = work / source.name
+        content = source.read_text()
+        content, count = re.subn(r'(?m)^([ \t]*)\\begin\{document\}',
+                                lambda match: r'\usepackage{pdf-navigation}' + '\n' + match.group(0),
+                                content, count=1)
+        if count != 1:
+            raise ValueError(f"No document environment found in {source}")
+        staged_source.write_text(content)
         command = ["latexmk", "-pdf", "-interaction=nonstopmode",
                    f"-auxdir={work}", f"-outdir={work}"]
         if force:
             command.append("-g")
-        result = subprocess.run(command + [source.name], cwd=source.parent,
+        result = subprocess.run(command + [str(staged_source)], cwd=source.parent,
                                 env=env, capture_output=True, text=True)
         built_pdf = work / f"{source.stem}.pdf"
         if result.returncode != 0 or not built_pdf.is_file():

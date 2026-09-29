@@ -1,0 +1,41 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pdf-navigation}[2026/09/29 PDF viewer navigation]
+
+% Loaded by the shared builder after the document's own preamble, including
+% historical sources and Beamer documents that already load hyperref.
+\@ifpackageloaded{hyperref}{}{%
+  \RequirePackage[unicode,hidelinks,hypertexnames=false]{hyperref}%
+}
+\hypersetup{hidelinks,bookmarksnumbered,bookmarksopen,
+  bookmarksopenlevel=1,pdfpagemode=UseOutlines}
+\RequirePackage{bookmark}
+\bookmarksetup{depth=3}
+
+% Numbered sections are handled by hyperref. Include unnumbered headings too,
+% placing a fresh destination after the heading (titlesec can retain an older
+% destination for a starred section).
+\@ifclassloaded{beamer}{}{%
+  % The thesis already supplies its contents and bibliography bookmarks.
+  \@ifundefined{thesischapter}{%
+    \NewCommandCopy{\PDFNavigationSection}{\section}
+    \RenewDocumentCommand{\section}{s o m}{%
+      \IfBooleanTF{#1}{%
+        \PDFNavigationSection*{#3}%
+        \phantomsection
+        \bookmark[level=\toclevel@section,dest=\@currentHref]{#3}%
+      }{%
+        \IfNoValueTF{#2}{\PDFNavigationSection{#3}}{\PDFNavigationSection[#2]{#3}}%
+      }%
+    }
+  }{}
+}
+
+% Diff markup changes appearance; PDF outline titles retain the words.
+\pdfstringdefDisableCommands{%
+  \def\delhighlight#1{#1}%
+  \def\inhighlight#1{#1}%
+  \def\diffinline#1#2{#2}%
+  \def\diffspace#1{ }%
+  \def\colorbox#1#2{#2}%
+}
+\endinput
