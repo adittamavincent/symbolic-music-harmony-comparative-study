@@ -30,6 +30,8 @@ class PdfBuildTests(unittest.TestCase):
             (output / "main.aux").write_text("aux")
             (output / "main.log").write_text("compiler log")
             self.assertEqual(kwargs["cwd"], self.source.parent)
+            # pdfTeX output can contain bytes that are not valid UTF-8.
+            self.assertEqual(kwargs["errors"], "replace")
             self.assertIn(str(self.pdf.parent), kwargs["env"]["TEXINPUTS"])
             self.assertIn(str(self.root / "scripts"), kwargs["env"]["TEXINPUTS"])
             staged = Path(command[-1])

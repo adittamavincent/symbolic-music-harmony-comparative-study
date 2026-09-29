@@ -45,8 +45,17 @@ def get_git_content(ref, path):
 
 def resolve_git_ref(ref):
     # Accept the convenient lowercase spelling without requiring a tag.
-    if ref.lower() == "head":
+    if ref.lower() in ("head", "thesis"):
+        # `thesis` names the working thesis, not a reviewed tag.
         ref = "HEAD"
+    elif ref.lower() == "proposal":
+        tags = subprocess.run(
+            ["git", "tag", "--list", "proposal/v*", "--sort=-version:refname"],
+            capture_output=True, text=True,
+        ).stdout.split()
+        if not tags:
+            raise ValueError("No proposal/v* tag found")
+        ref = tags[0]
     candidates = [ref]
     for prefix in ["thesis/", "proposal/"]:
         if not ref.startswith(prefix):
@@ -585,6 +594,13 @@ def word_level_render(old_text, new_text):
             old_heading.group(1) + "{" + left_title.rstrip() + "}" + left_body,
             new_heading.group(1) + "{" + right_title.rstrip() + "}" + right_body,
         )
+
+    # TikZ path syntax such as `\node (a) [style] {...};` breaks when any
+    # token is wrapped in a highlight macro, so mark the whole block instead.
+    if "\\begin{tikzpicture}" in old_text or "\\begin{tikzpicture}" in new_text:
+        def block(color, text):
+            return f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}\n" if text else ""
+        return block("delhl", old_text), block("inshl", new_text)
 
     old_tokens = tokenize_words(old_text)
     new_tokens = tokenize_words(new_text)

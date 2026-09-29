@@ -70,6 +70,12 @@ class RefAndSourceTests(unittest.TestCase):
         self.assertEqual(diff.resolve_git_ref("v1"), "proposal/v1")
         self.assertEqual(diff.resolve_git_ref("v3"), "thesis/v3")
 
+    def test_phase_names_resolve_to_latest_proposal_and_head(self):
+        self.git("tag", "proposal/v10", "HEAD~1")
+        self.assertEqual(diff.resolve_git_ref("proposal"), "proposal/v10")
+        # A thesis tag exists here, yet `thesis` still means the current commit.
+        self.assertEqual(diff.resolve_git_ref("thesis"), self.sha)
+
     def test_invalid_ref_fails(self):
         with self.assertRaisesRegex(ValueError, "Unknown Git ref"):
             diff.resolve_git_ref("missing-ref")
@@ -181,6 +187,14 @@ class RefAndSourceTests(unittest.TestCase):
         old, new = diff.word_level_render("Old text.", "Fang et al.\\ \\parencite{source} text.")
         self.assertIn("al.\\ ", new)
         self.assertNotIn("al.\\}", new)
+
+    def test_changed_tikz_picture_is_highlighted_as_one_block(self):
+        picture = "\\begin{tikzpicture}\n\\node (%s) [process] {Step};\n\\end{tikzpicture}"
+        old, new = diff.word_level_render(picture % "start", picture % "dev")
+        self.assertEqual(old, "\\begin{diffmath}{delhl}\n" + picture % "start" + "\n\\end{diffmath}\n")
+        self.assertEqual(new, "\\begin{diffmath}{inshl}\n" + picture % "dev" + "\n\\end{diffmath}\n")
+        old, new = diff.word_level_render(picture % "start", "")
+        self.assertEqual(new, "")
 
 
 class SectionRenderingTests(unittest.TestCase):

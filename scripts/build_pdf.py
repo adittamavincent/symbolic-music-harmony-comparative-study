@@ -57,8 +57,11 @@ def compile_pdf(tex_path, pdf_path, force=False):
                    f"-auxdir={work}", f"-outdir={work}"]
         if force:
             command.append("-g")
+        # TeX logs are not guaranteed UTF-8: pdfTeX writes 8-bit bytes and
+        # line wrapping can split multibyte characters.
         result = subprocess.run(command + [str(staged_source)], cwd=source.parent,
-                                env=env, capture_output=True, text=True)
+                                env=env, capture_output=True, text=True,
+                                errors="replace")
         built_pdf = work / f"{source.stem}.pdf"
         if result.returncode != 0 or not built_pdf.is_file():
             log = work / f"{source.stem}.log"

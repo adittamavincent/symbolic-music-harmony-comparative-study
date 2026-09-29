@@ -81,7 +81,9 @@ help:
 		"  make diff <ref1> <ref2>  Generate side-by-side diff PDF" \
 		"                           Contoh: make diff proposal/v1 proposal/v2" \
 		"                           Contoh terbaru: make diff proposal/v1 head" \
+		"                           Contoh fase: make diff proposal thesis" \
 		"                           Ref: tag, ID commit, branch, head/HEAD (commit terakhir)" \
+		"                           proposal = tag proposal/v* terbaru; thesis = head" \
 		"  make diff-clean          Hapus file artefak diff" \
 		"" \
 		"🧹 CLEANUP:" \
