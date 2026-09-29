@@ -93,6 +93,7 @@ class RefAndSourceTests(unittest.TestCase):
     def test_chapter_definition_preserves_source_wording_inside_column_environments(self):
         self.write("docs/final-thesis/thesis/main.tex.template", r"""\newcommand{\thesischapter}[2]{
 \clearpage
+\phantomsection
 \setcounter{section}{0}
 \addcontentsline{toc}{part}{BAB #1: #2}
 \begin{center}\bfseries BAB #1\par #2\end{center}
@@ -110,6 +111,7 @@ class RefAndSourceTests(unittest.TestCase):
         self.assertIn(r"\def\thesischapter##1##2{", latex)
         self.assertIn(r"BAB ##1\par ##2", latex)
         self.assertNotIn(r"\addcontentsline", latex)
+        self.assertNotIn(r"\phantomsection", latex)
         self.assertNotIn(r"\AtBeginEnvironment{leftside}", latex)
         self.assertIn(r"\setlength{\textwidth}{\linewidth}", latex)
 

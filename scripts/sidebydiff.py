@@ -146,7 +146,7 @@ def extract_section_formatting(ref):
     chapter_definition = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', content)
     if chapter_definition:
         body, _ = read_braced_argument(content, chapter_definition.end())
-        body = re.sub(r'\\clearpage\b', '', body)
+        body = re.sub(r'\\(?:clearpage|phantomsection)\b', '', body)
         body = re.sub(r'\\addcontentsline\{[^{}]*\}\{[^{}]*\}\{[^{}]*\}', '', body)
         body = re.sub(r'(?<!\\)%.*', '', body)
         commands.append(r"\def\thesischapter#1#2{" + body + "}")
