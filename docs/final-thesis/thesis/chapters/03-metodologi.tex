@@ -1,12 +1,32 @@
 \section{Metode Pendekatan}
 
-Penelitian ini menggunakan pendekatan kuantitatif komparatif. Penelitian kuantitatif menjawab pertanyaan tentang hubungan antarvariabel dengan tujuan menjelaskan, meramalkan, dan mengendalikan fenomena, sedangkan penelitian kualitatif menjawab pertanyaan tentang ciri-ciri fenomena untuk mendeskripsikan dan memahaminya dari sudut pandang partisipan \parencite{leedy2018}. Data penelitian ini berupa jumlah dan laju penandaan kaidah pada keluaran model, yang dibandingkan antar-model dan antar-\textit{conditioning level} melalui uji statistik. Karena itu, pendekatan kuantitatif sesuai dengan pertanyaan penelitian. Pemeriksaan contoh partitur pada tahap analisis berfungsi untuk menafsirkan penandaan, bukan sebagai sumber data utama.
+Penelitian ini menggunakan pendekatan kuantitatif. Penelitian kuantitatif menguji teori secara objektif dengan memeriksa hubungan antarvariabel; variabel tersebut diukur dengan instrumen sehingga data berupa angka dapat dianalisis secara statistik \parencite{creswell2018}. Data penelitian ini berupa jumlah dan laju penandaan kaidah pada keluaran model, yang dibandingkan antar-model dan antar-\textit{conditioning level} melalui uji statistik. Teori harmoni fungsional dan kaidah Strube digunakan secara deduktif: kaidah diturunkan menjadi variabel, hipotesis, dan definisi operasional sebelum data dikumpulkan.
+
+Berdasarkan jenis rumusan masalah \parencite{sugiyono2019}, pertanyaan penelitian pertama bersifat deskriptif, pertanyaan kedua bersifat komparatif, dan pertanyaan ketiga bersifat asosiatif kausal. Pada pertanyaan kedua, model dipilih oleh peneliti, bukan diberi perlakuan, sehingga perbandingannya bersifat komparatif. Pada pertanyaan ketiga, \textit{conditioning level} diberikan peneliti pada model yang sama, sehingga pengaruhnya diperiksa dengan logika eksperimen, yaitu mencari pengaruh perlakuan tertentu dalam kondisi yang dikendalikan \parencite{sugiyono2019}.
+
+Pemeriksaan contoh partitur pada tahap analisis berfungsi untuk menafsirkan penandaan, bukan sebagai sumber data utama. Pemeriksaan tersebut tidak memiliki pertanyaan, data, dan analisis kualitatif tersendiri, sehingga penelitian ini tidak menggunakan metode campuran (\textit{mixed methods}).
 
 Penelitian berlangsung dalam dua tahap. Tahap pertama membangun dan memvalidasi instrumen evaluasi otomatis berbasis music21. Tahap kedua menerapkan instrumen tersebut untuk menghasilkan temuan komparatif lintas model dan lintas kondisi instruksi.
 
-Penelitian ini diposisikan sebagai studi observasional komparatif, bukan eksperimen terkontrol penuh. Ketiga model tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan tingkat kepatuhan yang terukur antar model dapat mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara kedua penjelasan tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
+Perbandingan antar-model diposisikan sebagai studi komparatif, bukan eksperimen terkontrol penuh. Ketiga model tidak sepenuhnya setara dalam kondisi pelatihan: DeepBach dan Coconet merupakan model spesialis yang dilatih pada korpus \textit{chorale} SATB Bach ($\sim$400 karya), sementara NotaGen adalah model generalis yang dilatih pada lebih dari 1,6 juta partitur lintas genre dan dikondisikan ke tugas SATB melalui metadata teks (\texttt{instrumentation: Choir SATB}), bukan melalui \textit{fine-tuning} berbasis genre. Konsekuensinya, perbedaan tingkat kepatuhan yang terukur antar model dapat mencerminkan kombinasi dari (a) perbedaan \textit{bias} induktif arsitektur dan (b) perbedaan skala serta spesialisasi data pelatihan. Desain penelitian ini tidak memungkinkan pemisahan statistik yang bersih antara kedua penjelasan tersebut, karena tidak tersedia versi ketiga model yang dilatih pada data yang identik.
 
 Interpretasi temuan akan membahas kedua penjelasan tersebut dan tidak mengatribusikan seluruh perbedaan skor pada faktor arsitektur semata. Temuan yang dihasilkan berlaku pada model, checkpoint, dan kondisi yang diuji.
+
+\subsection{Posisi Peneliti}
+
+Posisionalitas adalah posisi peneliti dalam penelitian. Posisi ini dibentuk oleh latar belakang, keyakinan, dan pengalaman peneliti, serta dapat memengaruhi proses penelitian \parencite{holmes2020}. Pembedaan orang dalam (\textit{insider}) dan orang luar (\textit{outsider}) umumnya dibahas dalam penelitian kualitatif terhadap kelompok yang diteliti. Dwyer dan Buckle \parencite{dwyer2009} memandang kedua posisi tersebut sebagai posisi yang dapat ditempati bersamaan, bukan dua pilihan yang saling meniadakan. Penelitian ini tidak meneliti kelompok manusia. Peneliti adalah mahasiswa musik yang mempelajari harmoni Barat, sehingga berposisi sebagai orang dalam terhadap tradisi teori yang dijadikan acuan. Terhadap ketiga model, peneliti berposisi sebagai orang luar karena tidak terlibat dalam pengembangan, pelatihan, maupun evaluasi aslinya.
+
+Refleksivitas adalah pemeriksaan peneliti atas anggapan dan penilaiannya sendiri serta pengaruhnya pada proses penelitian. Jamieson et al.\ \parencite{jamieson2023} berpendapat bahwa refleksivitas juga berguna pada penelitian kuantitatif, karena mendorong peneliti menimbang setiap tahap penelitian secara lebih cermat. Pada penelitian ini, posisi peneliti dapat memengaruhi pemilihan Strube sebagai acuan, perumusan definisi operasional dan pengecualiannya, anotasi contoh validasi, pemilihan masukan generasi, pemilihan contoh partitur untuk pembahasan, dan penafsiran hasil. Pengaruh tersebut dikendalikan melalui langkah berikut:
+
+\begin{enumerate}
+    \item Kaidah, definisi operasional, kriteria sampel, dan rencana analisis ditetapkan dalam protokol sebelum data utama dikumpulkan. Setiap perubahan dicatat sebagai versi baru beserta alasannya.
+    \item Instrumen yang sama diterapkan secara otomatis pada seluruh keluaran yang memenuhi kriteria.
+    \item Keluaran model yang digunakan sebagai contoh validasi dianotasi tanpa informasi model dan kondisi asalnya. Pengajar harmoni meninjau anotasi yang diperselisihkan, dan perbedaan anotasi dicatat beserta penyelesaiannya.
+    \item Contoh partitur untuk pembahasan dipilih melalui prosedur yang ditetapkan sebelumnya, bukan berdasarkan skor yang menguntungkan.
+    \item Seluruh percobaan generasi, kegagalan, dan eksklusi dilaporkan.
+\end{enumerate}
+
+Kaidah Strube mewakili norma penulisan empat suara dalam tradisi harmoni tonal Barat. Penandaan kaidah menunjukkan ketidaksesuaian dengan norma tersebut, bukan penilaian atas nilai musikal keluaran atau atas tradisi musik lain.
 
 \section{Objek dan Subjek Penelitian}
 
@@ -61,6 +81,8 @@ DeepBach dan Coconet menerima batasan nada, sementara adaptor NotaGen menggunaka
 \subsection{Instrumen Pengukuran}
 
 Alat evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Indikator gabungan variabel terikat adalah indeks yang dinamai \textit{Strube Score} dalam kode. Indeks tersebut mengurangi satu dengan jumlah penandaan kaidah per peristiwa sopran, kemudian membatasi nilainya pada rentang nol hingga satu. Penyebutnya adalah jumlah peristiwa sopran, sehingga beberapa penandaan pada satu waktu dapat berkontribusi secara terpisah terhadap penalti. Jumlah penandaan setiap kaidah juga dicatat secara terpisah.
+
+Kaidah yang diukur bersumber dari Strube \parencite{strube1928}. Rumus pada subbab ini tidak dikutip dari Strube. Peneliti menyusunnya sebagai definisi operasional, yaitu penerjemahan kaidah ke dalam kondisi yang dapat dihitung pada data simbolik. Dalam rumus, $p_{i,t}$ adalah nomor nada MIDI suara $i$ pada peristiwa ke-$t$, interval dihitung dalam semiton, dan kelas nada dinyatakan modulo 12, sesuai representasi nada yang diolah music21 \parencite{cuthbert2010}. $K_{\text{tonic}}$ adalah kelas nada tonika, dan $L_{\text{pc}}$ adalah kelas nada \textit{leading tone}. Rumus ini menjadi spesifikasi yang dicocokkan dengan kode melalui uji perangkat lunak dan dengan penilaian musikal melalui anotasi pada subbab Validitas dan Reliabilitas Instrumen.
 
 Indeks penalti dihitung terhadap $M_{\text{total}}$, yang pada kode saat ini adalah jumlah peristiwa nada/akor sopran dengan nilai minimum satu:
 

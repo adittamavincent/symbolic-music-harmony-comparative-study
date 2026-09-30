@@ -39,6 +39,15 @@ Quant: harus ada hipotesis dan variabel
 
 The researcher also reported being unsure whether the reviewer asked for a qualitative or a quantitative design, and was asked to define the grand theory clearly.
 
+## Second set of notes (supplied 2026-09-30)
+
+The researcher supplied further points from the same review context on 2026-09-30, written in their own words. The date of the lecturer remarks and the speaker were not supplied. Summary of the researcher's wording (Indonesian):
+
+- Posisionalitas: the researcher is a music student researching music, which reads as an insider position. Insider = the group being studied; outsider = usually the researcher. How can the study avoid bias? Music research is interdisciplinary (anthropology, culture); reflexivity.
+- The reviewer asked whether the mathematical representation has a source. The formulas were written to operationalise the rules for the Python evaluator. Should they be written, omitted, or replaced by pseudocode?
+- State clearly whether the study is qualitative or quantitative, citing a common source such as Creswell or Sugiyono.
+- State the grand theory.
+
 ## Action record
 
 The interpretations below are ours. Confirm them with the lecturer where marked.
@@ -53,5 +62,9 @@ The interpretations below are ours. Confirm them with the lecturer where marked.
 | F06 | "Quant: efektivitas / peningkatan … Terhadap … Var terikat" | Quantitative questions state an independent variable's effect *terhadap* the dependent variable. This fits conditioning level, which the researcher manipulates within each model. It does not fit the model comparison, because model differences are not a manipulated cause. | Q3 asks about the effect of conditioning level on rule adherence; Q2 asks about differences between models | `01-pendahuluan.tex` I.B.2, I.C.1 | Done; confirm with lecturer |
 | F07 | "Quant: harus ada hipotesis dan variabel" | Explicit variables and hypotheses | Added III.C.1 *Variabel Penelitian* (two independent variables, one dependent variable, per-rule indicators); hypotheses in II.C.2 matched to Q2 and Q3 | `02-tinjauan-pustaka.tex` II.C, `03-metodologi.tex` III.C | Done |
 | F08 | Grand theory (reported verbally) | Grand theory: functional harmony (Western tonal harmony). Middle theory: Strube's voice-leading rules. Applied level: operational definitions measured on symbolic music. | II.B.2 opens with functional harmony, then the rules and their operationalisation | `02-tinjauan-pustaka.tex` II.B | Done; confirm with lecturer |
+| F09 | "posisionalitas … anak musik kok neliti musik … insider … outsider … refleksivitas"; music research is interdisciplinary (anthropology, culture) | The researcher is a music student measuring music against a theory tradition they study, so the reviewer asked how the researcher's insider position is kept from biasing the study. No human group is studied, so the insider/outsider pair applies to the theory tradition (insider) and to the models (outsider). | Added III.A *Posisi Peneliti*: positionality, insider/outsider, reflexivity in quantitative research, five bias controls, and the normative scope of Strube's rules | `03-metodologi.tex` III.A | Done; confirm with lecturer |
+| F10 | Mathematical formulas: source? Should they be listed, or replaced by pseudocode? | The rule comes from Strube; the formulas are the researcher's operationalisation. They define what the instrument counts, so they stay in BAB III with explicit attribution and defined notation. Pseudocode describes the implementation and belongs in an appendix after the instrument decisions in `research/protocol.md` are settled. | Added an attribution and notation paragraph before the formulas in III.C *Instrumen Pengukuran* | `03-metodologi.tex` III.C | Formula attribution done; appendix pending |
+| F11 | Qualitative or quantitative; cite a common source (Creswell or Sugiyono) | Quantitative. Q1 descriptive, Q2 comparative, Q3 causal-associative with the conditioning level as a researcher-given treatment. Score-excerpt review supports interpretation and is not a qualitative strand, so the study is not mixed methods. | III.A rewritten with `creswell2018` and `sugiyono2019` | `03-metodologi.tex` III.A | Done; confirm Sugiyono edition and pages |
+| F12 | Grand theory (repeated) | Grand, middle, and applied levels now named, plus supporting computational theory and the deductive use of theory | II.B.2 opening paragraph | `02-tinjauan-pustaka.tex` II.B.2 | Done; confirm with lecturer |
 
 Add one row per distinct request. Close a row only when the change and its evidence are linked. Record later supervisor decisions with dates; do not replace the original review note with our interpretation.

@@ -43,7 +43,7 @@ The existing quantization uses `[0.25]` as divisors, the fifth test also accepts
 
 ## Annotation and pilot
 
-Create a small deliberately varied fixture set covering each retained rule and exception. Independently label voice IDs, key/context, event location, eligible opportunity, rule, expected flag, and reason. Ask a tutor to review disputed cases. Keep original labels and record disagreements and resolutions.
+Create a small deliberately varied fixture set covering each retained rule and exception. Independently label voice IDs, key/context, event location, eligible opportunity, rule, expected flag, and reason. Ask a tutor to review disputed cases. Keep original labels and record disagreements and resolutions. When model outputs are used as validation examples, label them without seeing the model or condition that produced them (added 2026-09-30 as a researcher-bias control; see thesis III.A *Posisi Peneliti*).
 
 If binary labels and a sufficient reference set are available, compare detector flags with the human labels using false positives/negatives and precision/recall. Explain how examples were chosen. Four passing software checks and one positive Bach score do not establish instrument validity.
 

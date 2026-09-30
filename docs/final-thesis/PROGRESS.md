@@ -178,3 +178,16 @@ At the researcher's request, I.A now covers the template's four elements in pros
 4. Argument: the Strube rule basis, the adherence definition, and the teaching relevance.
 
 All Bach Doodle figures come from the full arXiv text (`huang2019`, reading ledger). The old v2 claim that the 2017 Coconet paper used music21 to count parallel motion mixed up the two Huang et al. papers: the counting is in the 2019 Bach Doodle paper.
+
+## Positionality, formulas, approach, and grand theory (2026-09-30)
+
+The researcher supplied a second set of review points (feedback F09–F12). Changes:
+
+- III.A now states a quantitative approach with Creswell and Creswell (2018) and classifies the questions with Sugiyono's descriptive, comparative, and causal-associative types. It explains why the score-excerpt review does not make the study mixed methods. The model comparison is described as comparative; the conditioning-level question follows experimental logic within each model.
+- III.A has a new *Posisi Peneliti* subsection: insider to the Western harmony tradition, outsider to the models, reflexivity in quantitative research, and five bias controls. Blind labelling of model-output validation examples was added to `research/protocol.md` as a planned control.
+- III.C *Instrumen Pengukuran* now says the formulas are the researcher's operationalisation of Strube's rules and defines $p_{i,t}$, $K_{\text{tonic}}$, and $L_{\text{pc}}$, which the formulas used without definition.
+- II.B.2 names grand, middle, and applied theory levels, the supporting computational theory, and the deductive use of theory.
+
+New bibliography entries: `creswell2018`, `sugiyono2019`, `jamieson2023`, `holmes2020`, `dwyer2009`. The three journal articles were checked against Crossref metadata and abstracts on 2026-09-30. The two books were not opened. Confirm the Creswell definition page and which Sugiyono edition the researcher uses; Sugiyono's classification of question types and definition of experimental method need page numbers from that copy. A web search for common citation practice in Indonesian music theses could not be run in this session, so the choice of Creswell and Sugiyono follows the researcher's suggestion, not a survey.
+
+Pending decision: a pseudocode appendix for the evaluator. Recommended after the instrument decisions in `research/protocol.md` (quantization, fourths in the fifth check, sounding sonorities, score denominator) are settled, so the appendix does not document behaviour that will change.
