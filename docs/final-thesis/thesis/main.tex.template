@@ -36,7 +36,7 @@
 
 % Environment Variables Macros
 % v3 title follows the v2 review; proposal builds keep THESIS_TITLE from metadata.
-\newcommand{\thesistitle}{EVALUASI MUSIK SIMBOLIK HASIL GENERASI DEEPBACH, COCONET, DAN NOTAGEN: PENGARUH \textit{CONDITIONING LEVEL} TERHADAP KEPATUHAN KAIDAH HARMONI GUSTAV STRUBE}
+\newcommand{\thesistitle}{EVALUASI MUSIK HASIL AI DEEPBACH, COCONET, DAN NOTAGEN: PENGARUH TINGKAT KENDALI TERHADAP KEPATUHAN KAIDAH STRUBE}
 \newcommand{\researchername}{${RESEARCHER_NAME}}
 \newcommand{\researchernim}{${RESEARCHER_NIM}}
 \newcommand{\institutionname}{${INSTITUTION_NAME}}

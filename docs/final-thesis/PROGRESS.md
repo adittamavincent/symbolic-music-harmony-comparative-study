@@ -191,3 +191,14 @@ The researcher supplied a second set of review points (feedback F09–F12). Chan
 New bibliography entries: `creswell2018`, `sugiyono2019`, `jamieson2023`, `holmes2020`, `dwyer2009`. The three journal articles were checked against Crossref metadata and abstracts on 2026-09-30. The two books were not opened. Confirm the Creswell definition page and which Sugiyono edition the researcher uses; Sugiyono's classification of question types and definition of experimental method need page numbers from that copy. A web search for common citation practice in Indonesian music theses could not be run in this session, so the choice of Creswell and Sugiyono follows the researcher's suggestion, not a survey.
 
 Pending decision: a pseudocode appendix for the evaluator. Recommended after the instrument decisions in `research/protocol.md` (quantization, fourths in the fifth check, sounding sonorities, score denominator) are settled, so the appendix does not document behaviour that will change.
+
+## Plain-language revision and title length (2026-09-30)
+
+The researcher reports that readers from the art school find the study hard to follow because of unexplained technical terms. Changes at the researcher's request:
+
+- I.A *Latar Belakang* rewritten for readers without a computing background. Each technical term is explained when it first appears (model generatif musik, musik simbolik, MIDI, music21, definisi operasional, tingkat kendali, the score). Architecture and sampling names (LSTM, pseudo-Gibbs and blocked Gibbs sampling, CLaMP-DPO) and "log-likelihood" were moved out of I.A; BAB II still describes them. Facts, figures, and citations are unchanged.
+- *Conditioning level* is now *tingkat kendali* throughout BAB I–III; the English term is given once in I.A and in the variable definition. The III.C synonym *tingkat keterbatasan (constraint level)* was replaced by the same term.
+- Title shortened from 18 to 15 words: *Evaluasi Musik Hasil AI DeepBach, Coconet, dan NotaGen: Pengaruh Tingkat Kendali terhadap Kepatuhan Kaidah Strube*. "Simbolik", "Generasi", "Harmoni", and "Gustav" were dropped; "AI" was added so readers know what the three names are. Confirm with the lecturer.
+- The *Posisi Peneliti* subsection became one paragraph at the end of III.A, without a heading.
+
+The rumusan masalah (I.B.1) still uses some technical terms (log-likelihood, CLaMP 2, checkpoint) and was not rewritten in this pass.

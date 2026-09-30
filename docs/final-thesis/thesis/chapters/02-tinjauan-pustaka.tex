@@ -22,7 +22,7 @@ music21 \parencite{cuthbert2010} adalah pustaka Python sumber terbuka untuk musi
 
 \subsection{Posisi Penelitian}
 
-Penelitian ini berfokus pada perbandingan keluaran model menggunakan kaidah gerak suara yang dirumuskan dari Strube. Perbandingan mencakup pengukuran tiap kaidah serta perbedaan representasi dan kendali generasi pada DeepBach, Coconet, dan NotaGen. Dibandingkan dengan analisis Bach Doodle, penelitian ini menambahkan DeepBach dan NotaGen, kaidah resolusi nada penuntun, dan perbandingan antar-\textit{conditioning level}. Berbeda dari ukuran distribusional, pengukuran ini mencatat setiap penandaan beserta lokasi musikalnya sehingga dapat diperiksa kembali pada partitur.
+Penelitian ini berfokus pada perbandingan keluaran model menggunakan kaidah gerak suara yang dirumuskan dari Strube. Perbandingan mencakup pengukuran tiap kaidah serta perbedaan representasi dan kendali generasi pada DeepBach, Coconet, dan NotaGen. Dibandingkan dengan analisis Bach Doodle, penelitian ini menambahkan DeepBach dan NotaGen, kaidah resolusi nada penuntun, dan perbandingan antar-tingkat kendali. Berbeda dari ukuran distribusional, pengukuran ini mencatat setiap penandaan beserta lokasi musikalnya sehingga dapat diperiksa kembali pada partitur.
 
 \section{Landasan Teori}
 
@@ -65,8 +65,8 @@ Hipotesis adalah jawaban sementara terhadap masalah penelitian yang kebenarannya
     $H_0$: tidak terdapat perbedaan tingkat kepatuhan terhadap kaidah Strube antara \textit{output} DeepBach, Coconet, dan NotaGen. \\
     $H_1$: terdapat perbedaan tingkat kepatuhan terhadap kaidah Strube pada sedikitnya satu model.
     \item Hipotesis untuk pertanyaan penelitian ketiga, pada setiap model: \\
-    $H_0$: \textit{conditioning level} tidak berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube. \\
-    $H_1$: \textit{conditioning level} berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube.
+    $H_0$: tingkat kendali tidak berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube. \\
+    $H_1$: tingkat kendali berpengaruh terhadap tingkat kepatuhan \textit{output} terhadap kaidah Strube.
 \end{enumerate}
 
-Kedua hipotesis dirumuskan tanpa arah karena sumber yang ditinjau belum memberikan dasar untuk memperkirakan model atau \textit{conditioning level} mana yang menghasilkan kepatuhan lebih tinggi. Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji. Hasil tersebut tidak menunjukkan bahwa perbedaan disebabkan oleh arsitektur model semata. Pada hipotesis kedua, \textit{conditioning level} diberikan oleh peneliti pada model yang sama, sehingga perbedaan antar-\textit{conditioning level} dapat dibaca sebagai pengaruh kendali tersebut pada model dan checkpoint yang diuji.
+Kedua hipotesis dirumuskan tanpa arah karena sumber yang ditinjau belum memberikan dasar untuk memperkirakan model atau tingkat kendali mana yang menghasilkan kepatuhan lebih tinggi. Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji. Hasil tersebut tidak menunjukkan bahwa perbedaan disebabkan oleh arsitektur model semata. Pada hipotesis kedua, tingkat kendali diberikan oleh peneliti pada model yang sama, sehingga perbedaan antar-tingkat kendali dapat dibaca sebagai pengaruh kendali tersebut pada model dan checkpoint yang diuji.
