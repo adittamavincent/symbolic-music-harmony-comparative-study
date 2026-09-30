@@ -202,3 +202,15 @@ The researcher reports that readers from the art school find the study hard to f
 - The *Posisi Peneliti* subsection became one paragraph at the end of III.A, without a heading.
 
 The rumusan masalah (I.B.1) still uses some technical terms (log-likelihood, CLaMP 2, checkpoint) and was not rewritten in this pass.
+
+## Literature expansion from OpenAlex (2026-09-30)
+
+At the researcher's request, BAB I–III were expanded with sources screened from the OpenAlex batch `20260930T015029093933Z`. Criteria, inclusions, and exclusions are in `research/literature/screening-2026-09-30.md`.
+
+- 24 new bibliography entries, all 2018–2026 and peer-reviewed. The chapters now cite 49 distinct keys, and all resolve in the build (48-page PDF).
+- I.A keeps the plain-language style and adds field growth, how musicians use generative models, evaluation practice, and annotation subjectivity.
+- BAB II has new subsections: *Perkembangan Model Generatif Musik Simbolik*, *Evaluasi Penggunaan Model oleh Musisi*, and *Analisis Harmoni Komputasional dan Anotasi*. The theory section adds tonal-harmony corpus evidence, a current functional-harmony theory, cultural familiarity in consonance, and suspensions as rule exceptions.
+- BAB III adds interdisciplinarity and Western-data dominance to the positionality paragraph, annotator disagreement to validation, voice separation to quality control, a rule against reading non-significant results as equivalence, and the rationale for measuring all models with one instrument.
+- Fixed bibliography errors: `le2025` fourth author is Mikaela Keller; the `Retkowski2024` arXiv ID is 2412.07948. Protected proper nouns in several existing titles.
+
+All new claims were checked against OpenAlex abstracts only. Record page or section support in the reading ledger before submission.
