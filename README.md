@@ -29,6 +29,7 @@ Run commands from the repository root.
 | Preview generation settings without loading models | `uv run python research/experiments/scripts/run_experiment.py --dry-run` |
 | Evaluate existing generated MIDI | `make eval`, then `make plot` |
 | Find known problems and cleanup priorities | Read [the maintenance audit](docs/maintenance.md) |
+| Search OpenAlex for literature | Review `research/literature/openalex_queries.json`, then run `uv run research/scripts/openalex_search.py --batch` |
 
 Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` files and PDFs are build outputs; changes made directly to them can be overwritten.
 
@@ -158,6 +159,19 @@ make setup
 This clones DeepBach and NotaGen into `research/models/`, writes Coconet's `package.json` and `run_coconet.js`, and runs `npm install` when npm is available. Re-running setup rewrites the Coconet wrapper. It does not install Python requirements or verify inference.
 
 DeepBach resources and NotaGen-X weights download on generation when missing. Coconet initializes a remote checkpoint through its Node runner. Coconet also uses DeepBach's dataset code to extract its seed. The pipeline normally runs DeepBach first.
+
+### OpenAlex literature search
+
+The tracked search plan is [research/literature/openalex_queries.json](research/literature/openalex_queries.json). Each entry states its topic, purpose, exact query, earliest year, and result limit. Edit that one file before a bulk search. Create a free key in [OpenAlex settings](https://openalex.org/settings/api) and put `OPENALEX_API_KEY=your-key` in the ignored `.env.local`, or export `OPENALEX_API_KEY` in your shell. The helper uses only Python's standard library and can also run without a key on OpenAlex's smaller keyless budget.
+
+```bash
+uv run research/scripts/openalex_search.py --batch --dry-run
+uv run research/scripts/openalex_search.py --batch
+uv run research/scripts/openalex_search.py --query "chorale generation parallel fifths" --limit 25
+uvx ruff check research/scripts/openalex_search.py research/tests/test_openalex_search.py
+```
+
+`uv run` executes the local script; `uvx` runs the Ruff quality check as an isolated tool. The bulk command saves CSV/JSONL and a manifest for each query, a deduplicated `combined.csv` with matching query IDs, and a snapshot of the query JSON in one dated directory under `research/outputs/openalex/`. It records exact key-free request URLs, retrieval times, counts, and any failed queries. Each query is capped at 1,000 records. Outputs are ignored by Git; copy any search log needed for a thesis claim into the research evidence bundle. Check the publication and the relevant passage before promoting a result to [the reading ledger](docs/final-thesis/reading-notes.csv) or the shared bibliography. The OpenAlex [agent guide](https://help.openalex.org/access/agents/) and [API quick reference](https://help.openalex.org/api/llm-quick-reference/) document query syntax and current limits.
 
 ## Editing and building documents
 

@@ -30,3 +30,9 @@ The current thesis reuses the proposal class for formatting. Department-specific
 The researcher explicitly requests no draft labels or project-status commentary in the front matter. Preserve cover, approval-page, and abstract wording unless a specific edit is requested. Track readiness in the project documentation.
 
 Versioning carries revision status. Do not add draft notices, status headings, or instructions to finish sections anywhere in the thesis. Use normal academic headings and supported prose; track incomplete work in PROGRESS.md and protocol.md.
+
+# OpenAlex literature discovery
+
+The tracked search plan is `research/literature/openalex_queries.json`. Review and update its query objects before a literature search; run the whole file with `uv run research/scripts/openalex_search.py --batch`. Use `uv run` for this local Python script and `uvx` for standalone tools such as Ruff. The script reads `OPENALEX_API_KEY` from the environment or the ignored `.env.local`, sends it in an Authorization header, and writes per-query CSV, raw JSONL, a combined deduplicated CSV, and query manifests under ignored `research/outputs/openalex/`. Never print, commit, or put the key in a URL. A keyless search has a smaller daily budget.
+
+Consult https://help.openalex.org/access/agents/ and https://help.openalex.org/api/llm-quick-reference/ when forming new queries. Use the OpenAlex API for discovery and metadata, record exact queries and retrieval dates, and check important records against publisher/DOI pages and full text before adding claims or citations. Do not treat OpenAlex citation counts or a matching title as proof that a source supports a musical or methodological claim. Keep source verification in `docs/final-thesis/reading-notes.csv` and the literature search record in the output manifest. Do not silently insert search results into the shared proposal/thesis bibliography.

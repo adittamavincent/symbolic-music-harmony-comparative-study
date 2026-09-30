@@ -9,6 +9,8 @@ This directory owns the computational research for final thesis v3. Commands bel
 | `experiments/strube_conditions.json` | Proposed condition matrix; not yet an approved comparable design |
 | `experiments/scripts/` | Model adapters, generation orchestration, evaluation, plotting |
 | `scripts/bootstrap_models.py` | Download/setup third-party implementations and write the Coconet runner |
+| `scripts/openalex_search.py` | Bounded, repeatable literature search with CSV, JSONL, and query manifest |
+| `literature/openalex_queries.json` | Tracked batch plan for literature discovery |
 | `requirements.txt` | Research Python dependencies; mostly unpinned |
 | `protocol.md` | Decisions to settle before collecting main data |
 | `models/` | Local model clones/checkpoints, ignored by Git; may not exist yet |

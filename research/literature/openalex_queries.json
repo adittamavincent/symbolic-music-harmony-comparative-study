@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "research_focus": "Evaluasi kepatuhan kaidah harmoni dan voice leading pada keluaran simbolik DeepBach, Coconet, dan NotaGen",
+  "queries": [
+    {
+      "id": "q01-evaluation-surveys",
+      "theme": "Peta metrik evaluasi musik simbolik",
+      "purpose": "Temukan tinjauan metrik dan batas hubungan metrik otomatis dengan penilaian manusia.",
+      "search": "symbolic music generation evaluation metrics survey",
+      "from_year": 2020,
+      "limit": 50
+    },
+    {
+      "id": "q02-chorale-evaluation",
+      "theme": "Evaluasi harmonisasi koral",
+      "purpose": "Temukan penelitian yang mengukur keluaran koral empat suara dan definisi unit evaluasinya.",
+      "search": "Bach chorale generation voice leading evaluation",
+      "from_year": null,
+      "limit": 50
+    },
+    {
+      "id": "q03-parallel-motion",
+      "theme": "Paralel kwint dan oktaf",
+      "purpose": "Cari definisi operasional, deteksi, dan penggunaan penalti untuk gerak paralel.",
+      "search": "chorale generation parallel fifths parallel octaves",
+      "from_year": null,
+      "limit": 40
+    },
+    {
+      "id": "q04-leading-tone",
+      "theme": "Resolusi leading tone",
+      "purpose": "Cari cara penelitian komputasional mengenali nada peka dan konteks resolusinya.",
+      "search": "chorale voice leading leading tone resolution computational",
+      "from_year": null,
+      "limit": 40
+    },
+    {
+      "id": "q05-satb-representation",
+      "theme": "Representasi dan pemetaan SATB",
+      "purpose": "Cari asumsi pemetaan suara, timing, dan representasi partitur yang memengaruhi evaluasi.",
+      "search": "SATB symbolic music voice assignment timing evaluation",
+      "from_year": 2015,
+      "limit": 40
+    },
+    {
+      "id": "q06-human-validation",
+      "theme": "Validasi metrik terhadap penilaian manusia",
+      "purpose": "Cari studi yang membandingkan metrik otomatis dengan evaluasi pendengar atau anotator.",
+      "search": "symbolic music generation objective metrics human evaluation",
+      "from_year": 2018,
+      "limit": 50
+    },
+    {
+      "id": "q07-deepbach",
+      "theme": "Sumber asli DeepBach",
+      "purpose": "Temukan publikasi asli dan studi lanjutan untuk tugas, conditioning, dan evaluasi DeepBach.",
+      "search": "DeepBach steerable Bach chorales generation",
+      "from_year": null,
+      "limit": 25
+    },
+    {
+      "id": "q08-coconet",
+      "theme": "Sumber asli Coconet",
+      "purpose": "Temukan Counterpoint by Convolution dan studi tentang partial-score completion.",
+      "search": "Coconet Counterpoint by Convolution chorale",
+      "from_year": null,
+      "limit": 25
+    },
+    {
+      "id": "q09-notagen",
+      "theme": "Sumber asli NotaGen",
+      "purpose": "Temukan publikasi model dan rincian kontrol native, data, serta evaluasinya.",
+      "search": "NotaGen symbolic music generation conditioning evaluation",
+      "from_year": 2024,
+      "limit": 25
+    },
+    {
+      "id": "q10-rule-based-evaluation",
+      "theme": "Pengukuran berbasis kaidah harmoni",
+      "purpose": "Cari studi yang mendefinisikan pelanggaran kaidah, pengecualian, dan denominator skor.",
+      "search": "symbolic music harmony rule violation evaluation voice leading",
+      "from_year": null,
+      "limit": 50
+    },
+    {
+      "id": "q11-instrument-validation",
+      "theme": "Validasi instrumen komputasional",
+      "purpose": "Cari praktik anotasi acuan, kesepakatan anotator, dan analisis kesalahan detektor musikal.",
+      "search": "computational music analysis annotation agreement validation voice leading",
+      "from_year": null,
+      "limit": 40
+    }
+  ]
+}
