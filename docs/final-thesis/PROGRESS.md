@@ -163,7 +163,18 @@ The researcher supplied notes from the v2 tutoring review; they are recorded ver
 - Verified from the DeepBach paper (arXiv 1612.01010): evaluation by an online "Bach or Computer" discrimination test, and the authors' example analysis notes compositional errors such as parallel octaves. Added to I.A, I.B.1, and II.A.1.
 - Added `leedy2018` and `rangkuti2016` to the shared bibliography, using the metadata and paraphrases in the department template's reference list. The books were not opened; confirm edition and pages. The Schoenberg citation for tonic, dominant, and subdominant functions also needs a page.
 
-Open: the title (F01). The current title names LSTM, CNN, and Transformer. Options for the researcher and lecturer:
+Title (F01), resolved 2026-09-30: the researcher chose to revise it along the reviewer's "evaluasi musik hasil x" pattern and a clearly quantitative form. The v3 title now lives in `thesis/main.tex.template`, so rebuilding proposals v1/v2 keeps their metadata title. The abstracts still describe the earlier architecture framing and were not edited. Earlier options considered: The current title names LSTM, CNN, and Transformer. Options for the researcher and lecturer:
 
 1. EVALUASI MUSIK SIMBOLIK HASIL GENERASI DEEPBACH, COCONET, DAN NOTAGEN BERDASARKAN KAIDAH HARMONI FUNGSIONAL GUSTAV STRUBE
 2. PENGARUH CONDITIONING LEVEL TERHADAP KEPATUHAN KAIDAH HARMONI GUSTAV STRUBE PADA MUSIK SIMBOLIK HASIL GENERASI DEEPBACH, COCONET, DAN NOTAGEN
+
+## Latar belakang structure (2026-09-30)
+
+At the researcher's request, I.A now covers the template's four elements in prose, without headings:
+
+1. Social facts and developments: the Bach Doodle deployment of Coconet (over 55 million harmonization requests in three days) and the DeepBach MuseScore plugin.
+2. Model facts, then literature facts: evaluation methods reported for each model, distributional metrics, Fang et al., and the Bach Doodle music21 analysis of parallel fifths and octaves.
+3. Field facts: user complaints about parallel motion in the Bach Doodle, the DeepBach authors' note on parallel octaves, and the interface differences between models.
+4. Argument: the Strube rule basis, the adherence definition, and the teaching relevance.
+
+All Bach Doodle figures come from the full arXiv text (`huang2019`, reading ledger). The old v2 claim that the 2017 Coconet paper used music21 to count parallel motion mixed up the two Huang et al. papers: the counting is in the 2019 Bach Doodle paper.
