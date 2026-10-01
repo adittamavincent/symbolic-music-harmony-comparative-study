@@ -71,6 +71,18 @@
 \pdfbookmark[0]{\contentsname}{contents}
 \tableofcontents
 
+\clearpage
+\phantomsection
+\addcontentsline{toc}{part}{DAFTAR GAMBAR}
+\renewcommand{\listfigurename}{DAFTAR GAMBAR}
+\listoffigures
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{part}{DAFTAR TABEL}
+\renewcommand{\listtablename}{DAFTAR TABEL}
+\listoftables
+
 \doublespacing
 \clearpage
 \pagenumbering{arabic}

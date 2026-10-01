@@ -52,6 +52,7 @@ These are this project's proposed completion criteria. Confirm department requir
 - Replaced unsupported chapter 4/5 outcomes with an explicit evidence boundary and completion prompts.
 - Corrected the thesis cover's proposal wording and added chapter divisions and a contents page. Department format approval remains open.
 - Following the researcher's correction, removed draft/status text from the front matter and restored the previous approval-page and abstract wording. Readiness is tracked in project documentation.
+- Adapted the front-matter sequence from a 2026 S-1 Musik ISI Yogyakarta skripsi (`references/ARINII 'ILMAL HAQQI_2026_BAB I.pdf`): submission page, approval-page wording with blank examination date, statement page, lists of figures and tables, and a Sistematika Penulisan section in BAB I. Still open: motto, persembahan, and kata pengantar (researcher's own text), daftar lampiran once appendices exist, the approval-page signatory roles (the reference uses Pembimbing I/II, Cognate, and Koordinator Prodi), and supervisor confirmation of the format.
 
 No main experiment, statistical finding, lecturer approval, Git milestone tag, or submission has been created by these changes. See the final verification entry in [maintenance.md](../maintenance.md) for checks actually run after the move.
 

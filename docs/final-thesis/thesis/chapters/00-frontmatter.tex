@@ -1,23 +1,42 @@
 \input{chapters/00-titlepage}
 \setcounter{page}{2}
 
+% Submission Page
+\newpage
+\begin{spacing}{1.15}
+\bfseries
+\vspace*{\fill}
+\begin{center}
+{\fontsize{16pt}{19.2pt}\selectfont\MakeUppercase{\thesistitle}\par}
+\vspace{1.5cm}
+\includegraphics[width=4cm]{logo-isi.png}\par
+\vspace{1.5cm}
+Oleh:\\
+\researchername\\
+NIM: \researchernim\par
+\vspace{1.5cm}
+\mdseries
+Skripsi ini diajukan kepada Dewan Penguji \facultyname{} \institutionname{} sebagai salah satu syarat untuk mengakhiri jenjang studi Sarjana S-1 dalam bidang \departmentname\par
+\vspace{0.5cm}
+\academicyear\par
+\end{center}
+\vspace*{\fill}
+\end{spacing}
+
 % Approval Page
 \newpage
 \begin{spacing}{1.15}
 \begin{center}
     HALAMAN PENGESAHAN\par
     \vspace{0.8cm}
+\end{center}
+\noindent Skripsi berjudul:\par
+\begin{center}
     \textbf{\thesistitle}\par
-    \vspace{0.6cm}
-    Diajukan oleh:\par
-    \researchername\par
-    NIM. \researchernim\par
-    \vspace{0.8cm}
-    Skripsi ini telah disetujui dan disahkan sebagai syarat kelulusan derajat Sarjana Seni di\par
-    \programstudy, Jurusan \departmentname{} \facultyname,\par
-    \institutionname\par
-    \vspace{1.0cm}
-    
+\end{center}
+\noindent diajukan oleh \researchername{}, NIM \researchernim, \programstudy, Jurusan \departmentname, \facultyname{} \institutionname, telah dipertanggungjawabkan di depan Tim Penguji Skripsi pada tanggal \makebox[4cm]{\dotfill} dan dinyatakan telah memenuhi syarat untuk diterima.\par
+\vspace{1.0cm}
+\begin{center}
     \cityname, \submissiondate\par
     Disetujui,\par
     \vspace{0.4cm}
@@ -58,6 +77,29 @@
         NIP \advisorthesisnip
     \end{minipage}
 \end{center}
+\end{spacing}
+
+% Statement Page
+\newpage
+\begin{spacing}{1.15}
+\begin{center}
+    \textbf{HALAMAN PERNYATAAN}
+\end{center}
+\vspace{0.5cm}
+
+Saya menyatakan bahwa skripsi ini bebas dari unsur plagiasi dan belum pernah diajukan untuk memperoleh derajat akademik di suatu perguruan tinggi. Skripsi ini tidak memuat karya atau pendapat yang pernah ditulis atau diterbitkan oleh orang lain dan/atau oleh saya sendiri sebelumnya, kecuali yang secara tertulis diacu dalam naskah dan tercantum dalam daftar pustaka. Pernyataan ini saya buat dengan sesungguhnya. Saya bersedia menerima sanksi sesuai dengan ketentuan yang berlaku apabila di kemudian hari ditemukan bukti bahwa pernyataan ini tidak benar.\par
+
+\vspace{1.0cm}
+\begin{flushright}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \cityname, \makebox[3cm]{\dotfill}\par
+        Yang menyatakan,\par
+        \vspace{2.0cm}
+        \researchername\par
+        NIM \researchernim
+    \end{minipage}
+\end{flushright}
 \end{spacing}
 
 % Abstract
