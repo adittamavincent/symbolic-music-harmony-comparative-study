@@ -89,6 +89,62 @@
       "search": "computational music analysis annotation agreement validation voice leading",
       "from_year": null,
       "limit": 40
+    },
+    {
+      "id": "q12-fixed-voice-harmonization",
+      "theme": "Evaluasi harmonisasi dengan suara masukan tetap",
+      "purpose": "Temukan tugas yang membedakan suara masukan dari suara hasil generasi; periksa bagaimana relasi suara tetap dan suara hasil generasi dinilai.",
+      "search": "chorale harmonization fixed soprano generated voices evaluation",
+      "from_year": null,
+      "limit": 40
+    },
+    {
+      "id": "q13-harmonization-rubrics",
+      "theme": "Rubrik kaidah untuk evaluasi harmonisasi",
+      "purpose": "Cari rubrik yang dipublikasikan beserta pemilihan kaidah, pemeriksa manusia, pembobotan, dan batas adaptasinya; jangan menganggap rubrik sebagai paket Strube yang tervalidasi.",
+      "search": "Part Invariant Model Music Generation Harmonization",
+      "from_year": null,
+      "limit": 30
+    },
+    {
+      "id": "q14-tonal-rule-evaluation",
+      "theme": "Pengetahuan musikal dan evaluator berbasis kaidah",
+      "purpose": "Temukan sumber asli tentang penerjemahan teori menjadi pemeriksaan komputasional dan batas cakupan evaluator dibandingkan teori harmoni penuh.",
+      "search": "rule based evaluation tonal progressions harmonization",
+      "from_year": null,
+      "limit": 40
+    },
+    {
+      "id": "q15-yan-evaluation-followups",
+      "theme": "Pengembangan evaluasi harmonisasi setelah Yan dkk.",
+      "purpose": "Cari penelitian terkait model part-invariant dan evaluasi harmonisasi; hubungan sitasi serta penggunaan ulang rubrik harus diperiksa pada teks asli.",
+      "search": "part invariant music harmonization evaluation rubric",
+      "from_year": 2018,
+      "limit": 40
+    },
+    {
+      "id": "q16-deepchoir-controlled-harmonization",
+      "theme": "Model pembanding dengan tugas SATB terkendali",
+      "purpose": "Temukan DeepChoir dan model yang menerima melodi serta kendali akor; periksa keluaran empat suara, ketersediaan kode atau bobot, dan kesetaraan tugas sebelum pemilihan model.",
+      "search": "Chord Conditioned Melody Harmonization Controllable Harmonicity",
+      "from_year": null,
+      "limit": 25
+    },
+    {
+      "id": "q17-chorale-rule-evaluation-recent",
+      "theme": "Evaluasi harmoni empat suara dan rubrik terbaru",
+      "purpose": "Cari evaluasi aturan dan pengecualian SATB; bedakan fungsi fitness untuk generasi dari instrumen evaluasi eksternal.",
+      "search": "four part harmonization voice leading rules evaluation",
+      "from_year": 2020,
+      "limit": 40
+    },
+    {
+      "id": "q18-transformer-harmonization-constraints",
+      "theme": "Kendali musik pada Transformer harmonisasi",
+      "purpose": "Cari harmonisasi terkendali pada model baru; jangan menyamakan generasi simbol akor dengan realisasi suara SATB atau menganggap generasi bersyarat sebagai infilling suara tetap.",
+      "search": "transformer melody harmonization chord constraints",
+      "from_year": 2022,
+      "limit": 40
     }
   ]
 }

@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "scope": "Targeted exploration of adapting Yan et al. evaluation and feasible newer harmonization systems; not a systematic review",
+  "openalex_query_file": "research/literature/openalex_queries.json",
+  "openalex_batch_manifest": "research/outputs/openalex/20261001T094230522976Z-batch/batch_manifest.json",
+  "openalex_outcome": {
+    "attempted": 18,
+    "failed": 18,
+    "retrieved_unique_works": 0,
+    "reason": "DNS resolution unavailable"
+  },
+  "web_searches": [
+    {
+      "id": "web-01",
+      "query": "\"Part-invariant Model for Music Generation and Harmonization\" evaluation rubric",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-02",
+      "query": "\"Yan\" \"Lustig\" \"VanderStel\" harmonization evaluation",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-03",
+      "query": "\"Rubrics For Objective Evaluation\" music",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-04",
+      "query": "\"Part-invariant\" \"rubric\" harmonization -site:eurekamag.com",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-05",
+      "query": "\"Yan et al.\" \"harmonization\" \"grading\" music",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-06",
+      "query": "\"NotaGen\" \"harmonization\" bass melody",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-07",
+      "query": "\"Bach or Mock\" \"Yan\" evaluation",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-08",
+      "query": "\"harmonization\" \"Yan et al., 2018\"",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-09",
+      "query": "\"chorale\" \"Yan\" \"2018\" \"evaluation\" rubric",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-10",
+      "query": "chorale harmonization transformer fixed bass evaluation 2024 2025",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-11",
+      "query": "DiffBach chorale harmonization diffusion evaluation",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-12",
+      "query": "\"Part-invariant Model\" \"evaluation\" -site:eurekamag.com -site:dblp.org -site:rochester.edu -site:ismir.net -site:ismir2018.ismir.net -site:ismir2018.ircam.fr",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-13",
+      "query": "\"DeepChoir\" github",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-14",
+      "query": "\"Chord-Conditioned Melody Harmonization\" transformer",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-15",
+      "query": "\"Part-invariant\" \"rubric\" \"evaluation\" -site:rochester.edu",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-16",
+      "query": "\"Bach\" \"Transformer\" \"harmonization\" \"2024\" github",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-17",
+      "query": "\"chorale\" \"Transformer\" \"harmonization\" \"2025\" model",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-18",
+      "query": "\"part-invariant\" \"Yan\" \"grading\" -site:rochester.edu -site:ismir2018.ismir.net -site:eurekamag.com",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-19",
+      "query": "\"Part-invariant Model\" github code",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-20",
+      "query": "\"Writing and Analysis Workbook\" \"Laitz\" \"2012\" Oxford",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-21",
+      "query": "\"AI Harmonizer\" \"model\" \"weights\" \"huggingface\"",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-22",
+      "query": "\"Part-invariant Model for Music Generation and Harmonization\" \"rubric\" -site:rochester.edu -site:ismir2018.ismir.net -site:ismir2018.ircam.fr -site:eurekamag.com",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-23",
+      "query": "\"Yan2018partInvariant\" -site:rochester.edu",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-24",
+      "query": "\"Bach chorale\" \"leading tone\" \"rubric\" evaluation",
+      "date": "2026-10-01",
+      "result_count": null,
+      "note": "Targeted discovery; provider returned a bounded result list, not an exhaustive count"
+    },
+    {
+      "id": "web-25",
+      "query": "\"Writing and Analysis Workbook\" \"Laitz\" \"Third Edition\"",
+      "domains": [
+        "oup.com"
+      ],
+      "date": "2026-10-01",
+      "result_count": null
+    },
+    {
+      "id": "web-26",
+      "query": "\"AI Harmonizer\" \"Yan\" \"Part-invariant\"",
+      "domains": [
+        "nime.org"
+      ],
+      "date": "2026-10-01",
+      "result_count": null
+    }
+  ],
+  "verified_primary_sources": [
+    {
+      "id": "yan2018",
+      "url": "https://labsites.rochester.edu/air/publications/Yan2018partInvariant.pdf",
+      "location": "Section 4.2 and footnotes 5-6; pp. 208-209",
+      "publication_record": "https://ismir.net/conferences/ismir-2018/"
+    },
+    {
+      "id": "yan2018-rubric",
+      "url": "https://labsites.rochester.edu/air/projects/model0.md",
+      "location": "Rubrics For Objective Evaluation; categories 1-11"
+    },
+    {
+      "id": "blanchard2025",
+      "url": "https://nime.org/proceedings/2025/nime2025_84.pdf",
+      "location": "Sections 2.2 and 3; reference 24",
+      "publication_record": "https://zenodo.org/records/15698966"
+    },
+    {
+      "id": "blanchard2025-checkpoint",
+      "url": "https://huggingface.co/mitmedialab/jsbChorales-1000",
+      "location": "Model card; linked from official implementation",
+      "limit": "Not downloaded or run"
+    },
+    {
+      "id": "deepchoir2023",
+      "url": "https://arxiv.org/pdf/2202.08423",
+      "location": "Sections 2.2 and 3.2; arXiv v4 accepted-by-ICASSP-2023 metadata"
+    },
+    {
+      "id": "deepchoir-code",
+      "url": "https://github.com/sander-wood/deepchoir",
+      "location": "README; weights.zip and weights.z01 listings",
+      "limit": "Not downloaded or run"
+    },
+    {
+      "id": "fang2020",
+      "url": "https://arxiv.org/html/2006.13329v3",
+      "location": "Sections 2 and 3; alternative distribution-based grading, not established reuse of Yan rubric"
+    },
+    {
+      "id": "notagen-upstream",
+      "url": "https://github.com/ElectricAlexis/NotaGen",
+      "location": "Model variants, conditioning and inference README"
+    }
+  ],
+  "access_limits": [
+    "Some GitHub submodule pages and raw sample.py at pinned commit could not be retrieved; decoder implementation not verified line by line",
+    "Wiley 10.1155/cplx/3086287 returned 403; not included as a verified methodological foundation",
+    "Laitz textbook exercises were not obtained from original full text",
+    "No exhaustive forward-citation index or successful OpenAlex discovery; do not claim novelty or universal reuse of rubric"
+  ]
+}
