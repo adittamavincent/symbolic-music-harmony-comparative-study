@@ -68,9 +68,10 @@ Second slide.
 \usepackage{xcolor}
 \definecolor{inshl}{rgb}{0,1,0}
 \newcommand{\inhighlight}[1]{\colorbox{inshl}{#1}}
+\newcommand{\inspale}[1]{\colorbox{inshl}{#1}}
 \newcommand{\diffspace}[1]{{\color{#1}\penalty0\leaders\hrule height\ht\strutbox depth\dp\strutbox\hskip\fontdimen2\font}}
 \begin{document}
-\section{\colorbox{inshl}{Music}\diffspace{inshl}\inhighlight{Information} Retrieval}
+\section{\colorbox{inshl}{Music}\diffspace{inshl}\inhighlight{Information} \inspale{Retrieval}}
 Body.
 \end{document}
 """)

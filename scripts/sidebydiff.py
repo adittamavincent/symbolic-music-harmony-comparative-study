@@ -1,37 +1,37 @@
 #!/usr/bin/env python3
 r"""
-Generate a section-aligned side-by-side diff of committed manuscripts.
-Read chapters, nested inputs, and cover wording from each source version.
-Align existing headings, then compare paragraphs and words within each
-section. Columns flow across pages and synchronize at section boundaries.
-Both sides retain their full text; only changed words receive highlights.
+Generate a side-by-side PDF comparison of two committed manuscript versions.
+
+Read each version's chapters, nested inputs, cover wording, and preamble
+macros from Git. diff_layout pairs front-matter pages by role and headings by
+ID (\label, else the title slug), aligns the text under them sentence by
+sentence, and renders rows that keep paired parts side by side. A change map
+on the first page lists every pair with its status and shared-word share.
+diff_bibliography lines up the reference lists entry by entry.
 """
 
-from collections import Counter
-from difflib import SequenceMatcher
-import math
 import os
 import re
+import shutil
 import subprocess
 import sys
-import shutil
 import tempfile
 
 from build_pdf import compile_pdf
-
-CHAPTER_ORDER = [
-    "docs/proposal-phase/proposal/chapters/00-frontmatter.tex",
-    "docs/proposal-phase/proposal/chapters/01-pendahuluan.tex",
-    "docs/proposal-phase/proposal/chapters/02-tinjauan-pustaka.tex",
-    "docs/proposal-phase/proposal/chapters/03-metodologi.tex",
-    "docs/proposal-phase/proposal/chapters/04-jadwal.tex",
-]
+from diff_bibliography import (bibliography_rows, diff_bib_files, extract_citation_keys,
+                               render_bibliography_rows)
+from diff_layout import Comparison, render_change_map
+from diff_tokens import read_braced_argument
 
 CLASS_PATH = "docs/proposal-phase/assets/isi-proposal.cls"
-BIB_PATH = "docs/proposal-phase/assets/references.bib"
-LOGO_PATH = "docs/proposal-phase/assets/logo-isi.png"
-
-# Placeholders are dynamically loaded from env files.
+# Macros a version defines itself; \renewcommand changes LaTeX's own (\thesection, \contentsname).
+TEXT_MACRO = re.compile(r'\\(?:newcommand|providecommand)\*?\s*(?:\{\\([A-Za-z]+)\}|\\([A-Za-z]+))'
+                        r'\s*(?:\[(\d)\])?\s*(\[[^\]]*\])?\s*\{')
+DEFINITION = re.compile(r'\\(?:newcommand|renewcommand|providecommand)(\*?)\s*(\{\\[A-Za-z@]+\}|\\[A-Za-z@]+)')
+CHAPTER_DEFINITION = re.compile(r'\\newcommand\{\\thesischapter\}\[2\]')
+# Labels from the sources get a side prefix; the diff's own labels start with "diff".
+SOURCE_LABEL = re.compile(r'\\(label|ref|pageref|eqref|autoref)\{(?!diff)([^{}]*)\}')
+CITATION = re.compile(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)(\*?(?:\[[^\]]*\])*)\{([^}]+)\}')
 
 
 def get_git_content(ref, path):
@@ -76,10 +76,15 @@ def resolve_git_ref(ref):
     raise ValueError(f"Unknown Git ref: {ref}")
 
 
+def strip_comments(text):
+    """Remove comments as TeX does: the rest of the line, its end, and the next indent."""
+    return re.sub(r'(?<!\\)%[^\n]*(?:\n[ \t]*)?', '', text)
+
+
 def clean_latex_for_diff(text, class_source=None):
     """Preserve source page boundaries, wording, and local formatting."""
     text = replace_title_page(text, class_source)
-    text = re.sub(r'(?<!\\)%.*', '', text)
+    text = strip_comments(text)
     # The renderer handles page boundaries outside the comparison columns.
     text = text.replace(r"\begin{titlepage}", r"\begingroup")
     text = text.replace(r"\end{titlepage}", "\\endgroup\n\\newpage")
@@ -117,34 +122,46 @@ def find_git_path(ref, filename):
     return None
 
 
-def get_template_inputs(ref):
-    """
-    Extract exact chapter paths relative to the selected manuscript template.
-    """
+def expand_inputs(ref, text, root, stack=()):
+    """Inline \\input files relative to the template directory, without comments."""
+    def expand(match):
+        name = match.group(1).strip()
+        if not name.endswith(".tex"):
+            name += ".tex"
+        path = os.path.normpath(os.path.join(root, name))
+        if path in stack:
+            raise ValueError(f"Recursive LaTeX input at {ref}:{path}")
+        content = get_git_content(ref, path)
+        if not content:
+            raise ValueError(f"Missing or empty LaTeX input at {ref}:{path}")
+        return expand_inputs(ref, content, root, (*stack, path))
+
+    return re.sub(r'\\input\{([^}]+)\}', expand, strip_comments(text))
+
+
+def template_preamble(ref):
+    """The template preamble with its inputs (metadata, layout) inlined."""
     path = find_git_path(ref, "main.tex.template")
-    content = get_git_content(ref, path)
-    matches = re.findall(r'\\input\{([^}]+)\}', content)
-    filenames = []
-    for m in matches:
-        m = m.strip()
-        if not m.endswith(".tex"):
-            m = m + ".tex"
-        filenames.append(os.path.normpath(os.path.join(os.path.dirname(path), m)))
-    return filenames
+    if not path:
+        return ""
+    preamble = get_git_content(ref, path).split(r"\begin{document}", 1)[0]
+    return expand_inputs(ref, preamble, os.path.dirname(path))
+
+
+def chapter_definition(preamble):
+    match = CHAPTER_DEFINITION.search(preamble)
+    return read_braced_argument(preamble, match.end())[0] if match else ""
 
 
 def extract_section_formatting(ref):
     """
-    Find main.tex.template in git ref, and extract formatting commands:
-    \\renewcommand{\\thesection}...
-    \\titleformat{\\section}...
-    \\titleformat{\\subsection}...
-    \\titleformat{\\subsubsection}...
+    Collect a version's heading numbering and format, paragraph settings,
+    caption names, and its chapter heading without page or contents effects.
+    Line spacing such as \\doublespacing may sit in the document body.
     """
     path = find_git_path(ref, "main.tex.template")
-    if not path:
-        return ""
-    content = get_git_content(ref, path)
+    body = strip_comments(get_git_content(ref, path)).split(r"\begin{document}", 1)[-1] if path else ""
+    content = template_preamble(ref) + "\n" + body
     commands = []
     for line in content.splitlines():
         line_strip = line.strip()
@@ -154,21 +171,17 @@ def extract_section_formatting(ref):
             commands.append(line_strip)
         elif line_strip in (r"\doublespacing", r"\onehalfspacing", r"\singlespacing"):
             commands.append(line_strip)
-    chapter_definition = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', content)
-    if chapter_definition:
-        body, _ = read_braced_argument(content, chapter_definition.end())
+    body = chapter_definition(content)
+    if body:
         body = re.sub(r'\\(?:clearpage|phantomsection)\b', '', body)
         body = re.sub(r'\\addcontentsline\{[^{}]*\}\{[^{}]*\}\{[^{}]*\}', '', body)
-        body = re.sub(r'(?<!\\)%.*', '', body)
         commands.append(r"\def\thesischapter#1#2{" + body + "}")
     return "\n  ".join(commands)
 
 
 def extract_template_packages(ref):
     """Return the template's package lines; the diff preamble loads hyperref."""
-    path = find_git_path(ref, "main.tex.template")
-    preamble = get_git_content(ref, path).split(r"\begin{document}", 1)[0]
-    preamble = re.sub(r'(?<!\\)%.*', '', preamble)
+    preamble = template_preamble(ref)
     lines = []
     for match in re.finditer(r'\\(?:usepackage|usetikzlibrary)(?:\[[^\]]*\])?\{([^}]*)\}', preamble):
         if match.group(1).strip() not in ("hyperref", "bookmark"):
@@ -176,13 +189,8 @@ def extract_template_packages(ref):
     return lines
 
 
-def extract_source_definitions(text):
-    r"""
-    Move macro definitions out of the manuscript text. Each comparison block
-    is a TeX group, so a \newcommand left in place would vanish before a
-    later block used it. The returned definitions run at the start of every
-    block on that side instead.
-    """
+def find_definitions(text):
+    """Return text without its macro definitions, and the definitions in order."""
     definitions = []
     pattern = re.compile(r'\\(?:newcommand|renewcommand|providecommand)\*?\s*(?:\{\\[A-Za-z@]+\}|\\[A-Za-z@]+)(?:\s*\[[^\]]*\])*')
     pos = 0
@@ -195,6 +203,17 @@ def extract_source_definitions(text):
         definitions.append(text[match.start():end])
         text = text[:match.start()] + text[end:]
         pos = match.start()
+    return text, definitions
+
+
+def extract_source_definitions(text):
+    r"""
+    Move macro definitions out of the manuscript text. Each comparison block
+    is a TeX group, so a \newcommand left in place would vanish before a
+    later block used it. The returned definitions run at the start of every
+    block on that side instead.
+    """
+    text, definitions = find_definitions(text)
     return text, "\n".join(definitions)
 
 
@@ -207,943 +226,204 @@ def build_full_proposal(ref):
     """
     parts = []
     template_path = find_git_path(ref, "main.tex.template")
-    template = get_git_content(ref, template_path)
+    template = strip_comments(get_git_content(ref, template_path))
     document_root = os.path.dirname(template_path)
-
-    def read_input(path, stack=()):
-        if path in stack:
-            raise ValueError(f"Recursive LaTeX input at {ref}:{path}")
-        content = get_git_content(ref, path)
-        if not content:
-            raise ValueError(f"Missing or empty LaTeX input at {ref}:{path}")
-
-        def expand(match):
-            name = match.group(1).strip()
-            if not name.endswith(".tex"):
-                name += ".tex"
-            nested_path = os.path.normpath(os.path.join(document_root, name))
-            return read_input(nested_path, (*stack, path))
-
-        return re.sub(r'\\input\{([^}]+)\}', expand, content)
 
     # Keep chapter headings from the template in their original input order.
     template_body = template.split(r"\begin{document}", 1)[-1]
-    chapter_break = re.search(r'\\newcommand\{\\thesischapter\}\[2\]', template)
-    chapter_body = read_braced_argument(template, chapter_break.end())[0] if chapter_break else ""
     for match in re.finditer(r'\\input\{([^}]+)\}|\\thesischapter\{([^}]+)\}\{([^}]+)\}|\\(?:newpage|clearpage)\b', template_body):
         if match.group(1):
-            name = match.group(1).strip()
-            if not name.endswith(".tex"):
-                name += ".tex"
-            parts.append(read_input(os.path.normpath(os.path.join(document_root, name))).strip())
+            parts.append(expand_inputs(ref, match.group(0), document_root).strip())
         else:
-            if match.group(2) and re.search(r'\\(?:newpage|clearpage)\b', chapter_body):
-                parts.append(r"\clearpage")
             parts.append(match.group(0))
     full_text = "\n\n".join(parts)
+    # A chapter heading opens a page, whether the template or a chapter file holds it.
+    if re.search(r'\\(?:newpage|clearpage)\b', chapter_definition(template_preamble(ref))):
+        full_text = re.sub(r'(?m)^[ \t]*(?=\\thesischapter\{)', "\\\\clearpage\n", full_text)
     class_path = find_git_path(ref, "isi-proposal.cls")
     class_source = get_git_content(ref, class_path) if class_path else ""
     return clean_latex_for_diff(full_text, class_source)
 
 
-def split_paragraphs(content):
-    """Split into paragraph blocks, separated by 1+ blank lines. Respects tikzpicture blocks to prevent formatting/compilation issues."""
-    if not content:
-        return []
-    normalized = content.replace("\r\n", "\n")
-    paragraphs = []
-    current_para_lines = []
-    in_tikz = False
-    
-    lines = normalized.split("\n")
-    for line in lines:
-        line_strip = line.strip()
-        if "\\begin{tikzpicture}" in line_strip:
-            in_tikz = True
-        
-        if not line_strip and not in_tikz:
-            if current_para_lines:
-                paragraphs.append("\n".join(current_para_lines).strip())
-                current_para_lines = []
-        else:
-            current_para_lines.append(line)
-            
-        if "\\end{tikzpicture}" in line_strip:
-            in_tikz = False
-            
-    if current_para_lines:
-        paragraphs.append("\n".join(current_para_lines).strip())
-        
-    return [p for p in paragraphs if p]
-
-
-def compute_lcs(a, b):
-    """Longest Common Subsequence, run at paragraph level (not line level)."""
-    m, n = len(a), len(b)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if a[i - 1] == b[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1] + 1
-            else:
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
-    lcs = []
-    i, j = m, n
-    while i > 0 and j > 0:
-        if a[i - 1] == b[j - 1]:
-            lcs.append(a[i - 1])
-            i -= 1
-            j -= 1
-        elif dp[i - 1][j] >= dp[i][j - 1]:
-            i -= 1
-        else:
-            j -= 1
-    lcs.reverse()
-    return lcs
-
-
-def compute_diff(old_paragraphs, new_paragraphs):
-    """Return list of ('equal' | 'delete' | 'insert', paragraph_text)."""
-    lcs = compute_lcs(old_paragraphs, new_paragraphs)
-    ops = []
-    i = j = 0
-    lcs_idx = 0
-    while i < len(old_paragraphs) or j < len(new_paragraphs):
-        if (lcs_idx < len(lcs)
-                and i < len(old_paragraphs)
-                and old_paragraphs[i] == lcs[lcs_idx]
-                and j < len(new_paragraphs)
-                and new_paragraphs[j] == lcs[lcs_idx]):
-            ops.append(("equal", old_paragraphs[i]))
-            i += 1
-            j += 1
-            lcs_idx += 1
-        elif i < len(old_paragraphs) and (
-            lcs_idx >= len(lcs) or old_paragraphs[i] != lcs[lcs_idx]
-        ):
-            ops.append(("delete", old_paragraphs[i]))
-            i += 1
-        elif j < len(new_paragraphs) and (
-            lcs_idx >= len(lcs) or new_paragraphs[j] != lcs[lcs_idx]
-        ):
-            ops.append(("insert", new_paragraphs[j]))
-            j += 1
-        else:
-            i += 1
-            j += 1
-    return ops
-
-
-# ---------------------------------------------------------------------------
-# Word-level diff (second pass). Same LCS machinery as paragraph-level,
-# just fed tokens instead of whole paragraphs.
-#
-# IMPORTANT: naive whitespace tokenization is UNSAFE for LaTeX source.
-# A "word" split purely on spaces can land mid-macro-argument, e.g.
-# `\makeisititle{...}{Semester Ganjil 2026/2027}{2026}` whitespace-splits
-# into a token like `2026/2027}{2026}` which has unbalanced braces on
-# its own. Wrapping that fragment in \colorbox{color}{...} desyncs brace
-# matching for the REST of the document and cascades into a fatal
-# "Missing \endgroup" / "Emergency stop" error.
-#
-# Fix: after whitespace-splitting, merge adjacent tokens until the
-# running brace balance returns to zero, so every token handed to
-# \colorbox is guaranteed self-balanced. This trades some highlight
-# granularity (a whole macro-argument may light up as one chunk instead
-# of word-by-word) for a document that actually compiles.
-# ---------------------------------------------------------------------------
-
-DISPLAY_MATH_ENVIRONMENTS = r"(?:equation|multline|align|alignat|flalign|gather|displaymath)\*?"
-DISPLAY_MATH_START = re.compile(r'\\begin\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\[')
-DISPLAY_MATH_END = re.compile(r'\\end\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\]')
-CITATION_OPTION = re.compile(r'\\(?:parencite|cite|textcite|citeauthor|citeyear)\*?(?:\[[^\]]*\])*\[[^\]]*$')
-
-
-UNSAFE_HIGHLIGHT_PATTERNS = (
-    "\\\\",       # row breaks (tabularx, tikz) -- illegal in restricted h-mode
-    "\\begin",
-    "\\end",
-    "\\newpage",
-    "\\item",
-    "&",          # alignment tab -- illegal in boxes
-    "\\hline",    # table lines
-    "\\cline",
-    "\\cellcolor", # table cell coloring
-    "\\multicolumn",
-)
-
-
-def _is_safe_to_highlight(token_text):
-    """
-    Refuse to wrap a token in \\colorbox if it contains constructs that
-    are illegal inside a restricted-horizontal-mode box (\\colorbox is
-    built on \\getitemize), even when its braces are balanced. \\\\ / \\begin
-    / \\end / \\newpage all require paragraph or vertical mode.
-    """
-    if any(pat in token_text for pat in UNSAFE_HIGHLIGHT_PATTERNS):
-        return False
-    if re.search(r'\\[^%_#$]', token_text):
-        return False
-    if re.search(r'(?<!\\)%', token_text):
-        return False
-    if re.search(r'(?<!\\)_', token_text):
-        return False
-    if re.search(r'(?<!\\)\^', token_text):
-        return False
-    if re.search(r'(?<!\\)\$', token_text):
-        return False
-    return True
-
-
-def tokenize_words(text):
-    """
-    Split a paragraph into brace-safe and math-safe tokens.
-
-    Pass 1: split on whitespace, tracking newlines as boundaries.
-    Pass 2: merge consecutive word-tokens whenever the running
-            '{' minus '}' count is nonzero, unescaped '$' is unbalanced, or
-            inside a display math environment, so every emitted token is
-            individually brace-balanced and math-balanced.
-    """
-    # Keep compact environment wrappers separate from visible heading words.
-    # Include begin arguments so highlights cannot replace an environment's size.
-    text = re.sub(r'\\begin\{[^{}]+\}(?:\[[^\]]*\])?(?:\{[^{}]*\})*|\\end\{[^{}]+\}|\\(?:begingroup|endgroup)\b',
-                  lambda match: " " + match.group(0) + " ", text)
-    # Build a flat stream of ('W', word) / ('NL', None) first.
-    stream = []
-    lines = text.split("\n")
-    for idx, line in enumerate(lines):
-        if idx > 0:
-            stream.append(("NL", None))
-        for word in line.split():
-            # Keep attached punctuation with inline math; splitting ($x$)
-            # into three words invents spaces next to the parentheses.
-            stream.append(("W", word))
-
-    merged = []
-    buf = []
-    brace_balance = 0
-    math_mode = False
-    display_math = False
-
-    def flush():
-        if buf:
-            merged.append(("W", " ".join(buf)))
-            buf.clear()
-
-    for kind, val in stream:
-        if kind == "NL":
-            if math_mode or display_math or brace_balance != 0:
-                # Mid-merge: fold newline into space
-                continue
-            flush()
-            merged.append(("NL", None))
-        else:
-            buf.append(val)
-            
-            # Check display math start/end
-            if DISPLAY_MATH_START.search(val):
-                display_math = True
-            
-            # Count unescaped braces
-            unescaped_opens = len(re.findall(r'(?<!\\)\{', val))
-            unescaped_closes = len(re.findall(r'(?<!\\)\}', val))
-            brace_balance += unescaped_opens - unescaped_closes
-            
-            # Count unescaped dollars to toggle math mode
-            unescaped_dollars = len(re.findall(r'(?<!\\)\$', val))
-            if unescaped_dollars % 2 != 0:
-                math_mode = not math_mode
-                
-            if DISPLAY_MATH_END.search(val):
-                display_math = False
-                
-            # A citation's optional page argument may contain spaces.
-            open_citation = CITATION_OPTION.search(" ".join(buf))
-            if brace_balance <= 0 and not math_mode and not display_math and not open_citation:
-                flush()
-                brace_balance = 0
-    flush()
-    return merged
-
-
-def render_token(token, highlight=None):
-    """Render a single token. `highlight` is a color name or None."""
-    kind, value = token
-    if kind == "NL":
-        return "\n"
-    if highlight and _is_safe_to_highlight(value):
-        return f"\\colorbox{{{highlight}}}{{{value}}} "
-    return f"{value} "
-
-
-def is_safe_to_highlight_token(val, is_math=False, is_box=False):
-    # A trailing TeX space escape would escape the highlight's closing brace.
-    if val.endswith("\\"):
-        return False
-    if is_math:
-        if any(pat in val for pat in ["\\begin{equation}", "\\begin{multline}", "\\begin{align}", "\\begin{gather}"]):
-            return False
-        return True
-        
-    if any(pat in val for pat in UNSAFE_HIGHLIGHT_PATTERNS):
-        return False
-        
-    if re.search(r'(?<!\\)%', val):
-        return False
-        
-    if not is_box:
-        if re.search(r'(?<!\\)_', val) or re.search(r'(?<!\\)\^', val) or re.search(r'(?<!\\)\$', val):
-            return False
-            
-    macros = re.findall(r'\\([a-zA-Z\*]+)', val)
-    allowed_macros = {
-        "textit", "textbf", "emph", "underline", "section", "subsection", "subsubsection",
-        "parencite", "cite", "textcite", "citeauthor", "citeyear", "texttt"
-    }
-    for macro in macros:
-        if macro not in allowed_macros:
-            return False
-            
-    return True
-
-
-def classify_token_style(style, val):
-    if not style:
-        return None
-    # Display math needs a block background, preserving AMS layout and row breaks.
-    if DISPLAY_MATH_START.search(val) and DISPLAY_MATH_END.search(val):
-        return style + "_display"
-    val_strip = val.strip()
-    val_clean = re.sub(r'[\.,;:\?!\)]+$', '', val_strip)
-    val_clean = re.sub(r'^\(', '', val_clean)
-    
-    if re.match(r'^\$([^$]*)\$$', val_clean):
-        if is_safe_to_highlight_token(val, is_math=True):
-            return style + "_math"
-        return None
-        
-    if re.match(r'^\\(section|subsection|subsubsection)\{.*\}$', val_clean):
-        if is_safe_to_highlight_token(val):
-            return style + "_format"
-        return None
-        
-    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\*?(?:\[[^\]]*\])*\{.*\}$', val_clean):
-        if is_safe_to_highlight_token(val, is_box=True):
-            # Citation expansion is unsafe inside soul's text reconstruction.
-            return style + "_box"
-        return None
-        
-    if is_safe_to_highlight_token(val):
-        return style + "_text"
-        
-    return None
-
-
-def highlight_prose(text, command):
-    """Paint words and their connecting glue inside the source formatting."""
-    parts = []
-    pos = 0
-    formatting = re.compile(r'\\(?:textit|textbf|emph|underline|texttt)\{|(?<!\\)\{')
-    color = "delhl" if command == "delhighlight" else "inshl"
-
-    def paint_words(plain):
-        return "".join(f"\\diffspace{{{color}}}" if piece.isspace() else f"\\{command}{{{piece}}}"
-                       for piece in re.split(r'(\s+)', plain) if piece)
-
-    while match := formatting.search(text, pos):
-        parts.append(paint_words(text[pos:match.start()]))
-        content, end = read_braced_argument(text, match.end() - 1)
-        parts.append(text[match.start():match.end()] + highlight_prose(content, command) + "}")
-        pos = end
-    parts.append(paint_words(text[pos:]))
-    return "".join(parts)
-
-
-def apply_highlight(style, text):
-    if not style:
-        return text + " "
-    
-    color = "delhl" if style.startswith("delhl") else "inshl"
-    if style.endswith("_display"):
-        return f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}\n"
-    if style.endswith("_text"):
-        hl_cmd = "delhighlight" if color == "delhl" else "inhighlight"
-        # Parentheses and punctuation belong to the changed text as well.
-        return highlight_prose(text.strip(), hl_cmd) + " "
-    val_strip = text.strip()
-    punc_start = ""
-    if val_strip.startswith("("):
-        punc_start = "("
-        val_strip = val_strip[1:]
-    punc_end = ""
-    punc_match = re.search(r'[\.,;:\?!\)]+$', val_strip)
-    if punc_match:
-        punc_end = punc_match.group(0)
-        val_strip = val_strip[:-len(punc_end)]
-    
-    if style.endswith("_format"):
-        pattern = r'^\\(section|subsection|subsubsection)\{(.*)\}$'
-        match = re.match(pattern, val_strip)
-        if match:
-            macro_name = match.group(1)
-            content = match.group(2)
-            the_cmd = f"\\the{macro_name}"
-            return (
-                f"{punc_start}"
-                f"{{\\let\\origthe{the_cmd}"
-                f"\\renewcommand{{{the_cmd}}}{{\\colorbox{{{color}}}{{\\origthe}}}}"
-                f"\\{macro_name}{{\\colorbox{{{color}}}{{{content}}}}}}}"
-                f"{punc_end} "
-            )
-            
-    if style.endswith("_box"):
-        return f"\\diffinline{{{color}}}{{{punc_start}{val_strip}{punc_end}}} "
-            
-    if style.endswith("_math"):
-        math_pattern = r'^\$([^$]*)\$$'
-        match = re.match(math_pattern, val_strip)
-        if match:
-            content = match.group(1)
-            return f"\\diffinline{{{color}}}{{{punc_start}\\ensuremath{{{content}}}{punc_end}}} "
-        
-    return text + " "
-
-
-def word_level_render(old_text, new_text):
-    """
-    Run word-level LCS between old_text and new_text. Return
-    (old_rendered, new_rendered) where only the differing words are
-    wrapped in highlight commands (when safe to do so)
-    -- everything matching stays plain text on BOTH sides, exactly like
-    VSCode's inline word diff.
-    """
-    # A matched heading is a container, not one changed word. Compare its
-    # title separately so formatting changes do not color its unchanged
-    # wording or automatically generated section number.
-    heading_pattern = r'^(\s*\\(section|subsection|subsubsection)\*?(?:\[[^\]]*\])?)\{'
-    old_heading = re.match(heading_pattern, old_text)
-    new_heading = re.match(heading_pattern, new_text)
-    if old_heading and new_heading and old_heading.group(2) == new_heading.group(2):
-        old_title, old_end = read_braced_argument(old_text, old_heading.end() - 1)
-        new_title, new_end = read_braced_argument(new_text, new_heading.end() - 1)
-        left_title, right_title = word_level_render(old_title, new_title)
-        left_body, right_body = word_level_render(old_text[old_end:], new_text[new_end:])
-        return (
-            old_heading.group(1) + "{" + left_title.rstrip() + "}" + left_body,
-            new_heading.group(1) + "{" + right_title.rstrip() + "}" + right_body,
-        )
-
-    # TikZ path syntax such as `\node (a) [style] {...};` breaks when any
-    # token is wrapped in a highlight macro, so mark the whole block instead.
-    if "\\begin{tikzpicture}" in old_text or "\\begin{tikzpicture}" in new_text:
-        def block(color, text):
-            return f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}\n" if text else ""
-        return block("delhl", old_text), block("inshl", new_text)
-
-    old_tokens = tokenize_words(old_text)
-    new_tokens = tokenize_words(new_text)
-    ops = compute_diff(old_tokens, new_tokens)
-
-    old_actions = []
-    new_actions = []
-
-    for kind, tok in ops:
-        kind_type, value = tok
-        if kind == "equal":
-            if kind_type == "NL":
-                old_actions.append((None, "\n"))
-                new_actions.append((None, "\n"))
-            else:
-                old_actions.append((None, value))
-                new_actions.append((None, value))
-        elif kind == "delete":
-            if kind_type == "NL":
-                old_actions.append((None, "\n"))
-            else:
-                act_style = classify_token_style("delhl", value)
-                val_to_use = value
-                if act_style == "delhl_text" and re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', re.sub(r'[\.,;\?!\)]+$', '', value.strip()).strip()):
-                    val_to_use = f"\\mbox{{{value}}}"
-                old_actions.append((act_style, val_to_use))
-        elif kind == "insert":
-            if kind_type == "NL":
-                new_actions.append((None, "\n"))
-            else:
-                act_style = classify_token_style("inshl", value)
-                val_to_use = value
-                if act_style == "inshl_text" and re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', re.sub(r'[\.,;\?!\)]+$', '', value.strip()).strip()):
-                    val_to_use = f"\\mbox{{{value}}}"
-                new_actions.append((act_style, val_to_use))
-
-    def merge_runs(actions):
-        if not actions:
-            return []
-        merged = []
-        cur_style, val = actions[0]
-        cur_list = [val]
-        for style, val in actions[1:]:
-            # Keep highlighted tokens separate so ordinary inter-word glue can
-            # stretch and break under the source's justification settings. A
-            # long soul run otherwise overflows with \emergencystretch=\maxdimen.
-            if (style is None and cur_style is None
-                    and val != "\n" and cur_list[-1] != "\n"):
-                cur_list.append(val)
-            else:
-                merged.append((cur_style, " ".join(cur_list)))
-                cur_style = style
-                cur_list = [val]
-        merged.append((cur_style, " ".join(cur_list)))
-        return merged
-
-    old_merged = merge_runs(old_actions)
-    new_merged = merge_runs(new_actions)
-
-    def render_merged(runs):
-        parts = []
-        joined_newlines = set()
-
-        def inline_color(style):
-            if style and style.endswith(("_text", "_math", "_box")):
-                return "delhl" if style.startswith("delhl") else "inshl"
-            return None
-
-        for index, (style, val) in enumerate(runs):
-            if val == "\n":
-                parts.append("%\n" if index in joined_newlines else "\n")
-            else:
-                rendered = apply_highlight(style, val)
-                color = inline_color(style)
-                following = index + 1
-                if following < len(runs) and runs[following][1] == "\n":
-                    following += 1
-                if (color and following < len(runs)
-                        and color == inline_color(runs[following][0])):
-                    # Leaders paint the entire justified space and disappear
-                    # at a line break; they never box the surrounding phrase.
-                    rendered = rendered.removesuffix(" ") + f"\\diffspace{{{color}}}"
-                    if following == index + 2:
-                        joined_newlines.add(index + 1)
-                parts.append(rendered)
-        return "".join(parts)
-
-    return render_merged(old_merged), render_merged(new_merged)
-
-
-PAGE_BREAK = re.compile(r'\\(?:newpage|clearpage)\b')
-
-
-# Front-matter pages pair by role, so pages added between them stay unpaired.
-FRONTMATTER_ROLES = {"judul": "cover", "sampul": "cover", "pengesahan": "approval",
-                     "abstrak": "abstract-id", "abstract": "abstract-en"}
-
-
-def frontmatter_identity(text):
-    """Match source roles independently of a visible heading or its TeX styling."""
-    # A contents entry names the page directly, e.g. HALAMAN PERNYATAAN.
-    contents = re.search(r'\\addcontentsline\{toc\}\{[^{}]*\}\{([^{}]*)\}', text)
-    if contents:
-        title = " ".join(re.sub(r'\\[a-zA-Z]+\*?|[{}]', ' ', contents.group(1)).casefold().split())
-        title = title.removeprefix("halaman ")
-        return ("frontmatter", FRONTMATTER_ROLES.get(title, title))
-    plain = re.sub(r'\\(?:begin|end)\{[^{}]*\}', '', text)
-    plain = re.sub(r'\\[a-zA-Z]+\*?', '', plain)
-    plain = re.sub(r'[{}]', '', plain).casefold()
-    if re.search(r'^\s*abstrak\s*$|\bkata kunci\s*:', plain, re.MULTILINE):
-        return ("frontmatter", "abstract-id")
-    if re.search(r'^\s*abstract\s*$|\bkeywords\s*:', plain, re.MULTILINE):
-        return ("frontmatter", "abstract-en")
-    if "halaman pengesahan" in plain:
-        return ("frontmatter", "approval")
-    if r"\begingroup" in text and ("skripsi" in plain or "cover" in plain):
-        return ("frontmatter", "cover")
-    return None
-
-
-def split_sections(content):
-    """Parse source pages and headings, keeping front-matter roles separate."""
-    sections = []
-    parent = ""
-    subsection = ""
-    continuation = ("frontmatter",)
-    pending_break = ""
-    # Keep page commands as metadata on the next block, never as displayed text.
-    source_pages = PAGE_BREAK.split(content)
-    source_breaks = PAGE_BREAK.findall(content)
-    for page_index, page in enumerate(source_pages):
-        if page_index:
-            pending_break = source_breaks[page_index - 1]
-        boundaries = list(re.finditer(
-            r'^\s*\\(?:section|subsection|subsubsection)\*?\{[^\n]*|^\s*\\thesischapter\{[^\n]*',
-            page, re.MULTILINE,
-        ))
-        start = 0
-        key = frontmatter_identity(page[:boundaries[0].start()] if boundaries else page) or continuation
-
-        def append(end):
-            nonlocal pending_break
-            text = page[start:end].strip()
-            if text:
-                sections.append((key, (pending_break + "\n" + text).strip()))
-                pending_break = ""
-
-        for match in boundaries:
-            append(match.start())
-            heading = match.group(0).strip()
-            if heading.startswith(r"\thesischapter"):
-                parent = subsection = ""
-                key = ("chapter", heading)
-            elif heading.startswith(r"\section"):
-                parent = heading
-                subsection = ""
-                key = frontmatter_identity(heading) or ("section", parent)
-            elif heading.startswith(r"\subsection"):
-                subsection = heading
-                key = ("subsection", parent, subsection)
-            else:
-                key = ("subsubsection", parent, subsection, heading)
-            start = match.start()
-        append(len(page))
-        if sections:
-            continuation = sections[-1][0]
-    return sections
-
-
-# Alignment scores below this value leave both units unpaired.
-SECTION_MATCH_THRESHOLD = 0.4
-PARAGRAPH_MATCH_THRESHOLD = 0.35
-# Unpaired paragraphs between the same neighbors need less similarity.
-POSITIONAL_MATCH_THRESHOLD = 0.25
-# A moved unit with a changed heading needs this much shared content.
-MOVE_CONTENT_THRESHOLD = 0.5
-ALIGNMENT_STOPWORDS = frozenset("""
-    dan atau di ke dari yang untuk dalam pada terhadap oleh dengan ini itu
-    adalah sebagai juga akan tidak serta the of and in for on to an is are
-    as by with this that
-""".split())
-
-
-def plain_words(text):
-    """Visible words of LaTeX source, used only to score alignment."""
-    text = re.sub(r'\\(?:begin|end)\{[^{}]*\}|\\[a-zA-Z@]+\*?', ' ', text)
-    return [word for word in re.findall(r'[^\W\d_]{2,}', text.casefold())
-            if word not in ALIGNMENT_STOPWORDS]
-
-
-def weighted_vectors(documents):
-    """Sublinear TF-IDF vectors: words shared by many units weigh little."""
-    counts = [Counter(words) for words in documents]
-    frequency = Counter(word for count in counts for word in count)
-    total = len(documents)
-    return [{word: (1 + math.log(n)) * (math.log((total + 1) / (frequency[word] + 1)) + 1)
-             for word, n in count.items()} for count in counts]
-
-
-def cosine(a, b):
-    dot = sum(weight * b.get(word, 0.0) for word, weight in a.items())
-    if not dot:
-        return 0.0
-    return dot / math.sqrt(sum(w * w for w in a.values()) * sum(w * w for w in b.values()))
-
-
-def align_by_similarity(old_count, new_count, score, threshold):
-    """
-    Order-preserving alignment that maximizes the summed scores above the
-    threshold. Unpaired items return None for the other side; between two
-    pairs, old items precede new items.
-    """
-    gain = [[score(i, j) - threshold for j in range(new_count)] for i in range(old_count)]
-    best = [[0.0] * (new_count + 1) for _ in range(old_count + 1)]
-    for i in range(old_count - 1, -1, -1):
-        for j in range(new_count - 1, -1, -1):
-            paired = best[i + 1][j + 1] + gain[i][j] if gain[i][j] > 0 else float("-inf")
-            best[i][j] = max(paired, best[i + 1][j], best[i][j + 1])
-    pairs = []
-    i = j = 0
-    while i < old_count or j < new_count:
-        if i < old_count and j < new_count and gain[i][j] > 0 \
-                and best[i][j] == best[i + 1][j + 1] + gain[i][j]:
-            pairs.append((i, j))
-            i, j = i + 1, j + 1
-        elif i < old_count and (j == new_count or best[i][j] == best[i + 1][j]):
-            pairs.append((i, None))
-            i += 1
-        else:
-            pairs.append((None, j))
-            j += 1
-    return pairs
-
-
-def section_parts(key, text):
-    """Split a unit into heading words and body words for scoring."""
-    text = PAGE_BREAK.sub('', text)
-    if key[0] == "frontmatter":
-        return [], plain_words(text)
-    heading = key[-1]
-    title = re.sub(r'^\\thesischapter\{[^{}]*\}|^\\(?:sub)*section\*?(?:\[[^\]]*\])?', '', heading)
-    return plain_words(title), plain_words(text.partition(heading)[2])
-
-
-def section_alignment(old_sections, new_sections):
-    """
-    Pair units by heading and content similarity rather than exact heading
-    text. Renamed, re-leveled, and rewritten units still pair; added and
-    deleted units occupy their own rows instead of shifting later pairs.
-    Return index pairs and, for a unit moved elsewhere, its counterpart.
-    """
-    parts = [section_parts(key, text) for key, text in old_sections + new_sections]
-    titles = weighted_vectors([title for title, _ in parts])
-    bodies = weighted_vectors([body for _, body in parts])
-    offset = len(old_sections)
-
-    def similarity(i, j):
-        old_key, new_key = old_sections[i][0], new_sections[j][0]
-        if (old_key[0] == "frontmatter") != (new_key[0] == "frontmatter"):
-            return 0.0, 0.0, None
-        content = cosine(bodies[i], bodies[offset + j]) if parts[i][1] and parts[offset + j][1] else None
-        if old_key[0] == "frontmatter":
-            if len(old_key) > 1 and len(new_key) > 1:
-                return float(old_key == new_key), 0.0, None
-            return content or 0.0, 0.0, None
-        heading = cosine(titles[i], titles[offset + j])
-        if content is None:
-            return heading, heading, None
-        return max(content, 0.8 * heading, (heading + content) / 2), heading, content
-
-    scores = [[similarity(i, j) for j in range(len(new_sections))] for i in range(len(old_sections))]
-    pairs = align_by_similarity(len(old_sections), len(new_sections),
-                                lambda i, j: scores[i][j][0], SECTION_MATCH_THRESHOLD)
-    # Order-preserving rows cannot pair a unit that changed position. Compare
-    # it with its counterpart only for an unchanged heading or similar content.
-    moved_old = [i for i, j in pairs if j is None]
-    moved_new = [j for i, j in pairs if i is None]
-    candidates = sorted(
-        ((scores[i][j][0], i, j) for i in moved_old for j in moved_new
-         if scores[i][j][2] is not None
-         and (scores[i][j][1] > 0.99 or scores[i][j][2] >= MOVE_CONTENT_THRESHOLD)),
-        reverse=True)
-    moves = {}
-    for _, i, j in candidates:
-        if ("old", i) not in moves and ("new", j) not in moves:
-            moves[("old", i)] = j
-            moves[("new", j)] = i
-    return pairs, moves
-
-
-def align_sections(old_sections, new_sections):
-    """Return aligned (old, new) unit text; an unpaired side is empty."""
-    pairs, _ = section_alignment(old_sections, new_sections)
-    return [(old_sections[i][1] if i is not None else "", new_sections[j][1] if j is not None else "")
-            for i, j in pairs]
-
-
-def render_section_text(old_text, new_text):
-    """Highlight changed paragraphs without boxing or synchronizing each one."""
-    ops = compute_diff(split_paragraphs(old_text), split_paragraphs(new_text))
-    left, right = [], []
-    deletes, inserts = [], []
-
-    def similarity(old, new):
-        return SequenceMatcher(None, old.split(), new.split(), autojunk=False).ratio()
-
-    def render(old, new):
-        rendered_old, rendered_new = word_level_render(old, new)
-        if old:
-            left.append(rendered_old)
-        if new:
-            right.append(rendered_new)
-
-    def render_gap(olds, news):
-        # Paragraphs merged or split in the same place compare as one block;
-        # unrelated rewrites are wholly deleted or added, not word-matched.
-        old, new = "\n\n".join(olds), "\n\n".join(news)
-        if old and new and similarity(old, new) >= POSITIONAL_MATCH_THRESHOLD:
-            render(old, new)
-        else:
-            for text in olds:
-                render(text, "")
-            for text in news:
-                render("", text)
-
-    def flush():
-        # Word-diff revised paragraphs with the most similar counterpart.
-        olds, news = [], []
-        for i, j in align_by_similarity(len(deletes), len(inserts),
-                                        lambda i, j: similarity(deletes[i], inserts[j]),
-                                        PARAGRAPH_MATCH_THRESHOLD):
-            if i is not None and j is not None:
-                render_gap(olds, news)
-                olds, news = [], []
-                render(deletes[i], inserts[j])
-            elif i is not None:
-                olds.append(deletes[i])
-            else:
-                news.append(inserts[j])
-        render_gap(olds, news)
-        deletes.clear()
-        inserts.clear()
-
-    for kind, text in ops:
-        if kind == "equal":
-            flush()
-            left.append(text)
-            right.append(text)
-        elif kind == "delete":
-            deletes.append(text)
-        else:
-            inserts.append(text)
-    flush()
-    return "\n\n".join(left), "\n\n".join(right)
-
-
-def render_sections(old_full, new_full):
-    """Align source sections and honor a page boundary requested by either side."""
-    out = [r"\begin{paracol}{2}"]
-    has_content = False
-    old_sections, new_sections = split_sections(old_full), split_sections(new_full)
-    pairs, moves = section_alignment(old_sections, new_sections)
-
-    def source(sections, index):
-        return PAGE_BREAK.sub('', sections[index][1]).strip() if index is not None else ""
-
-    for i, j in pairs:
-        old_text = old_sections[i][1] if i is not None else ""
-        new_text = new_sections[j][1] if j is not None else ""
-        if has_content and (PAGE_BREAK.search(old_text) or PAGE_BREAK.search(new_text)):
-            out.extend([r"\end{paracol}", r"\newpage", r"\begin{paracol}{2}"])
-        if ("old", i) in moves:
-            # Each side of a moved unit is compared with its counterpart.
-            left = r"\diffmoved{dipindahkan ke posisi baru}" + "\n" + \
-                render_section_text(source(old_sections, i), source(new_sections, moves[("old", i)]))[0]
-            right = ""
-        elif ("new", j) in moves:
-            left = ""
-            right = r"\diffmoved{dipindahkan dari posisi lama}" + "\n" + \
-                render_section_text(source(old_sections, moves[("new", j)]), source(new_sections, j))[1]
-        else:
-            left, right = render_section_text(source(old_sections, i), source(new_sections, j))
-        out.extend([
-            r"\begin{leftside}", left, r"\par\end{leftside}",
-            r"\switchcolumn", r"\begin{rightside}", right,
-            r"\par\end{rightside}", r"\switchcolumn*",
-        ])
-        has_content = True
-    out.append(r"\end{paracol}")
-    # A trailing source break still precedes the bibliography.
-    if re.search(r'\\(?:newpage|clearpage)\s*$', old_full.strip()) or re.search(r'\\(?:newpage|clearpage)\s*$', new_full.strip()):
-        out.append(r"\newpage")
-    return "\n".join(out)
-
-
-def load_tracked_metadata(ref):
-    """Return the metadata.tex a thesis template inputs at ref, or an empty string."""
-    template_path = find_git_path(ref, "main.tex.template")
-    template = get_git_content(ref, template_path)
-    if not re.search(r'\\input\{metadata(?:\.tex)?\}', template):
-        return ""
-    return get_git_content(ref, os.path.join(os.path.dirname(template_path), "metadata.tex"))
-
-
-def load_env_macros(tracked_metadata=""):
-    """Tracked thesis metadata wins; .env.local fills macros it does not define."""
-    # Try .env.local first, then .env.example
+ENV_DEFAULTS = {
+    "THESIS_TITLE": "EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER",
+    "RESEARCHER_NAME": "[Nama Peneliti]",
+    "RESEARCHER_NIM": "[NIM]",
+    "INSTITUTION_NAME": "[Institusi]",
+    "FACULTY_NAME": "[Fakultas]",
+    "DEPARTMENT_NAME": "[Jurusan]",
+    "PROGRAM_STUDY": "[Program Studi]",
+    "CITY_NAME": "[Kota]",
+    "SUBMISSION_DATE": "[Tanggal Pengesahan]",
+    "ACADEMIC_YEAR": "[Tahun Akademik]",
+    "GRADUATION_YEAR": "[Tahun Lulus]",
+    "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
+    "ADVISOR_ACADEMIC_NIP": "[NIP]",
+    "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
+    "ADVISOR_THESIS_NIP": "[NIP]",
+    "EXAMINER_1": "[Penguji 1]",
+    "EXAMINER_1_NIP": "[NIP]",
+    "EXAMINER_2": "[Penguji 2]",
+    "EXAMINER_2_NIP": "[NIP]",
+    "THESIS_ADVISOR_1": "[Pembimbing I]",
+    "THESIS_ADVISOR_1_NIP": "[NIP]",
+    "THESIS_ADVISOR_2": "[Pembimbing II]",
+    "THESIS_ADVISOR_2_NIP": "[NIP]",
+    "COGNATE": "[Cognate]",
+    "COGNATE_NIP": "[NIP]",
+    "PROGRAM_COORDINATOR": "[Koordinator Program Studi]",
+    "PROGRAM_COORDINATOR_NIP": "[NIP]",
+    "DEAN": "[Dekan]",
+}
+# Metadata macro names and the .env.local keys that fill them.
+ENV_MACROS = {
+    "thesistitle": "THESIS_TITLE", "researchername": "RESEARCHER_NAME", "researchernim": "RESEARCHER_NIM",
+    "institutionname": "INSTITUTION_NAME", "facultyname": "FACULTY_NAME",
+    "departmentname": "DEPARTMENT_NAME", "programstudy": "PROGRAM_STUDY", "cityname": "CITY_NAME",
+    "submissiondate": "SUBMISSION_DATE", "academicyear": "ACADEMIC_YEAR",
+    "graduationyear": "GRADUATION_YEAR", "advisoracademic": "ADVISOR_ACADEMIC",
+    "advisoracademicnip": "ADVISOR_ACADEMIC_NIP", "advisorthesis": "ADVISOR_THESIS",
+    "advisorthesisnip": "ADVISOR_THESIS_NIP", "examinerone": "EXAMINER_1",
+    "examineronenip": "EXAMINER_1_NIP", "examinertwo": "EXAMINER_2", "examinertwonip": "EXAMINER_2_NIP",
+    "advisorone": "THESIS_ADVISOR_1", "advisoronenip": "THESIS_ADVISOR_1_NIP",
+    "advisortwo": "THESIS_ADVISOR_2", "advisortwonip": "THESIS_ADVISOR_2_NIP", "cognate": "COGNATE",
+    "cognatenip": "COGNATE_NIP", "programcoordinator": "PROGRAM_COORDINATOR",
+    "programcoordinatornip": "PROGRAM_COORDINATOR_NIP", "deanname": "DEAN",
+}
+
+
+def env_values():
+    """Proposal metadata: .env.local, else .env.example, over placeholder defaults."""
+    values = dict(ENV_DEFAULTS)
     env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
-    macros = []
-    defaults = {
-        "THESIS_TITLE": "EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER",
-        "RESEARCHER_NAME": "[Nama Peneliti]",
-        "RESEARCHER_NIM": "[NIM]",
-        "INSTITUTION_NAME": "[Institusi]",
-        "FACULTY_NAME": "[Fakultas]",
-        "DEPARTMENT_NAME": "[Jurusan]",
-        "PROGRAM_STUDY": "[Program Studi]",
-        "CITY_NAME": "[Kota]",
-        "SUBMISSION_DATE": "[Tanggal Pengesahan]",
-        "ACADEMIC_YEAR": "[Tahun Akademik]",
-        "GRADUATION_YEAR": "[Tahun Lulus]",
-        "ADVISOR_ACADEMIC": "[Dosen Pembimbing Akademik]",
-        "ADVISOR_ACADEMIC_NIP": "[NIP]",
-        "ADVISOR_THESIS": "[Dosen Pembimbing Skripsi]",
-        "ADVISOR_THESIS_NIP": "[NIP]",
-        "EXAMINER_1": "[Penguji 1]",
-        "EXAMINER_1_NIP": "[NIP]",
-        "EXAMINER_2": "[Penguji 2]",
-        "EXAMINER_2_NIP": "[NIP]",
-        "THESIS_ADVISOR_1": "[Pembimbing I]",
-        "THESIS_ADVISOR_1_NIP": "[NIP]",
-        "THESIS_ADVISOR_2": "[Pembimbing II]",
-        "THESIS_ADVISOR_2_NIP": "[NIP]",
-        "COGNATE": "[Cognate]",
-        "COGNATE_NIP": "[NIP]",
-        "PROGRAM_COORDINATOR": "[Koordinator Program Studi]",
-        "PROGRAM_COORDINATOR_NIP": "[NIP]",
-        "DEAN": "[Dekan]"
-    }
-    
     if os.path.exists(env_path):
-        with open(env_path, "r") as f:
-            for line in f:
+        with open(env_path) as handle:
+            for line in handle:
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    k = k.strip()
-                    v = v.strip().strip('"').strip("'")
-                    if v:
-                        defaults[k] = v
-
-    macros.append(rf"\newcommand{{\thesistitle}}{{{defaults.get('THESIS_TITLE', 'EVALUASI AKURASI KAIDAH HARMONI FUNGSIONAL PADA MUSIK SIMBOLIK HASIL GENERASI LSTM, CNN, DAN TRANSFORMER')}}}")
-    macros.append(rf"\newcommand{{\researchername}}{{{defaults.get('RESEARCHER_NAME', '[Nama Peneliti]')}}}")
-    macros.append(rf"\newcommand{{\researchernim}}{{{defaults.get('RESEARCHER_NIM', '[NIM]')}}}")
-    macros.append(rf"\newcommand{{\institutionname}}{{{defaults.get('INSTITUTION_NAME', '[Institusi]')}}}")
-    macros.append(rf"\newcommand{{\facultyname}}{{{defaults.get('FACULTY_NAME', '[Fakultas]')}}}")
-    macros.append(rf"\newcommand{{\departmentname}}{{{defaults.get('DEPARTMENT_NAME', '[Jurusan]')}}}")
-    macros.append(rf"\newcommand{{\programstudy}}{{{defaults.get('PROGRAM_STUDY', '[Program Studi]')}}}")
-    macros.append(rf"\newcommand{{\cityname}}{{{defaults.get('CITY_NAME', '[Kota]')}}}")
-    macros.append(rf"\newcommand{{\submissiondate}}{{{defaults.get('SUBMISSION_DATE', '[Tanggal Pengesahan]')}}}")
-    macros.append(rf"\newcommand{{\academicyear}}{{{defaults.get('ACADEMIC_YEAR', '[Tahun Akademik]')}}}")
-    macros.append(rf"\newcommand{{\graduationyear}}{{{defaults.get('GRADUATION_YEAR', '[Tahun Lulus]')}}}")
-    macros.append(rf"\newcommand{{\advisoracademic}}{{{defaults.get('ADVISOR_ACADEMIC', '[Dosen Pembimbing Akademik]')}}}")
-    macros.append(rf"\newcommand{{\advisoracademicnip}}{{{defaults.get('ADVISOR_ACADEMIC_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\advisorthesis}}{{{defaults.get('ADVISOR_THESIS', '[Dosen Pembimbing Skripsi]')}}}")
-    macros.append(rf"\newcommand{{\advisorthesisnip}}{{{defaults.get('ADVISOR_THESIS_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\examinerone}}{{{defaults.get('EXAMINER_1', '[Penguji 1]')}}}")
-    macros.append(rf"\newcommand{{\examineronenip}}{{{defaults.get('EXAMINER_1_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\examinertwo}}{{{defaults.get('EXAMINER_2', '[Penguji 2]')}}}")
-    macros.append(rf"\newcommand{{\examinertwonip}}{{{defaults.get('EXAMINER_2_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\advisorone}}{{{defaults.get('THESIS_ADVISOR_1', '[Pembimbing I]')}}}")
-    macros.append(rf"\newcommand{{\advisoronenip}}{{{defaults.get('THESIS_ADVISOR_1_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\advisortwo}}{{{defaults.get('THESIS_ADVISOR_2', '[Pembimbing II]')}}}")
-    macros.append(rf"\newcommand{{\advisortwonip}}{{{defaults.get('THESIS_ADVISOR_2_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\cognate}}{{{defaults.get('COGNATE', '[Cognate]')}}}")
-    macros.append(rf"\newcommand{{\cognatenip}}{{{defaults.get('COGNATE_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\programcoordinator}}{{{defaults.get('PROGRAM_COORDINATOR', '[Koordinator Program Studi]')}}}")
-    macros.append(rf"\newcommand{{\programcoordinatornip}}{{{defaults.get('PROGRAM_COORDINATOR_NIP', '[NIP]')}}}")
-    macros.append(rf"\newcommand{{\deanname}}{{{defaults.get('DEAN', '[Dekan]')}}}")
-    macros = [m.replace(r"\newcommand", r"\providecommand", 1) for m in macros]
-    return "\n".join([tracked_metadata.strip(), *macros]).strip()
+                    key, value = line.split("=", 1)
+                    value = value.strip().strip('"').strip("'")
+                    if value:
+                        values[key.strip()] = value
+    return values
 
 
-def read_braced_argument(text, pos):
-    """Read a nested TeX argument without treating escaped braces as groups."""
-    while pos < len(text) and text[pos].isspace():
-        pos += 1
-    if pos >= len(text) or text[pos] != "{":
-        raise ValueError("Expected a braced LaTeX argument")
-    start = pos + 1
-    balance = 1
-    pos += 1
-    while pos < len(text):
-        if text[pos] == "\\":
-            pos += 2
-            continue
-        if text[pos] == "{":
-            balance += 1
-        elif text[pos] == "}":
-            balance -= 1
-            if balance == 0:
-                return text[start:pos], pos + 1
-        pos += 1
-    raise ValueError("Unclosed LaTeX argument")
+def load_env_macros():
+    """Fallback definitions for metadata macros that a version may not define."""
+    values = env_values()
+    return "\n".join(rf"\providecommand{{\{name}}}{{{values[key]}}}" for name, key in ENV_MACROS.items())
+
+
+def overriding(definition):
+    r"""Rewrite a definition so it applies whether or not the macro exists yet."""
+    match = DEFINITION.match(definition)
+    name = match.group(2).strip("{}")
+    return rf"\providecommand{{{name}}}{{}}\renewcommand{match.group(1)}{{{name}}}" + definition[match.end():]
+
+
+def version_definitions(ref, body_definitions=""):
+    """Macro definitions of one version: its preamble (metadata, layouts) and text."""
+    values = env_values()
+    preamble = re.sub(r'\$\{([A-Z0-9_]+)\}', lambda m: values.get(m.group(1), m.group(0)),
+                      template_preamble(ref))
+    return [definition for definition in find_definitions(preamble)[1] + find_definitions(body_definitions)[1]
+            if DEFINITION.match(definition).group(2).strip("{}") != r"\thesischapter"]
+
+
+def side_setup(ref, body_definitions=""):
+    r"""
+    Code that opens every column block of one version: its heading format,
+    paragraph settings, and macros (metadata, page layouts). The chapter
+    heading comes from extract_section_formatting without its page break.
+    Definitions nested inside \newenvironment need doubled parameter markers.
+    """
+    macros = [overriding(definition) for definition in version_definitions(ref, body_definitions)]
+    setup = "\n  ".join([extract_section_formatting(ref), *macros])
+    return re.sub(r'(?<!\\)#', "##", setup)
+
+
+def text_macros(definitions):
+    """
+    Macros a version defines for its own text: metadata values, a cover
+    heading, signature blocks. Return {name: (argument count, body)}; a macro
+    with an optional argument stays unexpanded.
+    """
+    macros = {}
+    for definition in definitions:
+        match = TEXT_MACRO.match(definition)
+        if match and not match.group(4):
+            name = match.group(1) or match.group(2)
+            body, _ = read_braced_argument(definition, match.end() - 1)
+            macros[name] = (int(match.group(3) or 0), body)
+    return macros
+
+
+def expand_text_macros(text, macros):
+    r"""
+    Replace a version's own macros by what they print, so the comparison sees
+    what readers see: a renamed macro with the same value is unchanged, a
+    changed title is a change, and names inside a signature block compare
+    word by word. A control word eats the spaces after it unless an empty
+    group ends it, e.g. \researchername{}.
+    """
+    if macros:
+        pattern = re.compile(r'\\(' + "|".join(sorted(map(re.escape, macros), key=len, reverse=True))
+                             + r')(?![A-Za-z])')
+
+        def expand_once(text):
+            out, pos = [], 0
+            while match := pattern.search(text, pos):
+                count, body = macros[match.group(1)]
+                end = match.end()
+                if count:
+                    try:
+                        arguments = []
+                        for _ in range(count):
+                            argument, end = read_braced_argument(text, end)
+                            arguments.append(argument)
+                    except ValueError:
+                        out.append(text[pos:match.end()])
+                        pos = match.end()
+                        continue
+                    body = re.sub(r'#([1-9])', lambda m, args=arguments: args[int(m.group(1)) - 1], body)
+                else:
+                    empty = re.compile(r'\{\}|[ \t]*(?:\n[ \t]*)?').match(text, end)
+                    end = empty.end()
+                # Text right after a control word, e.g. \selectfont, needs a separating space.
+                joined = re.search(r'\\[A-Za-z]+$', text[:match.start()]) and re.match(r'[^\W\d_]', body)
+                out.append(text[pos:match.start()] + (" " if joined else "") + body)
+                pos = end
+            return "".join(out) + text[pos:]
+
+        for _ in range(5):
+            expanded = expand_once(text)
+            if expanded == text:
+                break
+            text = expanded
+    # \expandafter\uline\expandafter{name} only expands a name macro for ulem.
+    text = re.sub(r'\\expandafter\\uline\\expandafter\{', r'\\uline{', text)
+    # TeX prints \MakeUppercase{plain text} in capitals; compare what it prints.
+    # A space keeps a preceding control word, e.g. \selectfont, from absorbing the text.
+    text = re.sub(r'\\MakeUppercase\{([^{}\\]*)\}',
+                  lambda m: (" " if re.search(r'\\[A-Za-z]+$', m.string[:m.start()]) else "") + m.group(1).upper(),
+                  text)
+    return re.sub(r'\\vfill\b|\\vspace\*\{\\fill\}', '', text)
+
+
+def label_sides(body):
+    """Give source labels a side prefix and left citations the left bibliography keys."""
+    def left(match):
+        content = SOURCE_LABEL.sub(lambda m: rf"\{m.group(1)}{{L-{m.group(2)}}}", match.group(1))
+        content = CITATION.sub(lambda m: rf"\{m.group(1)}{m.group(2)}{{" + ", ".join(
+            key.strip() + "_v1" for key in m.group(3).split(",") if key.strip()) + "}", content)
+        return f"\\begin{{leftside}}{content}\\end{{leftside}}"
+
+    def right(match):
+        content = SOURCE_LABEL.sub(lambda m: rf"\{m.group(1)}{{R-{m.group(2)}}}", match.group(1))
+        return f"\\begin{{rightside}}{content}\\end{{rightside}}"
+
+    body = re.sub(r'\\begin\{leftside\}(.*?)\\end\{leftside\}', left, body, flags=re.DOTALL)
+    return re.sub(r'\\begin\{rightside\}(.*?)\\end\{rightside\}', right, body, flags=re.DOTALL)
 
 
 def replace_title_page(text, class_source=None):
@@ -1171,183 +451,26 @@ def replace_title_page(text, class_source=None):
     return text
 
 
-def extract_citation_keys(text, suffix=""):
-    matches = re.findall(r'\\(?:parencite|cite|textcite|nocite)\*?(?:\[[^\]]*\])*\{([^}]+)\}', text)
-    keys = set()
-    for match in matches:
-        for key in match.split(','):
-            k = key.strip()
-            if k:
-                keys.add(k + suffix)
-    return sorted(list(keys))
-
-def parse_bib(content):
-    entries = {}
-    idx = 0
-    while True:
-        idx = content.find('@', idx)
-        if idx == -1: break
-        brace_idx = content.find('{', idx)
-        if brace_idx == -1: break
-        entry_type = content[idx+1:brace_idx].strip()
-        comma_idx = content.find(',', brace_idx)
-        if comma_idx == -1: break
-        key = content[brace_idx+1:comma_idx].strip()
-        balance = 1
-        pos = comma_idx + 1
-        while pos < len(content) and balance > 0:
-            if content[pos] == '{': balance += 1
-            elif content[pos] == '}': balance -= 1
-            pos += 1
-        if balance == 0:
-            fields_text = content[comma_idx+1:pos-1]
-            entries[key] = {
-                'type': entry_type,
-                'fields_text': fields_text,
-                'raw': content[idx:pos]
-            }
-        idx = pos
-    return entries
-
-def parse_fields_text(text):
-    fields = {}
-    idx = 0
-    while idx < len(text):
-        eq_idx = text.find('=', idx)
-        if eq_idx == -1: break
-        name = text[idx:eq_idx].strip().split(',')[-1].strip().lower()
-        idx = eq_idx + 1
-        while idx < len(text) and text[idx] in ' \t\n\r': idx += 1
-        if idx == len(text): break
-        if text[idx] == '{':
-            balance = 1
-            pos = idx + 1
-            while pos < len(text) and balance > 0:
-                if text[pos] == '{': balance += 1
-                elif text[pos] == '}': balance -= 1
-                pos += 1
-            val = text[idx+1:pos-1]
-            fields[name] = val
-            idx = pos
-        elif text[idx] == '"':
-            pos = idx + 1
-            while pos < len(text) and text[pos] != '"': pos += 1
-            val = text[idx+1:pos]
-            fields[name] = val
-            idx = pos + 1
-        else:
-            pos = idx
-            while pos < len(text) and text[pos] not in ',\n}': pos += 1
-            val = text[idx:pos].strip()
-            fields[name] = val
-            idx = pos
-    return fields
-
-# Biber parses these fields itself; a color macro breaks names, dates, and URLs.
-# A changed value still appears in its modified entry, without a text color.
-BIB_PARSED_FIELDS = {
-    "author", "editor", "editora", "editorb", "editorc", "translator",
-    "annotator", "commentator", "introduction", "foreword", "afterword",
-    "bookauthor", "holder", "shortauthor", "shorteditor", "namea", "nameb",
-    "namec", "date", "year", "month", "urldate", "eventdate", "origdate",
-    "url", "doi", "eprint", "file", "verba", "verbb", "verbc", "ids",
-    "crossref", "xref", "related", "keywords", "langid", "pages", "isbn", "issn",
-}
-
-
-def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
-    e1 = parse_bib(bib1_str)
-    e2 = parse_bib(bib2_str)
-    out1 = []
-    out2 = []
-    for key in set(keys1) | set(keys2):
-        if key in keys1 and key not in keys2:
-            if key in e1:
-                raw = e1[key]['raw'].strip()
-                raw = raw[:-1].rstrip() + ',\n  keywords = {v1},\n  userc = {del}\n}'
-                out1.append(raw)
-        elif key in keys2 and key not in keys1:
-            if key in e2:
-                raw = e2[key]['raw'].strip()
-                raw = raw[:-1].rstrip() + ',\n  keywords = {v2},\n  userc = {ins}\n}'
-                out2.append(raw)
-        else:
-            if key in e1 and key in e2:
-                fields1 = parse_fields_text(e1[key]['fields_text'])
-                fields2 = parse_fields_text(e2[key]['fields_text'])
-                new_f1 = []
-                new_f2 = []
-                all_fields = set(fields1.keys()) | set(fields2.keys())
-                for f in sorted(list(all_fields)):
-                    v1 = fields1.get(f)
-                    v2 = fields2.get(f)
-                    if v1 == v2 or f in BIB_PARSED_FIELDS:
-                        if v1 is not None:
-                            new_f1.append(f"{f} = {{{v1}}}")
-                        if v2 is not None:
-                            new_f2.append(f"{f} = {{{v2}}}")
-                    else:
-                        if v1 is not None:
-                            new_f1.append(f"{f} = {{{{\\bibdelcolor {v1}}}}}")
-                        if v2 is not None:
-                            new_f2.append(f"{f} = {{{{\\bibinscolor {v2}}}}}")
-                new_f1.append('keywords = {v1}')
-                new_f2.append('keywords = {v2}')
-                # Set userc so tcolorbox opens for modified entries too
-                new_f1.append('userc = {mod}')
-                new_f2.append('userc = {mod}')
-                out1.append(f"@{e1[key]['type']}{{{key},\n  " + ",\n  ".join(new_f1) + "\n}")
-                out2.append(f"@{e2[key]['type']}{{{key},\n  " + ",\n  ".join(new_f2) + "\n}")
-    return "\n".join(out1), "\n".join(out2)
-
-def plain_bib(value):
-    return " ".join(re.sub(r'\\[a-zA-Z]+|[{}\\]', '', value or "").casefold().split())
-
-
-def bibliography_rows(bib1_str, bib2_str, keys1, keys2):
-    """
-    Order cited sources by author, year, and title. Each row holds one source
-    on both sides, so an added or removed source leaves the other side blank.
-    """
-    e1, e2 = parse_bib(bib1_str), parse_bib(bib2_str)
-    rows = []
-    for key in set(keys1) | set(keys2):
-        left, right = key in keys1 and key in e1, key in keys2 and key in e2
-        if not (left or right):
-            continue
-        fields = parse_fields_text((e2 if right else e1)[key]['fields_text'])
-        names = fields.get("author") or fields.get("editor")
-        # Sort by family names: "Family, Given" or "Given Family".
-        families = [name.split(",")[0] if "," in name else name.split()[-1]
-                    for name in re.split(r'\s+and\s+', names.strip())] if names else [fields.get("title", "")]
-        rows.append(((plain_bib(" ".join(families)), fields.get("year") or fields.get("date", ""),
-                      plain_bib(fields.get("title")), key), key, left, right))
-    return [(key, left, right) for _, key, left, right in sorted(rows)]
-
-
-def render_bibliography_rows(rows, v1_keys, v2_keys):
-    """Print each source in its own synchronized row of the two columns."""
-    out = [f"\\nocite{{{', '.join(v1_keys)}}}" if v1_keys else "",
-           f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else "",
-           r"\begin{paracol}{2}", r"\section*{DAFTAR PUSTAKA}", r"\switchcolumn",
-           r"\section*{DAFTAR PUSTAKA}", r"\switchcolumn*"]
-    for index, (key, left, right) in enumerate(rows):
-        for side, present, entry in (("left", left, key + "_v1"), ("right", right, key)):
-            if present:
-                out.append(rf"\defbibcheck{{diff{side}{index}}}{{\iffieldequalstr{{entrykey}}{{{entry}}}{{}}{{\skipentry}}}}")
-                # A box keeps an entry's own glue from shifting the row.
-                out.append(r"\noindent\begin{minipage}[t]{\linewidth}"
-                           rf"\printbibliography[heading=none, check=diff{side}{index}]"
-                           r"\end{minipage}\par\vspace{4pt}")
-            out.append(r"\switchcolumn" if side == "left" else r"\switchcolumn*")
-    out.append(r"\end{paracol}")
-    return "\n".join(out)
-
-
 def diff_output_stem(ref1, ref2):
     """Keep resolved ref labels in filenames without creating tag subfolders."""
     names = [re.sub(r'[^A-Za-z0-9._-]', '_', ref) for ref in (ref1, ref2)]
     return f"proposal_diff_{names[0]}_{names[1]}"
+
+
+SIDE_COUNTERS = ("section", "subsection", "subsubsection", "table", "figure", "equation")
+
+
+def side_environment(name, setup):
+    """A column environment that resumes its version's counters and macros."""
+    return "\n".join([
+        rf"\newenvironment{{{name}side}}{{%",
+        r"  \setlength{\textwidth}{\linewidth}%",
+        *(rf"  \setcounter{{{counter}}}{{\value{{{name}{counter}}}}}%" for counter in SIDE_COUNTERS),
+        f"  {setup}%",
+        r"}{%",
+        *(rf"  \setcounter{{{name}{counter}}}{{\value{{{counter}}}}}%" for counter in SIDE_COUNTERS),
+        r"}",
+    ])
 
 
 def generate_diff_latex(tag1, tag2, outdir):
@@ -1363,10 +486,10 @@ def generate_diff_latex(tag1, tag2, outdir):
 
     old_full, old_definitions = extract_source_definitions(build_full_proposal(tag1))
     new_full, new_definitions = extract_source_definitions(build_full_proposal(tag2))
-
-    # Definitions nested inside newenvironment need doubled parameter markers.
-    left_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag1) + "\n" + old_definitions)
-    right_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag2) + "\n" + new_definitions)
+    old_full = expand_text_macros(old_full, text_macros(version_definitions(tag1, old_definitions)))
+    new_full = expand_text_macros(new_full, text_macros(version_definitions(tag2, new_definitions)))
+    left_setup = side_setup(tag1, old_definitions)
+    right_setup = side_setup(tag2, new_definitions)
     template_packages = list(dict.fromkeys(extract_template_packages(tag1) + extract_template_packages(tag2)))
 
     # Extract citations
@@ -1374,21 +497,9 @@ def generate_diff_latex(tag1, tag2, outdir):
     v1_keys = extract_citation_keys(old_full, suffix="_v1")
     v2_keys = extract_citation_keys(new_full)
 
-    body = render_sections(old_full, new_full)
-    
-    # Append _v1 to citation commands specifically inside the left column 
-    # to avoid biber duplicate key merging issues for v1
-    def leftside_repl(match):
-        content = match.group(1)
-        def cite_repl(m2):
-            cmd = m2.group(1)
-            keys = m2.group(3)
-            new_keys = ", ".join([k.strip() + "_v1" if k.strip() else "" for k in keys.split(",")])
-            return f"\\{cmd}{m2.group(2)}{{{new_keys}}}"
-        new_content = re.sub(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)(\*?(?:\[[^\]]*\])*)\{([^}]+)\}', cite_repl, content)
-        return f"\\begin{{leftside}}{new_content}\\end{{leftside}}"
-    
-    body = re.sub(r'\\begin\{leftside\}(.*?)\\end\{leftside\}', leftside_repl, body, flags=re.DOTALL)
+    comparison = Comparison(old_full, new_full)
+    change_map = render_change_map(comparison, tag1, tag2)
+    body = label_sides(comparison.render())
 
     # Pull class/bib/logo assets so the diff compiles with the real
     # proposal styling instead of a bare article class.
@@ -1416,12 +527,12 @@ def generate_diff_latex(tag1, tag2, outdir):
         if os.path.exists(local_bib):
             with open(local_bib, "r") as f:
                 bib_content_v2 = f.read()
-        
+
     bib_rows = bibliography_rows(bib_content_v1, bib_content_v2, pure_v1_keys, v2_keys)
     bib_content_v1, bib_content_v2 = diff_bib_files(bib_content_v1, bib_content_v2, pure_v1_keys, v2_keys)
     if bib_rows:
         body += "\n" + render_bibliography_rows(bib_rows, v1_keys, v2_keys)
-    
+
     bib_content_v1 = re.sub(r'(@[a-zA-Z]+\s*\{)\s*([^,]+)\s*(,)', lambda m: f"{m.group(1)}{m.group(2).strip()}_v1{m.group(3)}", bib_content_v1)
 
     with open(os.path.join(outdir, bib_filename1), "w") as f:
@@ -1446,10 +557,14 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\usepackage{paracol}",
         r"\usepackage{xurl}",
         r"\usepackage{etoolbox}",
+        r"\usepackage{longtable}",
         r"\usepackage[most]{tcolorbox}",
-        # Define diff colors early so defbibenvironment can reference them
-        r"\definecolor{delhl}{RGB}{255,214,214}",
-        r"\definecolor{inshl}{RGB}{204,244,206}",
+        # Strong colors mark changed words inside corresponding sentences;
+        # pale colors mark text without a counterpart.
+        r"\definecolor{delhl}{RGB}{255,183,183}",
+        r"\definecolor{inshl}{RGB}{166,229,171}",
+        r"\definecolor{delpl}{RGB}{255,232,232}",
+        r"\definecolor{inspl}{RGB}{226,245,227}",
         r"\definecolor{deltext}{RGB}{180,0,0}",
         r"\definecolor{instext}{RGB}{0,120,0}",
         # Robust switches: biblatex case changing alters a color argument.
@@ -1457,6 +572,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\DeclareRobustCommand{\bibinscolor}{\color{instext}}",
         r"\newcommand{\diffmoved}[1]{\par\noindent{\footnotesize\itshape\color{gray}[#1]}\par}",
         r"\newcommand{\diffinline}[2]{{\setlength{\fboxsep}{0pt}\colorbox{#1}{\strut #2}}}",
+        r"\newcommand{\diffkey}[3]{{\setlength{\fboxsep}{1.5pt}\colorbox{#1}{\strut kiri}\,\colorbox{#2}{\strut kanan}}~#3}",
         # No inset or added caption: retain the source equation's usable width.
         r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",
         rf"\addbibresource{{{bib_filename1}}}",
@@ -1464,8 +580,8 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\AtEveryBibitem{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         r"\AtEveryCitekey{\clearfield{extradate}\clearfield{extrayear}\clearfield{extraalpha}}",
         # Custom bibliography environment: tcolorbox wraps del/ins entries for background highlight
-        r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delhl,colframe=delhl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
-        r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inshl,colframe=inshl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delpl,colframe=delpl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
+        r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inspl,colframe=inspl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
         r"\newcommand{\bibtcbend}{\end{tcolorbox}}",
         # One entry per synchronized row: the row gap replaces the item gap.
         r"\defbibenvironment{bibliography}{\list{}{\setlength{\leftmargin}{\bibhang}\setlength{\itemindent}{-\leftmargin}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}}}{\endlist}{\item}",
@@ -1478,62 +594,20 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"  \iffieldequalstr{userc}{del}{\bibtcbend}{}%",
         r"  \iffieldequalstr{userc}{ins}{\bibtcbend}{}%",
         r"}",
-
-        # Load local env macros dynamically
-        load_env_macros(load_tracked_metadata(tag2)),
+        # Fallback metadata; each side redefines the macros its version defines.
+        load_env_macros(),
         # Counters for side-by-side sync
-        r"\newcounter{leftsection}",
-        r"\newcounter{leftsubsection}",
-        r"\newcounter{leftsubsubsection}",
-        r"\newcounter{lefttable}",
-        r"\newcounter{leftfigure}",
-        r"\newcounter{leftequation}",
-        r"\newcounter{rightsection}",
-        r"\newcounter{rightsubsection}",
-        r"\newcounter{rightsubsubsection}",
-        r"\newcounter{righttable}",
-        r"\newcounter{rightfigure}",
-        r"\newcounter{rightequation}",
-        r"\newenvironment{leftside}{%",
-        r"  \setlength{\textwidth}{\linewidth}%",
-        r"  \setcounter{section}{\value{leftsection}}%",
-        r"  \setcounter{subsection}{\value{leftsubsection}}%",
-        r"  \setcounter{subsubsection}{\value{leftsubsubsection}}%",
-        r"  \setcounter{table}{\value{lefttable}}%",
-        r"  \setcounter{figure}{\value{leftfigure}}%",
-        r"  \setcounter{equation}{\value{leftequation}}%",
-        f"  {left_formatting}%",
-        r"}{%",
-        r"  \setcounter{leftsection}{\value{section}}%",
-        r"  \setcounter{leftsubsection}{\value{subsection}}%",
-        r"  \setcounter{leftsubsubsection}{\value{subsubsection}}%",
-        r"  \setcounter{lefttable}{\value{table}}%",
-        r"  \setcounter{leftfigure}{\value{figure}}%",
-        r"  \setcounter{leftequation}{\value{equation}}%",
-        r"}",
-        r"\newenvironment{rightside}{%",
-        r"  \setlength{\textwidth}{\linewidth}%",
-        r"  \setcounter{section}{\value{rightsection}}%",
-        r"  \setcounter{subsection}{\value{rightsubsection}}%",
-        r"  \setcounter{subsubsection}{\value{rightsubsubsection}}%",
-        r"  \setcounter{table}{\value{righttable}}%",
-        r"  \setcounter{figure}{\value{rightfigure}}%",
-        r"  \setcounter{equation}{\value{rightequation}}%",
-        f"  {right_formatting}%",
-        r"}{%",
-        r"  \setcounter{rightsection}{\value{section}}%",
-        r"  \setcounter{rightsubsection}{\value{subsection}}%",
-        r"  \setcounter{rightsubsubsection}{\value{subsubsection}}%",
-        r"  \setcounter{righttable}{\value{table}}%",
-        r"  \setcounter{rightfigure}{\value{figure}}%",
-        r"  \setcounter{rightequation}{\value{equation}}%",
-        r"}",
+        *(rf"\newcounter{{{side}{counter}}}" for side in ("left", "right") for counter in SIDE_COUNTERS),
+        # Version macros may use internal names such as \@currentlabel.
+        r"\makeatletter",
+        side_environment("left", left_setup),
+        side_environment("right", right_setup),
+        r"\makeatother",
         # Retain native caption wording/numbering without floating out of columns.
         r"\makeatletter",
         r"\renewenvironment{table}[1][]{\def\@captype{table}}{}",
         r"\renewenvironment{figure}[1][]{\def\@captype{figure}}{}",
         r"\makeatother",
-        # (colors already defined earlier in preamble for defbibenvironment)
         # Use soul for line-wrapping highlights
         r"\usepackage{soul}",
         r"\soulregister{\parencite}{1}",
@@ -1552,8 +626,11 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\sethlcolor{delhl}",
         r"\newcommand{\delhighlight}[1]{{\sethlcolor{delhl}\hl{#1}}}",
         r"\newcommand{\inhighlight}[1]{{\sethlcolor{inshl}\hl{#1}}}",
+        r"\newcommand{\delpale}[1]{{\sethlcolor{delpl}\hl{#1}}}",
+        r"\newcommand{\inspale}[1]{{\sethlcolor{inspl}\hl{#1}}}",
         r"\begin{document}",
         r"\thispagestyle{empty}",
+        change_map,
         r"\setlength{\columnsep}{\dimexpr\paperwidth-\textwidth\relax}",
         r"\setlength{\columnseprule}{0.3pt}",
         r"\begin{paracol}{2}",
@@ -1584,7 +661,7 @@ def main():
     tag2 = resolve_git_ref(tag2)
     outdir = sys.argv[3] if len(sys.argv) > 3 else "scratch"
 
-    print(f"=== Building full proposal diff: {tag1} -> {tag2} ===")
+    print(f"=== Building side-by-side diff: {tag1} -> {tag2} ===")
     os.makedirs(outdir, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="diff-", dir=outdir) as temporary:
         tex_path = generate_diff_latex(tag1, tag2, temporary)

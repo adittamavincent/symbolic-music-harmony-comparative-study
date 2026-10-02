@@ -1,0 +1,47 @@
+% Page and heading layouts used by frontmatter/ and chapters/. Wording stays
+% in those files; this file only arranges it.
+
+% \thesischapter{number}{title} opens a chapter on a new page with a contents
+% entry. Section numbering restarts in each chapter.
+\newcommand{\thesischapter}[2]{%
+  \clearpage
+  \phantomsection
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  \addcontentsline{toc}{part}{BAB #1: #2}
+  \begin{center}\bfseries BAB #1\par #2\end{center}
+}
+
+% Cover and submission pages follow the 2026 Prodi Musik theses in
+% references/: bold 14pt title with chosen line breaks, logo, SKRIPSI,
+% "Oleh:" in regular weight, then bold name and NIM.
+\newcommand{\thesiscoverhead}{%
+  {\fontsize{14pt}{16pt}\selectfont\thesistitlelines\par}
+  \vfill
+  \includegraphics[width=5cm]{logo-isi.png}\par
+  \vspace{0.2cm}
+  SKRIPSI\par
+  \vspace{0.6cm}
+  {\mdseries Oleh:}\par
+  \researchername\par
+  NIM \researchernim\par
+}
+
+% Approval-page signatures.
+% \signatory{width}{role lines}{name}{identifier line, e.g. NIP or NUPTK}
+\newcommand{\signatory}[4]{%
+  \begin{minipage}[t]{#1}
+    \raggedright
+    #2\par
+    \vspace{1.4cm}
+    % Expand the name macro so \uline can break it between words.
+    \textbf{\expandafter\uline\expandafter{#3}}\par
+    #4
+  \end{minipage}%
+}
+% \examinercolumn{role}{name}{identifier line}: one examiner in the offset column.
+\newcommand{\examinercolumn}[3]{%
+  \par\noindent\hspace{0.25\textwidth}%
+  \signatory{0.75\textwidth}{#1}{#2}{#3}\par
+  \vspace{0.3cm}%
+}

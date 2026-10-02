@@ -1,0 +1,48 @@
+"""Reference-list comparison: changed fields, citation keys, and entry rows."""
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import diff_bibliography as bib  # noqa: E402
+
+
+class BibliographyDiffTests(unittest.TestCase):
+    def test_changed_bibliography_names_and_dates_remain_parseable(self):
+        old = "@book{k,\n  author = {Le, A and Bigo, B},\n  title = {Old},\n  year = {2024}\n}"
+        new = "@book{k,\n  author = {Le, A and Keller, C},\n  title = {New},\n  year = {2025}\n}"
+        left, right = bib.diff_bib_files(old, new, ["k"], ["k"])
+        self.assertIn("author = {Le, A and Bigo, B}", left)
+        self.assertIn("year = {2025}", right)
+        self.assertIn(r"title = {{\bibdelcolor Old}}", left)
+        self.assertIn(r"title = {{\bibinscolor New}}", right)
+        self.assertNotIn(r"\textcolor", left + right)
+
+    def test_citation_keys_include_page_arguments_and_lists(self):
+        self.assertEqual(bib.extract_citation_keys(r"\parencite[9]{strube1928} \cite{a, b}"),
+                         ["a", "b", "strube1928"])
+        self.assertEqual(bib.extract_citation_keys(r"\parencite{a}", suffix="_v1"), ["a_v1"])
+
+
+class BibliographyRowTests(unittest.TestCase):
+    OLD = """@book{kept, author = {Strube, Gustav}, title = {Chords}, year = {1928}}
+@inproceedings{gone, author = {Ke Chen and Shlomo Dubnov}, title = {Sketch}, year = {2020}}"""
+    NEW = """@book{kept, author = {Strube, Gustav}, title = {Chords}, year = {1928}}
+@article{added, author = {Huang, Cheng-Zhi Anna}, title = {Doodle}, year = {2019}}"""
+
+    def test_rows_sort_by_family_name_and_leave_missing_sides_blank(self):
+        rows = bib.bibliography_rows(self.OLD, self.NEW, ["kept", "gone"], ["kept", "added"])
+        self.assertEqual(rows, [("gone", True, False), ("added", False, True), ("kept", True, True)])
+
+    def test_each_row_prints_one_entry_per_side_in_a_synchronized_box(self):
+        rows = bib.bibliography_rows(self.OLD, self.NEW, ["kept", "gone"], ["kept", "added"])
+        rendered = bib.render_bibliography_rows(rows, ["kept_v1", "gone_v1"], ["kept", "added"])
+        self.assertIn(r"\iffieldequalstr{entrykey}{gone_v1}", rendered)
+        self.assertIn(r"\iffieldequalstr{entrykey}{added}", rendered)
+        self.assertNotIn(r"{entrykey}{added_v1}", rendered)
+        self.assertEqual(rendered.count(r"\printbibliography"), 4)
+        self.assertEqual(rendered.count(r"\switchcolumn*"), 4)
+
+
+if __name__ == "__main__":
+    unittest.main()

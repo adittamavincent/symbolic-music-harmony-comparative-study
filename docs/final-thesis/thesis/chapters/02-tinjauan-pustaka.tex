@@ -1,6 +1,8 @@
-\section{Tinjauan Pustaka}
+\thesischapter{II}{TINJAUAN PUSTAKA DAN LANDASAN TEORI}
 
-\subsection{Perkembangan Model Generatif Musik Simbolik}
+\section{Tinjauan Pustaka}\label{sec:tinjauan-pustaka}
+
+\subsection{Perkembangan Model Generatif Musik Simbolik}\label{sec:perkembangan-model-generatif}
 
 Pembuatan musik dengan komputer merupakan subbidang kreativitas komputasional, yaitu bidang multidisiplin yang berusaha memperoleh perilaku kreatif dari komputer. Carnovalini dan Rodà mencatat bahwa sifat multidisiplin tersebut membuat tujuan dan cara evaluasi bidang ini sulit ditetapkan secara tepat \parencite{carnovalini2020}. Civit et al.\ melakukan tinjauan sistematis dengan metode PRISMA terhadap publikasi pembuatan musik berbasis AI. Mereka menemukan peningkatan minat yang besar dari musisi maupun ilmuwan komputer dan membahas berbagai arsitektur model dari sudut pandang teknis dan musikal \parencite{civit2022}. Mycka dan Mańdziuk meninjau publikasi jurnal dan konferensi terkemuka tahun 2017--2023 dan mencatat bahwa jaringan saraf tiruan berlapis (\textit{deep neural networks}) menjadi pendekatan yang dominan dalam penelitian AI untuk musik \parencite{mycka2025}.
 
@@ -10,7 +12,7 @@ Model musik simbolik dikembangkan untuk berbagai tugas. MuseGAN menghasilkan mus
 
 Perbandingan antar-jenis model juga telah dilakukan. Ghoshal et al.\ membandingkan arsitektur LSTM, \textit{Transformer}, dan gabungan keduanya untuk pembuatan musik simbolik \parencite{ghoshal2026}. Yin et al.\ membandingkan beberapa sistem pembuatan musik, baik yang berbasis \textit{deep learning} maupun yang tidak, melalui studi dengar. Model \textit{deep learning} terkuat dalam studi tersebut memperoleh hasil yang setara dengan model Markov, sehingga para penulis menyimpulkan bahwa sampai saat itu \textit{deep learning} belum mengungguli metode lain untuk pembuatan musik otomatis \parencite{yin2023}.
 
-\subsection{DeepBach dan Coconet}
+\subsection{DeepBach dan Coconet}\label{sec:deepbach-dan-coconet}
 
 DeepBach \parencite{hadjeres2017} dirancang untuk menghasilkan \textit{chorale} empat suara dalam gaya Bach. Model memperkirakan distribusi nada dari konteks menggunakan jaringan yang mencakup LSTM dan melakukan generasi melalui \textit{pseudo-Gibbs sampling}, yaitu pengisian ulang nada satu per satu secara acak berdasarkan nada di sekitarnya. Pengguna dapat menetapkan batasan posisi seperti nada, ritme, atau kadens, termasuk menetapkan melodi sopran dan membiarkan model mengisi suara lainnya. Prosedur ini berbeda dari generasi sekuensial satu arah. Pengembangnya mengevaluasi DeepBach melalui uji diskriminasi daring ``\textit{Bach or Computer}'' dan menganalisis contoh keluaran. Analisis contoh tersebut mencatat kesalahan komposisi seperti oktaf sejajar, tanpa menghitung frekuensinya pada seluruh keluaran. Hadjeres dan Nielsen kemudian menjelaskan bahwa jaringan rekuren yang menyusun nada dari kiri ke kanan hanya memberi kendali terbatas kepada pengguna. Mereka mengusulkan \textit{Anticipation-RNN}, yang dapat mematuhi batasan dari pengguna, dan mengujinya pada melodi bergaya bagian sopran \textit{chorale} Bach \parencite{hadjeres2020}.
 
@@ -18,7 +20,7 @@ Coconet \parencite{huang2017} dikembangkan oleh peneliti MILA, Université de Mo
 
 Model simbolik yang lebih baru tidak selalu menyediakan tugas yang sama. NotaGen \parencite{wang2025}, misalnya, dilatih awal pada 1,6 juta karya dalam notasi ABC dan dikendalikan melalui petunjuk periode, komponis, dan instrumentasi. Antarmuka resminya tidak menyediakan masukan melodi tertentu yang harus dipertahankan dalam keluaran. Perbedaan antarmuka ini menentukan model mana yang dapat diuji dengan soal harmonisasi melodi yang sama.
 
-\subsection{Evaluasi Keluaran Model Musik Generatif}
+\subsection{Evaluasi Keluaran Model Musik Generatif}\label{sec:evaluasi-keluaran-model}
 
 Lerch et al.\ meninjau sasaran, metodologi, dan ukuran evaluasi model generatif musik. Tinjauan tersebut membedakan evaluasi keluaran sistem dari evaluasi penggunaan model, mencakup pendekatan subjektif dan objektif, kualitatif dan kuantitatif, serta empiris dan komputasional, dan membahas kelebihan serta keterbatasannya dari sudut pandang musikologi, teknik, dan interaksi manusia--komputer \parencite{lerch2025}. Penelitian ini termasuk evaluasi keluaran sistem dengan pendekatan objektif, kuantitatif, dan komputasional.
 
@@ -34,13 +36,13 @@ Huang et al.\ \parencite{huang2019} melaporkan penerapan Coconet dalam Bach Dood
 
 music21 \parencite{cuthbert2010} adalah pustaka Python sumber terbuka untuk musikologi berbasis komputer yang dikembangkan di MIT. Pustaka ini digunakan secara luas untuk analisis, manipulasi, dan evaluasi representasi musik simbolik. Fang et al.\ \parencite{fang2020} menggunakan music21 untuk membangun fungsi penilaian \textit{chorale}. Huang et al.\ \parencite{huang2019} menggunakan music21 untuk menghitung kuint dan oktaf sejajar pada keluaran Coconet. Penelitian ini menggunakan music21 untuk mengurai keluaran model dan memeriksa gerak suara. MusPy \parencite{dong2020} merupakan contoh pustaka Python lain untuk generasi dan evaluasi musik simbolik.
 
-\subsection{Evaluasi Penggunaan Model oleh Musisi}
+\subsection{Evaluasi Penggunaan Model oleh Musisi}\label{sec:evaluasi-penggunaan-model}
 
 Sebagian penelitian menilai model dari pengalaman penggunanya. Louie et al.\ menemukan bahwa pengguna pemula dapat kewalahan oleh banyaknya musik yang dihasilkan dan frustrasi oleh keluaran yang tidak menentu. Mereka mengembangkan alat pengarah, antara lain \textit{Voice Lanes} yang membatasi pembuatan musik pada suara tertentu. Pada studi lanjutan dengan 21 partisipan, alat tersebut meningkatkan rasa percaya, kendali, pemahaman, dan rasa kepemilikan pengguna atas komposisi \parencite{louie2020}. Suh et al.\ mengamati 15 pasang partisipan yang menyusun frasa musik dengan dan tanpa AI dalam studi laboratorium kualitatif. AI berperan antara lain sebagai titik awal bersama dan sebagai jaring pengaman ketika partisipan mengambil risiko kreatif \parencite{suh2021}. Dalam AI Song Contest, 13 tim dengan total 61 pengguna menghasilkan sampel dalam jumlah besar dan memilihnya kemudian, karena model pembelajaran mesin sulit diarahkan \parencite{huang2020contest}. Zacharakis et al.\ membandingkan harmonisasi melodi oleh komposer profesional dan pemula dengan dan tanpa sistem CHAMELEON. Penilaian terhadap sistem bergantung pada keahlian: pemula lebih menghargai bantuan sistem daripada profesional \parencite{zacharakis2021}.
 
 Penelitian-penelitian tersebut menilai interaksi pengguna dengan model. Penelitian ini tidak melibatkan pengguna, tetapi temuannya relevan karena menunjukkan bahwa keluaran model digunakan langsung oleh musisi, termasuk pemula, dalam proses komposisi dan harmonisasi.
 
-\subsection{Analisis Harmoni Komputasional dan Anotasi}
+\subsection{Analisis Harmoni Komputasional dan Anotasi}\label{sec:analisis-harmoni-komputasional}
 
 Analisis harmoni otomatis telah lama menjadi perhatian komunitas \textit{music information retrieval}. Micchi et al.\ memandang analisis angka Romawi sebagai kasus yang sulit karena memerlukan informasi kunci dan fungsi selain identitas akor. Mereka menyusun meta-korpus dari seluruh dataset analisis angka Romawi yang ada, yang juga memuat keragaman sudut pandang analitis manusia, dan menyatakan bahwa ejaan nada yang lengkap mutlak diperlukan untuk kajian harmoni \parencite{micchi2020}. Neuwirth et al.\ menerbitkan dataset analisis harmoni seluruh kuartet gesek Beethoven beserta skema anotasinya \parencite{neuwirth2018}. Dengan data tersebut, Moss et al.\ menganalisis anotasi ahli secara statistik dan menunjukkan bahwa sedikit akor mendominasi sebagian besar data, bahwa harmoni tonal memiliki arah dalam waktu, dan bahwa harmoni tonal bekerja secara berbeda pada tingkat akor dan tingkat kunci \parencite{moss2019}.
 
@@ -48,15 +50,15 @@ Beberapa penelitian menunjukkan bahwa analisis harmoni mengandung unsur penafsir
 
 Pemeriksaan gerak suara juga bergantung pada pemisahan suara. Karystinaios et al.\ memodelkan pemisahan suara pada musik simbolik sebagai pelacakan lintasan melodi, termasuk kasus suara yang bersilangan dan tumpang tindih \parencite{karystinaios2023}. Temuan-temuan ini berimplikasi pada instrumen penelitian. Kaidah yang memerlukan penentuan akor, fungsi, atau tonalitas mewarisi ketidakpastian analisis harmoni, sehingga penandaannya memerlukan pemeriksaan manusia. Penelitian ini membatasi pengukuran pada kaidah yang dapat ditentukan dari tinggi nada dan waktu bunyi, dan memeriksa pemetaan keempat suara sebelum gerak antar-suara dinilai.
 
-\subsection{Posisi Penelitian}
+\subsection{Posisi Penelitian}\label{sec:posisi-penelitian}
 
 Penelitian ini melanjutkan analisis Bach Doodle \parencite{huang2019}. Ukuran utamanya sama, yaitu jumlah kuint dan oktaf sejajar per birama yang dihitung dengan music21, dan gagasan yang diuji juga sama, yaitu bahwa kepatuhan model menurun ketika melodi masukan tidak menyerupai data latih. Penelitian ini memperluas analisis tersebut dalam empat hal. Pertama, melodi dikendalikan dan diberikan secara identik kepada dua model, DeepBach dan Coconet. Kedua, asal melodi dibedakan antara melodi \textit{chorale} Bach dan melodi latihan dalam buku harmoni Strube. Ketiga, kaidah diperluas dengan tiga kategori lain dari rubrik Yan et al.\ \parencite{yan2018} yang dapat diukur tanpa penafsiran akor, dan setiap kaidah beserta pengecualiannya dirumuskan dari uraian Strube \parencite{strube1928}. Keempat, harmonisasi asli Bach untuk melodi yang sama diukur sebagai acuan, dan instrumen diuji terhadap contoh dalam buku Strube serta terhadap angka yang dilaporkan Huang et al.
 
 Berbeda dari Yan et al., penelitian ini tidak menggunakan penilai manusia dan tidak mencakup kategori yang memerlukan analisis akor. Berbeda dari ukuran distribusional, pengukuran ini mencatat setiap penandaan beserta lokasi musikalnya sehingga dapat diperiksa kembali pada partitur. Berbeda dari studi dengar dan studi pengguna, penelitian ini mengukur keluaran terhadap kaidah yang dirujuk.
 
-\section{Landasan Teori}
+\section{Landasan Teori}\label{sec:landasan-teori}
 
-\subsection{Musik Simbolik, Model Generatif, dan Distribusi Data Latih}
+\subsection{Musik Simbolik, Model Generatif, dan Distribusi Data Latih}\label{sec:musik-simbolik-dan-model-generatif}
 
 Musik simbolik merepresentasikan nada, durasi, dan hubungan antar-suara dalam bentuk yang dapat dibaca secara struktural, seperti MIDI atau notasi ABC. Representasi ini memungkinkan pemeriksaan gerak suara setelah penguraian dan pemetaan suara diverifikasi. Penelitian dibatasi pada keluaran simbolik karena instrumen yang digunakan membaca peristiwa nada, bukan sinyal audio. Karena nada dalam musik simbolik tercatat secara eksplisit, penentuan nada mana yang termasuk suara yang sama dapat dirumuskan sebagai tugas tersendiri \parencite{karystinaios2023}. Pada keluaran empat suara, pemetaan sopran, alto, tenor, dan bas perlu diperiksa sebelum gerak antar-suara dinilai.
 
@@ -66,7 +68,7 @@ Model generatif mempelajari pola dari data latihnya. Masukan yang tidak menyerup
 
 Data latih dan spesialisasi kedua model juga berbeda. Hasil perbandingan akan menggambarkan keluaran model pada konfigurasi yang diuji, dengan mempertimbangkan faktor arsitektur, data latih, representasi, dan prosedur generasi. Pemisahan pengaruh masing-masing faktor memerlukan desain yang lebih terkendali daripada perbandingan dua model yang ada.
 
-\subsection{Teori Harmoni Fungsional dan Kaidah Gerak Suara Gustav Strube}
+\subsection{Teori Harmoni Fungsional dan Kaidah Gerak Suara Gustav Strube}\label{sec:teori-harmoni-dan-kaidah-strube}
 
 Landasan teori fokus penelitian ini tersusun dalam tiga tingkat. Teori harmoni fungsional menjadi teori utama (\textit{grand theory}). Kaidah gerak suara Gustav Strube menjadi teori tingkat menengah (\textit{middle theory}) yang menurunkan teori utama tersebut ke dalam aturan penulisan empat suara. Definisi operasional pada Bab III menjadi tingkat terapan (\textit{applied theory}) yang menerapkan kaidah tersebut pada musik simbolik. Teori tentang musik simbolik, model generatif, dan distribusi data latih pada subbab sebelumnya berfungsi sebagai teori pendukung dari bidang komputasi musik. Dalam penelitian kuantitatif, teori digunakan secara deduktif sebagai dasar hipotesis dan variabel yang kemudian diuji dengan data \parencite{creswell2018}.
 
@@ -90,13 +92,13 @@ Kaidah buku ajar memiliki pengecualian. Gerak paralel dapat dimaklumi pada batas
 
 Kaidah Strube merupakan norma dari tradisi harmoni tonal Barat. Konsonansi adalah kesan menyenangkan dari nada-nada yang berbunyi bersamaan. Harrison dan Pearce menunjukkan bahwa konsonansi dipengaruhi tidak hanya oleh sifat akustik bunyi tetapi juga oleh keakraban budaya \parencite{harrison2020consonance}. Karena itu, kepatuhan terhadap kaidah Strube diperlakukan sebagai ukuran kesesuaian dengan satu tradisi tertentu, bukan ukuran universal mutu musik.
 
-\section{Asumsi dan Hipotesis}
+\section{Asumsi dan Hipotesis}\label{sec:asumsi-dan-hipotesis}
 
-\subsection{Asumsi}
+\subsection{Asumsi}\label{sec:asumsi}
 
 Penelitian ini bertolak dari tiga anggapan dasar. Pertama, kelima kaidah dapat diterapkan pada tekstur empat suara bergaya \textit{chorale} yang menjadi keluaran kedua model. Kedua, keluaran simbolik yang lolos kontrol kualitas memuat informasi nada, durasi, dan suara yang cukup untuk memeriksa gerak antar-suara. Ketiga, pelanggaran kelima kaidah dapat ditentukan dari tinggi nada dan waktu bunyi tanpa penafsiran akor. Anggapan pertama dan ketiga didukung oleh uraian Strube yang dikutip beserta halamannya pada subbab sebelumnya, dan diperiksa lebih lanjut melalui uji instrumen terhadap contoh dalam buku tersebut. Anggapan kedua diperiksa melalui kontrol kualitas sampel pada Bab III.
 
-\subsection{Hipotesis}
+\subsection{Hipotesis}\label{sec:hipotesis}
 
 Hipotesis adalah jawaban sementara terhadap masalah penelitian yang kebenarannya harus diuji secara empiris \parencite{rangkuti2016}. Pertanyaan penelitian pertama bersifat deskriptif sehingga dijawab dengan statistik deskriptif tanpa hipotesis. Pertanyaan kedua dan ketiga dijawab melalui hipotesis berikut. Setiap hipotesis diuji untuk masing-masing kaidah secara terpisah, dengan laju pelanggaran per birama sebagai indikator tingkat kepatuhan.
 

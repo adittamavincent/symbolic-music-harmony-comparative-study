@@ -79,6 +79,7 @@ help:
 		"" \
 		"🔍 VERSIONING & DIFFING:" \
 		"  make diff <ref1> <ref2>  Generate side-by-side diff PDF" \
+		"                           Halaman 1: peta perubahan (pasangan bagian, status, % kata sama)" \
 		"                           Contoh: make diff proposal/v1 proposal/v2" \
 		"                           Contoh terbaru: make diff proposal/v1 head" \
 		"                           Contoh fase: make diff proposal thesis" \

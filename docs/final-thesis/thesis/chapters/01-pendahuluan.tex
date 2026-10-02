@@ -1,4 +1,6 @@
-\section{Latar Belakang}
+\thesischapter{I}{PENDAHULUAN}
+
+\section{Latar Belakang}\label{sec:latar-belakang}
 
 Kecerdasan buatan (\textit{artificial intelligence}, AI) kini dapat membuat musik. Program yang melakukannya disebut model generatif musik, yaitu program komputer yang mempelajari pola dari banyak contoh karya, lalu memakai pola tersebut untuk menyusun musik baru. Penggunaan komputer untuk menyusun musik dikenal juga sebagai komposisi algoritmis. Bidang ini bersifat multidisiplin karena mempertemukan musik, kreativitas, dan ilmu komputer \parencite{carnovalini2020}. Tinjauan sistematis Civit et al.\ menunjukkan bahwa minat musisi dan ilmuwan komputer terhadap pembuatan musik otomatis berbasis AI meningkat pesat dalam beberapa tahun terakhir, disertai keterlibatan perusahaan-perusahaan besar \parencite{civit2022}. Mycka dan Mańdziuk meninjau publikasi tahun 2017--2023 dan membagi penelitian AI dalam musik ke dalam tiga kelompok, yaitu klasifikasi, pembuatan, dan rekomendasi musik. Mereka juga mencatat penerapan nyata musik buatan AI serta persoalan hak ciptanya \parencite{mycka2025}.
 
@@ -26,15 +28,15 @@ Setiap kaidah diterjemahkan menjadi definisi operasional, yaitu rumusan yang men
 
 Kaidah gerak suara merupakan materi dasar dalam pembelajaran harmoni. Jika mahasiswa atau pemula memakai model harmonisasi untuk mengerjakan soal latihan, pengajar perlu mengetahui kaidah mana yang paling sering dilanggar model pada soal semacam itu. Pengukuran yang terdokumentasi juga menunjukkan letak setiap pelanggaran pada partitur sehingga dapat diperiksa kembali. Perbedaan yang ditemukan hanya berlaku pada versi model dan melodi yang diuji. Karena data latih dan cara menyusun nada kedua model berbeda, penelitian ini tidak dapat menyimpulkan bahwa perbedaan tersebut disebabkan oleh rancangan jaringan model saja. Temuan Yin et al.\ \parencite{yin2023} juga mengingatkan bahwa keunggulan suatu jenis model perlu ditunjukkan melalui evaluasi, bukan diandaikan.
 
-\section{Rumusan Masalah dan Pertanyaan Penelitian}
+\section{Rumusan Masalah dan Pertanyaan Penelitian}\label{sec:rumusan-dan-pertanyaan}
 
-\subsection{Rumusan Masalah}
+\subsection{Rumusan Masalah}\label{sec:rumusan-masalah}
 
 DeepBach dan Coconet dievaluasi oleh pengembangnya pada \textit{chorale} Bach melalui uji diskriminasi oleh pendengar (DeepBach) serta \textit{log-likelihood}, yaitu ukuran seberapa besar peluang yang diberikan model kepada karya Bach yang belum pernah dilihatnya, dan evaluasi manusia (Coconet). Analisis Bach Doodle menunjukkan bahwa kuint dan oktaf sejajar pada harmonisasi Coconet meningkat ketika melodi masukan berada di luar wilayah data latih \parencite{huang2019}. Temuan tersebut berasal dari melodi pengguna yang tidak dikendalikan, satu model, dan dua kaidah. Belum diketahui apakah pola yang sama muncul ketika melodi yang sama diberikan kepada model lain, apakah pola tersebut berlaku pada kaidah gerak suara lain, dan bagaimana kepatuhan model pada melodi soal latihan harmoni dibandingkan dengan kepatuhannya pada melodi \textit{chorale} Bach. Pada sumber yang ditinjau dalam Bab II, belum ditemukan pengukuran kepatuhan DeepBach dan Coconet terhadap kaidah gerak suara Strube dengan asal melodi yang dikendalikan dan definisi operasional yang terdokumentasi.
 
 Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint DeepBach dan Coconet yang ditetapkan dalam protokol, dengan melodi sopran sebagai masukan tetap. Kaidah yang diperiksa adalah lima kaidah gerak suara yang disebutkan di atas. Penandaan instrumen menunjukkan pelanggaran menurut definisi operasional, bukan penilaian musikal atas konteksnya. Penelitian tidak menilai nilai estetis keluaran, tidak melibatkan penilai atau pendengar manusia, dan tidak mengatribusikan perbedaan hasil pada arsitektur model semata.
 
-\subsection{Pertanyaan Penelitian}
+\subsection{Pertanyaan Penelitian}\label{sec:pertanyaan-penelitian}
 
 \begin{enumerate}
     \item Bagaimana tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube pada melodi \textit{chorale} Bach dan melodi latihan Strube?
@@ -42,9 +44,9 @@ Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint Deep
     \item Bagaimana pengaruh asal melodi terhadap tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube?
 \end{enumerate}
 
-\section{Tujuan dan Manfaat Penelitian}
+\section{Tujuan dan Manfaat Penelitian}\label{sec:tujuan-dan-manfaat}
 
-\subsection{Tujuan Penelitian}
+\subsection{Tujuan Penelitian}\label{sec:tujuan-penelitian}
 
 \begin{enumerate}
     \item Mengukur tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube pada melodi \textit{chorale} Bach dan melodi latihan Strube, dengan harmonisasi asli Bach sebagai acuan.
@@ -52,7 +54,7 @@ Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint Deep
     \item Menganalisis pengaruh asal melodi terhadap tingkat kepatuhan harmonisasi masing-masing model terhadap kaidah gerak suara Strube.
 \end{enumerate}
 
-\subsection{Manfaat Penelitian}
+\subsection{Manfaat Penelitian}\label{sec:manfaat-penelitian}
 
 Manfaat Teoretis:
 \begin{enumerate}
@@ -67,7 +69,7 @@ Manfaat Praktis:
     \item Menyediakan instrumen evaluasi otomatis yang terdokumentasi dan dapat diterapkan pada model harmonisasi lain yang menerima melodi sopran sebagai masukan.
 \end{enumerate}
 
-\section{Sistematika Penulisan}
+\section{Sistematika Penulisan}\label{sec:sistematika-penulisan}
 
 \begin{enumerate}
     \item BAB I Pendahuluan memaparkan latar belakang, rumusan masalah, pertanyaan penelitian, tujuan penelitian, serta manfaat teoretis dan praktis penelitian.

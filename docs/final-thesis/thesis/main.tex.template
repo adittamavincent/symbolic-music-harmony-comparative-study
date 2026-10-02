@@ -5,14 +5,6 @@
 \renewcommand{\contentsname}{DAFTAR ISI}
 \renewcommand{\figurename}{Gambar}
 \renewcommand{\tablename}{Tabel}
-\newcommand{\thesischapter}[2]{%
-  \clearpage
-  \phantomsection
-  \setcounter{section}{0}
-  \setcounter{subsection}{0}
-  \addcontentsline{toc}{part}{BAB #1: #2}
-  \begin{center}\bfseries BAB #1\par #2\end{center}
-}
 
 \usepackage{needspace}
 \usepackage[normalem]{ulem}
@@ -43,6 +35,8 @@
 
 % Title, researcher, institution, dates, and committee
 \input{metadata}
+% Chapter headings and front-matter page layouts
+\input{layout}
 
 % Disable hyphenation while keeping justification (MS Word style)
 \tolerance=1
@@ -53,7 +47,16 @@
 \begin{document}
 
 \pagenumbering{roman}
-\input{chapters/00-frontmatter}
+\input{frontmatter/01-halaman-judul}
+\setcounter{page}{2}
+\input{frontmatter/02-halaman-pengajuan}
+\input{frontmatter/03-halaman-pengesahan}
+\input{frontmatter/04-halaman-pernyataan}
+\input{frontmatter/05-motto}
+\input{frontmatter/06-halaman-persembahan}
+\input{frontmatter/07-kata-pengantar}
+\input{frontmatter/08-abstrak}
+\input{frontmatter/09-abstract}
 
 \clearpage
 \pdfbookmark[0]{\contentsname}{contents}
@@ -74,12 +77,9 @@
 \doublespacing
 \clearpage
 \pagenumbering{arabic}
-\thesischapter{I}{PENDAHULUAN}
 \input{chapters/01-pendahuluan}
-\thesischapter{II}{TINJAUAN PUSTAKA DAN LANDASAN TEORI}
 \input{chapters/02-tinjauan-pustaka}
-\thesischapter{III}{METODE PENELITIAN}
-\input{chapters/03-metodologi}
+\input{chapters/03-metode-penelitian}
 
 \clearpage
 \phantomsection

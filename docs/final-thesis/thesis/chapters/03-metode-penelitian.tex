@@ -1,4 +1,6 @@
-\section{Metode Pendekatan}
+\thesischapter{III}{METODE PENELITIAN}
+
+\section{Metode Pendekatan}\label{sec:metode-pendekatan}
 
 Penelitian ini menggunakan pendekatan kuantitatif. Penelitian kuantitatif menguji teori secara objektif dengan memeriksa hubungan antarvariabel; variabel tersebut diukur dengan instrumen sehingga data berupa angka dapat dianalisis secara statistik \parencite{creswell2018}. Data penelitian ini berupa jumlah dan laju pelanggaran kaidah pada harmonisasi yang dihasilkan model, yang dibandingkan antar-model dan antar-asal melodi melalui uji statistik. Teori harmoni fungsional dan kaidah Strube digunakan secara deduktif: kaidah diturunkan menjadi variabel, hipotesis, dan definisi operasional sebelum data dikumpulkan.
 
@@ -12,7 +14,7 @@ Perbandingan antar-model diposisikan sebagai studi komparatif, bukan eksperimen 
 
 Perumusan kaidah dan pemilihan melodi tetap melibatkan keputusan peneliti. Penelitian ini bersifat interdisipliner karena memadukan teori musik dengan komputasi. Evaluasi model generatif musik sendiri dapat dilihat dari sudut pandang musikologi, teknik, dan interaksi manusia--komputer \parencite{lerch2025}. Roberts dan Horn menggambarkan gabungan bermusik dan menulis kode sebagai praktik hibrida, tempat kebiasaan dari kedua bidang saling membentuk ulang \parencite{roberts2025}. Posisi peneliti dibentuk oleh latar belakang dan pengalamannya serta dapat memengaruhi proses penelitian \parencite{holmes2020}. Peneliti adalah mahasiswa musik yang mempelajari harmoni Barat, sehingga berposisi sebagai orang dalam (\textit{insider}) terhadap tradisi teori yang dijadikan acuan. Terhadap kedua model, peneliti berposisi sebagai orang luar (\textit{outsider}) karena tidak terlibat dalam pengembangan dan pelatihannya. Kedua posisi tersebut dapat ditempati bersamaan \parencite{dwyer2009}. Refleksivitas, yaitu pemeriksaan peneliti atas anggapan dan penilaiannya sendiri, juga berguna pada penelitian kuantitatif \parencite{jamieson2023}. Pada penelitian ini, posisi peneliti dapat memengaruhi perumusan kaidah dan pengecualiannya, pemilihan melodi, dan penafsiran hasil. Karena itu, definisi kaidah, kriteria melodi, dan rencana analisis ditetapkan sebelum harmonisasi utama dihasilkan. Melodi \textit{chorale} Bach dipilih secara acak dengan bilangan acak yang dicatat, seluruh latihan Strube yang memenuhi kriteria diikutsertakan, instrumen yang sama diterapkan secara otomatis pada seluruh keluaran, dan contoh partitur untuk pembahasan dipilih secara acak dari penandaan yang ada. Kaidah Strube mewakili norma penulisan empat suara dalam tradisi harmoni tonal Barat. Tradisi Barat juga mendominasi data penelitian pembuatan musik: Mehta et al.\ mencatat bahwa hanya 5,7 persen dari total jam dataset musik yang mereka kaji berasal dari genre non-Barat \parencite{mehta2025}. Penandaan kaidah menunjukkan ketidaksesuaian dengan norma tersebut, bukan penilaian atas nilai musikal keluaran atau atas tradisi musik lain.
 
-\section{Objek dan Subjek Penelitian}
+\section{Objek dan Subjek Penelitian}\label{sec:objek-dan-subjek}
 
 Objek penelitian adalah harmonisasi simbolik empat suara yang dihasilkan DeepBach \parencite{hadjeres2017} dan Coconet \parencite{huang2017} untuk melodi sopran yang ditetapkan. Harmonisasi asli Bach untuk melodi \textit{chorale} yang digunakan juga diukur sebagai acuan. DeepBach dijalankan melalui implementasi PyTorch resmi pengembangnya beserta bobot hasil pelatihan yang tersedia untuk implementasi tersebut. Coconet dijalankan melalui implementasi Magenta.js dengan checkpoint \texttt{coconet/bach} yang disediakan Google. Versi kode dan checkpoint dicatat dalam protokol penelitian.
 
@@ -20,11 +22,11 @@ Model dipilih dengan tiga kriteria: kode dan bobotnya tersedia secara terbuka; m
 
 Penelitian ini tidak menjadikan manusia sebagai subjek penelitian dan tidak melibatkan manusia sebagai penilai.
 
-\subsection{Populasi}
+\subsection{Populasi}\label{sec:populasi}
 
 Populasi adalah seluruh harmonisasi yang dapat dihasilkan checkpoint DeepBach dan Coconet yang ditetapkan dalam protokol untuk melodi sopran yang berasal dari \textit{chorale} Bach dan dari latihan harmonisasi melodi dalam buku Strube. Karena proses generasi mengandung unsur acak, populasi ini tidak dapat dicacah secara lengkap. Populasi didefinisikan melalui identitas model, checkpoint, pengaturan generasi, dan melodi yang digunakan.
 
-\subsection{Sampel}
+\subsection{Sampel}\label{sec:sampel}
 
 Unit analisis penelitian ini adalah melodi. Sampel terdiri atas dua kelompok melodi.
 
@@ -41,11 +43,11 @@ Setiap model menghasilkan lima harmonisasi untuk setiap melodi. Pengulangan ini 
 
 Melodi \textit{chorale} Bach dapat termasuk data latih model. Menurut kode resmi DeepBach, data latihnya dibagi berurutan mengikuti urutan korpus: bagian awal untuk pelatihan, sedangkan bagian akhir untuk validasi dan evaluasi. Status setiap melodi Bach terhadap data latih DeepBach dicatat. Pembagian data latih checkpoint Coconet yang digunakan tidak didokumentasikan, sehingga statusnya dicatat sebagai tidak diketahui. Kelompok Bach karena itu dipahami sebagai melodi dari jenis musik yang dipelajari model, yang sebagian atau seluruhnya mungkin pernah dilihat model saat pelatihan.
 
-\section{Metode Pengumpulan Data}
+\section{Metode Pengumpulan Data}\label{sec:metode-pengumpulan-data}
 
 Data dikumpulkan melalui generasi harmonisasi dan pengukuran otomatis terhadap harmonisasi tersebut. Identitas model, checkpoint, versi perangkat lunak, pengaturan generasi, melodi, dan keluaran mentah setiap percobaan disimpan agar pengukuran dapat diulang.
 
-\subsection{Variabel Penelitian}
+\subsection{Variabel Penelitian}\label{sec:variabel-penelitian}
 
 Penelitian ini memiliki dua variabel bebas dan satu variabel terikat.
 
@@ -57,17 +59,17 @@ Penelitian ini memiliki dua variabel bebas dan satu variabel terikat.
 
 Pertanyaan penelitian kedua membandingkan $Y$ antar-kategori $X_1$ pada melodi yang sama. Pertanyaan penelitian ketiga menguji pengaruh $X_2$ terhadap $Y$ pada setiap kategori $X_1$.
 
-\subsection{Pengumpulan Melodi}
+\subsection{Pengumpulan Melodi}\label{sec:pengumpulan-melodi}
 
 Melodi Bach diambil dari bagian sopran \textit{chorale} dalam korpus music21 beserta tangga nada, birama, dan tanda fermatanya. Melodi Strube diketik peneliti ke dalam format MusicXML dari edisi buku yang digunakan, dengan tangga nada, birama, dan tanda akhir frasa sesuai cetakan. Setiap melodi diberi kode yang mencatat halaman dan nomor latihannya, dan hasil pengetikan dicocokkan kembali dengan cetakan. Hasil pengetikan dan inventaris disimpan sebagai data penelitian.
 
 Untuk menggambarkan perbedaan kedua kelompok, ciri setiap melodi dihitung secara otomatis: jumlah birama, nada tertinggi dan terendah, lompatan terbesar, serta kesesuaian dengan batas Huang et al., yaitu seluruh nada berada pada nada MIDI 60 sampai 81 dan tidak ada lompatan yang melebihi satu oktaf \parencite{huang2019}.
 
-\subsection{Generasi Harmonisasi}
+\subsection{Generasi Harmonisasi}\label{sec:generasi-harmonisasi}
 
 Setiap melodi diberikan kepada model sebagai sopran yang tetap, dan model menghasilkan alto, tenor, serta bas. Pada DeepBach, sopran ditetapkan sebagai batasan posisi, sedangkan informasi tangga nada dan fermata diambil dari notasi melodi. Pada Coconet, sopran diisikan ke dalam \textit{piano roll}, dan model diminta mengisi tiga suara lainnya. Kedua model dijalankan dengan pengaturan bawaan implementasinya, misalnya jumlah iterasi pengambilan sampel, dan pengaturan tersebut dicatat serta sama untuk seluruh melodi. Setiap model dijalankan lima kali untuk setiap melodi. Bilangan acak dicatat apabila antarmuka model menyediakannya, dan seluruh keluaran mentah disimpan. Melodi yang tidak dapat diproses oleh salah satu model dicatat beserta alasannya.
 
-\subsection{Instrumen Pengukuran}
+\subsection{Instrumen Pengukuran}\label{sec:instrumen-pengukuran}
 
 Instrumen evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Kaidah yang diukur beserta pengecualiannya bersumber dari Strube \parencite{strube1928}, dan kategorinya mengikuti rubrik Yan et al.\ \parencite{yan2018}. Rumus pada subbab ini tidak dikutip dari kedua sumber tersebut. Peneliti menyusunnya sebagai definisi operasional, yaitu penerjemahan kaidah ke dalam kondisi yang dapat dihitung pada data simbolik. Halaman, contoh, dan pengecualian setiap kaidah pada edisi 1928 dicatat dalam lembar definisi kaidah yang dilampirkan.
 
@@ -128,7 +130,7 @@ Bobot pada indeks tersebut mengikuti rubrik Yan et al.\ \parencite{yan2018}. Ind
 
 Penghitungan utama mencakup semua kejadian, mengikuti Huang et al. Penghitungan tambahan mengecualikan gerak dari nada berfermata ke peristiwa berikutnya, karena gerak paralel pada batas frasa dapat dimaklumi \parencite{huang2019} dan Strube memperlakukan fermata sebagai kadens \parencite[174]{strube1928}. Pengecualian akibat pengulangan akor dan nada non-akor \parencite[35]{strube1928} memerlukan analisis akor sehingga tidak diterapkan.
 
-\subsection{Validitas dan Reliabilitas Instrumen}
+\subsection{Validitas dan Reliabilitas Instrumen}\label{sec:validitas-dan-reliabilitas}
 
 Instrumen yang valid mengukur secara akurat apa yang hendak diukur, sedangkan instrumen yang reliabel memberikan hasil yang konsisten ketika digunakan berulang kali pada objek yang sama \parencite{leedy2018}. Kelulusan uji perangkat lunak menunjukkan perilaku program pada kasus uji, sedangkan validitas menyangkut kesesuaian penandaan dengan kaidah yang dimaksud. Validitas instrumen diperiksa melalui empat langkah yang tidak memerlukan penilai manusia.
 
@@ -143,11 +145,11 @@ Reliabilitas instrumen diperiksa melalui pengulangan pengukuran pada berkas yang
 
 Penandaan instrumen menunjukkan pelanggaran menurut definisi operasional. Penandaan tersebut tidak mempertimbangkan pengecualian yang memerlukan penafsiran akor, sehingga hasil penelitian tidak dinyatakan sebagai penilaian musikal atas setiap kejadian.
 
-\subsection{Kontrol Kualitas Sampel}
+\subsection{Kontrol Kualitas Sampel}\label{sec:kontrol-kualitas-sampel}
 
 Harmonisasi dinyatakan layak dianalisis apabila memuat empat suara yang dapat dipisahkan, setiap suara hanya membunyikan satu nada pada satu waktu, sopran identik dengan melodi masukan dalam tinggi nada dan saat mulainya, dan seluruh nada berada pada kisi seperenam belas. Pemetaan suara perlu diperiksa karena pemisahan suara pada musik simbolik merupakan persoalan tersendiri, terutama ketika suara bersilangan atau tumpang tindih \parencite{karystinaios2023}. Harmonisasi yang tidak layak dikeluarkan dari analisis utama, dan jumlah serta alasan kegagalannya dilaporkan per model dan per asal melodi. Melodi yang tidak memiliki harmonisasi layak dari salah satu model dikeluarkan dari perbandingan berpasangan untuk kaidah yang bersangkutan, dan pengeluaran tersebut dicatat.
 
-\section{Metode Analisis Data}
+\section{Metode Analisis Data}\label{sec:metode-analisis-data}
 
 Laju pelanggaran setiap kaidah dirata-ratakan dari harmonisasi yang layak untuk setiap melodi dan setiap model. Nilai rata-rata tersebut menjadi data analisis.
 
@@ -161,7 +163,7 @@ Hasil yang tidak signifikan tidak ditafsirkan sebagai bukti bahwa model atau asa
 
 Hasil disajikan dalam bentuk tabel dan diagram kotak (\textit{box plot}) laju setiap kaidah per model dan per asal melodi. Contoh penandaan untuk pembahasan dipilih secara acak dengan bilangan acak yang dicatat, lalu ditampilkan beserta nomor birama dan kutipan partiturnya. Pembahasan contoh tersebut menjelaskan konteks musikal penandaan, termasuk kemungkinan adanya nada non-akor atau batas frasa, tanpa mengubah data hasil pengukuran.
 
-\section{Rancangan Alur Penelitian}
+\section{Rancangan Alur Penelitian}\label{sec:rancangan-alur-penelitian}
 
 Penelitian berlangsung dalam tahap berikut:
 
