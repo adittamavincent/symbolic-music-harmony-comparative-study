@@ -26,56 +26,52 @@ Skripsi ini diajukan kepada Dewan Penguji \facultyname{} \institutionname{} seba
 \end{spacing}
 
 % Approval Page
+% Layout follows the 2026 Prodi Musik approval pages in references/:
+% the three examiners stacked in one offset column, then the dean and the
+% program coordinator side by side.
+% \signatory{width}{role lines}{name}{identifier line, e.g. NIP or NUPTK}
+\newcommand{\signatory}[4]{%
+  \begin{minipage}[t]{#1}
+    \raggedright
+    #2\par
+    \vspace{1.4cm}
+    % Expand the name macro so \uline can break it between words.
+    \textbf{\expandafter\uline\expandafter{#3}}\par
+    #4
+  \end{minipage}%
+}
+\newcommand{\examinercolumn}[3]{%
+  \par\noindent\hspace{0.25\textwidth}%
+  \signatory{0.75\textwidth}{#1}{#2}{#3}\par
+  \vspace{0.3cm}%
+}
 \newpage
 \phantomsection
 \addcontentsline{toc}{matter}{HALAMAN PENGESAHAN}
 \begin{spacing}{1.15}
 \begin{center}
     HALAMAN PENGESAHAN\par
-    \vspace{0.8cm}
+    \vspace{0.3cm}
 \end{center}
 \noindent Skripsi berjudul:\par
 \begin{center}
     \textbf{\thesistitle}\par
 \end{center}
 \noindent diajukan oleh \researchername{}, NIM \researchernim, \programstudy, Jurusan \departmentname, \facultyname{} \institutionname{} (Kode Prodi: 91221), telah dipertanggungjawabkan di depan Tim Penguji Skripsi pada tanggal \makebox[4cm]{\dotfill} dan dinyatakan telah memenuhi syarat untuk diterima.\par
-\vspace{0.6cm}
+\vspace{0.3cm}
+\begin{spacing}{1.0}
+\examinercolumn{Pembimbing I/Ketua}{\advisorone}{NIP \advisoronenip}
+\examinercolumn{Pembimbing II/Anggota}{\advisortwo}{NIP \advisortwonip}
+\examinercolumn{\textit{Cognate}/Anggota}{\cognate}{NIP \cognatenip}
+\noindent\hspace{0.25\textwidth}\cityname, \submissiondate\par
+\vspace{0.2cm}
+\centerline{Mengetahui,}
+\vspace{0.2cm}
 \noindent
-\begin{minipage}[t]{0.65\textwidth}
-    \centering
-    Pembimbing I/Ketua\par
-    \vspace{1.6cm}
-    \textbf{\uline{\advisorone}}\par
-    NIP \advisoronenip
-\end{minipage}\par
-\vspace{0.6cm}
+\signatory{0.57\textwidth}{Dekan \facultyname\\\institutionname}{\deanname}{NUPTK \deannuptk}%
 \hfill
-\begin{minipage}[t]{0.65\textwidth}
-    \centering
-    Pembimbing II/Anggota\par
-    \vspace{1.6cm}
-    \textbf{\uline{\advisortwo}}\par
-    NIP \advisortwonip
-\end{minipage}\par
-\vspace{0.6cm}
-\noindent
-\begin{minipage}[t]{0.47\textwidth}
-    \centering
-    Cognate/Anggota\par
-    \vspace{1.6cm}
-    \textbf{\uline{\cognate}}\par
-    NIP \cognatenip
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.47\textwidth}
-    \centering
-    \cityname, \submissiondate\par
-    Mengetahui,\par
-    Koordinator Program Studi S-1 Musik\par
-    \vspace{1.6cm}
-    \textbf{\uline{\programcoordinator}}\par
-    NIP \programcoordinatornip
-\end{minipage}
+\signatory{0.4\textwidth}{Koordinator Program Studi\\S-1 Musik}{\programcoordinator}{NUPTK \programcoordinatornuptk}\par
+\end{spacing}
 \end{spacing}
 
 % Statement Page
