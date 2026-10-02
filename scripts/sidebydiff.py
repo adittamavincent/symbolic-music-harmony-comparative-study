@@ -7,7 +7,9 @@ section. Columns flow across pages and synchronize at section boundaries.
 Both sides retain their full text; only changed words receive highlights.
 """
 
+from collections import Counter
 from difflib import SequenceMatcher
+import math
 import os
 import re
 import subprocess
@@ -731,8 +733,19 @@ def word_level_render(old_text, new_text):
 PAGE_BREAK = re.compile(r'\\(?:newpage|clearpage)\b')
 
 
+# Front-matter pages pair by role, so pages added between them stay unpaired.
+FRONTMATTER_ROLES = {"judul": "cover", "sampul": "cover", "pengesahan": "approval",
+                     "abstrak": "abstract-id", "abstract": "abstract-en"}
+
+
 def frontmatter_identity(text):
     """Match source roles independently of a visible heading or its TeX styling."""
+    # A contents entry names the page directly, e.g. HALAMAN PERNYATAAN.
+    contents = re.search(r'\\addcontentsline\{toc\}\{[^{}]*\}\{([^{}]*)\}', text)
+    if contents:
+        title = " ".join(re.sub(r'\\[a-zA-Z]+\*?|[{}]', ' ', contents.group(1)).casefold().split())
+        title = title.removeprefix("halaman ")
+        return ("frontmatter", FRONTMATTER_ROLES.get(title, title))
     plain = re.sub(r'\\(?:begin|end)\{[^{}]*\}', '', text)
     plain = re.sub(r'\\[a-zA-Z]+\*?', '', plain)
     plain = re.sub(r'[{}]', '', plain).casefold()
@@ -796,18 +809,132 @@ def split_sections(content):
     return sections
 
 
-def align_sections(old_sections, new_sections):
-    """Keep inserted sections separate instead of shifting subsequent matches."""
-    matcher = SequenceMatcher(None, [key for key, _ in old_sections],
-                              [key for key, _ in new_sections], autojunk=False)
+# Alignment scores below this value leave both units unpaired.
+SECTION_MATCH_THRESHOLD = 0.4
+PARAGRAPH_MATCH_THRESHOLD = 0.35
+# Unpaired paragraphs between the same neighbors need less similarity.
+POSITIONAL_MATCH_THRESHOLD = 0.25
+# A moved unit with a changed heading needs this much shared content.
+MOVE_CONTENT_THRESHOLD = 0.5
+ALIGNMENT_STOPWORDS = frozenset("""
+    dan atau di ke dari yang untuk dalam pada terhadap oleh dengan ini itu
+    adalah sebagai juga akan tidak serta the of and in for on to an is are
+    as by with this that
+""".split())
+
+
+def plain_words(text):
+    """Visible words of LaTeX source, used only to score alignment."""
+    text = re.sub(r'\\(?:begin|end)\{[^{}]*\}|\\[a-zA-Z@]+\*?', ' ', text)
+    return [word for word in re.findall(r'[^\W\d_]{2,}', text.casefold())
+            if word not in ALIGNMENT_STOPWORDS]
+
+
+def weighted_vectors(documents):
+    """Sublinear TF-IDF vectors: words shared by many units weigh little."""
+    counts = [Counter(words) for words in documents]
+    frequency = Counter(word for count in counts for word in count)
+    total = len(documents)
+    return [{word: (1 + math.log(n)) * (math.log((total + 1) / (frequency[word] + 1)) + 1)
+             for word, n in count.items()} for count in counts]
+
+
+def cosine(a, b):
+    dot = sum(weight * b.get(word, 0.0) for word, weight in a.items())
+    if not dot:
+        return 0.0
+    return dot / math.sqrt(sum(w * w for w in a.values()) * sum(w * w for w in b.values()))
+
+
+def align_by_similarity(old_count, new_count, score, threshold):
+    """
+    Order-preserving alignment that maximizes the summed scores above the
+    threshold. Unpaired items return None for the other side; between two
+    pairs, old items precede new items.
+    """
+    gain = [[score(i, j) - threshold for j in range(new_count)] for i in range(old_count)]
+    best = [[0.0] * (new_count + 1) for _ in range(old_count + 1)]
+    for i in range(old_count - 1, -1, -1):
+        for j in range(new_count - 1, -1, -1):
+            paired = best[i + 1][j + 1] + gain[i][j] if gain[i][j] > 0 else float("-inf")
+            best[i][j] = max(paired, best[i + 1][j], best[i][j + 1])
     pairs = []
-    for _, i, end_i, j, end_j in matcher.get_opcodes():
-        old_run, new_run = old_sections[i:end_i], new_sections[j:end_j]
-        for index in range(max(len(old_run), len(new_run))):
-            old = old_run[index][1] if index < len(old_run) else ""
-            new = new_run[index][1] if index < len(new_run) else ""
-            pairs.append((old, new))
+    i = j = 0
+    while i < old_count or j < new_count:
+        if i < old_count and j < new_count and gain[i][j] > 0 \
+                and best[i][j] == best[i + 1][j + 1] + gain[i][j]:
+            pairs.append((i, j))
+            i, j = i + 1, j + 1
+        elif i < old_count and (j == new_count or best[i][j] == best[i + 1][j]):
+            pairs.append((i, None))
+            i += 1
+        else:
+            pairs.append((None, j))
+            j += 1
     return pairs
+
+
+def section_parts(key, text):
+    """Split a unit into heading words and body words for scoring."""
+    text = PAGE_BREAK.sub('', text)
+    if key[0] == "frontmatter":
+        return [], plain_words(text)
+    heading = key[-1]
+    title = re.sub(r'^\\thesischapter\{[^{}]*\}|^\\(?:sub)*section\*?(?:\[[^\]]*\])?', '', heading)
+    return plain_words(title), plain_words(text.partition(heading)[2])
+
+
+def section_alignment(old_sections, new_sections):
+    """
+    Pair units by heading and content similarity rather than exact heading
+    text. Renamed, re-leveled, and rewritten units still pair; added and
+    deleted units occupy their own rows instead of shifting later pairs.
+    Return index pairs and, for a unit moved elsewhere, its counterpart.
+    """
+    parts = [section_parts(key, text) for key, text in old_sections + new_sections]
+    titles = weighted_vectors([title for title, _ in parts])
+    bodies = weighted_vectors([body for _, body in parts])
+    offset = len(old_sections)
+
+    def similarity(i, j):
+        old_key, new_key = old_sections[i][0], new_sections[j][0]
+        if (old_key[0] == "frontmatter") != (new_key[0] == "frontmatter"):
+            return 0.0, 0.0, None
+        content = cosine(bodies[i], bodies[offset + j]) if parts[i][1] and parts[offset + j][1] else None
+        if old_key[0] == "frontmatter":
+            if len(old_key) > 1 and len(new_key) > 1:
+                return float(old_key == new_key), 0.0, None
+            return content or 0.0, 0.0, None
+        heading = cosine(titles[i], titles[offset + j])
+        if content is None:
+            return heading, heading, None
+        return max(content, 0.8 * heading, (heading + content) / 2), heading, content
+
+    scores = [[similarity(i, j) for j in range(len(new_sections))] for i in range(len(old_sections))]
+    pairs = align_by_similarity(len(old_sections), len(new_sections),
+                                lambda i, j: scores[i][j][0], SECTION_MATCH_THRESHOLD)
+    # Order-preserving rows cannot pair a unit that changed position. Compare
+    # it with its counterpart only for an unchanged heading or similar content.
+    moved_old = [i for i, j in pairs if j is None]
+    moved_new = [j for i, j in pairs if i is None]
+    candidates = sorted(
+        ((scores[i][j][0], i, j) for i in moved_old for j in moved_new
+         if scores[i][j][2] is not None
+         and (scores[i][j][1] > 0.99 or scores[i][j][2] >= MOVE_CONTENT_THRESHOLD)),
+        reverse=True)
+    moves = {}
+    for _, i, j in candidates:
+        if ("old", i) not in moves and ("new", j) not in moves:
+            moves[("old", i)] = j
+            moves[("new", j)] = i
+    return pairs, moves
+
+
+def align_sections(old_sections, new_sections):
+    """Return aligned (old, new) unit text; an unpaired side is empty."""
+    pairs, _ = section_alignment(old_sections, new_sections)
+    return [(old_sections[i][1] if i is not None else "", new_sections[j][1] if j is not None else "")
+            for i, j in pairs]
 
 
 def render_section_text(old_text, new_text):
@@ -816,15 +943,43 @@ def render_section_text(old_text, new_text):
     left, right = [], []
     deletes, inserts = [], []
 
+    def similarity(old, new):
+        return SequenceMatcher(None, old.split(), new.split(), autojunk=False).ratio()
+
+    def render(old, new):
+        rendered_old, rendered_new = word_level_render(old, new)
+        if old:
+            left.append(rendered_old)
+        if new:
+            right.append(rendered_new)
+
+    def render_gap(olds, news):
+        # Paragraphs merged or split in the same place compare as one block;
+        # unrelated rewrites are wholly deleted or added, not word-matched.
+        old, new = "\n\n".join(olds), "\n\n".join(news)
+        if old and new and similarity(old, new) >= POSITIONAL_MATCH_THRESHOLD:
+            render(old, new)
+        else:
+            for text in olds:
+                render(text, "")
+            for text in news:
+                render("", text)
+
     def flush():
-        for index in range(max(len(deletes), len(inserts))):
-            old = deletes[index] if index < len(deletes) else ""
-            new = inserts[index] if index < len(inserts) else ""
-            rendered_old, rendered_new = word_level_render(old, new)
-            if old:
-                left.append(rendered_old)
-            if new:
-                right.append(rendered_new)
+        # Word-diff revised paragraphs with the most similar counterpart.
+        olds, news = [], []
+        for i, j in align_by_similarity(len(deletes), len(inserts),
+                                        lambda i, j: similarity(deletes[i], inserts[j]),
+                                        PARAGRAPH_MATCH_THRESHOLD):
+            if i is not None and j is not None:
+                render_gap(olds, news)
+                olds, news = [], []
+                render(deletes[i], inserts[j])
+            elif i is not None:
+                olds.append(deletes[i])
+            else:
+                news.append(inserts[j])
+        render_gap(olds, news)
         deletes.clear()
         inserts.clear()
 
@@ -845,11 +1000,28 @@ def render_sections(old_full, new_full):
     """Align source sections and honor a page boundary requested by either side."""
     out = [r"\begin{paracol}{2}"]
     has_content = False
-    for old_text, new_text in align_sections(split_sections(old_full), split_sections(new_full)):
+    old_sections, new_sections = split_sections(old_full), split_sections(new_full)
+    pairs, moves = section_alignment(old_sections, new_sections)
+
+    def source(sections, index):
+        return PAGE_BREAK.sub('', sections[index][1]).strip() if index is not None else ""
+
+    for i, j in pairs:
+        old_text = old_sections[i][1] if i is not None else ""
+        new_text = new_sections[j][1] if j is not None else ""
         if has_content and (PAGE_BREAK.search(old_text) or PAGE_BREAK.search(new_text)):
             out.extend([r"\end{paracol}", r"\newpage", r"\begin{paracol}{2}"])
-        left, right = render_section_text(PAGE_BREAK.sub('', old_text).strip(),
-                                          PAGE_BREAK.sub('', new_text).strip())
+        if ("old", i) in moves:
+            # Each side of a moved unit is compared with its counterpart.
+            left = r"\diffmoved{dipindahkan ke posisi baru}" + "\n" + \
+                render_section_text(source(old_sections, i), source(new_sections, moves[("old", i)]))[0]
+            right = ""
+        elif ("new", j) in moves:
+            left = ""
+            right = r"\diffmoved{dipindahkan dari posisi lama}" + "\n" + \
+                render_section_text(source(old_sections, moves[("new", j)]), source(new_sections, j))[1]
+        else:
+            left, right = render_section_text(source(old_sections, i), source(new_sections, j))
         out.extend([
             r"\begin{leftside}", left, r"\par\end{leftside}",
             r"\switchcolumn", r"\begin{rightside}", right,
@@ -1128,6 +1300,50 @@ def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
                 out2.append(f"@{e2[key]['type']}{{{key},\n  " + ",\n  ".join(new_f2) + "\n}")
     return "\n".join(out1), "\n".join(out2)
 
+def plain_bib(value):
+    return " ".join(re.sub(r'\\[a-zA-Z]+|[{}\\]', '', value or "").casefold().split())
+
+
+def bibliography_rows(bib1_str, bib2_str, keys1, keys2):
+    """
+    Order cited sources by author, year, and title. Each row holds one source
+    on both sides, so an added or removed source leaves the other side blank.
+    """
+    e1, e2 = parse_bib(bib1_str), parse_bib(bib2_str)
+    rows = []
+    for key in set(keys1) | set(keys2):
+        left, right = key in keys1 and key in e1, key in keys2 and key in e2
+        if not (left or right):
+            continue
+        fields = parse_fields_text((e2 if right else e1)[key]['fields_text'])
+        names = fields.get("author") or fields.get("editor")
+        # Sort by family names: "Family, Given" or "Given Family".
+        families = [name.split(",")[0] if "," in name else name.split()[-1]
+                    for name in re.split(r'\s+and\s+', names.strip())] if names else [fields.get("title", "")]
+        rows.append(((plain_bib(" ".join(families)), fields.get("year") or fields.get("date", ""),
+                      plain_bib(fields.get("title")), key), key, left, right))
+    return [(key, left, right) for _, key, left, right in sorted(rows)]
+
+
+def render_bibliography_rows(rows, v1_keys, v2_keys):
+    """Print each source in its own synchronized row of the two columns."""
+    out = [f"\\nocite{{{', '.join(v1_keys)}}}" if v1_keys else "",
+           f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else "",
+           r"\begin{paracol}{2}", r"\section*{DAFTAR PUSTAKA}", r"\switchcolumn",
+           r"\section*{DAFTAR PUSTAKA}", r"\switchcolumn*"]
+    for index, (key, left, right) in enumerate(rows):
+        for side, present, entry in (("left", left, key + "_v1"), ("right", right, key)):
+            if present:
+                out.append(rf"\defbibcheck{{diff{side}{index}}}{{\iffieldequalstr{{entrykey}}{{{entry}}}{{}}{{\skipentry}}}}")
+                # A box keeps an entry's own glue from shifting the row.
+                out.append(r"\noindent\begin{minipage}[t]{\linewidth}"
+                           rf"\printbibliography[heading=none, check=diff{side}{index}]"
+                           r"\end{minipage}\par\vspace{4pt}")
+            out.append(r"\switchcolumn" if side == "left" else r"\switchcolumn*")
+    out.append(r"\end{paracol}")
+    return "\n".join(out)
+
+
 def diff_output_stem(ref1, ref2):
     """Keep resolved ref labels in filenames without creating tag subfolders."""
     names = [re.sub(r'[^A-Za-z0-9._-]', '_', ref) for ref in (ref1, ref2)]
@@ -1158,23 +1374,6 @@ def generate_diff_latex(tag1, tag2, outdir):
     v1_keys = extract_citation_keys(old_full, suffix="_v1")
     v2_keys = extract_citation_keys(new_full)
 
-    # Bibliography diff block
-    bib_diff = []
-    if v1_keys or v2_keys:
-        v1_nocite = f"\\nocite{{{', '.join(v1_keys)}}}" if v1_keys else ""
-        v2_nocite = f"\\nocite{{{', '.join(v2_keys)}}}" if v2_keys else ""
-        bib_diff = [
-            v1_nocite,
-            v2_nocite,
-            r"\begin{paracol}{2}",
-            r"\section*{DAFTAR PUSTAKA}",
-            r"\printbibliography[heading=none, keyword=v1]" if v1_keys else "",
-            r"\switchcolumn",
-            r"\section*{DAFTAR PUSTAKA}",
-            r"\printbibliography[heading=none, keyword=v2]" if v2_keys else "",
-            r"\end{paracol}",
-        ]
-
     body = render_sections(old_full, new_full)
     
     # Append _v1 to citation commands specifically inside the left column 
@@ -1190,7 +1389,6 @@ def generate_diff_latex(tag1, tag2, outdir):
         return f"\\begin{{leftside}}{new_content}\\end{{leftside}}"
     
     body = re.sub(r'\\begin\{leftside\}(.*?)\\end\{leftside\}', leftside_repl, body, flags=re.DOTALL)
-    body = body + "\n" + "\n".join(bib_diff)
 
     # Pull class/bib/logo assets so the diff compiles with the real
     # proposal styling instead of a bare article class.
@@ -1219,7 +1417,10 @@ def generate_diff_latex(tag1, tag2, outdir):
             with open(local_bib, "r") as f:
                 bib_content_v2 = f.read()
         
+    bib_rows = bibliography_rows(bib_content_v1, bib_content_v2, pure_v1_keys, v2_keys)
     bib_content_v1, bib_content_v2 = diff_bib_files(bib_content_v1, bib_content_v2, pure_v1_keys, v2_keys)
+    if bib_rows:
+        body += "\n" + render_bibliography_rows(bib_rows, v1_keys, v2_keys)
     
     bib_content_v1 = re.sub(r'(@[a-zA-Z]+\s*\{)\s*([^,]+)\s*(,)', lambda m: f"{m.group(1)}{m.group(2).strip()}_v1{m.group(3)}", bib_content_v1)
 
@@ -1254,6 +1455,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         # Robust switches: biblatex case changing alters a color argument.
         r"\DeclareRobustCommand{\bibdelcolor}{\color{deltext}}",
         r"\DeclareRobustCommand{\bibinscolor}{\color{instext}}",
+        r"\newcommand{\diffmoved}[1]{\par\noindent{\footnotesize\itshape\color{gray}[#1]}\par}",
         r"\newcommand{\diffinline}[2]{{\setlength{\fboxsep}{0pt}\colorbox{#1}{\strut #2}}}",
         # No inset or added caption: retain the source equation's usable width.
         r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",
@@ -1265,7 +1467,8 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\newcommand{\bibdelbegin}{\begin{tcolorbox}[enhanced,breakable,colback=delhl,colframe=delhl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{deltext}\noindent\hangindent=\bibhang\hangafter=1}",
         r"\newcommand{\bibinsbegin}{\begin{tcolorbox}[enhanced,breakable,colback=inshl,colframe=inshl,boxrule=0pt,arc=1pt,boxsep=0pt,left=3pt,right=3pt,top=0pt,bottom=0pt,before=\noindent,after=\par,grow to left by=\bibhang]\color{instext}\noindent\hangindent=\bibhang\hangafter=1}",
         r"\newcommand{\bibtcbend}{\end{tcolorbox}}",
-        r"\defbibenvironment{bibliography}{\list{}{\setlength{\leftmargin}{\bibhang}\setlength{\itemindent}{-\leftmargin}\setlength{\itemsep}{4pt}\setlength{\parsep}{0pt}}}{\endlist}{\item}",
+        # One entry per synchronized row: the row gap replaces the item gap.
+        r"\defbibenvironment{bibliography}{\list{}{\setlength{\leftmargin}{\bibhang}\setlength{\itemindent}{-\leftmargin}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}}}{\endlist}{\item}",
         r"\renewbibmacro*{begentry}{%",
         r"  \iffieldequalstr{userc}{del}{\bibdelbegin}{}%",
         r"  \iffieldequalstr{userc}{ins}{\bibinsbegin}{}%",

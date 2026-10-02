@@ -593,5 +593,102 @@ class ProposalToThesisTests(unittest.TestCase):
         self.assertNotIn(r"\textcolor", left + right)
 
 
+class SimilarityAlignmentTests(unittest.TestCase):
+    def page(self, title, body):
+        return (r"\phantomsection" + "\n" + rf"\addcontentsline{{toc}}{{matter}}{{{title}}}"
+                + "\n" + body)
+
+    def test_added_frontmatter_pages_leave_approval_beside_approval(self):
+        old = ("\n" + r"\newpage" + "\n").join((
+            r"\begingroup PROPOSAL SKRIPSI \endgroup",
+            r"\begin{center}HALAMAN PENGESAHAN\end{center} Old approval.",
+            r"\begin{center}\textbf{ABSTRAK}\end{center}" + "\nIsi lama.",
+        ))
+        new = ("\n" + r"\newpage" + "\n").join((
+            self.page("HALAMAN JUDUL", r"\begingroup Cover \endgroup"),
+            self.page("HALAMAN PENGAJUAN", "Submission."),
+            self.page("HALAMAN PENGESAHAN", "New approval."),
+            self.page("HALAMAN PERNYATAAN", "Statement."),
+            self.page("KATA PENGANTAR", "Preface."),
+            self.page("ABSTRAK", "Isi baru."),
+        ))
+        keys = [key for key, _ in diff.split_sections(new)]
+        self.assertEqual(keys, [("frontmatter", "cover"), ("frontmatter", "pengajuan"),
+                                ("frontmatter", "approval"), ("frontmatter", "pernyataan"),
+                                ("frontmatter", "kata pengantar"), ("frontmatter", "abstract-id")])
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual(len(pairs), 6)
+        self.assertIn("Old approval.", pairs[2][0])
+        self.assertIn("New approval.", pairs[2][1])
+        self.assertEqual(pairs[1][0], "")
+        self.assertEqual(pairs[3][0], "")
+        self.assertIn("Isi lama.", pairs[5][0])
+        self.assertIn("Isi baru.", pairs[5][1])
+
+    def test_relevelled_and_renamed_sections_pair_by_heading_or_content(self):
+        old = "\n".join((
+            r"\section{Rumusan Masalah}", "Pertanyaan tentang kepatuhan kaidah harmoni.",
+            r"\section{Diagram Alir Penelitian}",
+            "Diagram alir menggambarkan keseluruhan tahapan penelitian dari awal sampai akhir.",
+        ))
+        new = "\n".join((
+            r"\section{Rumusan Masalah dan Pertanyaan Penelitian}",
+            r"\subsection{Rumusan Masalah}", "Model dievaluasi terhadap kaidah gerak suara.",
+            r"\section{Rancangan Alur Penelitian}",
+            "Diagram alir menggambarkan keseluruhan tahapan penelitian dari awal sampai selesai.",
+        ))
+        pairs = diff.align_sections(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual(pairs[0][0], "")
+        self.assertIn("Pertanyaan Penelitian}", pairs[0][1])
+        self.assertIn(r"\section{Rumusan Masalah}", pairs[1][0])
+        self.assertIn(r"\subsection{Rumusan Masalah}", pairs[1][1])
+        self.assertIn("Diagram Alir", pairs[2][0])
+        self.assertIn("Rancangan Alur", pairs[2][1])
+
+    def test_moved_section_compares_with_its_counterpart_at_both_positions(self):
+        moved = r"\section{Sistematika Penulisan}" + "\nBab satu memaparkan latar belakang penelitian."
+        old = "\n".join((r"\section{Latar Belakang}", "Konteks.", r"\section{Metode}", "Langkah.", moved))
+        new = "\n".join((r"\section{Latar Belakang}", "Konteks.",
+                         moved.replace("memaparkan", "menjelaskan"), r"\section{Metode}", "Langkah."))
+        pairs, moves = diff.section_alignment(diff.split_sections(old), diff.split_sections(new))
+        self.assertEqual(len(moves), 2)
+        rendered = diff.render_sections(old, new)
+        self.assertIn(r"\diffmoved{dipindahkan ke posisi baru}", rendered)
+        self.assertIn(r"\diffmoved{dipindahkan dari posisi lama}", rendered)
+        self.assertIn(r"\delhighlight{memaparkan}", rendered)
+        self.assertIn(r"\inhighlight{menjelaskan}", rendered)
+        self.assertNotIn(r"\inhighlight{latar}", rendered)
+
+    def test_inserted_paragraph_does_not_take_an_edited_paragraph_counterpart(self):
+        old = r"\section{A}" + "\n\nFirst paragraph about model output.\n\nClosing words stay mostly the same here."
+        new = (r"\section{A}" + "\n\nAn entirely unrelated inserted paragraph.\n\n"
+               "First paragraph about generated model output.\n\nClosing words stay mostly the same now.")
+        left, right = diff.render_section_text(old, new)
+        self.assertIn(r"\inhighlight{generated}", right)
+        self.assertNotIn(r"\inhighlight{First}", right)
+        self.assertIn(r"\inhighlight{unrelated}", right)
+        self.assertIn(r"\delhighlight{here.}", left)
+
+
+class BibliographyRowTests(unittest.TestCase):
+    OLD = """@book{kept, author = {Strube, Gustav}, title = {Chords}, year = {1928}}
+@inproceedings{gone, author = {Ke Chen and Shlomo Dubnov}, title = {Sketch}, year = {2020}}"""
+    NEW = """@book{kept, author = {Strube, Gustav}, title = {Chords}, year = {1928}}
+@article{added, author = {Huang, Cheng-Zhi Anna}, title = {Doodle}, year = {2019}}"""
+
+    def test_rows_sort_by_family_name_and_leave_missing_sides_blank(self):
+        rows = diff.bibliography_rows(self.OLD, self.NEW, ["kept", "gone"], ["kept", "added"])
+        self.assertEqual(rows, [("gone", True, False), ("added", False, True), ("kept", True, True)])
+
+    def test_each_row_prints_one_entry_per_side_in_a_synchronized_box(self):
+        rows = diff.bibliography_rows(self.OLD, self.NEW, ["kept", "gone"], ["kept", "added"])
+        rendered = diff.render_bibliography_rows(rows, ["kept_v1", "gone_v1"], ["kept", "added"])
+        self.assertIn(r"\iffieldequalstr{entrykey}{gone_v1}", rendered)
+        self.assertIn(r"\iffieldequalstr{entrykey}{added}", rendered)
+        self.assertNotIn(r"{entrykey}{added_v1}", rendered)
+        self.assertEqual(rendered.count(r"\printbibliography"), 4)
+        self.assertEqual(rendered.count(r"\switchcolumn*"), 4)
+
+
 if __name__ == "__main__":
     unittest.main()
