@@ -27,11 +27,29 @@
 % Indonesian page labels in citations, e.g. (Strube, 1928, hlm. 9).
 \DefineBibliographyStrings{english}{page = {hlm\adddot}, pages = {hlm\adddot}}
 
-% Section formatting
+% Section formatting: A. → 1. → a., as in the 2026 department template and the
+% 2026 Prodi Musik theses in references/. Cross-references keep the parent
+% letter (B.1) so they stay unique.
 \renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\alph{subsubsection}}
+\makeatletter
+\renewcommand{\p@subsection}{\thesection.}
+\renewcommand{\p@subsubsection}{\thesection.\thesubsection.}
+\makeatother
 \titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.\quad}{0pt}{}
-\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection\quad}{0pt}{}
-\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection\quad}{0pt}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.\quad}{0pt}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection.\quad}{0pt}{}
+
+% Contents entries: dot leaders on every line and a period after each label,
+% matching the front-matter entries above.
+\usepackage{titletoc}
+\makeatletter
+\newcommand{\tocleaders}{\leaders\hbox{$\m@th\mkern\@dotsep mu\hbox{.}\mkern\@dotsep mu$}\hfill}
+\makeatother
+\titlecontents{part}[0pt]{\addvspace{6pt}\bfseries}{}{}{\tocleaders\contentspage}
+\titlecontents{section}[2em]{}{\contentslabel[\thecontentslabel.]{2em}}{}{\tocleaders\contentspage}
+\titlecontents{subsection}[4em]{}{\contentslabel[\thecontentslabel.]{2em}}{}{\tocleaders\contentspage}
 
 % Title, researcher, institution, dates, and committee
 \input{metadata}

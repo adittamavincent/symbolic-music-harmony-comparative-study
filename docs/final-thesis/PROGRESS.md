@@ -258,3 +258,31 @@ At the researcher's request, BAB I–III were expanded with sources screened fro
 - Fixed bibliography errors: `le2025` fourth author is Mikaela Keller; the `Retkowski2024` arXiv ID is 2412.07948. Protected proper nouns in several existing titles.
 
 All new claims were checked against OpenAlex abstracts only. Record page or section support in the reading ledger before submission.
+
+## BAB I compared with 2026 reference theses (2026-10-02)
+
+The researcher asked whether BAB I follows the structure used in the approved 2026 theses under the Git-ignored `references/` folder. Compared sources: six S-1 Musik skripsi (Arinii 'Ilmal Haqqi, Cinta Angelica Paradise, Intan Rama Wijaya, Nourmalita Alya Putri, Stanislaus Anata Warnabinarja Sihombing, Yazid Fauzan Ath Thaariq), one S-2 tesis (Benadito Anicheto Manek), and the department's 2026 proposal template. All reference theses are complete five-chapter documents, not proposals.
+
+| Item | References | v3 before this change |
+| --- | --- | --- |
+| BAB I sections | All: Latar Belakang, Rumusan Masalah, Tujuan, Manfaat. Intan, Nourmalita, and Benadito also have a separate *Pertanyaan Penelitian* after a prose *Rumusan Masalah*. | Template form: B. Rumusan Masalah dan Pertanyaan Penelitian, C. Tujuan dan Manfaat; prose rumusan then a question list (F03). Kept. |
+| Sistematika Penulisan | 4 of 6 S-1 skripsi (Arinii, Cinta, Stanislaus, Yazid); absent in the two music-education skripsi and the S-2 tesis; absent in the template. Three of four write it as prose; Arinii uses a numbered list. | Present since `e67901b` (numbered list, BAB I–III). |
+| Heading and contents numbering | Template and every reference contents page: A. → 1.; contents lines with dot leaders; "BAB I PENDAHULUAN". | Subsections printed as B.1, C.1; contents showed "A" without a period, "BAB I: PENDAHULUAN", leaders only on subsections. |
+| Manfaat | Numbered or lettered sub-items: 1. Manfaat Teoretis / 2. Manfaat Praktis, with a., b. items. | Unnumbered "Manfaat Teoretis:" labels; the label could fall alone at a page end. |
+| Latar Belakang length | About 1,570–2,410 words in the S-1 skripsi; template asks for 2–3 pages. | About 1,530 words (6 pages at double spacing). No change. |
+
+Changes made:
+
+- `main.tex.template`: subsections numbered 1., 2. (subsubsections a.), cross-references keep the parent letter (B.1); contents entries use dot leaders and a period after each label (`titletoc`).
+- `layout.tex`: contents entry "BAB I PENDAHULUAN" without a colon.
+- I.C.2 *Manfaat Penelitian*: a. Manfaat Teoretis / b. Manfaat Praktis with 1), 2) items, wording unchanged.
+- I.D *Sistematika Penulisan*: prose, one paragraph per chapter (the Stanislaus form), now matching the actual BAB II and BAB III headings (adds *Evaluasi Penggunaan Model oleh Musisi*, *Posisi Penelitian*, the symbolic-music theory subsection, reliability, and sample quality control).
+
+Open decision for the researcher: the reference Sistematika sections describe all five chapters, because those theses are complete. The v3 Sistematika describes only BAB I–III, which are the chapters present. Add BAB IV and BAB V when those chapters are written, or earlier if the supervisor expects the planned chapters to be described.
+
+Follow-up at the researcher's request (2026-10-02): combined "X dan Y" sections that only held X and Y as subsections were split into separate lettered sections, as in the reference theses (Intan, Nourmalita, Benadito). This departs from the template's combined headings.
+
+- BAB I: A. Latar Belakang, B. Rumusan Masalah, C. Pertanyaan Penelitian, D. Tujuan Penelitian, E. Manfaat Penelitian (1. Manfaat Teoretis, 2. Manfaat Praktis, items a., b.), F. Sistematika Penulisan.
+- BAB II: C. Asumsi and D. Hipotesis replace C. Asumsi dan Hipotesis.
+- Not changed: III.B *Objek dan Subjek Penelitian* (its subsections are Populasi and Sampel, not the two title terms) and III.C.5 *Validitas dan Reliabilitas Instrumen* (no subsections).
+- Section references such as "I.B.1" earlier in this file use the old numbering.

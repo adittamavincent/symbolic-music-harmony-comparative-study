@@ -28,15 +28,13 @@ Setiap kaidah diterjemahkan menjadi definisi operasional, yaitu rumusan yang men
 
 Kaidah gerak suara merupakan materi dasar dalam pembelajaran harmoni. Jika mahasiswa atau pemula memakai model harmonisasi untuk mengerjakan soal latihan, pengajar perlu mengetahui kaidah mana yang paling sering dilanggar model pada soal semacam itu. Pengukuran yang terdokumentasi juga menunjukkan letak setiap pelanggaran pada partitur sehingga dapat diperiksa kembali. Perbedaan yang ditemukan hanya berlaku pada versi model dan melodi yang diuji. Karena data latih dan cara menyusun nada kedua model berbeda, penelitian ini tidak dapat menyimpulkan bahwa perbedaan tersebut disebabkan oleh rancangan jaringan model saja. Temuan Yin et al.\ \parencite{yin2023} juga mengingatkan bahwa keunggulan suatu jenis model perlu ditunjukkan melalui evaluasi, bukan diandaikan.
 
-\section{Rumusan Masalah dan Pertanyaan Penelitian}\label{sec:rumusan-dan-pertanyaan}
-
-\subsection{Rumusan Masalah}\label{sec:rumusan-masalah}
+\section{Rumusan Masalah}\label{sec:rumusan-masalah}
 
 DeepBach dan Coconet dievaluasi oleh pengembangnya pada \textit{chorale} Bach melalui uji diskriminasi oleh pendengar (DeepBach) serta \textit{log-likelihood}, yaitu ukuran seberapa besar peluang yang diberikan model kepada karya Bach yang belum pernah dilihatnya, dan evaluasi manusia (Coconet). Analisis Bach Doodle menunjukkan bahwa kuint dan oktaf sejajar pada harmonisasi Coconet meningkat ketika melodi masukan berada di luar wilayah data latih \parencite{huang2019}. Temuan tersebut berasal dari melodi pengguna yang tidak dikendalikan, satu model, dan dua kaidah. Belum diketahui apakah pola yang sama muncul ketika melodi yang sama diberikan kepada model lain, apakah pola tersebut berlaku pada kaidah gerak suara lain, dan bagaimana kepatuhan model pada melodi soal latihan harmoni dibandingkan dengan kepatuhannya pada melodi \textit{chorale} Bach. Pada sumber yang ditinjau dalam Bab II, belum ditemukan pengukuran kepatuhan DeepBach dan Coconet terhadap kaidah gerak suara Strube dengan asal melodi yang dikendalikan dan definisi operasional yang terdokumentasi.
 
 Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint DeepBach dan Coconet yang ditetapkan dalam protokol, dengan melodi sopran sebagai masukan tetap. Kaidah yang diperiksa adalah lima kaidah gerak suara yang disebutkan di atas. Penandaan instrumen menunjukkan pelanggaran menurut definisi operasional, bukan penilaian musikal atas konteksnya. Penelitian tidak menilai nilai estetis keluaran, tidak melibatkan penilai atau pendengar manusia, dan tidak mengatribusikan perbedaan hasil pada arsitektur model semata.
 
-\subsection{Pertanyaan Penelitian}\label{sec:pertanyaan-penelitian}
+\section{Pertanyaan Penelitian}\label{sec:pertanyaan-penelitian}
 
 \begin{enumerate}
     \item Bagaimana tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube pada melodi \textit{chorale} Bach dan melodi latihan Strube?
@@ -44,9 +42,7 @@ Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint Deep
     \item Bagaimana pengaruh asal melodi terhadap tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube?
 \end{enumerate}
 
-\section{Tujuan dan Manfaat Penelitian}\label{sec:tujuan-dan-manfaat}
-
-\subsection{Tujuan Penelitian}\label{sec:tujuan-penelitian}
+\section{Tujuan Penelitian}\label{sec:tujuan-penelitian}
 
 \begin{enumerate}
     \item Mengukur tingkat kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara Strube pada melodi \textit{chorale} Bach dan melodi latihan Strube, dengan harmonisasi asli Bach sebagai acuan.
@@ -54,25 +50,29 @@ Penelitian dibatasi pada harmonisasi empat suara yang dihasilkan checkpoint Deep
     \item Menganalisis pengaruh asal melodi terhadap tingkat kepatuhan harmonisasi masing-masing model terhadap kaidah gerak suara Strube.
 \end{enumerate}
 
-\subsection{Manfaat Penelitian}\label{sec:manfaat-penelitian}
+\needspace{6\baselineskip}
+\section{Manfaat Penelitian}\label{sec:manfaat-penelitian}
 
-Manfaat Teoretis:
 \begin{enumerate}
-    \item Menguji ulang temuan analisis Bach Doodle tentang pengaruh melodi di luar data latih terhadap gerak paralel dalam kondisi yang dikendalikan, pada dua model dan lima kaidah.
-    \item Menyediakan definisi operasional lima kaidah gerak suara Strube yang dapat diperiksa, diperdebatkan, dan dikembangkan dalam kajian teori musik dan teknologi musik.
-    \item Menghasilkan data empiris tentang kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara, dibandingkan dengan harmonisasi asli Bach.
-\end{enumerate}
-
-Manfaat Praktis:
-\begin{enumerate}
-    \item Memberikan informasi terukur bagi pengajar dan mahasiswa harmoni tentang kaidah gerak suara yang paling sering dilanggar model ketika mengerjakan melodi soal latihan.
-    \item Menyediakan instrumen evaluasi otomatis yang terdokumentasi dan dapat diterapkan pada model harmonisasi lain yang menerima melodi sopran sebagai masukan.
+    \renewcommand{\labelenumii}{\alph{enumii}.}
+    \item Manfaat Teoretis
+    \begin{enumerate}
+        \item Menguji ulang temuan analisis Bach Doodle tentang pengaruh melodi di luar data latih terhadap gerak paralel dalam kondisi yang dikendalikan, pada dua model dan lima kaidah.
+        \item Menyediakan definisi operasional lima kaidah gerak suara Strube yang dapat diperiksa, diperdebatkan, dan dikembangkan dalam kajian teori musik dan teknologi musik.
+        \item Menghasilkan data empiris tentang kepatuhan harmonisasi DeepBach dan Coconet terhadap kaidah gerak suara, dibandingkan dengan harmonisasi asli Bach.
+    \end{enumerate}
+    \needspace{4\baselineskip}
+    \item Manfaat Praktis
+    \begin{enumerate}
+        \item Memberikan informasi terukur bagi pengajar dan mahasiswa harmoni tentang kaidah gerak suara yang paling sering dilanggar model ketika mengerjakan melodi soal latihan.
+        \item Menyediakan instrumen evaluasi otomatis yang terdokumentasi dan dapat diterapkan pada model harmonisasi lain yang menerima melodi sopran sebagai masukan.
+    \end{enumerate}
 \end{enumerate}
 
 \section{Sistematika Penulisan}\label{sec:sistematika-penulisan}
 
-\begin{enumerate}
-    \item BAB I Pendahuluan memaparkan latar belakang, rumusan masalah, pertanyaan penelitian, tujuan penelitian, serta manfaat teoretis dan praktis penelitian.
-    \item BAB II Tinjauan Pustaka dan Landasan Teori membahas penelitian terdahulu tentang model generatif musik simbolik, evaluasi keluaran model, termasuk analisis Bach Doodle yang dilanjutkan penelitian ini, dan analisis harmoni komputasional, serta teori harmoni fungsional dan kaidah gerak suara Gustav Strube yang menjadi dasar pengukuran. Bab ini juga memuat asumsi dan hipotesis penelitian.
-    \item BAB III Metode Penelitian menjelaskan pendekatan kuantitatif, objek penelitian, populasi dan sampel melodi, variabel, prosedur generasi harmonisasi, instrumen pengukuran berbasis music21 beserta validasinya, metode analisis data, dan alur penelitian.
-\end{enumerate}
+BAB I Pendahuluan memaparkan latar belakang, rumusan masalah, pertanyaan penelitian, tujuan penelitian, manfaat teoretis dan praktis penelitian, serta sistematika penulisan.
+
+BAB II Tinjauan Pustaka dan Landasan Teori membahas penelitian terdahulu tentang perkembangan model generatif musik simbolik, DeepBach dan Coconet, evaluasi keluaran model, evaluasi penggunaan model oleh musisi, dan analisis harmoni komputasional. Tinjauan tersebut mencakup analisis Bach Doodle yang dilanjutkan penelitian ini dan diakhiri dengan posisi penelitian. Landasan teorinya menjelaskan musik simbolik, model generatif, dan distribusi data latih, serta teori harmoni fungsional dan kaidah gerak suara Gustav Strube yang menjadi dasar pengukuran. Bab ini juga memuat asumsi dan hipotesis penelitian.
+
+BAB III Metode Penelitian menjelaskan pendekatan kuantitatif, objek penelitian, populasi dan sampel melodi, variabel, pengumpulan melodi, prosedur generasi harmonisasi, instrumen pengukuran berbasis music21 beserta validitas dan reliabilitasnya, kontrol kualitas sampel, metode analisis data, dan alur penelitian.
