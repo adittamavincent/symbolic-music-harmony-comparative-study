@@ -19,17 +19,19 @@ Peran setiap sumber:
 
 ## Celah yang harus ditutup sebelum sidang
 
+Diperbarui 2 Oktober 2026 setelah buku Strube 1928 dibaca dan instrumen v2 diimplementasikan.
+
 | Celah | Kenapa berbahaya | Cara menutup | Status |
 | --- | --- | --- | --- |
-| Halaman Strube untuk lima kaidah belum dibaca | Pertanyaan "di halaman berapa Strube menulis ini?" tidak bisa dijawab; klaim "dirumuskan dari Strube" belum terbukti | Baca edisi yang dipakai, isi `research/literature/strube-rule-pages.csv` | Terbuka |
-| Belum diketahui apakah Strube memuat larangan tumpang tindih suara | Satu dari lima kaidah bisa kehilangan dasar Strube | Cek saat membaca; jika tidak ada, putuskan: tetap dengan Yan saja (dan tulis begitu) atau dihapus | Terbuka |
-| Jumlah latihan melodi Strube belum diketahui | Kelompok Strube adalah separuh desain | Inventaris di `strube-exercise-inventory.csv` | Terbuka |
-| Contoh cetak Strube belum diketik | Validasi langkah 2 belum ada | Isi `strube-example-fixtures.csv` dan ketik MusicXML | Terbuka |
-| Abstrak masih menjelaskan desain lama (tiga arsitektur, NotaGen, nada penuntun) | Penguji membaca abstrak lebih dulu; kontradiksi langsung terlihat | Minta abstrak ditulis ulang, atau tulis setelah hasil | Menunggu keputusan peneliti |
-| Kode masih instrumen versi 1 | Klaim BAB III belum diimplementasikan | Implementasi v2 dan empat langkah validasi | Terbuka |
-| Pilot belum dijalankan | Batas panjang melodi Coconet dan kosakata sopran DeepBach belum diketahui | Pilot beberapa melodi tiap kelompok | Terbuka |
-| Persetujuan pembimbing atas desain baru | Desain berubah besar dari proposal | Bawa BAB I–III dan berkas ini ke bimbingan | Terbuka |
-| Halaman Cohen (1988), Hodges dan Lehmann (1956), Creswell, Sugiyono belum dicatat | Penguji bisa minta halaman | Buka sumber dan catat di `reading-notes.csv` | Terbuka |
+| Halaman Strube untuk lima kaidah | Pertanyaan "di halaman berapa?" | Kaidah ditemukan: paralel hlm. 9 dan 12, jarak hlm. 20, persilangan hlm. 174, tumpang tindih hlm. 12–13 (`strube-rule-pages.csv`) | Tertutup; cocokkan sekali dengan buku cetak |
+| Apakah Strube memuat tumpang tindih | Satu kaidah bisa kehilangan dasar | Ada di hlm. 12, dengan pengecualian gerak melangkah | Tertutup |
+| Jumlah latihan melodi Strube | Separuh desain | 69 latihan melodi bernomor di hlm. 11–80; hlm. 48 (latihan 67–68) tidak ada di PDF | Tertutup; cek hlm. 48 di buku cetak |
+| Contoh cetak Strube sebagai kasus uji | Validasi langkah 2 | Sembilan gambar terdaftar di `strube-example-fixtures.csv`; perlu diketik ke MusicXML | Terbuka (kerja peneliti, sekitar 20–30 menit) |
+| Abstrak masih desain lama | Kontradiksi di halaman awal | Abstrak Indonesia dan Inggris ditulis ulang | Tertutup |
+| Kode instrumen | Klaim BAB III belum ada wujudnya | `research/voice_leading_v2.py`, 20 uji perangkat lunak, validasi langkah 3–5 sudah dijalankan | Tertutup untuk instrumen; adapter generasi belum |
+| Pilot dan adapter generasi | Batas panjang melodi dan kosakata DeepBach belum diketahui | Adapter melodi bebas, perbaikan pipeline, pilot | Terbuka (tahap penelitian setelah proposal disetujui) |
+| Persetujuan pembimbing | Desain berubah besar dari proposal | Bawa naskah v3 dan `bimbingan-v3.md` | Terbuka |
+| Halaman Cohen, Hodges–Lehmann, Creswell, Sugiyono | Penguji bisa minta halaman | Buka sumber, catat di `reading-notes.csv` | Terbuka (kecil) |
 
 ## A. Judul, masalah, dan tujuan
 
@@ -82,8 +84,8 @@ Grand theory: harmoni fungsional (tonalitas, fungsi tonika–dominan–subdomina
 *Bukti:* BAB II Landasan Teori, subbab kedua paragraf 1.
 
 **12. Kenapa Strube, bukan Piston, Kostka, atau Laitz?**
-Terjemahan Indonesia buku Strube tersedia di perpustakaan ISI Yogyakarta, dan catatan review proposal meminta penelitian ini merujuk Strube. Jika Strube memang menjadi buku ajar mata kuliah harmoni di program studi, sebutkan itu; pastikan dulu faktanya. Kelima kaidah yang diukur adalah kaidah umum penulisan empat suara dalam tradisi buku ajar tonal, sehingga pemilihan Strube tidak mengubah jenis kaidah yang diukur.
-*Rawan bila:* belum bisa menyebut edisi dan halaman. **Wajib ditutup** (lihat tabel celah). Jangan menyebut nama penerjemah sebagai argumen sebelum dipastikan.
+Catatan review proposal meminta penelitian ini merujuk Strube, dan terjemahan Indonesianya tersedia di perpustakaan ISI Yogyakarta. Edisi yang dirujuk adalah edisi asli 1928 (Oliver Ditson). Buku ini menyediakan dua hal yang dibutuhkan desain: uraian kaidah beserta pengecualiannya, dan latihan harmonisasi melodi yang dapat diberikan kepada model. Jika Strube memang buku ajar mata kuliah harmoni di program studi, sebutkan itu setelah faktanya dipastikan.
+*Bukti:* Strube hlm. 8 (latihan bas dan melodi), hlm. 9, 12–13, 20, 174 (kaidah).
 
 **13. Rubrik Yan berasal dari tradisi buku Amerika, Strube lain lagi. Kenapa dicampur?**
 Keduanya dari tradisi yang sama, yaitu penulisan empat suara dalam harmoni tonal Barat. Yan sendiri menyebut rubriknya lazim dalam buku ajar dan kelas teori musik. Pembagiannya jelas: Yan menentukan kategori mana yang punya preseden untuk menilai harmonisasi model; Strube menentukan rumusan dan pengecualian yang dipakai. Setiap kaidah dicatat sumbernya di lembar definisi.
@@ -97,6 +99,15 @@ Dua alasan. Pertama, dalam tugas ini sopran diberikan sebagai soal, sehingga res
 
 **16. Bach sendiri melanggar kaidah. Kenapa Bach dijadikan acuan?**
 Justru karena itu. Huang menemukan 132 kuint sejajar dan 51 oktaf sejajar pada 382 chorale, dan Yan mencatat bahwa kaidah buku ajar tidak diikuti Bach secara ketat. Acuan Bach bukan nol, melainkan pembanding realistis: berapa laju pelanggaran harmonisasi manusia ahli untuk melodi yang sama. Hasil model dibaca relatif terhadap acuan ini.
+
+**16a. Kenapa persilangan hanya dihitung bila melewati sopran?**
+Karena Strube sendiri membolehkan persilangan sesekali bila menghasilkan gerak suara yang lebih baik, asalkan tidak melewati sopran (hlm. 174). Menghitung semua persilangan berarti menghukum sesuatu yang dibolehkan sumber teori. Rubrik Yan menghitung semua persilangan; penyempitan ini disebutkan terbuka di BAB II.
+
+**16b. Kenapa tumpang tindih dengan gerak melangkah tidak dihitung?**
+Strube mendefinisikan tumpang tindih dan menyatakan gerak itu hanya dipakai bila salah satu suara bergerak melangkah (hlm. 12); Gambar 33 hlm. 13 menandai kasus kedua suara melompat sebagai "avoid". Instrumen mengikuti batas itu: melangkah berarti satu atau dua semiton.
+
+**16c. Kenapa kuint dengan gerak berlawanan tidak dihitung, padahal music21 menghitungnya?**
+Strube hlm. 9 menyatakan kuint dan oktaf berurutan dengan gerak berlawanan tidak bermasalah. Pada 371 chorale Bach, semua 69 penandaan tambahan music21 adalah kasus gerak berlawanan; untuk kasus lain kedua implementasi identik.
 
 **17. Apa beda persilangan dan tumpang tindih suara?**
 Persilangan terjadi pada satu saat: suara bawah berbunyi lebih tinggi daripada suara atas. Tumpang tindih terjadi pada perpindahan: suara bergerak melewati nada yang baru saja dibunyikan suara di sebelahnya, walaupun pada saat baru keduanya tidak bersilangan. Definisi tumpang tindih sengaja mensyaratkan tidak ada persilangan agar satu kejadian tidak dihitung dua kali.
@@ -138,9 +149,9 @@ Lima harmonisasi dari melodi yang sama tidak independen. Menghitungnya sebagai 6
 **27. Bagaimana memilih melodi Bach? Bisa saja Anda memilih yang menguntungkan.**
 Kriteria kelayakan sama untuk kedua kelompok, lalu melodi Bach diambil secara acak dengan bilangan acak yang dicatat sebelum generasi. Untuk Strube, semua latihan melodi yang layak diikutsertakan, bukan dipilih.
 
-**28. Bagaimana jika buku Strube tidak punya cukup latihan melodi?**
-Jika kurang dari 30, semuanya tetap dipakai dan efek terkecil yang dapat dideteksi dilaporkan. Jika jauh lebih sedikit (sekitar kurang dari 10), desain diubah bersama pembimbing sebelum generasi, misalnya menambah latihan melodi dari buku harmoni lain, dan perubahan itu dicatat di protokol.
-*Rawan bila:* inventaris belum dilakukan saat sidang. **Wajib ditutup.**
+**28. Berapa latihan melodi di buku Strube, dan kenapa tidak semua dipakai?**
+Latihan 1–118 (hlm. 8–81) sudah diinventaris: 69 memberi melodi sopran, 47 memberi bas. Yang dipakai adalah latihan melodi bernomor sampai bab mode minor (hlm. 11–80). Latihan bas tidak dipakai karena tugasnya memberi sopran. Latihan melodi sesudah bab mode minor dirancang untuk melatih suspensi, nada sisipan, dan antisipasi; pelanggaran yang dimaklumi karena nada non-akor butuh analisis akor, sehingga instrumen akan salah menghitungnya. Strube sendiri menyebut nada non-akor dinilai dari sudut pandang berbeda (hlm. 35). Melodi di bab chorale tidak dipakai karena diambil dari Bach (hlm. 174). Kriteria ini berdasarkan isi bab, bukan hasil.
+*Rawan bila:* hlm. 48 (latihan 67–68) belum dicek di buku cetak.
 
 **29. Melodi Strube bisa berbeda dalam panjang, wilayah, dan tangga nada. Bagaimana tahu yang berpengaruh adalah asalnya?**
 Penelitian ini tidak mengklaim satu ciri sebagai penyebab. Variabelnya adalah asal melodi sebagai satu paket, sama seperti kelompok "di luar batas" pada Huang. Ciri-ciri melodi diukur dan dilaporkan supaya pembaca tahu perbedaan apa saja yang ada di antara kedua kelompok.
@@ -159,7 +170,8 @@ Kaidahnya dari Strube dan kategorinya dari rubrik Yan. Rumusnya disusun peneliti
 
 **33. Tanpa penilai manusia, bagaimana Anda tahu program Anda benar?**
 Empat langkah. (1) Validitas isi: setiap kaidah dikaitkan dengan halaman Strube dan kategori Yan sebelum data. (2) Contoh cetak Strube dipakai sebagai kunci: program harus menandai contoh yang disebut salah oleh buku dan tidak menandai contoh yang benar; label benar/salahnya datang dari penulis buku, bukan dari peneliti. (3) Pemeriksaan silang dengan fungsi `VoiceLeadingQuartet` music21 pada 371 chorale. (4) Laju kuint dan oktaf sejajar pada chorale Bach dibandingkan dengan angka terbitan Huang (0,023 dan 0,009 per birama).
-*Rawan bila:* langkah 2 belum ada karena contoh Strube belum diketik. **Wajib ditutup.**
+Langkah 3–5 sudah dijalankan pada 371 chorale Bach (345 memenuhi syarat): tidak ada perbedaan dengan music21 untuk persilangan dan tumpang tindih; perbedaan paralel hanya kasus gerak berlawanan; dua kali run menghasilkan hash identik.
+*Rawan bila:* langkah 2 belum ada karena gambar Strube belum diketik. Tutup dengan mengetik sembilan gambar di `strube-example-fixtures.csv`.
 
 **34. Pelanggaran yang sebenarnya bisa dimaklumi ikut terhitung. Bukankah hasilnya bias?**
 Penghitungan utama mengikuti Huang, yaitu semua kejadian dihitung. Penghitungan tambahan mengecualikan gerak pada batas frasa (fermata), yang memang disebut Huang sebagai salah satu alasan pemakluman. Pengecualian karena nada non-akor tidak diterapkan karena butuh analisis akor; ini dinyatakan sebagai batas. Instrumen yang sama dipakai untuk semua model, semua melodi, dan untuk harmonisasi Bach, sehingga perbandingannya tetap setara. Hasil disebut "pelanggaran menurut definisi operasional", bukan "kesalahan musikal".
@@ -173,8 +185,8 @@ Itu resolusi waktu kedua model: DeepBach membagi satu ketukan menjadi empat, Coc
 **37. MIDI tidak menyimpan ejaan nada. Bagaimana membedakan kuint murni dari sekst berkurang?**
 Tidak bisa dibedakan dari MIDI. Tujuh semiton dihitung sebagai kuint. Dalam tekstur chorale tonal, sekst berkurang jarang muncul, dan keterbatasan ini dicatat. Alasan yang sama membuat kategori sekon diperbesar tidak diukur.
 
-**38. Bagaimana kalau angka Bach Anda tidak sama dengan Huang?**
-Tidak diharapkan sama persis: Huang memakai versi data latih Coconet tanpa fermata dan tidak menjelaskan pengaturan music21-nya, sedangkan penelitian ini memakai 371 chorale korpus music21. Yang disyaratkan adalah perbedaannya dapat dijelaskan. Jika perbedaannya besar dan tidak dapat dijelaskan, instrumen diperiksa ulang sebelum dipakai, dan perubahan dicatat sebagai versi baru.
+**38. Angka Bach Anda tidak sama dengan Huang. Kenapa?**
+Dengan definisi Strube, laju Bach 0,0078 kuint dan 0,0030 oktaf per birama. Dengan definisi music21 yang ikut menghitung gerak berlawanan, 0,0176 dan 0,0059; Huang melaporkan 0,023 dan 0,009. Sebagian besar selisih berasal dari definisi gerak berlawanan, yang tidak dianggap bermasalah oleh Strube. Sisanya wajar karena versi data berbeda (382 karya JSB, termasuk duplikat, tanpa fermata) dan pengaturan penghitungan Huang tidak diterbitkan. Semua angka itu lebih dari 20 kali lebih rendah daripada 0,365 kuint per birama pada Coconet, jadi instrumen jelas membedakan tingkat Bach dari tingkat model.
 
 **39. Bobot 1 dan 0,5 dari mana? Kenapa tidak jadi skor utama?**
 Dari rubrik Yan: kategori paralel berbobot 1; jarak, persilangan, dan tumpang tindih masing-masing 0,5. Indeks tertimbang hanya ringkasan tambahan. Pengujian utama dilakukan per kaidah karena dua harmonisasi dengan skor sama bisa punya masalah yang berbeda.
@@ -218,7 +230,7 @@ Posisi peneliti adalah orang dalam terhadap tradisi teori dan orang luar terhada
 Penelitian ini tidak melibatkan manusia sebagai subjek, penilai, atau pendengar. Data berupa partitur publik (korpus music21), latihan buku yang diketik untuk penelitian, dan keluaran model. Pindaian buku tidak disebarkan.
 
 **51. Apa batas utama penelitian?**
-Hanya dua model dan checkpoint yang diuji; hanya lima kaidah tanpa analisis akor; pengecualian nada non-akor tidak diterapkan; asal melodi dibaca sebagai satu paket ciri; tidak ada klaim tentang arsitektur; kepatuhan kaidah Strube adalah ukuran kesesuaian dengan satu tradisi, bukan mutu musik secara umum.
+Hanya dua model dan checkpoint yang diuji; hanya lima kaidah tanpa analisis akor; pengecualian Strube yang butuh analisis akor (kuint lewat, pengulangan akor, kuint akibat suspensi) tidak diterapkan; melodi Strube terbatas pada bab sebelum nada non-akor; asal melodi dibaca sebagai satu paket ciri; tidak ada klaim tentang arsitektur; kepatuhan kaidah Strube adalah ukuran kesesuaian dengan satu tradisi, bukan mutu musik secara umum.
 
 **52. Kenapa desain berubah jauh dari proposal?**
 Evaluasi atas desain proposal menunjukkan tiga masalah: tingkat kendali A–D tidak setara antar-model (kondisi NotaGen C dan D identik), pemilihan tiga kaidah dan rumus skor tidak punya dasar sumber, dan pengukuran nada penuntun bergantung pada deteksi tonalitas otomatis. Desain baru mengikatkan setiap pilihan pada penelitian terdahulu: Huang untuk desain dan ukuran, Yan untuk kategori, Strube untuk kaidah. Perubahan dicatat di protokol beserta alasannya, dan desain lama disimpan sebagai versi historis.
@@ -246,6 +258,6 @@ Identitas model dan checkpoint, pengaturan generasi, daftar melodi beserta halam
 
 ## Cara berlatih
 
-1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 24, 33, dan 52 tanpa membaca.
+1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, dan 52 tanpa membaca.
 2. Minta teman bertanya acak dari daftar ini dan memotong jawaban yang lebih dari satu menit.
 3. Setelah setiap celah di tabel atas ditutup, perbarui jawaban yang terkait dan hapus tanda **Wajib ditutup**.

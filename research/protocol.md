@@ -1,6 +1,6 @@
 # v3 protocol worksheet
 
-Protocol version 2, drafted 2026-10-02. Status: proposed design, not yet executed and not yet agreed with the supervisor. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/feedback.md` when they follow actual feedback.
+Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Status: proposed design, not yet executed and not yet agreed with the supervisor. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/feedback.md` when they follow actual feedback.
 
 ## Design in one paragraph
 
@@ -11,7 +11,7 @@ The study continues the Bach Doodle analysis of Huang et al. (2019, §6.3). Huan
 | Task | Fixed soprano; model generates alto, tenor, bass | Bach Doodle task (Huang et al. 2019); DeepBach §2.3.2 and Coconet support partial-score completion |
 | Models (X1) | DeepBach (official PyTorch repo, pretrained resources), Coconet (Magenta.js, checkpoint `coconet/bach`) | Open, accept a fixed soprano, trained on Bach chorales. NotaGen excluded: its official interface offers period/composer/instrumentation prompts, not a melody to preserve |
 | Melody origin (X2) | Bach chorale sopranos (music21 corpus) vs Strube melody exercises | Huang et al. out-of-distribution finding; Yan et al. note that exercise length differs from training pieces |
-| Outcome (Y) | Per-measure rates of parallel fifths, parallel octaves/unisons, upper-voice spacing, voice crossing, voice overlap; Yan-weighted penalty index as secondary summary | Huang et al. unit (per measure); Yan et al. rubric categories 3, 9, 10, 11 and weights |
+| Outcome (Y) | Per-measure rates of parallel fifths, parallel octaves/unisons, upper-voice spacing, crossing above the soprano, voice overlap; Yan-weighted penalty index as secondary summary | Huang et al. unit (per measure); Yan et al. rubric categories 3, 9, 10, 11 and weights |
 | Reference | Bach's own harmonization of the Bach melodies, measured identically | Huang et al. report Bach rates (0.023 P5, 0.009 P8 per measure) |
 | Unit of analysis | Melody; five generations per melody per model are averaged | Avoids treating repeated generations as independent |
 | Tests | Wilcoxon signed-rank (model, paired); Mann–Whitney U per model (origin); Holm over five rules per family | Huang et al. used Kruskal–Wallis and Mann–Whitney |
@@ -21,13 +21,13 @@ The study continues the Bach Doodle analysis of Huang et al. (2019, §6.3). Huan
 | Decision | Current choice | Status |
 | --- | --- | --- |
 | Title and questions | Thesis v3 BAB I (2026-10-02) | Drafted; supervisor confirmation pending |
-| Strube edition | Edition actually consulted (likely the 2015 Indonesian translation in the ISI library, *Teori dan Penggunaan Akor (I)*, transl. A. Gathut Bintarto T.) | Pending: researcher confirms edition, volume coverage, and bibliography entry |
-| Rule pages | One sheet per rule in `research/literature/strube-rule-pages.csv` | Pending: researcher reads Strube |
-| Strube melody inventory | All exercises in `research/literature/strube-exercise-inventory.csv` | Pending: researcher inventories the book |
+| Strube edition | Original 1928 Oliver Ditson edition (`strube1928`), scanned PDF supplied by the researcher at `references/The Theory and Use of Chords.pdf` (147 PDF pages; at least p. 48 is missing, and pages from the Suspensions chapter onward are scanned as two-page spreads) | Confirmed 2026-10-02 |
+| Rule pages | `research/literature/strube-rule-pages.csv`: parallels pp. 9, 12; spacing p. 20; crossing p. 174; overlap pp. 12–13 | Filled 2026-10-02 from the scan (OCR plus page images); researcher to confirm against the print |
+| Strube melody inventory | `research/literature/strube-exercise-inventory.csv`: exercises 1–118 (pp. 8–81): 69 given-soprano candidates, 47 given basses, 67–68 on missing p. 48 | Filled 2026-10-02; key, meter, length, and typing pending |
 | Model identities | DeepBach repository commit and resource archive checksum; Magenta.js package version and checkpoint URL | Pending: record at pilot |
 | Sample size | At least 30 melodies per origin group (power analysis below) | Proposed |
 | Generations | Five per melody per model; default sampling settings of each implementation | Proposed |
-| Instrument version | v2 definitions below; code not yet changed | Pending implementation |
+| Instrument version | `research/voice_leading_v2.py` (v2.0) with 20 software checks in `research/tests/test_voice_leading_v2.py`; validation checks 3–5 run on the Bach corpus | Implemented 2026-10-02; textbook fixtures (check 2) pending |
 | Analysis plan | Below; freeze before main generation | Proposed |
 
 ## Models
@@ -52,7 +52,7 @@ Eligibility, applied identically to both groups:
 4. Length the pilot shows both models can process. Record any melody either model cannot process and why.
 5. Bach group only: the chorale has exactly four voices, so Bach's own harmonization can be measured as the reference.
 
-Strube group: inventory every exercise in the consulted edition (page, number, given voice, figured or not, key, mode, meter, length in measures, eligible yes/no, reason). Include all eligible melody exercises. Type each eligible melody into MusicXML with key, meter, and printed phrase endings; name files by page and exercise number; check each file against the printed page. Keep photos or scans of the book in the Git-ignored `references/` folder only; the 2015 translation is under copyright.
+Strube group: inventory every exercise in the consulted edition (page, number, given voice, figured or not, key, mode, meter, length in measures, eligible yes/no, reason). Include all eligible numbered melody exercises from the first melody-harmonization exercises through the Minor Modes chapter (pp. 11–80; exercises 12–108). Exclude given basses (the task fixes the soprano); exclude melody exercises from the Suspensions chapter onward, because they are built around non-chord tones (suspensions, auxiliary tones, anticipations) whose exceptions need chord analysis that the instrument cannot apply (Strube p. 35 says non-chord tones are judged from a different viewpoint); exclude the chorale chapter (pp. 174–179), whose melodies are taken from J. S. Bach. The inventory found 69 candidate melodies in that range, above the 30-melody minimum; check exercises 67–68 on p. 48 in the printed book. Type each eligible melody into MusicXML with key, meter, and printed phrase endings; name files by page and exercise number; check each file against the printed page. Keep photos or scans of the book in the Git-ignored `references/` folder only; do not commit or publish them.
 
 Bach group: soprano parts of the 371 music21 corpus chorales with key, meter, and fermatas. After eligibility filtering, draw a random sample with a recorded seed, of the same size as the Strube group and at least 30.
 
@@ -74,14 +74,15 @@ Definitions are the researcher's operationalisation. Each rule must be traced to
 - Parallel fifths (all six pairs): |interval| mod 12 = 7 at both events, the upper voice moves, and both voices move in the same direction. Includes compound fifths.
 - Parallel octaves/unisons (all six pairs): |interval| mod 12 = 0 at both events, with the same motion condition. Includes unisons and compound octaves.
 - Upper-voice spacing (S–A, A–T): interval greater than 12 semitones at an event. T–B is not checked (Yan category 9 names only S–A and A–T).
-- Voice crossing (S–A, A–T, T–B): lower voice above the upper voice at an event. Unisons are not crossings.
-- Voice overlap (S–A, A–T, T–B): the lower voice moves above the upper voice's previous pitch, or the upper voice moves below the lower voice's previous pitch, while the pair is not crossed at the new event (so one event is not counted as both crossing and overlap).
+- Crossing above the soprano (S–A, S–T, S–B): any other voice sounding above the soprano at an event. Unisons are not crossings. Crossings among alto, tenor, and bass are not counted, because Strube allows occasional crossing "not over the soprano" (p. 174).
+- Voice overlap (S–A, A–T, T–B): the lower voice moves above the upper voice's previous pitch, or the upper voice moves below the lower voice's previous pitch (Strube p. 12), while the pair is not crossed at the new event (so one event is not counted twice) and neither voice of the pair moves by step (1–2 semitones), because Strube accepts overlap when one voice moves stepwise (pp. 12–13, Figs. 32–33).
+- Strube exceptions not applied because they need harmonic analysis: diminished-to-perfect fifths when passing (pp. 34–35), fifths at a chord repetition (p. 35), retarded fifths produced by a suspension (p. 83). Fifths and octaves reached by contrary motion are not counted (p. 9).
 - Rate per rule: count divided by the number of measures in the input melody (a pickup measure counts as one). Also store counts and opportunities (motions or events checked).
 - Weighted penalty index: (P5 + P8 + 0.5 × (spacing + crossing + overlap)) / measures, using the Yan rubric weights (1 for the parallel category, 0.5 for categories 9–11).
 - Main count includes every occurrence, following Huang et al. Sensitivity count excludes motions from a fermata note to the following event. Non-chord-tone excuses are not applied because they need chord analysis.
 - Semitone arithmetic treats 7 semitones as a perfect fifth; a diminished sixth spelled enharmonically is counted as a fifth. MIDI outputs carry no spelling, so this is recorded as a limitation.
 
-Excluded Yan categories and reasons: 1 (doubled chordal seventh), 2 (doubled leading tone), 4 (seventh resolution), 6 (non-stylistic progression), 7 (non-tertian chord) need chord, function, or key interpretation, which carries analyst disagreement and would require human checking. Category 5 (soprano leading-tone resolution) concerns the given soprano, not a generated voice. Category 8 (augmented second) needs pitch spelling, which MIDI does not keep.
+Excluded Yan categories and reasons: 1 (doubled chordal seventh), 2 (doubled leading tone), 4 (seventh resolution), 6 (non-stylistic progression), 7 (non-tertian chord) need chord, function, or key interpretation, which carries analyst disagreement and would require human checking. Category 5 (soprano leading-tone resolution) concerns the given soprano, not a generated voice. Category 8 (augmented second) needs pitch spelling, which MIDI does not keep. Covered (hidden) fifths and octaves (Strube p. 12) are not in the Yan rubric.
 
 Known v1 code defects that must be fixed before the pilot (from `docs/maintenance.md`): `quantize([0.25])` collapses onsets; fourths are counted as fifth candidates; parallels use shared onsets instead of sounding sonorities; batch evaluation drops `parse_quality`; Coconet MIDI reconstruction uses `append` and shifts offsets; shared output folders mix stale files; adapters hard-code settings and ignore the manifest; incomplete runs report success.
 
@@ -92,6 +93,16 @@ Known v1 code defects that must be fixed before the pilot (from `docs/maintenanc
 3. Cross-implementation check: on all 371 corpus chorales, compare the instrument with music21 `VoiceLeadingQuartet` methods (`parallelFifth`, `parallelOctave`/`parallelUnisonOrOctave`, `voiceCrossing`, `voiceOverlap`, all present in music21 9.3.0). Report agreement and explain each class of disagreement.
 4. Published figures: compare per-measure P5 and P8 rates on Bach chorales with Huang et al. (0.023 and 0.009). Exact agreement is not expected (data version, fermatas, unison handling, unspecified music21 settings). A large unexplained gap blocks use of the instrument.
 5. Reliability: rerunning the same files with the same instrument version must reproduce identical flags (compare output hashes).
+
+### Results of checks 3–5 (2026-10-02)
+
+Run: `uv run python research/experiments/scripts/validate_instrument_v2.py`, instrument v2.0, music21 9.3.0. Outputs: `research/outputs/validation_v2/20261002T065120Z/` and the repeat `20261002T065214Z` (Git-ignored). These are instrument checks on Bach's chorales, not study data.
+
+- Corpus: 371 chorales; 345 evaluated (5,387 measures); 26 excluded (20 with more than four parts, 4 with 32nd-note durations, 2 with grace notes).
+- Check 3, cross-implementation: crossing and overlap predicates agreed with music21 on every adjacent-pair motion (962 and 1,559 positives, no disagreements in about 71,000 motions). For parallels, the instrument flagged nothing music21 did not; music21 additionally flagged 53 fifths and 16 octaves, all reached by contrary motion, which Strube does not object to (p. 9).
+- Check 4, published figures: Strube-definition rates on Bach were 0.0078 parallel fifths and 0.0030 parallel octaves per measure; with music21's broader definition, 0.0176 and 0.0059. Huang et al. reported 0.023 and 0.009 on 382 chorales. The remaining gap is plausibly due to data version (JSB 382 pieces, including duplicates, quantized without fermatas) and unpublished counting settings; it cannot be resolved without Huang et al.'s code. All values are more than 20 times below the 0.365 fifths per measure that Huang et al. reported for Coconet output, so the instrument separates Bach from model-level rates.
+- Other Bach rates (main count): spacing 0.074, crossing above the soprano 0.010, overlap 0.093 per measure; with fermata motions excluded, overlap 0.045 and fifths 0.0061.
+- Check 5, reliability: two runs produced identical per-chorale and flag files (SHA-256 `0343e353…` and `7f6d57b5…`).
 
 ## Quality control
 
@@ -118,9 +129,9 @@ With 30 melodies per group, the plan is 30 × 2 groups × 2 models × 5 = 600 ge
 
 | Risk | Check | Contingency |
 | --- | --- | --- |
-| Strube has few or no melody exercises | Inventory | Fewer than 30: use all and report the minimum detectable effect. Fewer than about 10: method amendment agreed with the supervisor before generation (another harmony textbook's melody exercises), recorded here with reasons |
-| A rule (especially overlap) is not stated in Strube | Rule pages | Keep the rule with the Yan rubric as its only source and say so in BAB II/III, or drop it; decide before freezing |
-| Strube prints few voice-leading examples | Rule pages | Rely more on constructed edge cases; state the smaller textbook test set |
+| Strube melody exercises turn out ineligible after typing (range, grid, model limits) | Typing and pilot | 69 candidates give a margin; fewer than 30 eligible: use all and report the minimum detectable effect |
+| Rule coverage in Strube | Resolved 2026-10-02 | All five rules found (pp. 9, 12–13, 20, 174); crossing narrowed to crossing above the soprano and overlap given the stepwise exception, per Strube |
+| Strube prints few voice-leading examples | Fixture list | Nine printed figures listed in `strube-example-fixtures.csv` (Figs. 21, 22, 30, 32, 33, 76); supplement with constructed edge cases already in the test suite |
 | Melody notes outside DeepBach's soprano vocabulary | Pilot | Ineligible; record. Do not transpose, because transposition changes the melody's distance from the training data |
 | Coconet length or memory limits | Pilot | Process in fixed segments only if both models can be given identical segments; otherwise record ineligibility |
 | 3/4 or other meters behave differently | Pilot | Keep, but report meter as a melody feature |

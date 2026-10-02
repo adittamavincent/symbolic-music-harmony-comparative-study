@@ -20,6 +20,15 @@ Recorded by the assistant at the researcher's request.
 - Changed and why: The researcher asked for a design traceable to one prior study and for no human evaluation. Rewrote BAB I–III around Huang et al. as the main prior study, with Yan et al. for categories and Strube for rule wording and melodies; changed the title; wrote protocol version 2; added Strube data templates and a defense Q&A file. Research code and the v1 manifest were not changed.
 - Next: Read Strube and fill the rule-page template; inventory exercises; type printed examples; get supervisor agreement; implement instrument v2 and run the four validation checks; pilot.
 
+## 2026-10-02 (later) — Strube reading, inventory, instrument v2
+
+Recorded by the assistant at the researcher's request ("benerin semua sampai ready tag v3").
+
+- Did: OCR-ed the supplied 1928 Strube scan (147 pages) and read the rule and exercise pages as images; filled the rule-page, exercise-inventory, and fixture-list CSVs; implemented `research/voice_leading_v2.py` and 20 software checks; ran validation checks 3–5 on the 371 music21 chorales twice; rewrote both abstracts; aligned BAB I–III, protocol, and defense notes with the Strube pages.
+- Found: All five rules are stated by Strube, but crossing is allowed "not over the soprano" (p. 174) and overlap is allowed with stepwise motion (pp. 12–13); fifths by contrary motion are "not objectionable" (p. 9). music21's parallel-fifth function also flags contrary-motion fifths (all 69 extra flags on Bach were of that kind). 69 given-soprano exercises in pp. 11–80; p. 48 missing from the scan. Bach rates under Strube definitions: 0.0078 P5, 0.0030 P8 per measure.
+- Changed and why: Narrowed crossing to crossing above the soprano and added the stepwise exception to overlap, so that the measured rules follow the cited source. Limited the Strube melody group to exercises before the non-chord-tone chapters, because the instrument cannot apply non-chord-tone exceptions. This is instrument version 2.0; no study data existed under the earlier draft definitions.
+- Next: Researcher confirms pages in print, checks p. 48, types melodies and figures; supervisor consultation; adapters and pilot.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

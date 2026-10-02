@@ -30,14 +30,14 @@ Unit analisis penelitian ini adalah melodi. Sampel terdiri atas dua kelompok mel
 
 \begin{enumerate}
     \item Kelompok Bach: melodi sopran dari 371 \textit{chorale} Bach dalam korpus music21 \parencite{cuthbert2010}.
-    \item Kelompok Strube: melodi latihan harmonisasi dalam buku Strube \parencite{strube1928}, menurut edisi yang dicatat dalam protokol.
+    \item Kelompok Strube: melodi latihan harmonisasi bernomor dalam buku Strube edisi 1928 \parencite{strube1928}, pada bab-bab akor dari harmonisasi melodi pertama sampai bab mode minor (hlm. 11--80).
 \end{enumerate}
 
-Kedua kelompok memakai kriteria kelayakan yang sama: melodi tunggal dengan birama dan tangga nada yang tertulis, nilai nada yang dapat dinyatakan pada kisi seperenam belas, dan seluruh nada berada dalam wilayah masukan sopran kedua model. \textit{Chorale} Bach juga harus memiliki tepat empat suara agar harmonisasi aslinya dapat diukur sebagai acuan. Seluruh latihan dalam buku Strube diinventaris terlebih dahulu dengan mencatat halaman, nomor, suara yang diberikan, tangga nada, birama, panjang, dan alasan kelayakan. Seluruh latihan melodi yang layak diikutsertakan. Melodi Bach yang layak kemudian diambil secara acak sebanyak jumlah melodi kelompok Strube, dengan jumlah sedikitnya 30 melodi.
+Kedua kelompok memakai kriteria kelayakan yang sama: melodi tunggal dengan birama dan tangga nada yang tertulis, nilai nada yang dapat dinyatakan pada kisi seperenam belas, dan seluruh nada berada dalam wilayah masukan sopran kedua model. \textit{Chorale} Bach juga harus memiliki tepat empat suara agar harmonisasi aslinya dapat diukur sebagai acuan. Seluruh latihan dalam buku Strube diinventaris terlebih dahulu dengan mencatat halaman, nomor, suara yang diberikan, tangga nada, birama, panjang, dan alasan kelayakan. Latihan bas tidak digunakan karena tugas penelitian ini memberikan sopran. Latihan melodi sesudah bab mode minor tidak digunakan karena dirancang untuk melatih nada non-akor, yaitu suspensi, nada sisipan, dan antisipasi; pengecualian kaidah akibat nada non-akor memerlukan analisis akor, sehingga melodi tersebut akan menghasilkan penandaan yang tidak dapat dibedakan dari pelanggaran. Melodi pada bab harmonisasi \textit{chorale} juga tidak digunakan karena diambil dari J.S. Bach \parencite[174]{strube1928}. Seluruh latihan melodi yang layak pada bab yang ditetapkan diikutsertakan, dan jumlahnya melampaui jumlah minimum di bawah. Melodi Bach yang layak kemudian diambil secara acak sebanyak jumlah melodi kelompok Strube, dengan jumlah sedikitnya 30 melodi.
 
 Jumlah minimum melodi ditetapkan melalui analisis daya statistik untuk uji Mann--Whitney pada pertanyaan ketiga. Untuk mendeteksi efek besar ($d = 0{,}8$) menurut Cohen \parencite{cohen1988} dengan taraf signifikansi 0,05 dua arah dan daya 0,8, uji \textit{t} dua kelompok memerlukan 25,5 melodi per kelompok. Efisiensi relatif asimtotik uji peringkat terhadap uji \textit{t} tidak kurang dari 0,864 untuk distribusi kontinu apa pun \parencite{hodges1956}, sehingga 25,5 dibagi 0,864 menjadi 29,5 dan dibulatkan ke atas menjadi 30 melodi per kelompok. Apabila latihan Strube yang layak kurang dari 30, seluruhnya tetap digunakan dan ukuran efek terkecil yang dapat dideteksi dilaporkan. Pertanyaan kedua menggunakan seluruh melodi sebagai pasangan, karena setiap melodi diharmonisasi oleh kedua model.
 
-Setiap model menghasilkan lima harmonisasi untuk setiap melodi. Pengulangan ini mengurangi pengaruh hasil acak satu kali generasi terhadap nilai setiap melodi, dengan beban komputasi yang tetap terjangkau. Dengan 30 melodi per kelompok, rencana generasi berjumlah 600 harmonisasi. Kelima harmonisasi dari melodi yang sama tidak diperlakukan sebagai lima observasi independen; laju pelanggarannya dirata-ratakan menjadi satu nilai per melodi per model. Setiap percobaan generasi, kegagalan, dan alasan eksklusi dicatat; keluaran yang gagal tidak diganti secara diam-diam.
+Setiap model menghasilkan lima harmonisasi untuk setiap melodi. Pengulangan ini mengurangi pengaruh hasil acak satu kali generasi terhadap nilai setiap melodi, dengan beban komputasi yang tetap terjangkau. Jumlah harmonisasi adalah jumlah melodi dikalikan dua model dan lima generasi, sehingga sedikitnya 600 harmonisasi untuk dua kelompok berisi 30 melodi. Kelima harmonisasi dari melodi yang sama tidak diperlakukan sebagai lima observasi independen; laju pelanggarannya dirata-ratakan menjadi satu nilai per melodi per model. Setiap percobaan generasi, kegagalan, dan alasan eksklusi dicatat; keluaran yang gagal tidak diganti secara diam-diam.
 
 Melodi \textit{chorale} Bach dapat termasuk data latih model. Menurut kode resmi DeepBach, data latihnya dibagi berurutan mengikuti urutan korpus: bagian awal untuk pelatihan, sedangkan bagian akhir untuk validasi dan evaluasi. Status setiap melodi Bach terhadap data latih DeepBach dicatat. Pembagian data latih checkpoint Coconet yang digunakan tidak didokumentasikan, sehingga statusnya dicatat sebagai tidak diketahui. Kelompok Bach karena itu dipahami sebagai melodi dari jenis musik yang dipelajari model, yang sebagian atau seluruhnya mungkin pernah dilihat model saat pelatihan.
 
@@ -52,7 +52,7 @@ Penelitian ini memiliki dua variabel bebas dan satu variabel terikat.
 \begin{enumerate}
     \item Variabel bebas pertama ($X_1$): model generatif. Variabel kategorik dengan dua kategori: DeepBach (jaringan rekuren LSTM dengan \textit{pseudo-Gibbs sampling}) dan Coconet (jaringan konvolusional dengan \textit{orderless} NADE dan \textit{blocked Gibbs sampling}). Kategori ini menunjukkan model dan checkpoint yang diuji, bukan arsitektur yang terisolasi dari data latih dan prosedur generasi.
     \item Variabel bebas kedua ($X_2$): asal melodi. Variabel kategorik dengan dua kategori: melodi \textit{chorale} Bach dan melodi latihan Strube.
-    \item Variabel terikat ($Y$): tingkat kepatuhan harmonisasi terhadap kaidah gerak suara Strube. Indikatornya adalah laju pelanggaran per birama untuk lima kaidah: kuint sejajar, oktaf sejajar, jarak antar-suara atas, persilangan suara, dan tumpang tindih suara. Indeks penalti tertimbang menurut bobot rubrik Yan et al.\ \parencite{yan2018} digunakan sebagai ringkasan tambahan. Laju yang lebih rendah menunjukkan kepatuhan yang lebih tinggi.
+    \item Variabel terikat ($Y$): tingkat kepatuhan harmonisasi terhadap kaidah gerak suara Strube. Indikatornya adalah laju pelanggaran per birama untuk lima kaidah: kuint sejajar, oktaf sejajar, jarak antar-suara atas, persilangan di atas sopran, dan tumpang tindih suara. Indeks penalti tertimbang menurut bobot rubrik Yan et al.\ \parencite{yan2018} digunakan sebagai ringkasan tambahan. Laju yang lebih rendah menunjukkan kepatuhan yang lebih tinggi.
 \end{enumerate}
 
 Pertanyaan penelitian kedua membandingkan $Y$ antar-kategori $X_1$ pada melodi yang sama. Pertanyaan penelitian ketiga menguji pengaruh $X_2$ terhadap $Y$ pada setiap kategori $X_1$.
@@ -69,11 +69,11 @@ Setiap melodi diberikan kepada model sebagai sopran yang tetap, dan model mengha
 
 \subsection{Instrumen Pengukuran}
 
-Instrumen evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Kaidah yang diukur bersumber dari Strube \parencite{strube1928}, dan kategorinya mengikuti rubrik Yan et al.\ \parencite{yan2018}. Rumus pada subbab ini tidak dikutip dari kedua sumber tersebut. Peneliti menyusunnya sebagai definisi operasional, yaitu penerjemahan kaidah ke dalam kondisi yang dapat dihitung pada data simbolik. Edisi, halaman, contoh, dan pengecualian setiap kaidah dicatat dalam lembar definisi kaidah yang dilampirkan.
+Instrumen evaluasi dikembangkan menggunakan bahasa Python dan pustaka music21 \parencite{cuthbert2010}. Kaidah yang diukur beserta pengecualiannya bersumber dari Strube \parencite{strube1928}, dan kategorinya mengikuti rubrik Yan et al.\ \parencite{yan2018}. Rumus pada subbab ini tidak dikutip dari kedua sumber tersebut. Peneliti menyusunnya sebagai definisi operasional, yaitu penerjemahan kaidah ke dalam kondisi yang dapat dihitung pada data simbolik. Halaman, contoh, dan pengecualian setiap kaidah pada edisi 1928 dicatat dalam lembar definisi kaidah yang dilampirkan.
 
 Keluaran diurai menjadi empat suara, yaitu sopran, alto, tenor, dan bas. Waktu dinyatakan pada kisi seperenam belas, yang merupakan resolusi waktu kedua model; Yan et al.\ juga menggunakan resolusi yang sama \parencite{yan2018}. Pada setiap titik kisi, nada yang sedang berbunyi pada setiap suara dicatat, termasuk nada yang ditahan. Untuk setiap pasangan suara, peristiwa bunyi adalah titik kisi tempat sedikitnya satu dari kedua suara tersebut memulai nada baru. Dalam rumus berikut, $t$ menunjukkan urutan peristiwa bunyi pasangan yang diperiksa, $p_{v,t}$ adalah nomor nada MIDI suara $v$ pada peristiwa $t$, dengan $v = 1, 2, 3, 4$ untuk sopran, alto, tenor, dan bas, dan $\Delta p_{v,t} = p_{v,t} - p_{v,t-1}$. Untuk dua suara $i < j$, $d_{ij,t} = p_{i,t} - p_{j,t}$ adalah jarak suara atas terhadap suara bawah dalam semiton. Gerak antara dua peristiwa hanya diperiksa apabila kedua suara berbunyi pada kedua peristiwa tersebut.
 
-Kuint sejajar dan oktaf sejajar diperiksa pada keenam pasangan suara. Untuk interval target $\delta = 7$ (kuint, termasuk kuint majemuk) dan $\delta = 0$ (oktaf, oktaf majemuk, dan unisono):
+Kuint sejajar dan oktaf sejajar diperiksa pada keenam pasangan suara. Untuk interval target $\delta = 7$ (kuint murni, termasuk kuint majemuk) dan $\delta = 0$ (oktaf, oktaf majemuk, dan unisono), kejadian dihitung bila kedua suara bergerak searah dari interval target ke interval target. Gerak berlawanan tidak dihitung karena Strube tidak menganggapnya bermasalah \parencite[9]{strube1928}, dan kuint murni ke kuint berkurang tidak dihitung karena kuint kedua tidak murni \parencite[35]{strube1928}:
 
 {\small
 \begin{multline}
@@ -82,7 +82,7 @@ Kuint sejajar dan oktaf sejajar diperiksa pada keenam pasangan suara. Untuk inte
 \end{multline}
 }
 
-Jarak antar-suara atas diperiksa pada pasangan sopran--alto dan alto--tenor. Persilangan suara diperiksa pada tiga pasangan suara yang bersebelahan, yaitu sopran--alto, alto--tenor, dan tenor--bas:
+Jarak antar-suara atas diperiksa pada pasangan sopran--alto dan alto--tenor \parencite[20]{strube1928}. Persilangan diperiksa antara sopran dan setiap suara lainnya, yaitu sopran--alto, sopran--tenor, dan sopran--bas, karena Strube membolehkan persilangan sesekali kecuali yang melewati sopran \parencite[174]{strube1928}:
 
 {\small
 \begin{equation}
@@ -90,11 +90,11 @@ Jarak antar-suara atas diperiksa pada pasangan sopran--alto dan alto--tenor. Per
 \end{equation}
 }
 
-Tumpang tindih suara diperiksa pada tiga pasangan suara yang bersebelahan. Kejadian dihitung apabila suara bawah bergerak lebih tinggi daripada nada sebelumnya pada suara atas, atau suara atas bergerak lebih rendah daripada nada sebelumnya pada suara bawah, sementara kedua suara tidak bersilangan pada peristiwa tersebut, sehingga satu kejadian tidak dihitung dua kali sebagai persilangan dan tumpang tindih:
+Tumpang tindih suara diperiksa pada tiga pasangan suara yang bersebelahan. Kejadian dihitung apabila suara bawah bergerak lebih tinggi daripada nada sebelumnya pada suara atas, atau suara atas bergerak lebih rendah daripada nada sebelumnya pada suara bawah \parencite[12]{strube1928}, dengan dua syarat: kedua suara tidak bersilangan pada peristiwa tersebut, sehingga satu kejadian tidak dihitung dua kali, dan tidak ada suara pada pasangan itu yang bergerak melangkah, yaitu satu atau dua semiton, karena Strube membolehkan tumpang tindih dengan gerak melangkah \parencite[12--13]{strube1928}. Dengan $\text{Langkah}_{v}(t) = \mathds{1}\left(|\Delta p_{v,t}| \in \{1, 2\}\right)$:
 
 {\small
 \begin{equation}
-\text{Tumpang}_{ij}(t) = \mathds{1}\left(p_{j,t} > p_{i,t-1} \lor p_{i,t} < p_{j,t-1}\right) \times \mathds{1}\left(d_{ij,t} \geq 0\right)
+\text{Tumpang}_{ij}(t) = \mathds{1}\left(p_{j,t} > p_{i,t-1} \lor p_{i,t} < p_{j,t-1}\right) \times \mathds{1}\left(d_{ij,t} \geq 0\right) \times \left(1 - \max\left(\text{Langkah}_{i}(t), \text{Langkah}_{j}(t)\right)\right)
 \end{equation}
 }
 
@@ -103,16 +103,16 @@ Karena sopran diberikan sebagai soal, setiap pasangan yang diperiksa melibatkan 
 \begin{table}[ht]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|>{\raggedright\arraybackslash}X|c|}
+\begin{tabularx}{\textwidth}{|l|l|>{\raggedright\arraybackslash}X|c|c|}
 \hline
-\textbf{Kaidah} & \textbf{Pasangan suara} & \textbf{Kejadian yang dihitung} & \textbf{Bobot Yan} \\ \hline
-Kuint sejajar & Keenam pasangan & Gerak searah dari kuint ke kuint & 1 \\ \hline
-Oktaf sejajar & Keenam pasangan & Gerak searah dari oktaf atau unisono ke oktaf atau unisono & 1 \\ \hline
-Jarak antar-suara atas & S--A, A--T & Peristiwa bunyi dengan jarak lebih dari satu oktaf & 0,5 \\ \hline
-Persilangan suara & S--A, A--T, T--B & Peristiwa bunyi dengan suara bawah di atas suara atas & 0,5 \\ \hline
-Tumpang tindih suara & S--A, A--T, T--B & Gerak yang melewati nada sebelumnya pada suara sebelah & 0,5 \\ \hline
+\textbf{Kaidah} & \textbf{Pasangan} & \textbf{Kejadian yang dihitung} & \textbf{Strube} & \textbf{Bobot Yan} \\ \hline
+Kuint sejajar & Keenam pasangan & Gerak searah dari kuint murni ke kuint murni & 9, 12 & 1 \\ \hline
+Oktaf sejajar & Keenam pasangan & Gerak searah dari oktaf atau unisono ke oktaf atau unisono & 9, 12 & 1 \\ \hline
+Jarak suara atas & S--A, A--T & Peristiwa bunyi dengan jarak lebih dari satu oktaf & 20 & 0,5 \\ \hline
+Persilangan & S--A, S--T, S--B & Peristiwa bunyi dengan suara lain di atas sopran & 174 & 0,5 \\ \hline
+Tumpang tindih & S--A, A--T, T--B & Gerak melewati nada sebelumnya pada suara sebelah tanpa gerak melangkah & 12--13 & 0,5 \\ \hline
 \end{tabularx}
-\caption{Kaidah gerak suara yang diukur}
+\caption{Kaidah gerak suara yang diukur, halaman uraiannya dalam Strube (1928), dan bobotnya dalam rubrik Yan et al.\ (2018)}
 \label{tab:kaidah}
 \end{table}
 
@@ -126,7 +126,7 @@ P = \frac{N_{\text{kuint}} + N_{\text{oktaf}} + 0{,}5 \left(N_{\text{jarak}} + N
 
 Bobot pada indeks tersebut mengikuti rubrik Yan et al.\ \parencite{yan2018}. Indeks ini meringkas kelima kaidah, sedangkan pengujian hipotesis dilakukan pada setiap kaidah. Jumlah kejadian dan jumlah kesempatan, yaitu banyaknya gerak atau peristiwa bunyi yang diperiksa, juga disimpan untuk setiap kaidah.
 
-Penghitungan utama mencakup semua kejadian, mengikuti Huang et al. Penghitungan tambahan mengecualikan gerak dari nada berfermata ke peristiwa berikutnya, karena gerak paralel pada batas frasa dapat dimaklumi \parencite{huang2019}. Pengecualian akibat nada non-akor memerlukan analisis akor sehingga tidak diterapkan.
+Penghitungan utama mencakup semua kejadian, mengikuti Huang et al. Penghitungan tambahan mengecualikan gerak dari nada berfermata ke peristiwa berikutnya, karena gerak paralel pada batas frasa dapat dimaklumi \parencite{huang2019} dan Strube memperlakukan fermata sebagai kadens \parencite[174]{strube1928}. Pengecualian akibat pengulangan akor dan nada non-akor \parencite[35]{strube1928} memerlukan analisis akor sehingga tidak diterapkan.
 
 \subsection{Validitas dan Reliabilitas Instrumen}
 
@@ -135,7 +135,7 @@ Instrumen yang valid mengukur secara akurat apa yang hendak diukur, sedangkan in
 \begin{enumerate}
     \item Validitas isi: setiap kaidah dikaitkan dengan halaman uraian Strube dan kategori rubrik Yan et al. Definisi, contoh, dan pengecualian ditetapkan sebelum harmonisasi utama dihasilkan.
     \item Uji terhadap contoh buku: contoh gerak suara yang benar dan salah yang dicetak dalam buku Strube diketik sebagai kasus uji. Instrumen harus menandai kesalahan yang ditunjukkan buku dan tidak menandai contoh yang benar. Kasus batas yang disusun peneliti, seperti tanda diam, nada yang ditahan, interval majemuk, unisono, serta perbedaan persilangan dan tumpang tindih, ditambahkan. Setiap ketidaksesuaian dilaporkan.
-    \item Pemeriksaan silang: penandaan kuint sejajar, oktaf sejajar, persilangan, dan tumpang tindih pada seluruh \textit{chorale} Bach dalam korpus music21 dibandingkan dengan fungsi \texttt{VoiceLeadingQuartet} dari music21 yang memeriksa gerak yang sama. Tingkat kesesuaian dilaporkan, dan setiap perbedaan ditelusuri pada perbedaan definisi.
+    \item Pemeriksaan silang: pemeriksaan gerak paralel, persilangan, dan tumpang tindih pada seluruh \textit{chorale} Bach dalam korpus music21 dibandingkan dengan fungsi \texttt{VoiceLeadingQuartet} dari music21 yang memeriksa gerak yang sama. Fungsi paralel music21 juga menerima kuint dan oktaf yang dicapai dengan gerak berlawanan, yang tidak dianggap bermasalah oleh Strube, sehingga perbedaan jenis itu dipisahkan. Tingkat kesesuaian dilaporkan, dan setiap perbedaan ditelusuri pada perbedaan definisi.
     \item Perbandingan dengan angka terbitan: laju kuint dan oktaf sejajar per birama pada \textit{chorale} Bach dibandingkan dengan angka Huang et al., yaitu 0,023 dan 0,009 \parencite{huang2019}. Angka tidak diharapkan identik karena versi data dan rincian definisi dapat berbeda, tetapi perbedaannya harus dapat dijelaskan sebelum instrumen digunakan.
 \end{enumerate}
 

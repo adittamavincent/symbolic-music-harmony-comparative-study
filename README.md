@@ -2,7 +2,7 @@
 
 This repository contains proposal v1/v2, the continuing final-thesis v3 draft, and experiment code for comparing DeepBach, Coconet, and NotaGen against selected harmony rules from Gustav Strube. The academic text is in Indonesian.
 
-On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). The code described below still implements the earlier version-1 design and has not yet been updated.
+On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). The measurement instrument for version 2 exists (`research/voice_leading_v2.py`); the generation adapters described below still implement the earlier version-1 design and have not yet been updated.
 
 Start final-thesis work with [the researcher guide](docs/final-thesis/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/feedback.md).
 
@@ -426,7 +426,9 @@ uv run python strube_evaluator.py research/outputs/deepbach/A_neutral
 
 The standalone directory command is nonrecursive. It keeps parse-quality/error rows and prints a valid-only view, but its CSV still contains flagged samples. The all-model `make eval` path is a separate implementation and currently drops those flags.
 
-`make test` runs four checks: a Bach MIDI round trip with a positive-score assertion, detection of deliberately parallel fifths, a direct parallel-octave case, and a direct leading-tone case. These are useful regression checks; they do not prove model inference, complete harmony-rule coverage, or statistical differences between models.
+`make test` runs the four version-1 checks (a Bach MIDI round trip with a positive-score assertion, detection of deliberately parallel fifths, a direct parallel-octave case, and a direct leading-tone case) and the 20 version-2 checks in `research/tests/test_voice_leading_v2.py`. These are regression checks; they do not prove model inference, complete harmony-rule coverage, or statistical differences between models.
+
+The version-2 instrument is `research/voice_leading_v2.py`. Its corpus validation (cross-check with music21, comparison with Huang et al.'s Bach rates, repeat-run hashes) runs with `uv run python research/experiments/scripts/validate_instrument_v2.py` and writes to `research/outputs/validation_v2/`.
 
 ## Naming and maintenance
 

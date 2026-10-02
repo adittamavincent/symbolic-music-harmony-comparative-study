@@ -102,6 +102,7 @@ setup-models:
 
 test:
 	uv run python research/tests/test_strube_validity.py
+	uv run python -m unittest research/tests/test_voice_leading_v2.py
 
 exp: run-all
 

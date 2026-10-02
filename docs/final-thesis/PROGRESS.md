@@ -27,16 +27,27 @@ Decision executed at the researcher's request (2026-10-02):
 
 Files changed in this reset: `thesis/chapters/01-pendahuluan.tex`, `02-tinjauan-pustaka.tex`, `03-metodologi.tex` (rewritten); `thesis/metadata.tex` (title); two sentences of the kata pengantar in `00-frontmatter.tex` (NotaGen and "ketiga model" removed); `research/protocol.md` (version 2); shared bibliography (`yan2018`, `cohen1988`, `hodges1956`); reading ledger; new templates `research/literature/strube-exercise-inventory.csv`, `strube-rule-pages.csv`, `strube-example-fixtures.csv`; new defense preparation file [defense-qa.md](defense-qa.md). Lecturer-feedback impact is recorded in [feedback.md](feedback.md).
 
-Not changed: research code, tests, and the v1 condition manifest (the historical instrument); the cover and approval-page layout apart from the title macro; the Indonesian and English abstracts. **The abstracts still describe the v2 architecture comparison with NotaGen and leading-tone resolution.** The project rule preserves abstract wording unless the researcher asks for an edit; the researcher should decide whether to rewrite them now or after results.
+Abstracts (Indonesian and English) were rewritten for the v2 design at the researcher's request on 2026-10-02 ("benerin semua"). The v1 code, tests, and condition manifest stay unchanged as the historical instrument.
 
-Open blockers, in order. Each is listed in [defense-qa.md](defense-qa.md) with its defense risk.
+### Strube check and instrument v2 (2026-10-02, same day)
 
-1. Read Strube (consulted edition) and fill `strube-rule-pages.csv`: confirm that each of the five rules, especially voice overlap, is stated, with pages and exceptions. Confirm the edition for the bibliography.
-2. Inventory Strube's exercises in `strube-exercise-inventory.csv`. The design needs melody (given-soprano) exercises; count the eligible ones.
-3. Type Strube's printed voice-leading examples into `strube-example-fixtures.csv` and MusicXML.
-4. Supervisor agreement on the machine-only design, the new title, and the questions.
-5. Implement instrument v2 and fix the pipeline defects listed in `research/protocol.md` and `docs/maintenance.md`; then run the four validation checks.
-6. Pilot both models on a few melodies from each group (length limits, DeepBach vocabulary, soprano preservation).
+The researcher supplied a scan of the original edition (`references/The Theory and Use of Chords.pdf`, Oliver Ditson 1928, matching `strube1928`). The assistant OCR-ed it with tesseract and read the rule pages as images.
+
+- All five rules are in Strube: parallel fifths, octaves, and unisons forbidden in strict writing, contrary motion not objectionable (p. 9; Fig. 30 p. 12); spacing S–A up to an octave, occasionally farther, A–T only transiently (p. 20); occasional crossing allowed, "not over the soprano" (p. 174); overlap defined and allowed when one voice moves stepwise (pp. 12–13). Crossing was narrowed to crossing above the soprano and overlap given the stepwise exception, in the manuscript, protocol, and code. Details: `research/literature/strube-rule-pages.csv`.
+- Strube has given-bass and given-melody exercises (p. 8). Exercises 1–118 (pp. 8–81) were inventoried: 69 given-soprano candidates, 47 given basses; exercises 67–68 are on p. 48, which is missing from the scan. Later chapters (suspensions onward) were excluded by a stated criterion (non-chord-tone exercises), and the chorale chapter because its melodies are Bach's. `research/literature/strube-exercise-inventory.csv`.
+- Instrument v2 implemented in `research/voice_leading_v2.py` with 20 software checks; `make test` runs them. Validation checks 3–5 were run on the music21 Bach chorales; results are in `research/protocol.md` ("Results of checks 3–5"). In brief: no disagreement with music21 on crossing and overlap predicates; music21's extra parallel flags are all contrary-motion cases that Strube allows; Strube-definition Bach rates 0.0078 P5 and 0.0030 P8 per measure (music21 definition 0.0176 and 0.0059, Huang et al. 0.023 and 0.009); identical hashes on repeat runs.
+- Citations now print Indonesian page labels ("hlm.") via `\DefineBibliographyStrings` in `thesis/main.tex.template`.
+
+Remaining before the main experiment (none blocks a `thesis/v3` tag for supervisor consultation, because v3 is the research-proposal manuscript):
+
+1. Researcher: confirm the rule pages against the printed book; check p. 48 (exercises 67–68); type the 69 candidate melodies and the nine textbook figures listed in `strube-example-fixtures.csv` into MusicXML.
+2. Supervisor agreement on the machine-only design, the title, and the questions.
+3. Generation adapters for arbitrary fixed-soprano melodies, plus the pipeline defects in `docs/maintenance.md` (Coconet offsets, run isolation, completion checks); the v1 adapters still hard-code BWV 66.6 and the A–D conditions.
+4. Validation check 2 (textbook fixtures) after typing; then the pilot.
+
+### v2 to v3 change record (2026-10-02)
+
+The researcher identified the v2 reviewers as Bu Suryati and Pak Galih, lecturers of Seminar Musikologi 2. [perubahan-v2-ke-v3.md](perubahan-v2-ke-v3.md) lists every change from `proposal/v2` to v3 and labels its basis: a lecturer note (F01–F12) or a researcher decision made to satisfy those notes. The lecturers did not ask for NotaGen's removal, the A–D replacement, the five-rule set, or the machine-only design; do not attribute those to them.
 
 ## What is evidenced now
 
@@ -54,7 +65,7 @@ These are this project's proposed completion criteria. Confirm department requir
 | --- | --- | --- | --- |
 | G1. Feedback and scope | Actual review notes, agreed questions/title, deadline, department guide | Waiting for input | Supply notes and confirm scope with supervisor |
 | G2. Literature | Read core sources; every retained claim mapped to a source page/section; search log supports the stated gap | Partial source verification only | Complete [reading notes](reading-notes.csv) |
-| G3. Instrument | Strube edition/pages for the five rules, exceptions, v2 definitions implemented, Strube example fixtures pass, music21 cross-check, Huang Bach-rate comparison | Open; v2 definitions drafted in protocol, code still v1 | Read Strube and fill the rule-page and fixture templates |
+| G3. Instrument | Strube edition/pages for the five rules, exceptions, v2 definitions implemented, Strube example fixtures pass, music21 cross-check, Huang Bach-rate comparison | Mostly done 2026-10-02: pages found, v2 implemented and tested, checks 3–5 run; textbook fixtures pending | Confirm pages in print; type the nine figures |
 | G4. Comparative protocol | Melody inventory and eligibility, Bach sample seed, model revisions and checksums, generation settings, frozen analysis plan | Open; protocol version 2 drafted 2026-10-02 | Inventory Strube; confirm with supervisor; freeze before main generation |
 | G5. Pipeline integrity | Timing conversion fixed, quality exclusions applied, isolated runs, failed-file/count checks, reproducible records | Open | Work through [maintenance findings](../maintenance.md#research-correctness) before main generation |
 | G6. Pilot | Both models process melodies from both groups, preserve the soprano, and pass quality control; pilot kept separate | Not run here | Record failures and limits; do not select favourable outputs |

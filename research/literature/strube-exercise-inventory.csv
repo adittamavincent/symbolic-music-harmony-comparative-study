@@ -1,1 +1,121 @@
 exercise_code,edition,volume,chapter,page,exercise_number,given_voice,figured_bass,key,mode,meter,length_measures,shortest_value,has_fermata_or_phrase_marks,eligible,exclusion_reason,musicxml_file,typed_by,checked_against_print_date,notes
+strube1928-ex001,1928 Oliver Ditson,,,8,1,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 14
+strube1928-ex002,1928 Oliver Ditson,,,8,2,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 14
+strube1928-ex003,1928 Oliver Ditson,,,8,3,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 14
+strube1928-ex004,1928 Oliver Ditson,,,8,4,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 14
+strube1928-ex005,1928 Oliver Ditson,,,10,5,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 16
+strube1928-ex006,1928 Oliver Ditson,,,10,6,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 16
+strube1928-ex007,1928 Oliver Ditson,,,10,7,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 16
+strube1928-ex008,1928 Oliver Ditson,,,10,8,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 16
+strube1928-ex009,1928 Oliver Ditson,,,11,9,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 17
+strube1928-ex010,1928 Oliver Ditson,,,11,10,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 17
+strube1928-ex011,1928 Oliver Ditson,,,11,11,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 17
+strube1928-ex012,1928 Oliver Ditson,,,17,12,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex013,1928 Oliver Ditson,,,17,13,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex014,1928 Oliver Ditson,,,17,14,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex015,1928 Oliver Ditson,,,17,15,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex016,1928 Oliver Ditson,,,17,16,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex017,1928 Oliver Ditson,,,17,17,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex018,1928 Oliver Ditson,,,17,18,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex019,1928 Oliver Ditson,,,17,19,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 23
+strube1928-ex020,1928 Oliver Ditson,,,19,20,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 25
+strube1928-ex021,1928 Oliver Ditson,,,19,21,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 25
+strube1928-ex022,1928 Oliver Ditson,,,19,22,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 25
+strube1928-ex023,1928 Oliver Ditson,,,19,23,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex024,1928 Oliver Ditson,,,19,24,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex025,1928 Oliver Ditson,,,19,25,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex026,1928 Oliver Ditson,,,19,26,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex027,1928 Oliver Ditson,,,19,27,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex028,1928 Oliver Ditson,,,19,28,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex029,1928 Oliver Ditson,,,19,29,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 25
+strube1928-ex030,1928 Oliver Ditson,,,22,30,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 28
+strube1928-ex031,1928 Oliver Ditson,,,22,31,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 28
+strube1928-ex032,1928 Oliver Ditson,,,22,32,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 28
+strube1928-ex033,1928 Oliver Ditson,,,22,33,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 28
+strube1928-ex034,1928 Oliver Ditson,,,22,34,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 28
+strube1928-ex035,1928 Oliver Ditson,,,26,35,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 32
+strube1928-ex036,1928 Oliver Ditson,,,26,36,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 32
+strube1928-ex037,1928 Oliver Ditson,,,26,37,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 32
+strube1928-ex038,1928 Oliver Ditson,,,26,38,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 32
+strube1928-ex039,1928 Oliver Ditson,,,26,39,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 32
+strube1928-ex040,1928 Oliver Ditson,,,31,40,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex041,1928 Oliver Ditson,,,31,41,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex042,1928 Oliver Ditson,,,31,42,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex043,1928 Oliver Ditson,,,31,43,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex044,1928 Oliver Ditson,,,31,44,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex045,1928 Oliver Ditson,,,31,45,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 37
+strube1928-ex046,1928 Oliver Ditson,,,32,46,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 38
+strube1928-ex047,1928 Oliver Ditson,,,32,47,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 38
+strube1928-ex048,1928 Oliver Ditson,,,39,48,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 45
+strube1928-ex049,1928 Oliver Ditson,,,39,49,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 45
+strube1928-ex050,1928 Oliver Ditson,,,39,50,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 45
+strube1928-ex051,1928 Oliver Ditson,,,39,51,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 45
+strube1928-ex052,1928 Oliver Ditson,,,39,52,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 45
+strube1928-ex053,1928 Oliver Ditson,,,42,53,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex054,1928 Oliver Ditson,,,42,54,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex055,1928 Oliver Ditson,,,42,55,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex056,1928 Oliver Ditson,,,42,56,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex057,1928 Oliver Ditson,,,42,57,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex058,1928 Oliver Ditson,,,42,58,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex059,1928 Oliver Ditson,,,42,59,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 48
+strube1928-ex060,1928 Oliver Ditson,,,47,60,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 53
+strube1928-ex061,1928 Oliver Ditson,,,47,61,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 53
+strube1928-ex062,1928 Oliver Ditson,,,47,62,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 53
+strube1928-ex063,1928 Oliver Ditson,,,47,63,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 53
+strube1928-ex064,1928 Oliver Ditson,,,47,64,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 53
+strube1928-ex065,1928 Oliver Ditson,,,47,65,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 53
+strube1928-ex066,1928 Oliver Ditson,,,47,66,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 53
+strube1928-ex067,1928 Oliver Ditson,,,48,67,,,,,,,,,unknown,Book page 48 is missing from the scanned PDF; check the printed book,,,,not in PDF
+strube1928-ex068,1928 Oliver Ditson,,,48,68,,,,,,,,,unknown,Book page 48 is missing from the scanned PDF; check the printed book,,,,not in PDF
+strube1928-ex069,1928 Oliver Ditson,,,52,69,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 57
+strube1928-ex070,1928 Oliver Ditson,,,52,70,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 57
+strube1928-ex071,1928 Oliver Ditson,,,52,71,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 57
+strube1928-ex072,1928 Oliver Ditson,,,52,72,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 57
+strube1928-ex073,1928 Oliver Ditson,,,52,73,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 57
+strube1928-ex074,1928 Oliver Ditson,,,54,74,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 59
+strube1928-ex075,1928 Oliver Ditson,,,54,75,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 59
+strube1928-ex076,1928 Oliver Ditson,,,55,76,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 60
+strube1928-ex077,1928 Oliver Ditson,,,59,77,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 64
+strube1928-ex078,1928 Oliver Ditson,,,60,78,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 65
+strube1928-ex079,1928 Oliver Ditson,,,60,79,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 65
+strube1928-ex080,1928 Oliver Ditson,,,60,80,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 65
+strube1928-ex081,1928 Oliver Ditson,,,60,81,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 65
+strube1928-ex082,1928 Oliver Ditson,,,60,82,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 65
+strube1928-ex083,1928 Oliver Ditson,,,64,83,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 71
+strube1928-ex084,1928 Oliver Ditson,,,64,84,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 71
+strube1928-ex085,1928 Oliver Ditson,,,64,85,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 71
+strube1928-ex086,1928 Oliver Ditson,,,64,86,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 71
+strube1928-ex087,1928 Oliver Ditson,,,66,87,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 73
+strube1928-ex088,1928 Oliver Ditson,,,66,88,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 73
+strube1928-ex089,1928 Oliver Ditson,,,66,89,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 73
+strube1928-ex090,1928 Oliver Ditson,,,66,90,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 73
+strube1928-ex091,1928 Oliver Ditson,,,68,91,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex092,1928 Oliver Ditson,,,68,92,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex093,1928 Oliver Ditson,,,68,93,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex094,1928 Oliver Ditson,,,68,94,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex095,1928 Oliver Ditson,,,68,95,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex096,1928 Oliver Ditson,,,68,96,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 75
+strube1928-ex097,1928 Oliver Ditson,,,78,97,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 85
+strube1928-ex098,1928 Oliver Ditson,,,78,98,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 85
+strube1928-ex099,1928 Oliver Ditson,,,78,99,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 85
+strube1928-ex100,1928 Oliver Ditson,,,78,100,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 85
+strube1928-ex101,1928 Oliver Ditson,,,78,101,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 85
+strube1928-ex102,1928 Oliver Ditson,,,79,102,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex103,1928 Oliver Ditson,,,79,103,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex104,1928 Oliver Ditson,,,79,104,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex105,1928 Oliver Ditson,,,79,105,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex106,1928 Oliver Ditson,,,79,106,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex107,1928 Oliver Ditson,,,79,107,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 86
+strube1928-ex108,1928 Oliver Ditson,,,80,108,soprano,,,,,,,,candidate,"Pending typing, range check against both models, and grid check",,,,PDF page 87
+strube1928-ex109,1928 Oliver Ditson,,,80,109,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 87
+strube1928-ex110,1928 Oliver Ditson,,,80,110,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 87
+strube1928-ex111,1928 Oliver Ditson,,,81,111,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex112,1928 Oliver Ditson,,,81,112,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex113,1928 Oliver Ditson,,,81,113,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex114,1928 Oliver Ditson,,,81,114,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex115,1928 Oliver Ditson,,,81,115,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex116,1928 Oliver Ditson,,,81,116,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex117,1928 Oliver Ditson,,,81,117,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex118,1928 Oliver Ditson,,,81,118,bass,,,,,,,,no,Given bass; the study gives the soprano,,,,PDF page 88
+strube1928-ex119-onward,1928 Oliver Ditson,,Suspensions onward,82-173,119+,mixed,,,,,,,,no,"Chapters on non-chord tones (suspensions, auxiliary tones, anticipations), modulation, altered chords: melodies built around non-chord tones whose exceptions need chord analysis; several pages missing or scanned as two-page spreads",,,,Not inventoried exercise by exercise
+strube1928-chorales,1928 Oliver Ditson,,Harmonization of Chorales,174-179,,soprano,,,,,,,yes,no,Melodies taken from J. S. Bach (p. 174); would duplicate the Bach group,,,,PDF pages 136-138

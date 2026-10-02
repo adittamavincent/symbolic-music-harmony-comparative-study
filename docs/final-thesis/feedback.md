@@ -5,7 +5,8 @@ The researcher reports an in-class, one-to-one tutoring review of v2. The resear
 ## Review record
 
 - Review date: not supplied (the researcher described it as "kemarin", the day before 2026-09-30)
-- Lecturer(s): not supplied
+- Lecturer(s): Bu Suryati and Pak Galih, lecturers of the course Seminar Musikologi 2 (supplied by the researcher on 2026-10-02; full names and titles not supplied)
+- Setting: in-class review in Seminar Musikologi 2
 - Reviewed version: proposal v2
 - Deadline and department guide: department template *Riset – Template Proposal TA Penelitian 2026* supplied locally under `references/`; deadline not supplied
 - Original notes, as written by the researcher:

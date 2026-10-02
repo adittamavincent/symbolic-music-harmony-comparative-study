@@ -1,1 +1,10 @@
 fixture_id,rule_id,source,strube_page,figure_or_example_number,printed_label,voice_pair,measure_or_beat_location,expected_flag_count,musicxml_file,notes
+strube-fig021,P5;P8,Strube 1928,9,Fig. 21,"contrary motion, not objectionable",S-B / A-B (verify),,0,,Transcribe from print; expected 0 P5/P8 because motion is contrary
+strube-fig022-bad,P5;P8,Strube 1928,9,Fig. 22 (bad),bad,verify,,verify (>=1),,IV-V connection with parallels
+strube-fig022-good,P5;P8,Strube 1928,9,Fig. 22 (good),good,,,0,,
+strube-fig030-bad,P5;P8,Strube 1928,12,Fig. 30 (bad),bad,verify,,verify (>=1),,"Parallel fifths, octaves, unisons marked with lines"
+strube-fig030-good,P5;P8,Strube 1928,12,Fig. 30 (good),good,,,0,,
+strube-fig032,OVERLAP,Strube 1928,12,"Fig. 32 a, b, c",acceptable (one voice stepwise),verify,,0,,Overlap with stepwise motion
+strube-fig033-good,OVERLAP,Strube 1928,13,Fig. 33 (good),good,,,0,,
+strube-fig033-avoid,OVERLAP,Strube 1928,13,Fig. 33 (avoid),avoid,verify,,1,,Overlap with both voices skipping
+strube-fig076,P5,Strube 1928,35,Fig. 76,P5 to d5 acceptable,verify,,0,,Second fifth not perfect

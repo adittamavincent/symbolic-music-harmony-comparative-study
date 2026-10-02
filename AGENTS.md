@@ -3,7 +3,7 @@
 This repository contains one continuing undergraduate thesis project. The academic manuscript is in Indonesian.
 
 - `proposal/v1` and `proposal/v2` are proposal milestones.
-- v2 was reviewed by lecturers during an in-class, one-to-one tutoring session, according to the researcher. The actual feedback has not yet been supplied.
+- v2 was reviewed in the course Seminar Musikologi 2 by its lecturers, Bu Suryati and Pak Galih, during an in-class, one-to-one tutoring session, according to the researcher. The researcher's notes are recorded in `docs/final-thesis/feedback.md` (F01–F12); `docs/final-thesis/perubahan-v2-ke-v3.md` separates changes that answer those notes from changes the researcher decided.
 - The active revision is **v3**, the final-thesis phase continuing from that proposal. Do not restart numbering as thesis v1 or call the active work proposal v3.
 - `docs/final-thesis/thesis/` owns the active manuscript. v3 follows the department's 2026 research proposal outline (Proposal Tugas Akhir Penelitian): BAB I Pendahuluan, BAB II Tinjauan Pustaka dan Landasan Teori, BAB III Metode Penelitian. Results and conclusion chapters are added only after main data exist. The chapters are a working draft, not evidence that the thesis is complete.
 - `docs/final-thesis/PROGRESS.md` records readiness, evidence, and unresolved decisions. `feedback.md` records lecturer comments once supplied.
