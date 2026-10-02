@@ -28,20 +28,20 @@
 }
 
 % Approval-page signatures.
-% \signatory{width}{role lines}{name}{identifier line, e.g. NIP or NUPTK}
-\newcommand{\signatory}[4]{%
-  \begin{minipage}[t]{#1}
-    \raggedright
-    #2\par
+% \signatory[alignment]{width}{role lines}{name}{identifier line, e.g. NIP or NUPTK}
+\newcommand{\signatory}[5][\raggedright]{%
+  \begin{minipage}[t]{#2}
+    #1
+    #3\par
     \vspace{1.4cm}
     % Expand the name macro so \uline can break it between words.
-    \textbf{\expandafter\uline\expandafter{#3}}\par
-    #4
+    \textbf{\expandafter\uline\expandafter{#4}}\par
+    #5
   \end{minipage}%
 }
-% \examinercolumn{role}{name}{identifier line}: one examiner in the offset column.
+% \examinercolumn{role}{name}{identifier line}: one examiner, centered on the page.
 \newcommand{\examinercolumn}[3]{%
-  \par\noindent\hspace{0.25\textwidth}%
-  \signatory{0.75\textwidth}{#1}{#2}{#3}\par
+  \par\noindent
+  \signatory[\centering]{\textwidth}{#1}{#2}{#3}\par
   \vspace{0.3cm}%
 }
