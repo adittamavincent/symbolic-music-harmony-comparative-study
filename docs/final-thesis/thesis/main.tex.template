@@ -39,37 +39,8 @@
 \titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection\quad}{0pt}{}
 \titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection\quad}{0pt}{}
 
-% Environment Variables Macros
-% v3 title follows the v2 review; proposal builds keep THESIS_TITLE from metadata.
-\newcommand{\thesistitle}{EVALUASI MUSIK HASIL AI DEEPBACH, COCONET, DAN NOTAGEN: PENGARUH TINGKAT KENDALI TERHADAP KEPATUHAN KAIDAH STRUBE}
-\newcommand{\researchername}{${RESEARCHER_NAME}}
-\newcommand{\researchernim}{${RESEARCHER_NIM}}
-\newcommand{\institutionname}{${INSTITUTION_NAME}}
-\newcommand{\facultyname}{${FACULTY_NAME}}
-\newcommand{\departmentname}{${DEPARTMENT_NAME}}
-\newcommand{\programstudy}{${PROGRAM_STUDY}}
-\newcommand{\cityname}{${CITY_NAME}}
-\newcommand{\submissiondate}{${SUBMISSION_DATE}}
-\newcommand{\academicyear}{${ACADEMIC_YEAR}}
-\newcommand{\graduationyear}{${GRADUATION_YEAR}}
-\newcommand{\advisoracademic}{${ADVISOR_ACADEMIC}}
-\newcommand{\advisoracademicnip}{${ADVISOR_ACADEMIC_NIP}}
-\newcommand{\advisorthesis}{${ADVISOR_THESIS}}
-\newcommand{\advisorthesisnip}{${ADVISOR_THESIS_NIP}}
-\newcommand{\examinerone}{${EXAMINER_1}}
-\newcommand{\examineronenip}{${EXAMINER_1_NIP}}
-\newcommand{\examinertwo}{${EXAMINER_2}}
-\newcommand{\examinertwonip}{${EXAMINER_2_NIP}}
-% Thesis committee (v3 onward)
-\newcommand{\advisorone}{${THESIS_ADVISOR_1}}
-\newcommand{\advisoronenip}{${THESIS_ADVISOR_1_NIP}}
-\newcommand{\advisortwo}{${THESIS_ADVISOR_2}}
-\newcommand{\advisortwonip}{${THESIS_ADVISOR_2_NIP}}
-\newcommand{\cognate}{${COGNATE}}
-\newcommand{\cognatenip}{${COGNATE_NIP}}
-\newcommand{\programcoordinator}{${PROGRAM_COORDINATOR}}
-\newcommand{\programcoordinatornip}{${PROGRAM_COORDINATOR_NIP}}
-\newcommand{\deanname}{${DEAN}}
+% Title, researcher, institution, dates, and committee
+\input{metadata}
 
 % Disable hyphenation while keeping justification (MS Word style)
 \tolerance=1

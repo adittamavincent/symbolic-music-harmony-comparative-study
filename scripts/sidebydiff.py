@@ -826,7 +826,17 @@ def render_sections(old_full, new_full):
     return "\n".join(out)
 
 
-def load_env_macros():
+def load_tracked_metadata(ref):
+    """Return the metadata.tex a thesis template inputs at ref, or an empty string."""
+    template_path = find_git_path(ref, "main.tex.template")
+    template = get_git_content(ref, template_path)
+    if not re.search(r'\\input\{metadata(?:\.tex)?\}', template):
+        return ""
+    return get_git_content(ref, os.path.join(os.path.dirname(template_path), "metadata.tex"))
+
+
+def load_env_macros(tracked_metadata=""):
+    """Tracked thesis metadata wins; .env.local fills macros it does not define."""
     # Try .env.local first, then .env.example
     env_path = ".env.local" if os.path.exists(".env.local") else ".env.example"
     macros = []
@@ -900,7 +910,8 @@ def load_env_macros():
     macros.append(rf"\newcommand{{\programcoordinator}}{{{defaults.get('PROGRAM_COORDINATOR', '[Koordinator Program Studi]')}}}")
     macros.append(rf"\newcommand{{\programcoordinatornip}}{{{defaults.get('PROGRAM_COORDINATOR_NIP', '[NIP]')}}}")
     macros.append(rf"\newcommand{{\deanname}}{{{defaults.get('DEAN', '[Dekan]')}}}")
-    return "\n".join(macros)
+    macros = [m.replace(r"\newcommand", r"\providecommand", 1) for m in macros]
+    return "\n".join([tracked_metadata.strip(), *macros]).strip()
 
 
 def read_braced_argument(text, pos):
@@ -1213,7 +1224,7 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"}",
 
         # Load local env macros dynamically
-        load_env_macros(),
+        load_env_macros(load_tracked_metadata(tag2)),
         # Counters for side-by-side sync
         r"\newcounter{leftsection}",
         r"\newcounter{leftsubsection}",

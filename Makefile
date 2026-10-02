@@ -176,11 +176,9 @@ thesis: $(THESIS_TEX)
 		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS); \
 	fi
 
-$(THESIS_TEX): $(THESIS_TEMPLATE) $(ENV_FILE)
-	@if [ ! -f "$(ENV_FILE)" ]; then \
-		echo "Warning: $(ENV_FILE) not found. Copy .env.example -> $(ENV_FILE) if metadata skripsi perlu diisi."; \
-	fi
-	envsubst < $< > $@
+# Thesis metadata is tracked in $(THESIS_DIR)/metadata.tex; no .env.local values.
+$(THESIS_TEX): $(THESIS_TEMPLATE)
+	cp $< $@
 
 # ==============================================================================
 # SIDE-BY-SIDE DIFF TARGETS

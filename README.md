@@ -124,7 +124,7 @@ Create the local file only if it does not already exist:
 test -f .env.local || cp .env.example .env.local
 ```
 
-Fill in `.env.local` before building.
+Fill in `.env.local` before building a proposal. The thesis (v3 onward) reads its title, researcher, institution, dates, and committee from the tracked [metadata.tex](docs/final-thesis/thesis/metadata.tex), so each commit rebuilds with the metadata it had. The keys below serve proposal builds and thesis commits made before `metadata.tex` existed.
 
 | Group | Keys |
 | --- | --- |
@@ -133,7 +133,6 @@ Fill in `.env.local` before building.
 | Dates | `SUBMISSION_DATE`, `ACADEMIC_YEAR`, `GRADUATION_YEAR` |
 | Advisors | `ADVISOR_ACADEMIC`, `ADVISOR_ACADEMIC_NIP`, `ADVISOR_THESIS`, `ADVISOR_THESIS_NIP` |
 | Examiners | `EXAMINER_1`, `EXAMINER_1_NIP`, `EXAMINER_2`, `EXAMINER_2_NIP` |
-| Thesis committee (v3 onward) | `THESIS_ADVISOR_1`, `THESIS_ADVISOR_1_NIP`, `THESIS_ADVISOR_2`, `THESIS_ADVISOR_2_NIP`, `COGNATE`, `COGNATE_NIP`, `PROGRAM_COORDINATOR`, `PROGRAM_COORDINATOR_NIP`, `DEAN` |
 
 The Makefile reads this file as Make assignments, then exports values to `envsubst`. Use `KEY=value` without shell quotes; quotes can appear in the PDF. Values are inserted as LaTeX, so escape special characters where needed, such as `&` as `\&`. Keep the file local; generated PDFs contain those details.
 
@@ -180,7 +179,8 @@ uvx ruff check research/scripts/openalex_search.py research/tests/test_openalex_
 
 | Change | Source |
 | --- | --- |
-| Researcher, advisors, dates, institution | `.env.local` |
+| Thesis title, researcher, committee, dates, institution | `docs/final-thesis/thesis/metadata.tex` |
+| Proposal researcher, advisors, dates, institution | `.env.local` |
 | Proposal text | `docs/proposal-phase/proposal/chapters/*.tex` |
 | Thesis text | `docs/final-thesis/thesis/chapters/*.tex` |
 | Chapter order, macros, document-specific formatting | The relevant `main.tex.template` |
