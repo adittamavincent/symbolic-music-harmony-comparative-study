@@ -11,6 +11,15 @@ Recorded by the assistant from this repository session, not a lecturer-review tr
 - Changed and why: Preserved computational behavior during the move. Replaced unsupported outcome claims with explicit draft evidence/status; corrected verified model/evaluation descriptions; added thesis cover/chapter divisions and planning/reading records.
 - Next: Obtain the actual lecturer notes and department guide; settle scope and musical definitions with the researcher/tutor; repair and validate the instrument/pipeline before the pilot.
 
+## 2026-10-02 — method reset to a machine-only design
+
+Recorded by the assistant at the researcher's request.
+
+- Did: Re-read Yan et al. (2018) §4 and Huang et al. (2019) §6.3 in the original PDFs; checked DeepBach's dataset split code, Magenta.js Coconet pitch range, music21 9.3.0 voice-leading methods, the When in Rome folder list, and Open Library metadata for Strube (1928). Computed the sample-size rationale with statsmodels.
+- Found: Huang et al. define out-of-distribution input as soprano pitches outside MIDI 60–81 or a leap larger than one octave, and used Kruskal–Wallis and Mann–Whitney tests. Yan et al. used sixteenth-note quantization and noted that 4-bar exercises differ in length from training pieces. DeepBach splits its training tensors contiguously (85/10/5) in corpus order without shuffling. The Coconet checkpoint's training split is undocumented. music21 9.3.0 provides `VoiceLeadingQuartet.parallelFifth`, `parallelOctave`, `voiceCrossing`, `voiceOverlap`; the old `theoryAnalyzer` module is absent. Strube's book is not on archive.org.
+- Changed and why: The researcher asked for a design traceable to one prior study and for no human evaluation. Rewrote BAB I–III around Huang et al. as the main prior study, with Yan et al. for categories and Strube for rule wording and melodies; changed the title; wrote protocol version 2; added Strube data templates and a defense Q&A file. Research code and the v1 manifest were not changed.
+- Next: Read Strube and fill the rule-page template; inventory exercises; type printed examples; get supervisor agreement; implement instrument v2 and run the four validation checks; pilot.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

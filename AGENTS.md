@@ -23,7 +23,7 @@ Changing quantization, voice mapping, rule definitions, denominators, or conditi
 
 Follow the user's no-AI-slop editing instructions: read the complete affected draft, preserve its voice and meaning, make the minimum effective edit, remove filler and unsupported emphasis, and explain changes. Check writing against `docs/final-thesis/eval.md` before delivery.
 
-Do not claim architectural causation from this three-model comparison. Model training data, checkpoints, interfaces, and output formats differ. State what the actual comparison supports.
+Do not claim architectural causation from this model comparison (DeepBach and Coconet since protocol version 2, 2026-10-02; three models before). Model training data, checkpoints, interfaces, and output formats differ. State what the actual comparison supports.
 
 The current thesis reuses the proposal class for formatting. Department-specific final-thesis formatting and front-matter requirements still need confirmation from the researcher and supervisor.
 

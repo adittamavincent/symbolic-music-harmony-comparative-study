@@ -68,3 +68,18 @@ The interpretations below are ours. Confirm them with the lecturer where marked.
 | F12 | Grand theory (repeated) | Grand, middle, and applied levels now named, plus supporting computational theory and the deductive use of theory | II.B.2 opening paragraph | `02-tinjauan-pustaka.tex` II.B.2 | Done; confirm with lecturer |
 
 Add one row per distinct request. Close a row only when the change and its evidence are linked. Record later supervisor decisions with dates; do not replace the original review note with our interpretation.
+
+## Impact of the method reset (2026-10-02)
+
+The researcher changed the design on 2026-10-02 (see PROGRESS.md, "Method reset"). No new lecturer comments were supplied. The table shows how each earlier request is met by the new design; the original notes above are unchanged.
+
+| ID | How the 2026-10-02 design meets it | Still to confirm |
+| --- | --- | --- |
+| F01 | Title now *Evaluasi Musik Hasil AI DeepBach dan Coconet: Pengaruh Asal Melodi terhadap Kepatuhan Kaidah Gerak Suara Strube*: object, X2, Y, and Strube named | Lecturer approval of the new title |
+| F02 / F11 | Still quantitative; Q1 descriptive, Q2 comparative, Q3 causal-associative with the melody given to the same model as the treatment; no human raters, so no qualitative strand | Sugiyono edition and pages |
+| F03 / F04 / F05 | Rumusan is a paragraph plus a list; all questions start with *Bagaimana* and name Strube's rules | None |
+| F06 | Q3 asks about the effect (*pengaruh*) of melody origin *terhadap* rule adherence | Lecturer agreement that melody origin is an acceptable independent variable |
+| F07 | X1 model, X2 melody origin, Y per-measure violation rates (five rules); hypotheses for Q2 and Q3, directional for parallels from Huang et al. | None |
+| F08 / F12 | Grand theory functional harmony; middle theory Strube's voice-leading rules; applied level operational definitions; supporting theory: symbolic models and training distribution | Strube pages for each rule |
+| F09 | Positionality paragraph kept; bias controls now are pre-fixed definitions, random Bach sampling with a recorded seed, inclusion of all eligible Strube melodies, automatic measurement, random selection of discussion examples | None |
+| F10 | Formulas rewritten for the v2 definitions and still attributed to the researcher; pseudocode appendix still pending until the code is implemented | Appendix after implementation |

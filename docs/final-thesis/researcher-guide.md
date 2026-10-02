@@ -6,6 +6,8 @@ v1 and v2 were proposals. v3 continues the same project as the final thesis. A f
 
 Read [PROGRESS.md](PROGRESS.md) for current evidence and [feedback.md](feedback.md) for the lecturer-review record.
 
+Update 2026-10-02: the design changed to a machine-only continuation of Huang et al. (2019) with DeepBach and Coconet (see "Method reset" in PROGRESS.md and [research/protocol.md](../../research/protocol.md)). Statements below about NotaGen, conditioning levels, and the clipped score describe the earlier design. Current reading priority: Strube's pages for the five rules, Huang et al. (2019) §6.3, and Yan et al. (2018) §4 with its supplementary rubric. Practise with [defense-qa.md](defense-qa.md).
+
 ## What you are trying to produce
 
 Your thesis should let another reader follow a research question through a justified method, inspect the evidence, and judge your answer. You need to explain why you chose the method and what the evidence cannot establish.

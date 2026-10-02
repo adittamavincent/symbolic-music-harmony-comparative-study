@@ -1,0 +1,6 @@
+rule_id,rule_name_id,yan_category_id,yan_weight,strube_edition,strube_volume,strube_pages,strube_wording_paraphrase,exceptions_stated_by_strube,printed_incorrect_examples_pages,printed_correct_examples_pages,operational_definition_ref,decision,notes
+P5,Larangan kuint sejajar,3,1,,,,,,,,research/protocol.md#instrument-version-2,,
+P8,Larangan oktaf/unisono sejajar,3,1,,,,,,,,research/protocol.md#instrument-version-2,,
+SPACING,Batas jarak S-A dan A-T,9,0.5,,,,,,,,research/protocol.md#instrument-version-2,,
+CROSSING,Larangan persilangan suara,10,0.5,,,,,,,,research/protocol.md#instrument-version-2,,
+OVERLAP,Larangan tumpang tindih suara,11,0.5,,,,,,,,research/protocol.md#instrument-version-2,,

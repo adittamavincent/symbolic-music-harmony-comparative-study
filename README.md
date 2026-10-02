@@ -2,6 +2,8 @@
 
 This repository contains proposal v1/v2, the continuing final-thesis v3 draft, and experiment code for comparing DeepBach, Coconet, and NotaGen against selected harmony rules from Gustav Strube. The academic text is in Indonesian.
 
+On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). The code described below still implements the earlier version-1 design and has not yet been updated.
+
 Start final-thesis work with [the researcher guide](docs/final-thesis/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/feedback.md).
 
 Use this README when returning to the project: it explains where to edit, how to build, what versions mean, and which parts still need work.

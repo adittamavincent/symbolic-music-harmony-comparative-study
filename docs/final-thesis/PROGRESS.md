@@ -1,6 +1,6 @@
 # v3: final-thesis progress
 
-Updated: 2026-09-28. Active manuscript: `thesis/`. Status: preparation and method review; not ready for submission.
+Updated: 2026-10-02. Active manuscript: `thesis/`. Status: method reset to a machine-only design (protocol version 2); BAB I–III rewritten; not ready for submission.
 
 ## Continuity
 
@@ -11,6 +11,32 @@ Updated: 2026-09-28. Active manuscript: `thesis/`. Status: preparation and metho
 | v3 | Final thesis continuing from v2 | Active manuscript and research plan; future milestone name `thesis/v3`; no tag or completed main experiment yet |
 
 The lecturer comments, review date, submission deadline, and current department guide have not been provided. Record comments in [feedback.md](feedback.md) before attributing any methodological revision to a lecturer.
+
+## Method reset, 2026-10-02 (current design)
+
+The researcher reported not understanding parts of their own method because several choices had no source: the four conditioning levels A–D, the choice of three rules, the clipped Strube Score, and Strube citations without pages. They asked to base the study on one prior study and, on the same day, ruled out any human evaluation (graders, students, listeners) as too costly for an undergraduate thesis. Manual data gathering, such as inventorying Strube's exercises, remains acceptable.
+
+Decision executed at the researcher's request (2026-10-02):
+
+- Main prior study: Huang et al. (2019), Bach Doodle §6.3. Kept: per-measure P5/P8 counts with music21, the out-of-distribution hypothesis, Mann–Whitney comparisons, Bach rates as reference.
+- Extensions: DeepBach added to Coconet; the same melodies given to both models; melody origin (Bach chorale sopranos vs Strube melody exercises) as X2; three more rules from the Yan et al. (2018) rubric that need no chord analysis (upper-voice spacing, crossing, overlap); Bach's own harmonizations as a reference on the same melodies.
+- Roles of the sources: Huang = design and measure; Yan = error categories and weights; Strube = rule wording, exceptions, and the textbook melodies.
+- Removed: NotaGen (cannot preserve a given melody), conditioning levels A–D, soprano leading-tone rule (the soprano is given, and the rule depended on automatic key detection), the clipped Strube Score (replaced by per-measure rates and a Yan-weighted index).
+- Validation without humans: Strube's printed examples as test fixtures, cross-check against music21 `VoiceLeadingQuartet`, comparison with Huang's Bach rates, deterministic reruns.
+- Sample: at least 30 melodies per origin group from a power analysis (d = 0.8, α = 0.05, power 0.8, rank-test efficiency ≥ 0.864); five generations per melody per model, averaged.
+
+Files changed in this reset: `thesis/chapters/01-pendahuluan.tex`, `02-tinjauan-pustaka.tex`, `03-metodologi.tex` (rewritten); `thesis/metadata.tex` (title); two sentences of the kata pengantar in `00-frontmatter.tex` (NotaGen and "ketiga model" removed); `research/protocol.md` (version 2); shared bibliography (`yan2018`, `cohen1988`, `hodges1956`); reading ledger; new templates `research/literature/strube-exercise-inventory.csv`, `strube-rule-pages.csv`, `strube-example-fixtures.csv`; new defense preparation file [defense-qa.md](defense-qa.md). Lecturer-feedback impact is recorded in [feedback.md](feedback.md).
+
+Not changed: research code, tests, and the v1 condition manifest (the historical instrument); the cover and approval-page layout apart from the title macro; the Indonesian and English abstracts. **The abstracts still describe the v2 architecture comparison with NotaGen and leading-tone resolution.** The project rule preserves abstract wording unless the researcher asks for an edit; the researcher should decide whether to rewrite them now or after results.
+
+Open blockers, in order. Each is listed in [defense-qa.md](defense-qa.md) with its defense risk.
+
+1. Read Strube (consulted edition) and fill `strube-rule-pages.csv`: confirm that each of the five rules, especially voice overlap, is stated, with pages and exceptions. Confirm the edition for the bibliography.
+2. Inventory Strube's exercises in `strube-exercise-inventory.csv`. The design needs melody (given-soprano) exercises; count the eligible ones.
+3. Type Strube's printed voice-leading examples into `strube-example-fixtures.csv` and MusicXML.
+4. Supervisor agreement on the machine-only design, the new title, and the questions.
+5. Implement instrument v2 and fix the pipeline defects listed in `research/protocol.md` and `docs/maintenance.md`; then run the four validation checks.
+6. Pilot both models on a few melodies from each group (length limits, DeepBach vocabulary, soprano preservation).
 
 ## What is evidenced now
 
@@ -28,21 +54,25 @@ These are this project's proposed completion criteria. Confirm department requir
 | --- | --- | --- | --- |
 | G1. Feedback and scope | Actual review notes, agreed questions/title, deadline, department guide | Waiting for input | Supply notes and confirm scope with supervisor |
 | G2. Literature | Read core sources; every retained claim mapped to a source page/section; search log supports the stated gap | Partial source verification only | Complete [reading notes](reading-notes.csv) |
-| G3. Instrument | Strube edition/pages, rule exceptions, voice/key/time definitions, score denominator, human annotations, focused test evidence | Open; timing and scoring problems found | Read rules and label small score excerpts with a tutor |
-| G4. Comparative protocol | Supported condition matrix, exact checkpoint/model revisions, seed policy, analysis unit, sample/exclusion plan | Open; NotaGen C and D are identical | Resolve choices in [the protocol](../../research/protocol.md) |
+| G3. Instrument | Strube edition/pages for the five rules, exceptions, v2 definitions implemented, Strube example fixtures pass, music21 cross-check, Huang Bach-rate comparison | Open; v2 definitions drafted in protocol, code still v1 | Read Strube and fill the rule-page and fixture templates |
+| G4. Comparative protocol | Melody inventory and eligibility, Bach sample seed, model revisions and checksums, generation settings, frozen analysis plan | Open; protocol version 2 drafted 2026-10-02 | Inventory Strube; confirm with supervisor; freeze before main generation |
 | G5. Pipeline integrity | Timing conversion fixed, quality exclusions applied, isolated runs, failed-file/count checks, reproducible records | Open | Work through [maintenance findings](../maintenance.md#research-correctness) before main generation |
-| G6. Pilot | Each retained model/condition can generate, parse, preserve constraints, and be manually checked; pilot kept separate | Not run here | Inspect scores and listen; record problems without selecting only good outputs |
+| G6. Pilot | Both models process melodies from both groups, preserve the soprano, and pass quality control; pilot kept separate | Not run here | Record failures and limits; do not select favourable outputs |
 | G7. Main data and analysis | Frozen protocol, raw artifacts, all attempts, actual eligible counts, run-specific analysis and figures | Not run here | Collect and review the agreed dataset |
 | G8. Final manuscript | BAB I–III match executed methods; results and conclusion chapters, added after main data, cite measured artifacts and answer the questions; abstracts and appendices complete | BAB I–III working draft; results/conclusion chapters not yet written | Review interpretations and write conclusions from data |
 | G9. Submission and defense | Department checklist, checked PDF, supervisor review, evidence archive, final presentation if required | Not ready | Confirm local requirements and rehearse the defense |
 
 ## Decisions that must be made before main data
 
-1. Compare named model/checkpoint pipelines or claim a general architecture effect? The available setup supports the former; it cannot isolate architecture from training data and other differences.
-2. Keep a separate NotaGen comparison with its native controls, or restrict the main experiment to a task that all models demonstrably support? Text metadata alone does not establish fixed soprano/bass conditioning.
-3. Retain the current clipped penalty index with a correct definition, or implement a true eligible-event adherence rate? These produce different measurements. Preserve and label the earlier instrument if it changes.
-4. What musical contexts require leading-tone resolution, and how should the evaluator treat rests, held notes, voice crossings, compound intervals, modulation, and ornaments?
-5. What is the independent observation: a generated score, a seed chorale, or a repeated generation within a seed? Decide before choosing statistical tests or pooling conditions.
+Current list (protocol version 2):
+
+1. Strube edition and volume, and whether all five rules and enough melody exercises are in it.
+2. Contingency if fewer than 30 (or fewer than about 10) eligible Strube melodies exist; see the risk table in `research/protocol.md`.
+3. Maximum melody length both models can process, and how the Coconet adapter handles full-length melodies.
+4. Confirmation that DeepBach's pretrained resources used the default contiguous split, so training membership of Bach melodies can be recorded.
+5. Freeze definitions, generation settings, the Bach sample seed, and the analysis plan before main generation.
+
+The earlier list (2026-09-28) asked whether to compare named pipelines or architectures, whether to keep NotaGen, which score to use, how to treat leading-tone contexts, and what the observation unit is. Protocol version 2 answers these: named pipelines only; NotaGen removed; per-measure rates plus a Yan-weighted index; leading-tone rule removed; the melody is the unit.
 
 ## This preparation changed
 
