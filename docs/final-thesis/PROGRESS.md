@@ -49,6 +49,17 @@ Remaining before the main experiment (none blocks a `thesis/v3` tag for supervis
 
 The researcher identified the v2 reviewers as Bu Suryati and Pak Galih, lecturers of Seminar Musikologi 2. [perubahan-v2-ke-v3.md](perubahan-v2-ke-v3.md) lists every change from `proposal/v2` to v3 and labels its basis: a lecturer note (F01–F12) or a researcher decision made to satisfy those notes. The lecturers did not ask for NotaGen's removal, the A–D replacement, the five-rule set, or the machine-only design; do not attribute those to them.
 
+### Indonesian translation of Strube (2026-10-02)
+
+The researcher supplied a scan of the Indonesian translation (`references/teori dan penggunaan akor - terjemahan pak gathut.pdf`, 91 pages, no text layer). Its title page reads *Teori dan Penggunaan Akor: Buku Pelajaran Ilmu Harmoni (I)*, translated by A. Gathut Bintarto T., S.Sos., S.Sn., M.A., UPT Perpustakaan ISI Yogyakarta, 2015. The translator's name and degrees match Pembimbing I. The assistant OCR-ed the scan and checked the rule pages as images.
+
+- Coverage: volume I ends near Fig. 147; the 1928 Minor Modes chapter (p. 74 onward), the suspension chapter, and the chorale chapter (p. 174, crossing rule) are not in it.
+- Rule pages in the translation: parallels pp. 12–13 and 16, overlap pp. 17–18, spacing p. 27, positions p. 10, fifth exceptions pp. 43–44.
+- Three wording differences from the 1928 text: spacing "occasionally even farther" appears as "biasanya dapat lebih jauh" (p. 27); the overlap sentence omits "stepwise" (p. 17); p. 10 adds that the bass should not be higher than the tenor, which the 1928 p. 7 sentence does not say. These are discussion points for the supervisor, not corrections.
+- Exercises 67–68 (1928 p. 48, missing from the 1928 scan) appear on translation p. 58 in treble clef. The inventory now lists both as melody candidates (71 in total), with the source noted.
+
+Study guide for the supervisor meeting: [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md). Updated: `defense-qa.md` (Q12, Q28, gap table), `bimbingan-v3.md` (sample count, question 2), the exercise inventory. The manuscript still cites only the 1928 edition; whether to cite the translation is a supervisor question.
+
 ## What is evidenced now
 
 - The repository contains three generation adapters, one condition manifest, an evaluator, four executable software checks, and draft BAB I–III following the department's 2026 research-proposal outline.

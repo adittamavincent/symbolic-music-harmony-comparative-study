@@ -25,12 +25,13 @@ Diperbarui 2 Oktober 2026 setelah buku Strube 1928 dibaca dan instrumen v2 diimp
 | --- | --- | --- | --- |
 | Halaman Strube untuk lima kaidah | Pertanyaan "di halaman berapa?" | Kaidah ditemukan: paralel hlm. 9 dan 12, jarak hlm. 20, persilangan hlm. 174, tumpang tindih hlm. 12–13 (`strube-rule-pages.csv`) | Tertutup; cocokkan sekali dengan buku cetak |
 | Apakah Strube memuat tumpang tindih | Satu kaidah bisa kehilangan dasar | Ada di hlm. 12, dengan pengecualian gerak melangkah | Tertutup |
-| Jumlah latihan melodi Strube | Separuh desain | 69 latihan melodi bernomor di hlm. 11–80; hlm. 48 (latihan 67–68) tidak ada di PDF | Tertutup; cek hlm. 48 di buku cetak |
+| Jumlah latihan melodi Strube | Separuh desain | 71 latihan melodi bernomor di hlm. 11–80. Latihan 67–68 (hlm. 48, tidak ada di PDF 1928) terlihat di terjemahan 2015 hlm. 58 sebagai latihan melodi | Tertutup; cocokkan hlm. 48 dengan buku 1928 cetak bila tersedia |
 | Contoh cetak Strube sebagai kasus uji | Validasi langkah 2 | Sembilan gambar terdaftar di `strube-example-fixtures.csv`; perlu diketik ke MusicXML | Terbuka (kerja peneliti, sekitar 20–30 menit) |
 | Abstrak masih desain lama | Kontradiksi di halaman awal | Abstrak Indonesia dan Inggris ditulis ulang | Tertutup |
 | Kode instrumen | Klaim BAB III belum ada wujudnya | `research/voice_leading_v2.py`, 20 uji perangkat lunak, validasi langkah 3–5 sudah dijalankan | Tertutup untuk instrumen; adapter generasi belum |
 | Pilot dan adapter generasi | Batas panjang melodi dan kosakata DeepBach belum diketahui | Adapter melodi bebas, perbaikan pipeline, pilot | Terbuka (tahap penelitian setelah proposal disetujui) |
 | Persetujuan pembimbing | Desain berubah besar dari proposal | Bawa naskah v3 dan `bimbingan-v3.md` | Terbuka |
+| Terjemahan Strube oleh Pembimbing I | Pembimbing I menerjemahkan buku Strube (2015); tiga kalimat kaidah berbeda dari edisi 1928 | Pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 1; tanyakan cara mengutip terjemahan | Terbuka |
 | Halaman Cohen, Hodges–Lehmann, Creswell, Sugiyono | Penguji bisa minta halaman | Buka sumber, catat di `reading-notes.csv` | Terbuka (kecil) |
 
 ## A. Judul, masalah, dan tujuan
@@ -84,7 +85,7 @@ Grand theory: harmoni fungsional (tonalitas, fungsi tonika–dominan–subdomina
 *Bukti:* BAB II Landasan Teori, subbab kedua paragraf 1.
 
 **12. Kenapa Strube, bukan Piston, Kostka, atau Laitz?**
-Catatan review proposal meminta penelitian ini merujuk Strube, dan terjemahan Indonesianya tersedia di perpustakaan ISI Yogyakarta. Edisi yang dirujuk adalah edisi asli 1928 (Oliver Ditson). Buku ini menyediakan dua hal yang dibutuhkan desain: uraian kaidah beserta pengecualiannya, dan latihan harmonisasi melodi yang dapat diberikan kepada model. Jika Strube memang buku ajar mata kuliah harmoni di program studi, sebutkan itu setelah faktanya dipastikan.
+Catatan review proposal meminta penelitian ini merujuk Strube. Terjemahan Indonesianya, *Teori dan Penggunaan Akor* jilid I (UPT Perpustakaan ISI Yogyakarta, 2015), diterjemahkan oleh A. Gathut Bintarto T., yaitu Pembimbing I. Edisi yang dirujuk adalah edisi asli 1928 (Oliver Ditson). Buku ini menyediakan dua hal yang dibutuhkan desain: uraian kaidah beserta pengecualiannya, dan latihan harmonisasi melodi yang dapat diberikan kepada model. Jika Strube memang buku ajar mata kuliah harmoni di program studi, sebutkan itu setelah faktanya dipastikan.
 *Bukti:* Strube hlm. 8 (latihan bas dan melodi), hlm. 9, 12–13, 20, 174 (kaidah).
 
 **13. Rubrik Yan berasal dari tradisi buku Amerika, Strube lain lagi. Kenapa dicampur?**
@@ -150,8 +151,9 @@ Lima harmonisasi dari melodi yang sama tidak independen. Menghitungnya sebagai 6
 Kriteria kelayakan sama untuk kedua kelompok, lalu melodi Bach diambil secara acak dengan bilangan acak yang dicatat sebelum generasi. Untuk Strube, semua latihan melodi yang layak diikutsertakan, bukan dipilih.
 
 **28. Berapa latihan melodi di buku Strube, dan kenapa tidak semua dipakai?**
-Latihan 1–118 (hlm. 8–81) sudah diinventaris: 69 memberi melodi sopran, 47 memberi bas. Yang dipakai adalah latihan melodi bernomor sampai bab mode minor (hlm. 11–80). Latihan bas tidak dipakai karena tugasnya memberi sopran. Latihan melodi sesudah bab mode minor dirancang untuk melatih suspensi, nada sisipan, dan antisipasi; pelanggaran yang dimaklumi karena nada non-akor butuh analisis akor, sehingga instrumen akan salah menghitungnya. Strube sendiri menyebut nada non-akor dinilai dari sudut pandang berbeda (hlm. 35). Melodi di bab chorale tidak dipakai karena diambil dari Bach (hlm. 174). Kriteria ini berdasarkan isi bab, bukan hasil.
-*Rawan bila:* hlm. 48 (latihan 67–68) belum dicek di buku cetak.
+Latihan 1–118 (hlm. 8–81) sudah diinventaris: 69 memberi melodi sopran, 47 memberi bas, dan 2 (latihan 67–68) tidak terbaca di scan. Yang dipakai adalah latihan melodi bernomor sampai bab mode minor (hlm. 11–80). Latihan bas tidak dipakai karena tugasnya memberi sopran. Latihan melodi sesudah bab mode minor dirancang untuk melatih suspensi, nada sisipan, dan antisipasi; pelanggaran yang dimaklumi karena nada non-akor butuh analisis akor, sehingga instrumen akan salah menghitungnya. Strube sendiri menyebut nada non-akor dinilai dari sudut pandang berbeda (hlm. 35). Melodi di bab chorale tidak dipakai karena diambil dari Bach (hlm. 174). Kriteria ini berdasarkan isi bab, bukan hasil.
+Latihan 67–68 di hlm. 48 tidak ada di scan 1928, tetapi terlihat sebagai latihan melodi di terjemahan 2015 hlm. 58, sehingga kandidatnya menjadi 71.
+*Rawan bila:* hlm. 48 edisi 1928 belum dicocokkan dengan buku cetak.
 
 **29. Melodi Strube bisa berbeda dalam panjang, wilayah, dan tangga nada. Bagaimana tahu yang berpengaruh adalah asalnya?**
 Penelitian ini tidak mengklaim satu ciri sebagai penyebab. Variabelnya adalah asal melodi sebagai satu paket, sama seperti kelompok "di luar batas" pada Huang. Ciri-ciri melodi diukur dan dilaporkan supaya pembaca tahu perbedaan apa saja yang ada di antara kedua kelompok.
@@ -258,6 +260,6 @@ Identitas model dan checkpoint, pengaturan generasi, daftar melodi beserta halam
 
 ## Cara berlatih
 
-1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, dan 52 tanpa membaca.
+1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, dan 52 tanpa membaca. Sebelum bimbingan dengan Pembimbing I, pelajari juga [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md).
 2. Minta teman bertanya acak dari daftar ini dan memotong jawaban yang lebih dari satu menit.
 3. Setelah setiap celah di tabel atas ditutup, perbarui jawaban yang terkait dan hapus tanda **Wajib ditutup**.

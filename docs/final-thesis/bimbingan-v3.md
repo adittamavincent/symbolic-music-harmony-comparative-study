@@ -17,7 +17,7 @@ Penelitian ini melanjutkan analisis Bach Doodle (Huang dkk., 2019), yang menemuk
 
 - **X1:** model. **X2:** asal melodi. **Y:** laju pelanggaran per birama untuk lima kaidah.
 - **Uji:** Wilcoxon untuk perbandingan model (data berpasangan), Mann–Whitney untuk pengaruh asal melodi, koreksi Holm.
-- **Sampel:** minimal 30 melodi per kelompok (analisis daya). Buku Strube hlm. 11–80 memuat 69 latihan melodi. Tiap melodi diharmonisasi lima kali per model, lalu dirata-rata.
+- **Sampel:** minimal 30 melodi per kelompok (analisis daya). Buku Strube hlm. 11–80 memuat 71 latihan melodi (latihan 67–68 dibaca dari terjemahan 2015 hlm. 58 karena hlm. 48 hilang dari scan 1928). Tiap melodi diharmonisasi lima kali per model, lalu dirata-rata.
 
 ## Dasar Strube (edisi 1928)
 
@@ -38,7 +38,7 @@ Penelitian ini melanjutkan analisis Bach Doodle (Huang dkk., 2019), yang menemuk
 ## Pertanyaan untuk pembimbing
 
 1. Apakah desain tanpa penilai manusia, judul baru, dan tiga pertanyaan penelitian dapat disetujui?
-2. Apakah edisi 1928 tepat sebagai rujukan, atau terjemahan Indonesia 2015 yang sebaiknya dikutip?
+2. Apakah edisi 1928 tepat sebagai rujukan, atau terjemahan Indonesia 2015 (jilid I, terjemahan Bapak) sebaiknya ikut dikutip? Jilid I tidak memuat kaidah persilangan (1928 hlm. 174). Tiga kalimat berbeda antara kedua edisi: jarak sopran–alto, syarat gerak melangkah pada tumpang tindih, dan bas di atas tenor (rincian di `persiapan-pembimbing-1.md`).
 3. Apakah Strube buku ajar mata kuliah harmoni di program studi? (Untuk alasan pemilihan sumber.)
 4. Bagaimana aturan program studi tentang pengungkapan penggunaan alat bantu AI dalam penelitian dan penulisan?
 5. Apakah format halaman depan sudah sesuai pedoman 2026?
