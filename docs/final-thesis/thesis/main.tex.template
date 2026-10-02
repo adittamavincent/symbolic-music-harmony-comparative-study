@@ -14,6 +14,8 @@
   \begin{center}\bfseries BAB #1\par #2\end{center}
 }
 
+\usepackage{needspace}
+\usepackage[normalem]{ulem}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 
@@ -24,6 +26,9 @@
 \bookmarksetup{depth=3}
 \makeatletter
 \renewcommand*{\toclevel@part}{0}
+% Non-chapter entries use normal-size text with dot leaders; only BAB uses the part style.
+\newcommand*{\l@matter}{\@dottedtocline{0}{0pt}{0pt}}
+\newcommand*{\toclevel@matter}{0}
 \makeatother
 
 \addbibresource{../../proposal-phase/assets/references.bib}
@@ -55,6 +60,16 @@
 \newcommand{\examineronenip}{${EXAMINER_1_NIP}}
 \newcommand{\examinertwo}{${EXAMINER_2}}
 \newcommand{\examinertwonip}{${EXAMINER_2_NIP}}
+% Thesis committee (v3 onward)
+\newcommand{\advisorone}{${THESIS_ADVISOR_1}}
+\newcommand{\advisoronenip}{${THESIS_ADVISOR_1_NIP}}
+\newcommand{\advisortwo}{${THESIS_ADVISOR_2}}
+\newcommand{\advisortwonip}{${THESIS_ADVISOR_2_NIP}}
+\newcommand{\cognate}{${COGNATE}}
+\newcommand{\cognatenip}{${COGNATE_NIP}}
+\newcommand{\programcoordinator}{${PROGRAM_COORDINATOR}}
+\newcommand{\programcoordinatornip}{${PROGRAM_COORDINATOR_NIP}}
+\newcommand{\deanname}{${DEAN}}
 
 % Disable hyphenation while keeping justification (MS Word style)
 \tolerance=1
@@ -73,13 +88,13 @@
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{part}{DAFTAR GAMBAR}
+\addcontentsline{toc}{matter}{DAFTAR GAMBAR}
 \renewcommand{\listfigurename}{DAFTAR GAMBAR}
 \listoffigures
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{part}{DAFTAR TABEL}
+\addcontentsline{toc}{matter}{DAFTAR TABEL}
 \renewcommand{\listtablename}{DAFTAR TABEL}
 \listoftables
 
@@ -95,7 +110,8 @@
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{part}{DAFTAR PUSTAKA}
+\addtocontents{toc}{\protect\addvspace{2.25em}}
+\addcontentsline{toc}{matter}{DAFTAR PUSTAKA}
 \printbibliography[title={DAFTAR PUSTAKA}]
 
 \end{document}

@@ -3,6 +3,8 @@
 
 % Submission Page
 \newpage
+\phantomsection
+\addcontentsline{toc}{matter}{HALAMAN PENGAJUAN}
 \begin{spacing}{1.15}
 \bfseries
 \vspace*{\fill}
@@ -25,6 +27,8 @@ Skripsi ini diajukan kepada Dewan Penguji \facultyname{} \institutionname{} seba
 
 % Approval Page
 \newpage
+\phantomsection
+\addcontentsline{toc}{matter}{HALAMAN PENGESAHAN}
 \begin{spacing}{1.15}
 \begin{center}
     HALAMAN PENGESAHAN\par
@@ -34,53 +38,50 @@ Skripsi ini diajukan kepada Dewan Penguji \facultyname{} \institutionname{} seba
 \begin{center}
     \textbf{\thesistitle}\par
 \end{center}
-\noindent diajukan oleh \researchername{}, NIM \researchernim, \programstudy, Jurusan \departmentname, \facultyname{} \institutionname, telah dipertanggungjawabkan di depan Tim Penguji Skripsi pada tanggal \makebox[4cm]{\dotfill} dan dinyatakan telah memenuhi syarat untuk diterima.\par
-\vspace{1.0cm}
-\begin{center}
+\noindent diajukan oleh \researchername{}, NIM \researchernim, \programstudy, Jurusan \departmentname, \facultyname{} \institutionname{} (Kode Prodi: 91221), telah dipertanggungjawabkan di depan Tim Penguji Skripsi pada tanggal \makebox[4cm]{\dotfill} dan dinyatakan telah memenuhi syarat untuk diterima.\par
+\vspace{0.6cm}
+\noindent
+\begin{minipage}[t]{0.65\textwidth}
+    \centering
+    Pembimbing I/Ketua\par
+    \vspace{1.6cm}
+    \textbf{\uline{\advisorone}}\par
+    NIP \advisoronenip
+\end{minipage}\par
+\vspace{0.6cm}
+\hfill
+\begin{minipage}[t]{0.65\textwidth}
+    \centering
+    Pembimbing II/Anggota\par
+    \vspace{1.6cm}
+    \textbf{\uline{\advisortwo}}\par
+    NIP \advisortwonip
+\end{minipage}\par
+\vspace{0.6cm}
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+    \centering
+    Cognate/Anggota\par
+    \vspace{1.6cm}
+    \textbf{\uline{\cognate}}\par
+    NIP \cognatenip
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+    \centering
     \cityname, \submissiondate\par
-    Disetujui,\par
-    \vspace{0.4cm}
-    
-    \begin{minipage}[t]{0.49\textwidth}
-        \raggedright
-        Penguji I\par
-        \vspace{2.0cm}
-        \underline{\textbf{\examinerone}}\par
-        NIP \examineronenip
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.49\textwidth}
-        \raggedleft
-        Penguji II\par
-        \vspace{2.0cm}
-        \underline{\textbf{\examinertwo}}\par
-        NIP \examinertwonip
-    \end{minipage}\par
-    
-    \vspace{1.2cm}
-    
-    \begin{minipage}[t]{0.49\textwidth}
-        \raggedright
-        Mengetahui,\par
-        Koordinator Program Studi Musik\par
-        \vspace{2.0cm}
-        \underline{\textbf{\advisoracademic}}\par
-        NIP \advisoracademicnip
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.49\textwidth}
-        \raggedleft
-        ~\par
-        Pembimbing Skripsi\par
-        \vspace{2.0cm}
-        \underline{\textbf{\advisorthesis}}\par
-        NIP \advisorthesisnip
-    \end{minipage}
-\end{center}
+    Mengetahui,\par
+    Koordinator Program Studi S-1 Musik\par
+    \vspace{1.6cm}
+    \textbf{\uline{\programcoordinator}}\par
+    NIP \programcoordinatornip
+\end{minipage}
 \end{spacing}
 
 % Statement Page
 \newpage
+\phantomsection
+\addcontentsline{toc}{matter}{HALAMAN PERNYATAAN}
 \begin{spacing}{1.15}
 \begin{center}
     \textbf{HALAMAN PERNYATAAN}
@@ -102,8 +103,102 @@ Saya menyatakan bahwa skripsi ini bebas dari unsur plagiasi dan belum pernah dia
 \end{flushright}
 \end{spacing}
 
+% Motto
+\newpage
+\phantomsection
+\addcontentsline{toc}{matter}{MOTTO}
+\begin{spacing}{1.15}
+\begin{center}
+    \textbf{MOTTO}
+\end{center}
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.75\textwidth}
+\centering
+\itshape
+Mesin dapat menebak nada berikutnya;\\
+manusia yang memutuskan mengapa nada itu perlu ada.
+\end{minipage}
+\end{center}
+\vspace*{\fill}
+\end{spacing}
+
+% Dedication
+\newpage
+\phantomsection
+\addcontentsline{toc}{matter}{HALAMAN PERSEMBAHAN}
+\begin{spacing}{1.15}
+\begin{center}
+    \textbf{HALAMAN PERSEMBAHAN}
+\end{center}
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\centering
+Skripsi ini saya persembahkan\\
+untuk kedua orang tua dan keluarga saya,\\
+yang tidak pernah bertanya kapan selesai,\\
+tetapi selalu bertanya apakah saya sudah makan.\par
+\vspace{1.0cm}
+Juga untuk siapa pun yang pernah duduk di kelas harmoni\\
+dan bertanya mengapa kuint sejajar harus dihindari.
+\end{minipage}
+\end{center}
+\vspace*{\fill}
+\end{spacing}
+
+% Preface
+\newpage
+\phantomsection
+\addcontentsline{toc}{matter}{KATA PENGANTAR}
+\begin{spacing}{1.15}
+\begin{center}
+    \textbf{KATA PENGANTAR}
+\end{center}
+\vspace{0.5cm}
+
+Puji syukur saya panjatkan kepada Tuhan Yang Maha Esa karena skripsi ini dapat saya susun sebagai salah satu syarat memperoleh gelar Sarjana Seni pada \programstudy, Jurusan \departmentname, \facultyname{} \institutionname.\par
+
+Topik skripsi ini lahir dari dua hal yang saya temui selama kuliah: latihan harmoni empat suara di kelas dan program komputer yang kini dapat menulis musik sendiri. Ketika sebuah model dapat menghasilkan koral dalam hitungan detik, saya ingin tahu apakah hasilnya mengikuti kaidah yang kami latih dengan pensil dan kertas partitur. Skripsi ini mencoba menjawab pertanyaan tersebut dengan prosedur yang dapat diulang dan diperiksa oleh pembaca lain.\par
+
+Penyusunan skripsi ini tidak saya kerjakan sendirian. Banyak pihak membantu dengan waktu, ilmu, pertanyaan, dan kesabaran. Untuk itu saya mengucapkan terima kasih kepada:
+\begin{enumerate}
+    \setlength{\itemsep}{0pt}
+    \item \deanname, selaku Dekan \facultyname{} \institutionname.
+    \item \programcoordinator, selaku Ketua Program Studi Musik \facultyname{} \institutionname.
+    \item \advisorone, selaku Dosen Pembimbing I, atas waktu, arahan, dan kesabarannya selama proses bimbingan.
+    \item \advisortwo, selaku Dosen Pembimbing II, atas bimbingan, koreksi, dan masukan selama penyusunan skripsi ini.
+    \item \cognate, selaku Dosen Penguji \textit{Cognate}, atas kesediaannya menguji skripsi ini serta memberikan kritik dan saran untuk penyempurnaannya.
+    \item \advisoracademic, selaku Dosen Pembimbing Akademik, yang mendampingi saya dalam urusan akademik sejak awal perkuliahan.
+    \item Seluruh dosen Program Studi Musik, khususnya pengampu mata kuliah harmoni dan analisis musik, yang memberikan dasar pengetahuan yang menjadi pijakan skripsi ini.
+    \item Seluruh staf akademik dan administrasi \facultyname{} \institutionname{} yang membantu kelancaran urusan perkuliahan hingga ujian.
+    \item Kedua orang tua saya atas doa, kepercayaan, dan dukungan yang tidak pernah putus, bahkan ketika saya sulit menjelaskan apa yang sedang saya teliti.
+    \item Keluarga besar saya yang selalu menanyakan kabar dan memberi semangat dari dekat maupun jauh.
+    \item Teman-teman Program Studi Musik angkatan 2023, tempat saya bertukar pikiran tentang musik dan hal-hal di luarnya.
+    \item Teman-teman yang bersedia mendengarkan penjelasan saya tentang kuint sejajar dan kecerdasan buatan, meskipun topik ini tidak selalu menarik bagi mereka.
+    \item Para pengembang DeepBach, Coconet, NotaGen, dan music21 yang membagikan kode dan modelnya secara terbuka, serta OpenAlex yang menyediakan data literatur ilmiah secara terbuka.
+    \item Diri saya sendiri, yang tetap melanjutkan pekerjaan ini ketika kode gagal dijalankan dan tulisan harus diperbaiki dari awal.
+\end{enumerate}
+
+\needspace{11\baselineskip}
+Saya menyadari bahwa skripsi ini memiliki keterbatasan. Ketiga model yang dibandingkan berbeda dalam data latih, format keluaran, dan cara pemakaiannya, sehingga hasil perbandingan perlu dibaca dalam batas tersebut. Semoga skripsi ini berguna bagi mahasiswa musik yang tertarik pada teknologi, dan bagi peneliti teknologi yang ingin memahami cara musisi membaca harmoni.\par
+
+\vspace{0.5cm}
+\begin{flushright}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \cityname, \makebox[3cm]{\dotfill}\par
+        Penulis,\par
+        \vspace{1.5cm}
+        \researchername
+    \end{minipage}
+\end{flushright}
+\end{spacing}
+
 % Abstract
 \newpage
+\phantomsection
+\addcontentsline{toc}{matter}{ABSTRAK}
 \begin{spacing}{1.15}
 \begin{center}
     \textbf{ABSTRAK}
@@ -116,6 +211,8 @@ Penelitian ini mengevaluasi akurasi \textit{output} model kecerdasan buatan (AI)
 
 % Abstract (English)
 \newpage
+\phantomsection
+\addcontentsline{toc}{matter}{ABSTRACT}
 \begin{spacing}{1.15}
 \begin{center}
     \textbf{ABSTRACT}

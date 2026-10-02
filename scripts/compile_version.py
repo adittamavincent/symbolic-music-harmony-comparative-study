@@ -130,6 +130,15 @@ def load_env_vars():
         "EXAMINER_1_NIP": "[NIP]",
         "EXAMINER_2": "[Penguji 2]",
         "EXAMINER_2_NIP": "[NIP]",
+        "THESIS_ADVISOR_1": "[Pembimbing I]",
+        "THESIS_ADVISOR_1_NIP": "[NIP]",
+        "THESIS_ADVISOR_2": "[Pembimbing II]",
+        "THESIS_ADVISOR_2_NIP": "[NIP]",
+        "COGNATE": "[Cognate]",
+        "COGNATE_NIP": "[NIP]",
+        "PROGRAM_COORDINATOR": "[Koordinator Program Studi]",
+        "PROGRAM_COORDINATOR_NIP": "[NIP]",
+        "DEAN": "[Dekan]",
     }
     if os.path.exists(env_path):
         with open(env_path) as handle:

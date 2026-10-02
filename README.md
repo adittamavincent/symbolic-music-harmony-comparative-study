@@ -133,6 +133,7 @@ Fill in `.env.local` before building.
 | Dates | `SUBMISSION_DATE`, `ACADEMIC_YEAR`, `GRADUATION_YEAR` |
 | Advisors | `ADVISOR_ACADEMIC`, `ADVISOR_ACADEMIC_NIP`, `ADVISOR_THESIS`, `ADVISOR_THESIS_NIP` |
 | Examiners | `EXAMINER_1`, `EXAMINER_1_NIP`, `EXAMINER_2`, `EXAMINER_2_NIP` |
+| Thesis committee (v3 onward) | `THESIS_ADVISOR_1`, `THESIS_ADVISOR_1_NIP`, `THESIS_ADVISOR_2`, `THESIS_ADVISOR_2_NIP`, `COGNATE`, `COGNATE_NIP`, `PROGRAM_COORDINATOR`, `PROGRAM_COORDINATOR_NIP`, `DEAN` |
 
 The Makefile reads this file as Make assignments, then exports values to `envsubst`. Use `KEY=value` without shell quotes; quotes can appear in the PDF. Values are inserted as LaTeX, so escape special characters where needed, such as `&` as `\&`. Keep the file local; generated PDFs contain those details.
 
