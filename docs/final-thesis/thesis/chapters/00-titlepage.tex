@@ -1,29 +1,31 @@
+% Cover and submission pages follow the 2026 Prodi Musik theses in
+% references/: bold 14pt title with chosen line breaks, logo, SKRIPSI,
+% "Oleh:" in regular weight, then bold name and NIM.
+\newcommand{\thesiscoverhead}{%
+  {\fontsize{14pt}{16pt}\selectfont\thesistitlelines\par}
+  \vfill
+  \includegraphics[width=5cm]{logo-isi.png}\par
+  \vspace{0.2cm}
+  SKRIPSI\par
+  \vspace{0.6cm}
+  {\mdseries Oleh:}\par
+  \researchername\par
+  NIM \researchernim\par
+}
+
 \begin{titlepage}
 \phantomsection
 \addcontentsline{toc}{matter}{HALAMAN JUDUL}
-\begin{spacing}{1.15}
+\begin{spacing}{1.7}
 \bfseries
-\vspace*{\fill}
 \begin{center}
-{\fontsize{16pt}{19.2pt}\selectfont\MakeUppercase{\thesistitle}\par}
+\thesiscoverhead
 \vfill
-SKRIPSI\par
-\programstudy\par
-\vspace{1cm}
-\includegraphics[width=4cm]{logo-isi.png}\par
-\vspace{1cm}
-Oleh:\\
-\researchername\\
-NIM: \researchernim\par
-\vfill
-Tugas Akhir Program Sarjana\par
-\academicyear\par
-\vfill
-\MakeUppercase{\programstudy}\\
-JURUSAN \MakeUppercase{\departmentname} \MakeUppercase{\facultyname}\\
-\MakeUppercase{\institutionname}\\
-\graduationyear\par
+\MakeUppercase{\programstudy}\par
+JURUSAN \MakeUppercase{\departmentname}\par
+\MakeUppercase{\facultyname}\par
+\MakeUppercase{\institutionname}\par
+\MakeUppercase{\academicyear}\par
 \end{center}
-\vspace*{\fill}
 \end{spacing}
 \end{titlepage}
