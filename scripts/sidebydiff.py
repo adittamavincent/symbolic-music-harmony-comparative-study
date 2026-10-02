@@ -162,6 +162,40 @@ def extract_section_formatting(ref):
     return "\n  ".join(commands)
 
 
+def extract_template_packages(ref):
+    """Return the template's package lines; the diff preamble loads hyperref."""
+    path = find_git_path(ref, "main.tex.template")
+    preamble = get_git_content(ref, path).split(r"\begin{document}", 1)[0]
+    preamble = re.sub(r'(?<!\\)%.*', '', preamble)
+    lines = []
+    for match in re.finditer(r'\\(?:usepackage|usetikzlibrary)(?:\[[^\]]*\])?\{([^}]*)\}', preamble):
+        if match.group(1).strip() not in ("hyperref", "bookmark"):
+            lines.append(re.sub(r'\s+', ' ', match.group(0)))
+    return lines
+
+
+def extract_source_definitions(text):
+    r"""
+    Move macro definitions out of the manuscript text. Each comparison block
+    is a TeX group, so a \newcommand left in place would vanish before a
+    later block used it. The returned definitions run at the start of every
+    block on that side instead.
+    """
+    definitions = []
+    pattern = re.compile(r'\\(?:newcommand|renewcommand|providecommand)\*?\s*(?:\{\\[A-Za-z@]+\}|\\[A-Za-z@]+)(?:\s*\[[^\]]*\])*')
+    pos = 0
+    while match := pattern.search(text, pos):
+        try:
+            _, end = read_braced_argument(text, match.end())
+        except ValueError:
+            pos = match.end()
+            continue
+        definitions.append(text[match.start():end])
+        text = text[:match.start()] + text[end:]
+        pos = match.start()
+    return text, "\n".join(definitions)
+
+
 def build_full_proposal(ref):
     """
     Concatenate all chapter files for a given git ref, in the exact order
@@ -320,6 +354,7 @@ def compute_diff(old_paragraphs, new_paragraphs):
 DISPLAY_MATH_ENVIRONMENTS = r"(?:equation|multline|align|alignat|flalign|gather|displaymath)\*?"
 DISPLAY_MATH_START = re.compile(r'\\begin\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\[')
 DISPLAY_MATH_END = re.compile(r'\\end\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\]')
+CITATION_OPTION = re.compile(r'\\(?:parencite|cite|textcite|citeauthor|citeyear)\*?(?:\[[^\]]*\])*\[[^\]]*$')
 
 
 UNSAFE_HIGHLIGHT_PATTERNS = (
@@ -421,7 +456,9 @@ def tokenize_words(text):
             if DISPLAY_MATH_END.search(val):
                 display_math = False
                 
-            if brace_balance <= 0 and not math_mode and not display_math:
+            # A citation's optional page argument may contain spaces.
+            open_citation = CITATION_OPTION.search(" ".join(buf))
+            if brace_balance <= 0 and not math_mode and not display_math and not open_citation:
                 flush()
                 brace_balance = 0
     flush()
@@ -476,7 +513,7 @@ def classify_token_style(style, val):
     if DISPLAY_MATH_START.search(val) and DISPLAY_MATH_END.search(val):
         return style + "_display"
     val_strip = val.strip()
-    val_clean = re.sub(r'[\.,;\?!\)]+$', '', val_strip)
+    val_clean = re.sub(r'[\.,;:\?!\)]+$', '', val_strip)
     val_clean = re.sub(r'^\(', '', val_clean)
     
     if re.match(r'^\$([^$]*)\$$', val_clean):
@@ -489,7 +526,7 @@ def classify_token_style(style, val):
             return style + "_format"
         return None
         
-    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{.*\}$', val_clean):
+    if re.match(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\*?(?:\[[^\]]*\])*\{.*\}$', val_clean):
         if is_safe_to_highlight_token(val, is_box=True):
             # Citation expansion is unsafe inside soul's text reconstruction.
             return style + "_box"
@@ -538,7 +575,7 @@ def apply_highlight(style, text):
         punc_start = "("
         val_strip = val_strip[1:]
     punc_end = ""
-    punc_match = re.search(r'[\.,;\?!\)]+$', val_strip)
+    punc_match = re.search(r'[\.,;:\?!\)]+$', val_strip)
     if punc_match:
         punc_end = punc_match.group(0)
         val_strip = val_strip[:-len(punc_end)]
@@ -963,7 +1000,7 @@ def replace_title_page(text, class_source=None):
 
 
 def extract_citation_keys(text, suffix=""):
-    matches = re.findall(r'\\(?:parencite|cite|textcite|nocite)\{([^}]+)\}', text)
+    matches = re.findall(r'\\(?:parencite|cite|textcite|nocite)\*?(?:\[[^\]]*\])*\{([^}]+)\}', text)
     keys = set()
     for match in matches:
         for key in match.split(','):
@@ -1034,6 +1071,18 @@ def parse_fields_text(text):
             idx = pos
     return fields
 
+# Biber parses these fields itself; a color macro breaks names, dates, and URLs.
+# A changed value still appears in its modified entry, without a text color.
+BIB_PARSED_FIELDS = {
+    "author", "editor", "editora", "editorb", "editorc", "translator",
+    "annotator", "commentator", "introduction", "foreword", "afterword",
+    "bookauthor", "holder", "shortauthor", "shorteditor", "namea", "nameb",
+    "namec", "date", "year", "month", "urldate", "eventdate", "origdate",
+    "url", "doi", "eprint", "file", "verba", "verbb", "verbc", "ids",
+    "crossref", "xref", "related", "keywords", "langid", "pages", "isbn", "issn",
+}
+
+
 def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
     e1 = parse_bib(bib1_str)
     e2 = parse_bib(bib2_str)
@@ -1060,15 +1109,16 @@ def diff_bib_files(bib1_str, bib2_str, keys1, keys2):
                 for f in sorted(list(all_fields)):
                     v1 = fields1.get(f)
                     v2 = fields2.get(f)
-                    if v1 == v2:
+                    if v1 == v2 or f in BIB_PARSED_FIELDS:
                         if v1 is not None:
                             new_f1.append(f"{f} = {{{v1}}}")
-                            new_f2.append(f"{f} = {{{v1}}}")
+                        if v2 is not None:
+                            new_f2.append(f"{f} = {{{v2}}}")
                     else:
                         if v1 is not None:
-                            new_f1.append(f"{f} = {{\\textcolor{{deltext}}{{{v1}}}}}")
+                            new_f1.append(f"{f} = {{{{\\bibdelcolor {v1}}}}}")
                         if v2 is not None:
-                            new_f2.append(f"{f} = {{\\textcolor{{instext}}{{{v2}}}}}")
+                            new_f2.append(f"{f} = {{{{\\bibinscolor {v2}}}}}")
                 new_f1.append('keywords = {v1}')
                 new_f2.append('keywords = {v2}')
                 # Set userc so tcolorbox opens for modified entries too
@@ -1095,12 +1145,13 @@ def generate_diff_latex(tag1, tag2, outdir):
         if os.path.exists(path):
             os.remove(path)
 
-    old_full = build_full_proposal(tag1)
-    new_full = build_full_proposal(tag2)
+    old_full, old_definitions = extract_source_definitions(build_full_proposal(tag1))
+    new_full, new_definitions = extract_source_definitions(build_full_proposal(tag2))
 
     # Definitions nested inside newenvironment need doubled parameter markers.
-    left_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag1))
-    right_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag2))
+    left_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag1) + "\n" + old_definitions)
+    right_formatting = re.sub(r'(?<!\\)#', "##", extract_section_formatting(tag2) + "\n" + new_definitions)
+    template_packages = list(dict.fromkeys(extract_template_packages(tag1) + extract_template_packages(tag2)))
 
     # Extract citations
     pure_v1_keys = extract_citation_keys(old_full)
@@ -1132,10 +1183,10 @@ def generate_diff_latex(tag1, tag2, outdir):
         content = match.group(1)
         def cite_repl(m2):
             cmd = m2.group(1)
-            keys = m2.group(2)
+            keys = m2.group(3)
             new_keys = ", ".join([k.strip() + "_v1" if k.strip() else "" for k in keys.split(",")])
-            return f"\\{cmd}{{{new_keys}}}"
-        new_content = re.sub(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)\{([^}]+)\}', cite_repl, content)
+            return f"\\{cmd}{m2.group(2)}{{{new_keys}}}"
+        new_content = re.sub(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)(\*?(?:\[[^\]]*\])*)\{([^}]+)\}', cite_repl, content)
         return f"\\begin{{leftside}}{new_content}\\end{{leftside}}"
     
     body = re.sub(r'\\begin\{leftside\}(.*?)\\end\{leftside\}', leftside_repl, body, flags=re.DOTALL)
@@ -1190,8 +1241,7 @@ def generate_diff_latex(tag1, tag2, outdir):
     latex = [
         r"\documentclass{isi-proposal}",
         r"\geometry{a3paper,landscape}", # Two A4 page areas; inherit the source class margins
-        r"\usepackage{tikz}",
-        r"\usetikzlibrary{shapes.geometric, arrows}",
+        *template_packages,
         r"\usepackage{paracol}",
         r"\usepackage{xurl}",
         r"\usepackage{etoolbox}",
@@ -1201,6 +1251,9 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\definecolor{inshl}{RGB}{204,244,206}",
         r"\definecolor{deltext}{RGB}{180,0,0}",
         r"\definecolor{instext}{RGB}{0,120,0}",
+        # Robust switches: biblatex case changing alters a color argument.
+        r"\DeclareRobustCommand{\bibdelcolor}{\color{deltext}}",
+        r"\DeclareRobustCommand{\bibinscolor}{\color{instext}}",
         r"\newcommand{\diffinline}[2]{{\setlength{\fboxsep}{0pt}\colorbox{#1}{\strut #2}}}",
         # No inset or added caption: retain the source equation's usable width.
         r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",

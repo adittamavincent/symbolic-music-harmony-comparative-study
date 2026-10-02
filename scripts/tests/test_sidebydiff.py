@@ -543,5 +543,55 @@ class MathAndSourceLayoutTests(unittest.TestCase):
         self.assertIn(signature, diff.render_sections(signature, signature))
 
 
+class ProposalToThesisTests(unittest.TestCase):
+    def test_source_macro_definitions_leave_the_text_for_every_block(self):
+        source = (r"\newcommand{\coverhead}{%" "\n" r"  {\bfseries Title}\par" "\n}\n"
+                  r"\newcommand{\signatory}[2]{#1 \textbf{#2}}" "\n"
+                  r"\coverhead" "\n" r"\signatory{Dekan}{Name}")
+        text, definitions = diff.extract_source_definitions(source)
+        self.assertNotIn(r"\newcommand", text)
+        self.assertIn(r"\coverhead", text)
+        self.assertIn(r"\signatory{Dekan}{Name}", text)
+        self.assertIn(r"\newcommand{\coverhead}{%", definitions)
+        self.assertIn(r"\newcommand{\signatory}[2]{#1 \textbf{#2}}", definitions)
+
+    def test_template_packages_skip_hyperref_and_keep_options(self):
+        template = r"""\documentclass{isi-proposal}
+\usepackage[normalem]{ulem}
+% \usepackage{commented}
+\usepackage[unicode,
+  hidelinks]{hyperref}
+\usepackage{bookmark}
+\usetikzlibrary{shapes.geometric, arrows}
+\begin{document}
+\usepackage{late}
+\end{document}"""
+        with patch.object(diff, "find_git_path", return_value="main.tex.template"), \
+             patch.object(diff, "get_git_content", return_value=template):
+            packages = diff.extract_template_packages("ref")
+        self.assertEqual(packages, [r"\usepackage[normalem]{ulem}",
+                                    r"\usetikzlibrary{shapes.geometric, arrows}"])
+
+    def test_citation_page_arguments_stay_whole_and_outside_soul(self):
+        tokens = [value for kind, value in diff.tokenize_words(r"kuint \parencite[9, 12]{strube1928}: lalu")
+                  if kind == "W"]
+        self.assertIn(r"\parencite[9, 12]{strube1928}:", tokens)
+        _, new = diff.word_level_render("", r"kuint \parencite[35]{strube1928}: lalu")
+        self.assertIn(r"\diffinline{inshl}{\parencite[35]{strube1928}:}", new)
+        self.assertNotIn(r"\inhighlight{\parencite", new)
+        self.assertEqual(diff.extract_citation_keys(r"\parencite[9]{strube1928} \cite{a, b}"),
+                         ["a", "b", "strube1928"])
+
+    def test_changed_bibliography_names_and_dates_remain_parseable(self):
+        old = "@book{k,\n  author = {Le, A and Bigo, B},\n  title = {Old},\n  year = {2024}\n}"
+        new = "@book{k,\n  author = {Le, A and Keller, C},\n  title = {New},\n  year = {2025}\n}"
+        left, right = diff.diff_bib_files(old, new, ["k"], ["k"])
+        self.assertIn("author = {Le, A and Bigo, B}", left)
+        self.assertIn("year = {2025}", right)
+        self.assertIn(r"title = {{\bibdelcolor Old}}", left)
+        self.assertIn(r"title = {{\bibinscolor New}}", right)
+        self.assertNotIn(r"\textcolor", left + right)
+
+
 if __name__ == "__main__":
     unittest.main()
