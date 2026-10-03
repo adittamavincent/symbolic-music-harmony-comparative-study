@@ -59,7 +59,7 @@ These are this project's proposed completion criteria. Confirm department requir
 
 1. Confirm the rule pages against both printed editions of Strube, and check 1928 p. 48 (exercises 67–68, read from translation p. 58).
 2. Type the 71 candidate melodies into MusicXML, check each file with `read_melody` in `research/harmonization_io.py`, and fill the key, meter, length, and fermata columns of the inventory. Type the nine textbook figures in `strube-example-fixtures.csv`.
-3. Read the core sources and record your own reading in the reading ledger.
+3. Read the core sources and record your own reading in the reading ledger. Twenty-nine cited keys have no row in `records/reading-notes.csv` (audit 2026-10-03), among them `yin2023`, `lerch2025`, `koops2019`, `conditschultz2018`, `creswell2018`, and `sugiyono2019`. Also search Indonesian sources (ISI repository, Garuda, SINTA) for related work and record the queries and dates; the current search log covers English OpenAlex queries only (defense Q82).
 4. Review the AI-drafted motto, halaman persembahan, and kata pengantar, including their personal details.
 5. Confirm Adityo Legowo as Cognate and Eki Satria as Dosen Pembimbing Akademik. Pembimbing I, Pembimbing II, and Cognate still print NIPs because their NUPTKs are unknown.
 
@@ -71,7 +71,7 @@ The handout is [supervision/bimbingan-v3.md](supervision/bimbingan-v3.md). In ad
 - Front matter: the cover and submission page say *Skripsi*; confirm the wording required for this phase, the signatory roles, and the format.
 - Appendices: the template's LAMPIRAN items (permits, photos, questionnaire) do not fit this study. Candidates are the rule-definition sheets, the melody inventory, and a pseudocode appendix for the instrument after the definitions are frozen.
 - Scope limits sit at the end of BAB I Rumusan Masalah; a separate *Batasan Penelitian* section would depart from the template.
-- Sistematika Penulisan describes only BAB I–III. Add BAB IV and V when written, or earlier if the supervisor expects the planned chapters.
+- Sistematika Penulisan now also describes the planned BAB IV and BAB V (added in the working tree on 2026-10-03, outside the audit session). Confirm with the supervisor that planned chapters may be described before they exist.
 
 ### Decisions before main data
 
@@ -81,6 +81,10 @@ The handout is [supervision/bimbingan-v3.md](supervision/bimbingan-v3.md). In ad
 4. Points raised in `study/persiapan-pembimbing-1.md` on 2026-10-02: how the Wilcoxon test handles zero differences; whether to test the model × origin interaction; how to treat fermatas that the Strube melodies may lack; whether to report hidden fifths and all voice crossings as additional descriptive data.
 5. Whether to use each implementation's default sampling settings as found in the sources (Coconet 96 iterations, temperature 0.99; DeepBach 500 iterations), and how to report that Coconet output cannot contain repeated notes in alto, tenor, and bass.
 6. Freeze definitions, generation settings, the Bach sample seed, and the analysis plan before main generation.
+7. Found in the 2026-10-03 audit: spacing and crossing are counted at every pair event, so a repeated note adds a count while a held note does not. Coconet output cannot contain repeated notes in alto, tenor, and bass, which lowers its spacing and crossing counts compared with DeepBach and Bach. The motion rules are unaffected. Choose before the pilot: merge repeated notes in every output before measuring, or count one event per uninterrupted span. Either choice makes a new instrument version (defense Q92).
+8. Whether to add a sensitivity analysis for meter (rate per opportunity or per beat), because rates per measure depend on measure length (defense Q91).
+9. Whether to check how much model output copies Bach's own harmonization on the Bach melodies (share of identical alto, tenor, and bass pitches per step), to separate memorisation from in-distribution behaviour (defense Q87).
+10. Whether pilot melodies may be reused in the main data, and what counts as an "explained" gap from Huang's Bach rates in validation check 4 (defense Q96–Q97).
 
 ### Citation checks before submission
 

@@ -1,0 +1,226 @@
+{
+  "run_at_utc": "2026-10-03T07:25:13.141806+00:00",
+  "scope": "synthetic implementation probes, not pilot or main model data",
+  "instrument_version": "2.0",
+  "instrument_sha256": "977efaca8b8999a100466f8a3a733ef7f9c5b63f0a206302ae379a874f480637",
+  "music21_version": "9.3.0",
+  "units": "quarterLength beats; all measurements use one explicit measure",
+  "scenarios": {
+    "sustained_versus_reattacked": {
+      "description": "Same sounding pitch sequence and duration, different attacks.",
+      "sustained": {
+        "instrument_version": "2.0",
+        "measures": 1,
+        "counts": {
+          "parallel_fifths": 0,
+          "parallel_octaves": 0,
+          "spacing": 1,
+          "crossing": 0,
+          "overlap": 0
+        },
+        "opportunities": {
+          "parallel_fifths": 0,
+          "parallel_octaves": 0,
+          "spacing": 2,
+          "crossing": 3,
+          "overlap": 0
+        },
+        "rates_per_measure": {
+          "parallel_fifths": 0.0,
+          "parallel_octaves": 0.0,
+          "spacing": 1.0,
+          "crossing": 0.0,
+          "overlap": 0.0
+        },
+        "weighted_penalty_per_measure": 0.5,
+        "flags": [
+          {
+            "rule": "spacing",
+            "pair": "S-A",
+            "step": 0,
+            "offset_ql": 0.0
+          }
+        ]
+      },
+      "reattacked": {
+        "instrument_version": "2.0",
+        "measures": 1,
+        "counts": {
+          "parallel_fifths": 0,
+          "parallel_octaves": 0,
+          "spacing": 4,
+          "crossing": 0,
+          "overlap": 0
+        },
+        "opportunities": {
+          "parallel_fifths": 18,
+          "parallel_octaves": 18,
+          "spacing": 8,
+          "crossing": 12,
+          "overlap": 9
+        },
+        "rates_per_measure": {
+          "parallel_fifths": 0.0,
+          "parallel_octaves": 0.0,
+          "spacing": 4.0,
+          "crossing": 0.0,
+          "overlap": 0.0
+        },
+        "weighted_penalty_per_measure": 2.0,
+        "flags": [
+          {
+            "rule": "spacing",
+            "pair": "S-A",
+            "step": 0,
+            "offset_ql": 0.0
+          },
+          {
+            "rule": "spacing",
+            "pair": "S-A",
+            "step": 4,
+            "offset_ql": 1.0
+          },
+          {
+            "rule": "spacing",
+            "pair": "S-A",
+            "step": 8,
+            "offset_ql": 2.0
+          },
+          {
+            "rule": "spacing",
+            "pair": "S-A",
+            "step": 12,
+            "offset_ql": 3.0
+          }
+        ]
+      }
+    },
+    "motion_during_soprano_fermata": {
+      "description": "Three ascending parallel fifths in A-T during a held soprano fermata.",
+      "main": {
+        "instrument_version": "2.0",
+        "measures": 1,
+        "counts": {
+          "parallel_fifths": 3,
+          "parallel_octaves": 0,
+          "spacing": 0,
+          "crossing": 0,
+          "overlap": 0
+        },
+        "opportunities": {
+          "parallel_fifths": 15,
+          "parallel_octaves": 15,
+          "spacing": 8,
+          "crossing": 9,
+          "overlap": 9
+        },
+        "rates_per_measure": {
+          "parallel_fifths": 3.0,
+          "parallel_octaves": 0.0,
+          "spacing": 0.0,
+          "crossing": 0.0,
+          "overlap": 0.0
+        },
+        "weighted_penalty_per_measure": 3.0,
+        "flags": [
+          {
+            "rule": "parallel_fifths",
+            "pair": "A-T",
+            "step": 4,
+            "offset_ql": 1.0
+          },
+          {
+            "rule": "parallel_fifths",
+            "pair": "A-T",
+            "step": 8,
+            "offset_ql": 2.0
+          },
+          {
+            "rule": "parallel_fifths",
+            "pair": "A-T",
+            "step": 12,
+            "offset_ql": 3.0
+          }
+        ]
+      },
+      "exclude_fermata_motion": {
+        "instrument_version": "2.0",
+        "measures": 1,
+        "counts": {
+          "parallel_fifths": 0,
+          "parallel_octaves": 0,
+          "spacing": 0,
+          "crossing": 0,
+          "overlap": 0
+        },
+        "opportunities": {
+          "parallel_fifths": 0,
+          "parallel_octaves": 0,
+          "spacing": 8,
+          "crossing": 9,
+          "overlap": 0
+        },
+        "rates_per_measure": {
+          "parallel_fifths": 0.0,
+          "parallel_octaves": 0.0,
+          "spacing": 0.0,
+          "crossing": 0.0,
+          "overlap": 0.0
+        },
+        "weighted_penalty_per_measure": 0.0,
+        "flags": []
+      }
+    },
+    "motion_across_silent_gap": {
+      "description": "S-A fifths separated by one silent beat in both voices.",
+      "measurement": {
+        "instrument_version": "2.0",
+        "measures": 1,
+        "counts": {
+          "parallel_fifths": 1,
+          "parallel_octaves": 0,
+          "spacing": 0,
+          "crossing": 0,
+          "overlap": 0
+        },
+        "opportunities": {
+          "parallel_fifths": 5,
+          "parallel_octaves": 5,
+          "spacing": 4,
+          "crossing": 6,
+          "overlap": 2
+        },
+        "rates_per_measure": {
+          "parallel_fifths": 1.0,
+          "parallel_octaves": 0.0,
+          "spacing": 0.0,
+          "crossing": 0.0,
+          "overlap": 0.0
+        },
+        "weighted_penalty_per_measure": 1.0,
+        "flags": [
+          {
+            "rule": "parallel_fifths",
+            "pair": "S-A",
+            "step": 8,
+            "offset_ql": 2.0
+          }
+        ]
+      }
+    },
+    "empty_alto": {
+      "quality_check": {
+        "accepted": true,
+        "reasons": []
+      }
+    },
+    "bass_longer_than_melody": {
+      "soprano_duration_beats": 4,
+      "bass_duration_beats": 8,
+      "quality_check": {
+        "accepted": true,
+        "reasons": []
+      }
+    }
+  }
+}

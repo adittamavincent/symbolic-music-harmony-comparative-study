@@ -30,6 +30,7 @@ Diperbarui 3 Oktober 2026. Celah yang sudah tertutup penuh dihapus dari tabel.
 | Pilot | Batas panjang melodi, kosakata DeepBach, dan memori Coconet belum diuji pada model | Runner generasi di atas adapter MusicXML, perbaikan pipeline lain, pilot | Terbuka (tahap penelitian setelah proposal disetujui) |
 | Persetujuan pembimbing | Desain berubah besar dari proposal | Bawa naskah v3 dan `bimbingan-v3.md` | Terbuka |
 | Terjemahan Strube oleh Pembimbing I | Pembimbing I menerjemahkan buku Strube (2015); tiga kalimat kaidah berbeda dari edisi 1928 | Pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 1; tanyakan cara mengutip terjemahan | Terbuka |
+| Jarak dan persilangan dihitung per peristiwa bunyi | Coconet tidak dapat mengulang nada, sehingga lajunya untuk dua kaidah ini lebih rendah karena cara pengukuran (Q92) | Samakan perlakuan nada ulang untuk semua keluaran, atau hitung per rentang; jadikan instrumen versi 3 | Terbuka (ditemukan 3 Oktober 2026) |
 | Halaman Cohen, Hodges–Lehmann, Creswell, Sugiyono | Penguji bisa minta halaman | Buka sumber, catat di `reading-notes.csv` | Terbuka (kecil) |
 
 ## A. Judul, masalah, dan tujuan
@@ -342,6 +343,112 @@ Lihat Q53. PROGRESS.md mencatat bahwa motto, halaman persembahan, dan kata penga
 
 **78. Kenapa mahasiswa musik mengerjakan penelitian komputasi? Apa sumbangannya bagi musik?**
 Yan dkk. menilai evaluasi model musik umumnya kurang ketat dari sudut teori musik. Keahlian musik dalam penelitian ini ada pada pemilihan dan perumusan kaidah, pembacaan pengecualian Strube, pemilihan soal latihan, dan penafsiran contoh partitur. Hasilnya berguna bagi pengajar harmoni yang mahasiswanya memakai alat semacam ini.
+
+## K. Simulasi penguji per sudut pandang (audit 3 Oktober 2026)
+
+Ditambahkan setelah audit BAB I–III pada 3 Oktober 2026. Pertanyaan disusun menurut sudut pandang yang biasa muncul di sidang: format dan bahasa, teori musik, metodologi dan statistik, serta konsistensi naskah. Sudut pandang ini bukan perkiraan tentang dosen tertentu. Pertanyaan yang sudah dijawab di bagian A–J tidak diulang.
+
+### Format, bahasa, dan sumber
+
+**79. Template prodi meminta latar belakang 2–3 halaman dan menggabungkan rumusan masalah dengan pertanyaan penelitian. Kenapa naskah Anda berbeda?**
+Struktur BAB I mengikuti skripsi S-1 Musik 2026 yang sudah disetujui: Intan dan Nourmalita menulis rumusan masalah sebagai prosa lalu pertanyaan penelitian sebagai bagian tersendiri, dan empat dari enam skripsi memuat sistematika penulisan. Latar belakang sekarang sekitar empat halaman (sekitar 1.100 kata); skripsi acuan memakai sekitar 1.570–2.410 kata.
+*Bukti:* `records/research-log.md`, entri 2026-10-02 tentang perbandingan BAB I dengan skripsi acuan.
+*Rawan bila:* penguji memegang template sebagai aturan wajib. Tanyakan kepada pembimbing sebelum sidang bentuk mana yang dipakai prodi untuk skripsi.
+
+**80. Kenapa memakai "et al." dalam teks berbahasa Indonesia, bukan "dkk."?**
+Gaya sitasi mengikuti format APA yang dipakai kelas dokumen. Penggantiannya mudah dilakukan di seluruh naskah bila pedoman prodi meminta "dkk.".
+
+**81. Judul menyebut "musik hasil AI", padahal yang diteliti hanya harmonisasi empat suara dari dua model. Bukankah terlalu luas?**
+Frasa "evaluasi musik hasil ..." berasal dari catatan review proposal (F01), dan judul langsung menyebut DeepBach dan Coconet, sehingga objeknya terbatas pada keluaran kedua model itu. Subjudul menyebut variabel bebas kedua, variabel terikat, dan Strube.
+*Rawan bila:* penguji meminta judul yang lebih sempit. Jangan berjanji mengganti judul di ruang sidang; catat usulan itu dan putuskan bersama pembimbing.
+
+**82. Apakah ada penelitian sejenis di Indonesia atau di ISI? Sumber berbahasa Indonesia hampir hanya Sugiyono dan Rangkuti.**
+Di antara sumber yang ditinjau belum ditemukan penelitian Indonesia tentang kepatuhan kaidah gerak suara pada harmonisasi model AI. Penelusuran yang tercatat dilakukan melalui OpenAlex dengan kata kunci bahasa Inggris.
+*Rawan bila:* penguji bertanya apakah repositori ISI, Garuda, atau SINTA sudah ditelusuri. Belum. Lakukan penelusuran berbahasa Indonesia, catat kata kunci dan tanggalnya, dan masukkan sumber yang relevan sebelum sidang.
+
+**83. Template meminta tinjauan pustaka dari jurnal terakreditasi atau bereputasi. Banyak sumber Anda berupa prosiding konferensi dan terbit 2025–2026.**
+Dalam bidang *music information retrieval*, prosiding ISMIR dan konferensi pembelajaran mesin adalah tempat terbit utama yang ditelaah sejawat. Huang dkk. (2019) dan Yan dkk. (2018), dua sumber terpenting, terbit di ISMIR.
+*Rawan bila:* penguji menanyakan isi sumber yang hanya diperiksa dari abstrak. Ketahui sumber mana yang sudah dibaca penuh (lihat `records/reading-notes.csv` dan bagian *Citation checks* di `PROGRESS.md`).
+
+### Teori dan musik
+
+**84. Siapa Gustav Strube, dan kenapa buku Amerika tahun 1928 relevan bagi mahasiswa ISI pada 2026?**
+Buku ini dipakai karena memuat rumusan kaidah beserta pengecualian, contoh benar dan salah yang dapat dijadikan kasus uji, dan latihan harmonisasi melodi yang dapat dijadikan masukan model. Jilid I buku ini sudah diterjemahkan ke bahasa Indonesia oleh Pembimbing I dan diterbitkan UPT Perpustakaan ISI Yogyakarta pada 2015.
+*Rawan bila:* ditanya biodata Strube. Biodatanya belum dicatat di naskah atau di catatan bacaan. Cari dari sumber yang dapat diperiksa sebelum sidang; jangan menjawab dari ingatan.
+
+**85. Larangan kuint sejajar berasal dari tradisi kontrapung, jauh sebelum teori fungsi harmoni. Kenapa teori utamanya harmoni fungsional?**
+Lihat juga Q64. BAB II sekarang menyatakan bahwa kelima kaidah dipilih karena dapat diperiksa tanpa menentukan fungsi akor, sedangkan harmoni fungsional tetap menjadi kerangka karena sebagian pengecualian Strube (kuint lewat, kuint pada pengulangan akor) bergantung pada fungsi harmoni dan membatasi penafsiran hasil. Akui bahwa asal-usul larangan paralel memang lebih tua daripada teori fungsi.
+*Rawan bila:* penguji mengusulkan teori kontrapung atau "harmoni tonal praktik umum" sebagai teori utama. Tidak ada sumber kontrapung di daftar pustaka. Diskusikan dengan Pembimbing I sebelum sidang, jangan mengganti kerangka teori di ruang sidang.
+
+**86. Melodi chorale umumnya adalah melodi nyanyian jemaat yang lebih tua, bukan karangan Bach. Jadi apa maksud "melodi Bach"?**
+Benar. BAB I menyebut chorale Bach sebagai harmonisasi empat suara yang ditulis Bach untuk melodi nyanyian jemaat. "Kelompok Bach" adalah label untuk melodi sopran dari korpus chorale yang diharmonisasi Bach, yaitu korpus yang dipelajari kedua model. Label itu tidak menyatakan bahwa Bach mengarang melodinya.
+
+**87. Kalau model hanya menyalin harmonisasi Bach yang sudah dihafalnya, kepatuhan pada melodi Bach tinggi karena hafalan, bukan karena melodinya "dalam distribusi". Bagaimana membedakannya?**
+Untuk DeepBach, status data latih setiap melodi dicatat dan dianalisis kepekaannya (melodi yang pernah dilihat dan yang tidak). Untuk Coconet, status itu tidak diketahui.
+*Rawan bila:* penguji meminta bukti langsung. Pemeriksaan yang belum ada di protokol: hitung proporsi nada alto, tenor, dan bas keluaran model yang sama dengan harmonisasi asli Bach pada langkah waktu yang sama. Kemiripan yang sangat tinggi menunjukkan penyalinan. Putuskan apakah pemeriksaan ini ditambahkan sebelum protokol dibekukan.
+
+**88. Kenapa tidak memakai melodi lokal, misalnya melodi nyanyian jemaat berbahasa Indonesia, sebagai asal melodi ketiga?**
+Penelitian ini membatasi diri pada dua asal melodi agar desainnya sesuai dengan analisis Huang dkk. dan jumlah sampelnya terpenuhi. Kaidah Strube adalah norma tradisi Barat, dan BAB III menyatakannya. Melodi lokal adalah saran yang baik untuk penelitian lanjutan, dengan kriteria kelayakan yang sama.
+
+### Metodologi dan statistik
+
+**89. Populasi Anda harmonisasi atau melodi?**
+Melodi. Populasi pertama adalah melodi sopran 371 chorale dalam korpus music21; populasi kedua adalah latihan harmonisasi melodi dalam buku Strube. Harmonisasi adalah pengamatan berulang untuk setiap melodi dan dirata-ratakan menjadi satu nilai per melodi per model.
+*Bukti:* BAB III Populasi dan Sampel (direvisi 3 Oktober 2026; sebelumnya populasi ditulis sebagai harmonisasi, padahal unit analisisnya melodi).
+
+**90. Semua latihan Strube yang layak dipakai. Kalau itu sensus, untuk apa uji statistik?**
+Kelompok Strube memang sensus atas latihan dalam buku itu, dan BAB III sekarang menyatakannya. Uji statistik memperlakukan melodi-melodi itu sebagai wakil soal latihan harmonisasi melodi dalam buku ajar harmoni. Karena itu generalisasi di luar buku Strube dinyatakan secara terbatas.
+*Rawan bila:* penguji menilai generalisasi ini lemah. Akui. Klaim yang aman adalah tentang latihan Strube dan soal sejenis, bukan semua soal harmonisasi.
+
+**91. Laju dihitung per birama. Birama 3/4 lebih pendek daripada 4/4. Kalau kedua kelompok berbeda komposisi biramanya, perbedaan laju bisa berasal dari birama, bukan dari asal melodi.**
+Birama dicatat sebagai ciri melodi, dan jumlah kesempatan (gerak atau peristiwa bunyi yang diperiksa) disimpan untuk setiap kaidah.
+*Rawan bila:* ditanya analisis apa yang menangani hal ini. Rencana analisis belum memuatnya. Usulan: tambahkan laju per kesempatan atau per ketukan sebagai analisis kepekaan, dan laporkan komposisi birama kedua kelompok. Putuskan sebelum protokol dibekukan.
+
+**92. Jarak dan persilangan dihitung pada setiap peristiwa bunyi. Nada yang ditahan dihitung sekali, sedangkan nada yang diulang dihitung lagi. Coconet tidak dapat mengulang nada. Bukankah laju jarak dan persilangan Coconet menjadi lebih rendah karena cara pengukuran?**
+Benar, dan ini ditemukan saat audit 3 Oktober 2026. Dalam `evaluate_grids` (`research/voice_leading_v2.py`), jarak dan persilangan dihitung pada setiap peristiwa bunyi pasangan suara. Nada yang diulang pada keluaran DeepBach atau Bach menambah peristiwa, sedangkan pada Coconet nada itu digabung. Kuint, oktaf, dan tumpang tindih tidak terpengaruh, karena nada yang diulang tidak mengubah tinggi nada.
+*Wajib diputuskan sebelum pilot:* pilihan paling sederhana adalah menggabungkan nada sama yang berurutan pada alto, tenor, dan bas untuk semua keluaran (DeepBach, Coconet, dan Bach) sebelum diukur, sehingga ketiganya diperlakukan sama. Pilihan lain adalah menghitung satu kejadian untuk setiap rentang jarak atau persilangan yang tidak terputus. Keduanya mengubah definisi, sehingga menjadi instrumen versi 3; hasil versi 2 disimpan.
+
+**93. Batas efisiensi 0,864 dari Hodges dan Lehmann berlaku untuk distribusi kontinu. Data Anda banyak bernilai nol.**
+Benar. BAB III sekarang menyatakan bahwa angka 30 melodi adalah perkiraan minimum dan bahwa ukuran efek terkecil yang dapat dideteksi dilaporkan berdasarkan jumlah melodi yang benar-benar dianalisis. Rata-rata lima generasi mengurangi nilai yang persis sama, tetapi kaidah yang jarang terjadi, seperti persilangan di atas sopran, tetap dapat banyak bernilai nol.
+
+**94. Dengan koreksi Holm atas lima kaidah, ambang terkecil menjadi 0,01. Apakah 30 melodi masih cukup?**
+Untuk efek d = 0,8 dengan daya 0,8, uji t dua arah pada α = 0,01 memerlukan 38,2 melodi per kelompok, atau 44,2 setelah dibagi 0,864. Pada uji satu arah, angkanya 32,8 dan 37,9. Dengan 30 melodi per kelompok, efek terkecil yang terdeteksi pada α = 0,01 sekitar d = 0,98 (dihitung dengan statsmodels pada 3 Oktober 2026). Jadi 30 melodi cukup untuk pengujian pertama pada urutan Holm hanya bila efeknya sangat besar. Jika kelompok Strube yang layak lebih dari 30, semuanya dipakai, dan itu menaikkan daya.
+
+**95. Mann–Whitney sebenarnya menguji apa? Median?**
+Uji ini memeriksa apakah nilai dari satu kelompok cenderung lebih besar daripada nilai dari kelompok lain. Uji ini menjadi uji median hanya bila bentuk kedua distribusi sama. Karena itu median, rentang antarkuartil, dan korelasi peringkat biserial dilaporkan bersama nilai p.
+
+**96. Di diagram alur ada keputusan "Apakah valid?". Kapan instrumen dinyatakan tidak valid?**
+Langkah 2: setiap ketidaksesuaian dengan contoh cetak Strube harus diperbaiki atau dijelaskan sebelum instrumen dipakai. Langkah 3: setiap jenis perbedaan dengan music21 harus dijelaskan dengan perbedaan definisi. Langkah 4: selisih dengan angka Huang harus dapat dijelaskan.
+*Rawan bila:* ditanya angka Bach Anda. Dengan definisi Strube, lajunya 0,0078 kuint dan 0,0030 oktaf per birama, sedangkan Huang melaporkan 0,023 dan 0,009. Dengan definisi music21, lajunya 0,0176 dan 0,0059. Sisa selisihnya baru dijelaskan sebagai kemungkinan (versi data dan pengaturan yang tidak diterbitkan). Tetapkan di protokol apa yang dianggap "dapat dijelaskan" sebelum pilot.
+
+**97. Apakah melodi yang dipakai saat uji coba dipakai lagi dalam data utama?**
+Protokol memisahkan hasil uji coba dari data utama, tetapi belum menetapkan apakah melodinya boleh dipakai lagi.
+*Rawan bila:* belum diputuskan. Usulan: catat melodi uji coba; jika dipakai lagi, harmonisasi data utama dihasilkan ulang dan keluaran uji coba tidak masuk analisis.
+
+**98. Paradigma penelitian Anda apa?**
+Pendekatan kuantitatif yang menguji hipotesis secara deduktif dari teori (BAB III Metode Pendekatan, Creswell dan Creswell). Creswell mengaitkan pendekatan kuantitatif dengan pandangan pascapositivis.
+*Rawan bila:* diminta halamannya. Halaman Creswell belum dicatat di `reading-notes.csv`.
+
+**99. Variabel terikat Anda satu atau lima?**
+Satu konstruk, yaitu tingkat kepatuhan, dengan lima indikator. Setiap indikator dianalisis dan diuji terpisah; indeks penalti tertimbang hanya ringkasan tambahan (BAB III Variabel Penelitian).
+
+**100. Kenapa memakai kata "pengaruh" padahal analisisnya bukan regresi?**
+Dalam pertanyaan ketiga, peneliti menentukan masukan yang diberikan kepada model yang sama, lalu membandingkan keluaran pada dua kondisi masukan. Pengaruh di sini adalah perbedaan keluaran akibat kondisi masukan, diuji dengan perbandingan dua kelompok (Mann–Whitney), bukan dengan koefisien regresi. Bentuk pertanyaan ini mengikuti catatan F06.
+
+### Konsistensi naskah
+
+**101. Rumus tumpang tindih mensyaratkan tidak ada suara yang melangkah. Bagaimana jika satu suara menahan nada?**
+Suara yang menahan nada tidak bergerak, sehingga tidak dihitung melangkah. Jika suara bawah naik melewati nada suara atas yang ditahan, kedua suara bersilangan pada peristiwa baru, sehingga gerak itu tidak dihitung sebagai tumpang tindih. Gerak itu dihitung sebagai persilangan hanya bila melibatkan sopran. Persilangan alto dan tenor tidak dihitung sama sekali, sesuai Strube hlm. 174.
+
+### Pertanyaan yang pasti muncul setelah BAB IV ditulis
+
+Belum dapat dijawab karena data utama belum ada. Siapkan jawabannya dari data, bukan dari dugaan:
+
+- Kaidah mana yang paling sering dilanggar setiap model, dan seberapa jauh dari acuan Bach?
+- Apakah hasil Coconet pada melodi Bach mendekati angka Huang untuk Coconet (0,365 dan 0,391 per birama)? Jika jauh berbeda, kenapa?
+- Berapa melodi yang gagal diproses atau gagal kontrol kualitas pada setiap model dan asal melodi, dan apakah kegagalan itu berkaitan dengan asal melodi?
+- Tunjukkan satu contoh penandaan di partitur. Apakah secara musikal itu memang kesalahan?
+- Apa yang harus dilakukan pengajar harmoni dengan temuan ini?
 
 ## Cara berlatih
 

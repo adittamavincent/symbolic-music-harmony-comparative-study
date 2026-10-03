@@ -1,0 +1,43 @@
+{
+  "captured_at_utc": "2026-10-03T07:26:45.568124+00:00",
+  "active_citation_keys": 50,
+  "candidate_keys": 1,
+  "active_keys_missing_exact_or_related_ledger_row": [
+    "araneda2023",
+    "carnovalini2020",
+    "civit2022",
+    "conditschultz2018",
+    "creswell2018",
+    "dong2018",
+    "dwyer2009",
+    "hadjeres2020",
+    "herremans2026",
+    "holmes2020",
+    "huang2020contest",
+    "jamieson2023",
+    "karystinaios2023",
+    "koops2019",
+    "lerch2025",
+    "louie2020",
+    "mcleod2023",
+    "meeus2018",
+    "mehta2025",
+    "micchi2020",
+    "moss2019",
+    "mycka2025",
+    "neuwirth2018",
+    "roberts2025",
+    "sugiyono2019",
+    "suh2021",
+    "yin2023",
+    "zacharakis2021"
+  ],
+  "files_sha256": {
+    "docs/final-thesis/thesis/chapters/01-pendahuluan.tex": "eb564cf372162d816d2df40e1a7152de7bfd2939a3ba5bf9fe75f34ce9d076d9",
+    "docs/final-thesis/thesis/chapters/02-tinjauan-pustaka.tex": "e083715a839d245536327e843dffb48f215bf2bc39b5aca49243f75b7a1927e9",
+    "docs/final-thesis/thesis/chapters/03-metode-penelitian.tex": "0a67d9eb48197bb55b1f98cb6765beb8692cde8aaa9279f55f51b73e73e11e3e",
+    "docs/proposal-phase/assets/references.bib": "186331cb89964ba5254c3bbc66cc3ccbe3fea35a0b6270d608b3f0a0643ebba1",
+    "docs/final-thesis/records/reading-notes.csv": "4f6d35c502ff44cd4a91f05784ef8fb603145a1faf076038bc1856e4df7ec1c6"
+  },
+  "note": "This captures citation inventory at a later instant than baseline.json. Concurrent edits may change these files; verification status is not a claim that every source was read."
+}

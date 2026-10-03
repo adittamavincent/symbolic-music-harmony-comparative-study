@@ -16,7 +16,7 @@ final-thesis/
 │   └── bimbingan-v3.md            One-page handout for the supervisor meeting
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
-│   ├── defense-qa.md              All practice questions and answers (Q1–Q78, with 16a–c and 41a–b)
+│   ├── defense-qa.md              All practice questions and answers (Q1–Q101, with 16a–c and 41a–b)
 │   ├── model-dan-istilah.md       DeepBach, Coconet, and technical terms in plain Indonesian
 │   └── researcher-guide.md        Research fundamentals and reading list
 └── records/                       Running records

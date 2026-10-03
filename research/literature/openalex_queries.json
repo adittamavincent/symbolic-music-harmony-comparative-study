@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "research_focus": "Evaluasi kepatuhan kaidah harmoni dan voice leading pada keluaran simbolik DeepBach, Coconet, dan NotaGen",
+  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; NotaGen sebagai model yang disaring keluar",
   "queries": [
     {
       "id": "q01-evaluation-surveys",
@@ -145,6 +145,31 @@
       "search": "transformer melody harmonization chord constraints",
       "from_year": 2022,
       "limit": 40
+    },
+    {
+      "id": "q19-parallel-prevention-choi",
+      "theme": "Penelitian langsung pencegahan paralel",
+      "purpose": "Periksa penelitian Choi dkk. sebagai pembanding langsung; bedakan loss pelatihan, kendali inferensi, dan evaluasi eksternal.",
+      "search": "Teaching chorale generation model avoid parallel motions",
+      "from_year": null,
+      "limit": 30
+    },
+    {
+      "id": "q20-repertoire-generalization",
+      "theme": "Asal repertoar dan generalisasi harmonisasi",
+      "purpose": "Periksa apakah asal buku ajar cukup untuk klaim out of distribution dan apa ciri masukan yang diukur.",
+      "search": "chorale harmonization generalization out of distribution melody",
+      "from_year": null,
+      "limit": 40
+    },
+    {
+      "id": "q21-voice-leading-event-units",
+      "theme": "Satuan peristiwa dan bias representasi",
+      "purpose": "Cari cara menghitung gerak suara pada nada ulang, nada tahan, tanda diam, dan penyebut kesempatan.",
+      "search": "computational voice leading evaluation onset sustained notes",
+      "from_year": null,
+      "limit": 30
     }
-  ]
+  ],
+  "plan_revision": "2026-10-03-audit"
 }
