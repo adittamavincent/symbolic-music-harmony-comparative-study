@@ -17,4 +17,4 @@ Proposal tags preserve earlier source snapshots. They do not prevent later edits
 
 See the [main README](../README.md) for setup, metadata, output paths, versioning, and experiments; the [thesis guide](final-thesis/README.md) for chapter ownership; and the [maintenance audit](maintenance.md) for known problems.
 
-The current sequence is proposal v1 → proposal v2 → final thesis v3. For research fundamentals, missing evidence, and lecturer-review actions, start with [the v3 researcher guide](final-thesis/researcher-guide.md) and [progress record](final-thesis/PROGRESS.md). Computational research is owned by [research/](../research/README.md).
+The current sequence is proposal v1 → proposal v2 → final thesis v3. For research fundamentals, missing evidence, and lecturer-review actions, start with [the v3 researcher guide](final-thesis/study/researcher-guide.md) and [progress record](final-thesis/PROGRESS.md). Computational research is owned by [research/](../research/README.md).

@@ -1,14 +1,14 @@
 # Persiapan sebelum mengirim naskah v3 ke Pembimbing I
 
-Disusun 2 Oktober 2026 untuk peneliti. Berkas ini bahan belajar, bukan bagian naskah. Isinya melengkapi [defense-qa.md](defense-qa.md) dan tidak mengulang 58 pertanyaan di sana. Kode seperti "Q14" merujuk ke nomor pertanyaan di berkas itu.
+Disusun 2 Oktober 2026 untuk peneliti. Berkas ini bahan belajar, bukan bagian naskah. Semua tanya-jawab ada di [defense-qa.md](defense-qa.md); berkas ini berisi bahan pendukungnya. Kode seperti "Q14" merujuk ke nomor pertanyaan di berkas itu.
 
 ## Urutan belajar
 
 1. Pelajari bagian 1. Pembimbing I adalah penerjemah buku Strube, jadi bagian ini paling mungkin muncul di bimbingan pertama.
 2. Kuasai rantai argumen di bagian 2 sampai bisa dijelaskan dalam dua menit tanpa catatan. Kalimat pegangannya ada di awal defense-qa.md.
 3. Pahami konsep dan rumus di bagian 3, lalu kerjakan latihan hitung manual di bagian 4.
-4. Baca sendiri sumber inti di bagian 5. Kolom `researcher_read_status` di [reading-notes.csv](reading-notes.csv) masih kosong untuk semua sumber.
-5. Latih defense-qa.md, lalu pertanyaan baru di bagian 6.
+4. Baca sendiri sumber inti di bagian 5. Kolom `researcher_read_status` di [reading-notes.csv](../records/reading-notes.csv) masih kosong untuk semua sumber.
+5. Latih defense-qa.md, terutama bagian J (Q59–Q78) yang disusun untuk bimbingan Pembimbing I.
 6. Selesaikan daftar periksa di bagian 7 sebelum mengirim.
 
 ## 1. Pembimbing I menerjemahkan buku Strube
@@ -18,7 +18,7 @@ Halaman judul scan `references/teori dan penggunaan akor - terjemahan pak gathut
 Akibatnya:
 
 - Pembimbing I kemungkinan besar mengenal setiap kaidah dan pengecualiannya kalimat demi kalimat. Siapkan halaman kaidah dalam kedua edisi.
-- Naskah sekarang hanya mengutip edisi 1928. Tanyakan apakah beliau ingin terjemahannya ikut dikutip. Pertanyaan ini sudah ada di [bimbingan-v3.md](bimbingan-v3.md).
+- Naskah sekarang hanya mengutip edisi 1928. Tanyakan apakah beliau ingin terjemahannya ikut dikutip. Pertanyaan ini sudah ada di [bimbingan-v3.md](../supervision/bimbingan-v3.md).
 - Istilah naskah sebaiknya sejalan dengan istilah terjemahan. "Tumpang tindih" sama persis. Terjemahan memakai "Paralel Kuint / Kuint Sejajar", "Paralel Oktaf", "paralel prime (unison)", "Paralel Kuint Tersembunyi", dan tiga jenis gerak: "Paralel (Searah), Berlawanan, dan Mencong".
 
 ### Peta halaman
@@ -45,13 +45,13 @@ Jilid I berakhir sekitar Gambar 147 (hlm. 87–89 terjemahan). Halaman 74 edisi 
 
 Perbedaan ini ditemukan saat membandingkan kedua scan. Bawa sebagai bahan diskusi, bukan sebagai koreksi atas terjemahan. Penerjemah bisa saja mempunyai alasan musikal atau memakai sumber lain.
 
-1. **Jarak sopran–alto.** Edisi 1928 hlm. 20: "The soprano may be as far as an octave from the alto (occasionally even farther)". Terjemahan hlm. 27: "Suara sopran dapat berjarak sejauh 1 oktaf dari alto (biasanya dapat lebih jauh)". *Occasionally* berarti kadang-kadang, sedangkan *biasanya* berarti umumnya. Naskah BAB II menulis "kadang-kadang lebih". Jika Pembimbing I memegang rumusan "biasanya", penandaan sopran–alto di atas satu oktaf bisa dinilai terlalu ketat. Lihat pertanyaan A2.
-2. **Tumpang tindih.** Edisi 1928 hlm. 12: "This progression should be used for the present only when one voice moves stepwise as in Fig. 32, a, b, c, or in Fig. 33." Terjemahan hlm. 17: "Progresi ini mesti digunakan untuk saat ini hanya ketika salah satu suara bergerak seperti yang ditunjukkan pada Gambar 32. a, b, c, atau pada Gambar 33." Kata *melangkah* tidak ada dalam kalimat itu, walaupun kalimat sebelumnya tentang Gambar 32 menyebut "salah satu suara digerakkan melangkah sementara suara lain melompat". Syarat 1–2 semiton dalam instrumen bersandar pada teks asli dan contoh Gambar 32–33. Lihat pertanyaan A3.
-3. **Bas dan tenor.** Edisi 1928 hlm. 7: "(The bass may be placed at any point within its compass.)" Terjemahan hlm. 10: "Suara Bass [B] dapat ditempatkan di titik manapun di sepanjang rentang / jangkauan suaranya — asal tidak lebih tinggi dari suara Tenor". Anak kalimat terakhir tidak ada dalam teks 1928. Pembimbing I tampaknya menganggap bas di atas tenor tidak tepat, sedangkan naskah hanya menghitung persilangan di atas sopran. Lihat pertanyaan B3.
+1. **Jarak sopran–alto.** Edisi 1928 hlm. 20: "The soprano may be as far as an octave from the alto (occasionally even farther)". Terjemahan hlm. 27: "Suara sopran dapat berjarak sejauh 1 oktaf dari alto (biasanya dapat lebih jauh)". *Occasionally* berarti kadang-kadang, sedangkan *biasanya* berarti umumnya. Naskah BAB II menulis "kadang-kadang lebih". Jika Pembimbing I memegang rumusan "biasanya", penandaan sopran–alto di atas satu oktaf bisa dinilai terlalu ketat. Lihat Q60.
+2. **Tumpang tindih.** Edisi 1928 hlm. 12: "This progression should be used for the present only when one voice moves stepwise as in Fig. 32, a, b, c, or in Fig. 33." Terjemahan hlm. 17: "Progresi ini mesti digunakan untuk saat ini hanya ketika salah satu suara bergerak seperti yang ditunjukkan pada Gambar 32. a, b, c, atau pada Gambar 33." Kata *melangkah* tidak ada dalam kalimat itu, walaupun kalimat sebelumnya tentang Gambar 32 menyebut "salah satu suara digerakkan melangkah sementara suara lain melompat". Syarat 1–2 semiton dalam instrumen bersandar pada teks asli dan contoh Gambar 32–33. Lihat Q61.
+3. **Bas dan tenor.** Edisi 1928 hlm. 7: "(The bass may be placed at any point within its compass.)" Terjemahan hlm. 10: "Suara Bass [B] dapat ditempatkan di titik manapun di sepanjang rentang / jangkauan suaranya — asal tidak lebih tinggi dari suara Tenor". Anak kalimat terakhir tidak ada dalam teks 1928. Pembimbing I tampaknya menganggap bas di atas tenor tidak tepat, sedangkan naskah hanya menghitung persilangan di atas sopran. Lihat Q66.
 
 ### Latihan 67–68 ditemukan
 
-Halaman 48 edisi 1928 tidak ada dalam scan. Terjemahan hlm. 58 mencetak latihan 62–68 dengan nomor yang sama. Latihan 62–64 ditulis dengan kunci F, sesuai catatan inventaris bahwa ketiganya latihan bas. Latihan 67 dan 68 ditulis dengan kunci G, jadi keduanya latihan melodi. [strube-exercise-inventory.csv](../../research/literature/strube-exercise-inventory.csv) sekarang mencatat keduanya sebagai kandidat beserta sumber pengamatannya, sehingga kandidat latihan melodi menjadi 71. Cocokkan dengan buku 1928 cetak bila tersedia.
+Halaman 48 edisi 1928 tidak ada dalam scan. Terjemahan hlm. 58 mencetak latihan 62–68 dengan nomor yang sama. Latihan 62–64 ditulis dengan kunci F, sesuai catatan inventaris bahwa ketiganya latihan bas. Latihan 67 dan 68 ditulis dengan kunci G, jadi keduanya latihan melodi. [strube-exercise-inventory.csv](../../../research/literature/strube-exercise-inventory.csv) sekarang mencatat keduanya sebagai kandidat beserta sumber pengamatannya, sehingga kandidat latihan melodi menjadi 71. Cocokkan dengan buku 1928 cetak bila tersedia.
 
 ## 2. Rantai argumen dan alasan setiap pilihan
 
@@ -123,7 +123,7 @@ Setiap baris harus bisa dijawab dengan "karena ..." dan nama sumbernya.
 | 117 dan 283 | Kejadian jarak lebih dari satu oktaf pada Bach: sopran–alto dan alto–tenor | Validasi instrumen |
 | 85/10/5 | Pembagian data DeepBach: latih, validasi, evaluasi | Kode resmi DeepBach |
 
-Angka 117 dan 283 berguna untuk pertanyaan A2. Bach lebih sering melebihi satu oktaf antara alto dan tenor (sekitar 0,053 per birama) daripada antara sopran dan alto (sekitar 0,022 per birama), padahal Strube lebih longgar untuk sopran–alto.
+Angka 117 dan 283 berguna untuk Q60. Bach lebih sering melebihi satu oktaf antara alto dan tenor (sekitar 0,053 per birama) daripada antara sopran dan alto (sekitar 0,022 per birama), padahal Strube lebih longgar untuk sopran–alto.
 
 ## 4. Latihan hitung manual
 
@@ -153,84 +153,11 @@ Pertanyaan untuk diri sendiri:
 | Koops dkk. 2019; Condit-Schultz dkk. 2018 | Kesepakatan antar-anotator; subjektivitas analisis | Alasan syarat ketiga pemilihan kaidah |
 | Yin dkk. 2023 | Hasil studi dengar | Alasan tidak mengandaikan keunggulan model *deep learning* |
 
-Banyak sumber lain di BAB I–II baru diperiksa dari abstrak, dan beberapa entri bibliografi masih perlu dicek (lihat PROGRESS.md, bagian *Outline change*). Jika Pembimbing I menanyakan halaman, hanya sumber di tabel ini yang siap setelah dibaca.
+Banyak sumber lain di BAB I–II baru diperiksa dari abstrak, dan beberapa entri bibliografi masih perlu dicek (lihat PROGRESS.md, bagian *Citation checks before submission*). Jika Pembimbing I menanyakan halaman, hanya sumber di tabel ini yang siap setelah dibaca.
 
-## 6. Pertanyaan baru
+## 6. Pertanyaan dan jawaban
 
-### A. Strube dan terjemahan Pembimbing I
-
-**A1. Kenapa mengutip edisi 1928, bukan terjemahan saya?**
-Kaidah persilangan (1928 hlm. 174) dan latihan bab mode minor tidak ada di jilid I yang saya miliki. Saya memakai satu edisi agar semua halaman konsisten dan rumusan kaidah dapat dicocokkan dengan teks asli. Saya ingin juga mengutip terjemahan Bapak untuk istilah dan kaidah yang ada di jilid I. Apakah Bapak setuju dengan cara itu, dan apakah ada jilid II?
-*Rawan bila:* belum pernah membuka terjemahan. Baca hlm. 10, 12–18, 27, dan 43–44 sebelum bimbingan.
-
-**A2. Di terjemahan saya, sopran "biasanya" boleh lebih dari satu oktaf dari alto. Kenapa dihitung sebagai pelanggaran?**
-Edisi 1928 menulis "occasionally even farther", dan naskah mengikuti teks itu. Instrumen tidak menilai satu kejadian sebagai salah; instrumen menghitung seberapa sering jarak itu terjadi, dan "kadang-kadang" memang soal frekuensi. Laju model dibaca terhadap acuan Bach: pada chorale Bach, sopran–alto melebihi satu oktaf sekitar 0,022 kali per birama. Sopran–alto dan alto–tenor juga dapat dilaporkan terpisah. Setelah itu, tanyakan bagaimana Bapak membaca kalimat tersebut.
-*Rawan bila:* jawaban terdengar menyalahkan terjemahan. Ajukan sebagai pertanyaan, bukan koreksi.
-
-**A3. Strube berkata tumpang tindih dipakai bila satu suara bergerak seperti pada gambar. Dari mana syarat satu atau dua semiton?**
-Teks 1928 hlm. 12 menulis "moves stepwise". Gambar 32 a–c menunjukkan satu suara melangkah dan suara lain melompat. Gambar 33 menandai kasus kedua suara melompat sebagai yang harus dihindari. Langkah berarti interval sekon, yaitu satu atau dua semiton.
-*Lanjutan yang mungkin:* "Sekon berlebih tiga semiton juga langkah." Benar menurut ejaan, tetapi MIDI tidak menyimpan ejaan sehingga sekon berlebih tidak dapat dibedakan dari terts kecil. Instrumen memperlakukannya sebagai lompatan, dan ini dicatat sebagai keterbatasan, sama seperti alasan kategori sekon berlebih tidak diukur.
-
-**A4. Banyak kaidah Strube berlaku "untuk saat ini", yaitu untuk tahap awal belajar. Kenapa kaidah tahap awal dipakai untuk menilai harmonisasi chorale?**
-Melodi Strube yang dipakai berasal dari bab-bab yang sama (hlm. 11–80), jadi tahap kaidahnya sesuai dengan soal yang diberikan. Kaidah yang sama diterapkan tanpa perbedaan pada kedua model dan pada harmonisasi Bach, sehingga perbandingannya tetap setara. Hasilnya dibaca sebagai kesesuaian dengan norma buku ajar, bukan sebagai nilai musikal.
-
-**A5. Kenapa kuint dan oktaf tersembunyi tidak diukur? Strube membahasnya di hlm. 12 (terjemahan hlm. 16).**
-Kaidah itu tidak termasuk rubrik Yan, sehingga tidak memenuhi syarat pertama. Akuilah bahwa kaidah ini dapat ditentukan dari tinggi nada dan waktu saja. Tawarkan untuk menambahkannya sebagai ukuran tambahan bila Pembimbing I menghendaki, dengan catatan bahwa penambahan itu mengubah instrumen dan harus dicatat sebagai versi baru sebelum data utama.
-
-### B. Teori
-
-**B1. Grand theory Anda harmoni fungsional, tetapi kaidah yang diukur justru dipilih karena tidak memerlukan fungsi akor. Bukankah itu bertentangan?**
-Harmoni fungsional menjelaskan mengapa empat suara bergerak: suara-suara itu mewujudkan progresi akor dalam tonalitas, dan kaidah gerak suara lahir dari praktik itu. Strube sendiri menempatkan larangan paralel dalam kerangka fungsi. Contohnya, bahaya paralel disebut terutama pada koneksi IV ke V (terjemahan hlm. 13), pembatasan ketat dikaitkan dengan perubahan fungsi harmoni (hlm. 44), dan akor dikelompokkan dalam keluarga seperti Subdominan Mayor (hlm. 60). Penelitian ini memakai teori itu sebagai sumber norma, tetapi sengaja mengukur wujud permukaannya saja, yaitu tinggi nada dan waktu. Tujuannya agar hasil tidak bergantung pada tafsir akor tanpa penilai manusia. Konsekuensinya, pengecualian yang memerlukan fungsi tidak diterapkan, dan hal itu dinyatakan sebagai batas.
-*Rawan bila:* ditanya teori lain yang lebih cocok, misalnya teori gerak suara berbasis persepsi. Huron (2001), "Tone and Voice", *Music Perception* 19(1), sering dirujuk untuk itu, tetapi belum ada di naskah dan belum dibaca. Jangan menyebutnya sebagai dasar sebelum membacanya.
-
-**B2. Kaidah dipilih karena mudah dihitung mesin. Bukankah itu memilih yang mudah, bukan yang penting?**
-Ini batas lingkup yang disengaja dan dinyatakan. Lima kaidah ini mencakup gerak paralel, yaitu kaidah yang dihitung Huang dan dikeluhkan pengguna Bach Doodle. Jarak antar-suara juga relevan bagi pengajaran: dalam studi Yan, mahasiswa lebih sering daripada model melampaui jarak satu oktaf antara suara atas yang berdekatan. Kategori lain memerlukan penilai manusia untuk tafsir akor, dan itu berada di luar cakupan penelitian ini. Kesimpulan hanya berlaku untuk lima kaidah ini.
-
-**B3. Di terjemahan saya, bas tidak boleh lebih tinggi dari tenor. Kenapa persilangan hanya dihitung di atas sopran?**
-Kalimat pada edisi 1928 hlm. 7 hanya mengatakan bahwa bas boleh ditempatkan di mana saja dalam wilayahnya. Kaidah persilangan diambil dari bab harmonisasi chorale (hlm. 174), yang membolehkan persilangan sesekali kecuali melewati sopran. Bab itu dipilih karena tugasnya sama dengan tugas model. Instrumen dapat menghitung persilangan alto–tenor dan tenor–bas tanpa biaya tambahan, jadi tawarkan untuk melaporkannya sebagai data deskriptif tambahan. Tanyakan bagaimana Bapak membaca kalimat di hlm. 10.
-
-**B4. Kenapa wilayah suara tidak diukur?**
-Wilayah suara tidak termasuk rubrik Yan. Kaidah ini bisa diukur tanpa analisis akor, tetapi keluaran model sudah dibatasi wilayah data latihnya (Coconet hanya memakai nada MIDI 36–81), sehingga pelanggarannya kemungkinan jarang. Kaidah ini dapat ditambahkan sebagai data deskriptif bila diminta.
-
-### C. Desain
-
-**C1. Untuk melodi Strube tidak ada harmonisasi ahli. Bagaimana Anda tahu laju model di sana tinggi atau rendah?**
-Acuan Bach hanya tersedia untuk melodi Bach. Pertanyaan 3 membandingkan model yang sama pada dua asal melodi, jadi pembandingnya adalah perilaku model itu sendiri pada melodi Bach. Jika Pembimbing I mempunyai atau mengetahui contoh harmonisasi untuk latihan Strube, contoh itu bisa menjadi acuan tambahan, tetapi sumbernya harus dicatat.
-
-**C2. Chorale Bach memiliki fermata, sedangkan latihan Strube mungkin tidak. Bukankah DeepBach mendapat informasi kadens lebih banyak pada melodi Bach?**
-Benar. DeepBach memakai fermata sebagai informasi masukan, sedangkan Coconet tidak. Perbedaan ini bagian dari "asal melodi sebagai satu paket", sama seperti perbedaan panjang dan wilayah. Kolom `has_fermata_or_phrase_marks` di inventaris perlu diisi saat mengetik, dan jumlah melodi bertanda frasa dilaporkan per kelompok. Analisis kepekaan tanpa batas frasa juga hanya berlaku pada melodi yang memiliki tanda frasa, dan hal itu perlu dilaporkan.
-*Belum diputuskan:* apakah DeepBach juga dijalankan pada melodi Bach tanpa fermata sebagai pemeriksaan tambahan. Diskusikan sebelum protokol dibekukan.
-
-**C3. Melodi tidak diacak ke dalam kelompok. Bukankah ini komparatif kausal, bukan eksperimen?**
-Yang dikendalikan peneliti adalah masukan yang diberikan kepada model yang sama. Namun kelompok melodi berbeda dalam beberapa ciri sekaligus, sehingga pengaruhnya dibaca sebagai pengaruh asal melodi secara keseluruhan (BAB II Hipotesis, paragraf terakhir). Bila Pembimbing I lebih suka istilah lain, misalnya kuasi-eksperimen, substansinya tidak berubah. Cocokkan istilah dengan halaman Sugiyono yang dipakai.
-
-**C4. Latihan Strube lebih pendek daripada chorale. Apakah laju per birama adil?**
-Laju per birama mengikuti Huang. Pada melodi pendek, satu kejadian mengubah laju lebih banyak, dan birama gantung dihitung satu birama penuh. Panjang melodi dilaporkan sebagai ciri kelompok. Jumlah kejadian dan jumlah kesempatan juga disimpan, sehingga laju per kesempatan dapat dihitung sebagai pemeriksaan.
-
-**C5. Melodi yang tidak dapat diproses model dikeluarkan. Bukankah yang terbuang justru melodi Strube yang paling tidak lazim?**
-Mungkin. DeepBach hanya menerima nada sopran yang ada di kosakata data latihnya, dan Coconet hanya nada MIDI 36–81. Melodi yang dikeluarkan dapat membuat kedua kelompok lebih mirip daripada aslinya. Karena itu, setiap pengeluaran dicatat beserta alasannya dan dilaporkan. Melodi tidak ditransposisi (Q31).
-
-**C6. Pertanyaan 2 menggabungkan melodi Bach dan Strube. Bagaimana jika perbedaan model hanya muncul pada salah satu asal?**
-Statistik deskriptif per model dan per asal melodi tetap dilaporkan, jadi pola seperti itu akan terlihat. Uji interaksi formal belum ada di protokol. Salah satu pilihan sederhana adalah menghitung selisih DeepBach dikurangi Coconet untuk setiap melodi, lalu membandingkan selisih itu antara kedua asal melodi dengan Mann–Whitney. Pilihan ini perlu disetujui sebelum protokol dibekukan.
-
-**C7. Bisakah Coconet mengharmonisasi melodi utuh?**
-Belum diketahui. Adapter yang ada memakai 32 langkah seperenam belas, yaitu dua birama 4/4, sehingga terlalu pendek untuk kebanyakan melodi. Panjang maksimum diperiksa saat pilot. Jika melodi harus dipotong, kedua model harus menerima potongan yang sama, dan perubahan itu dicatat sebagai perubahan protokol. Lihat risiko di `research/protocol.md`.
-
-### D. Statistik
-
-**D1. Persilangan jarang terjadi. Bagaimana Wilcoxon menangani banyak selisih nol?**
-Secara bawaan, uji Wilcoxon di SciPy membuang pasangan yang selisihnya nol, sehingga jumlah pasangan efektif turun. Jumlah pasangan yang selisihnya bukan nol perlu dilaporkan. Cara menangani nol, yaitu dibuang atau metode Pratt, belum ditulis di protokol dan perlu ditetapkan sebelum data dikumpulkan. Mann–Whitney juga memerlukan koreksi nilai kembar (*ties*) karena banyak laju bernilai nol.
-
-### E. Praktis
-
-**E1. Apa langkah berikutnya, dan kapan selesai?**
-Urutannya: mengetik 71 kandidat melodi dan sembilan contoh cetak Strube; menjalankan validasi langkah 2; membuat adapter generasi untuk melodi bebas; memperbaiki cacat pipeline di `docs/maintenance.md`; pilot; membekukan protokol; generasi utama; analisis. Siapkan perkiraan waktu sendiri sebelum bimbingan. Berkas ini tidak menetapkan tanggal.
-
-**E2. Bagian mana yang Anda kerjakan dengan bantuan AI?**
-Lihat Q53. PROGRESS.md mencatat bahwa motto, halaman persembahan, dan kata pengantar dirancang dengan bantuan AI. [research-log.md](research-log.md) mencatat bahwa penulisan ulang BAB I–III dan kode instrumen versi 2 dikerjakan asisten AI atas permintaan peneliti. Jawab jujur dan ikuti aturan prodi. Pastikan setiap kalimat di naskah dapat dijelaskan sendiri.
-
-**E3. Kenapa mahasiswa musik mengerjakan penelitian komputasi? Apa sumbangannya bagi musik?**
-Yan dkk. menilai evaluasi model musik umumnya kurang ketat dari sudut teori musik. Keahlian musik dalam penelitian ini ada pada pemilihan dan perumusan kaidah, pembacaan pengecualian Strube, pemilihan soal latihan, dan penafsiran contoh partitur. Hasilnya berguna bagi pengajar harmoni yang mahasiswanya memakai alat semacam ini.
+Semua pertanyaan ada di [defense-qa.md](defense-qa.md). Pertanyaan khusus bimbingan Pembimbing I ada di bagian J (Q59–Q78): Strube dan terjemahan (Q59–Q63), teori (Q64–Q67), desain (Q68–Q74), statistik (Q75), dan hal praktis (Q76–Q78).
 
 ## 7. Daftar periksa sebelum mengirim
 

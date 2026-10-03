@@ -86,11 +86,11 @@ Seluruh pengukuran dilakukan secara komputasional. Penilai manusia tidak digunak
 | Hal | Berkas |
 | --- | --- |
 | Catatan masukan kelas | [feedback.md](feedback.md) |
-| Protokol versi 2 dan alasan penggantian versi 1 | [research/protocol.md](../../research/protocol.md) |
-| Halaman kaidah Strube | [strube-rule-pages.csv](../../research/literature/strube-rule-pages.csv) |
-| Inventaris latihan Strube | [strube-exercise-inventory.csv](../../research/literature/strube-exercise-inventory.csv) |
-| Instrumen versi 2 dan hasil validasinya | [research/voice_leading_v2.py](../../research/voice_leading_v2.py); protokol bagian "Results of checks 3–5" |
-| Catatan kronologis | [research-log.md](research-log.md), [PROGRESS.md](PROGRESS.md) |
+| Protokol versi 2 dan alasan penggantian versi 1 | [research/protocol.md](../../../research/protocol.md) |
+| Halaman kaidah Strube | [strube-rule-pages.csv](../../../research/literature/strube-rule-pages.csv) |
+| Inventaris latihan Strube | [strube-exercise-inventory.csv](../../../research/literature/strube-exercise-inventory.csv) |
+| Instrumen versi 2 dan hasil validasinya | [research/voice_leading_v2.py](../../../research/voice_leading_v2.py); protokol bagian "Results of checks 3–5" |
+| Catatan kronologis | [research-log.md](../records/research-log.md), [PROGRESS.md](../PROGRESS.md) |
 | Perbandingan teks berdampingan | `make diff proposal/v2 head` (setelah perubahan di-commit) |
 
 ## Kalimat untuk menjelaskan revisi

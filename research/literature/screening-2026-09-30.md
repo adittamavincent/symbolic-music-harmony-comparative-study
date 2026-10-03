@@ -37,4 +37,4 @@ About 70 of the 294 records were off-topic (for example 6G networks, explainable
 
 ## Limits
 
-Claims were checked against abstracts, not full texts. Before submission, read each cited paper at the relevant section and record page or section numbers in `docs/final-thesis/reading-notes.csv`.
+Claims were checked against abstracts, not full texts. Before submission, read each cited paper at the relevant section and record page or section numbers in `docs/final-thesis/records/reading-notes.csv`.

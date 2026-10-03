@@ -2,7 +2,39 @@
 
 v3 continues proposal v2 as the final thesis. Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
 
-Start with [the researcher guide](researcher-guide.md), [progress and completion gates](PROGRESS.md), and [lecturer feedback](feedback.md). The [reading ledger](reading-notes.csv) tracks source support and your own reading separately. Research code and the protocol worksheet live in [research/](../../research/README.md).
+## What is in this folder
+
+```text
+final-thesis/
+├── README.md                      This map, source ownership, build commands
+├── PROGRESS.md                    Current status, completion gates, open items
+├── eval.md                        Writing checks applied before delivery
+├── thesis/                        Manuscript source (LaTeX)
+├── supervision/                   From and for the lecturers
+│   ├── feedback.md                Lecturer notes F01–F12 from the v2 review, with actions
+│   ├── perubahan-v2-ke-v3.md      Every change from proposal v2 to v3 and its basis
+│   └── bimbingan-v3.md            One-page handout for the supervisor meeting
+├── study/                         For the researcher to learn and rehearse
+│   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
+│   ├── defense-qa.md              All practice questions and answers (Q1–Q78)
+│   └── researcher-guide.md        Research fundamentals and reading list
+└── records/                       Running records
+    ├── research-log.md            Dated history of decisions and findings
+    └── reading-notes.csv          Source verification and the researcher's own reading
+```
+
+Where to start:
+
+| You want to | Open |
+| --- | --- |
+| Know what is done and what is open | [PROGRESS.md](PROGRESS.md) |
+| Prepare for Pembimbing I | [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md), then [study/defense-qa.md](study/defense-qa.md) |
+| Explain why the design changed after v2 | [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md) |
+| Check what the lecturers actually asked | [supervision/feedback.md](supervision/feedback.md) |
+| Find when and why something was decided | [records/research-log.md](records/research-log.md) |
+| Edit the manuscript | The table below |
+
+Research code, the protocol worksheet, and literature data live in [research/](../../research/README.md).
 
 ## Edit the source
 

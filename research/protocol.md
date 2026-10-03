@@ -1,6 +1,6 @@
 # v3 protocol worksheet
 
-Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Status: proposed design, not yet executed and not yet agreed with the supervisor. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/feedback.md` when they follow actual feedback.
+Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Status: proposed design, not yet executed and not yet agreed with the supervisor. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
 
 ## Design in one paragraph
 

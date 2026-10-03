@@ -4,7 +4,7 @@ This repository contains proposal v1/v2, the continuing final-thesis v3 draft, a
 
 On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). The measurement instrument for version 2 exists (`research/voice_leading_v2.py`); the generation adapters described below still implement the earlier version-1 design and have not yet been updated.
 
-Start final-thesis work with [the researcher guide](docs/final-thesis/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/feedback.md).
+Start final-thesis work with [the researcher guide](docs/final-thesis/study/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/supervision/feedback.md).
 
 Use this README when returning to the project: it explains where to edit, how to build, what versions mean, and which parts still need work.
 
@@ -44,11 +44,11 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 | Thesis v3 | Front matter and BAB I–III, following the department's 2026 research-proposal outline. Results and conclusion chapters wait for main data; the earlier five-chapter draft remains in Git history. |
 | Thesis versions | No `thesis/v*` tags exist yet. |
 | Thesis defense slides | No template or build recipe exists. `thesis-slides` is only a phony Make target and produces nothing. |
-| Evaluator | Parallel fifths, parallel octaves/unisons, and a restricted soprano leading-tone check are implemented. |
-| Experiments | Three adapters, a condition manifest, batch evaluation, and plotting are present. Evaluator tests do not establish successful model inference. |
+| Evaluator | Instrument v2 (`research/voice_leading_v2.py`) measures the five Strube rules; validation checks 3–5 have been run on the Bach chorales and the textbook fixtures are pending. Instrument v1 (`research/strube_evaluator.py`: parallel fifths/octaves and a soprano leading-tone check) is kept unchanged as the historical instrument. |
+| Experiments | The three adapters, condition manifest, batch evaluation, and plotting implement the superseded version-1 design (conditions A–D, BWV 66.6). Adapters for protocol version 2 are not written yet. Evaluator tests do not establish successful model inference. |
 | Reproducibility | Requested run settings are recorded. Dependencies, model revisions, random seeds, and checkpoint checksums are not locked. |
 
-The four existing software checks passed before and after moving research into `research/`. They do not establish instrument validity or model-inference success. The Bach fixture produces score `0.7568`, with 6 fifth flags and 3 leading-tone flags under the current, unvalidated instrument. The earlier five-chapter draft recorded these as preliminary code outputs; they are not part of the current BAB I–III manuscript. Quantization, scoring, conditioning, and run integrity must be resolved before main collection; see [the progress gates](docs/final-thesis/PROGRESS.md#completion-gates).
+`make test` runs the four version-1 checks and the 20 version-2 checks; all passed on 2026-10-02. Passing checks do not establish instrument validity or model-inference success. Generation adapters, run integrity, and the pilot must be completed before main collection; see [the progress gates](docs/final-thesis/PROGRESS.md#completion-gates).
 
 ## Contents
 
@@ -74,23 +74,26 @@ The four existing software checks passed before and after moving research into `
 ├── docs/
 │   ├── README.md / maintenance.md   Document guide and technical findings
 │   ├── proposal-phase/             Proposal v1/v2 sources, slides, shared assets
-│   └── final-thesis/
-│       ├── PROGRESS.md              v3 status, evidence, completion gates
-│       ├── feedback.md              Actual lecturer notes and actions
-│       ├── researcher-guide.md      Fundamentals, work sequence, readings
-│       ├── reading-notes.csv        Source verification and researcher reading
+│   └── final-thesis/               Map in its README.md
+│       ├── PROGRESS.md              v3 status, completion gates, open items
+│       ├── eval.md                  Writing checks
+│       ├── supervision/             Lecturer notes, v2→v3 changes, meeting handout
+│       ├── study/                   Supervisor preparation, defense Q&A, researcher guide
+│       ├── records/                 Research log and reading ledger
 │       └── thesis/                  Active v3 template, cover, BAB I–III
 ├── research/
 │   ├── README.md / protocol.md      Research commands and design decisions
 │   ├── requirements.txt            Canonical Python dependencies
-│   ├── strube_evaluator.py          Canonical measurement instrument
-│   ├── run_all.py                   Research pipeline entry point
+│   ├── voice_leading_v2.py          Measurement instrument, protocol version 2
+│   ├── strube_evaluator.py          Instrument version 1, kept as the historical instrument
+│   ├── run_all.py                   Version-1 research pipeline entry point
 │   ├── tests/                      Software checks
-│   ├── experiments/                Condition manifest and experiment scripts
+│   ├── experiments/                Version-1 condition manifest, experiment and validation scripts
+│   ├── literature/                 OpenAlex queries, Strube inventories, source screening
 │   ├── scripts/bootstrap_models.py  Model setup and Coconet runner source
 │   ├── models/                     Local third-party code/checkpoints, ignored
 │   └── outputs/                    Local raw/derived artifacts, ignored
-└── scripts/                        Document Git/PDF tools; bootstrap wrapper
+└── scripts/                        Document build and diff tools
 ```
 
 Research code, tests, experiments, dependencies, and local artifacts have one owner: `research/`. See its [workspace guide](research/README.md) for the folder transition. The root `.venv/` remains the local Python environment. `scratch/` remains document-tool scratch space.
@@ -173,7 +176,7 @@ uv run research/scripts/openalex_search.py --query "chorale generation parallel 
 uvx ruff check research/scripts/openalex_search.py research/tests/test_openalex_search.py
 ```
 
-`uv run` executes the local script; `uvx` runs the Ruff quality check as an isolated tool. The bulk command saves CSV/JSONL and a manifest for each query, a deduplicated `combined.csv` with matching query IDs, and a snapshot of the query JSON in one dated directory under `research/outputs/openalex/`. It records exact key-free request URLs, retrieval times, counts, and any failed queries. Each query is capped at 1,000 records. Outputs are ignored by Git; copy any search log needed for a thesis claim into the research evidence bundle. Check the publication and the relevant passage before promoting a result to [the reading ledger](docs/final-thesis/reading-notes.csv) or the shared bibliography. The OpenAlex [agent guide](https://help.openalex.org/access/agents/) and [API quick reference](https://help.openalex.org/api/llm-quick-reference/) document query syntax and current limits.
+`uv run` executes the local script; `uvx` runs the Ruff quality check as an isolated tool. The bulk command saves CSV/JSONL and a manifest for each query, a deduplicated `combined.csv` with matching query IDs, and a snapshot of the query JSON in one dated directory under `research/outputs/openalex/`. It records exact key-free request URLs, retrieval times, counts, and any failed queries. Each query is capped at 1,000 records. Outputs are ignored by Git; copy any search log needed for a thesis claim into the research evidence bundle. Check the publication and the relevant passage before promoting a result to [the reading ledger](docs/final-thesis/records/reading-notes.csv) or the shared bibliography. The OpenAlex [agent guide](https://help.openalex.org/access/agents/) and [API quick reference](https://help.openalex.org/api/llm-quick-reference/) document query syntax and current limits.
 
 ## Editing and building documents
 

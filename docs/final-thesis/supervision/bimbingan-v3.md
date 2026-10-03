@@ -38,7 +38,7 @@ Penelitian ini melanjutkan analisis Bach Doodle (Huang dkk., 2019), yang menemuk
 ## Pertanyaan untuk pembimbing
 
 1. Apakah desain tanpa penilai manusia, judul baru, dan tiga pertanyaan penelitian dapat disetujui?
-2. Apakah edisi 1928 tepat sebagai rujukan, atau terjemahan Indonesia 2015 (jilid I, terjemahan Bapak) sebaiknya ikut dikutip? Jilid I tidak memuat kaidah persilangan (1928 hlm. 174). Tiga kalimat berbeda antara kedua edisi: jarak sopran–alto, syarat gerak melangkah pada tumpang tindih, dan bas di atas tenor (rincian di `persiapan-pembimbing-1.md`).
+2. Apakah edisi 1928 tepat sebagai rujukan, atau terjemahan Indonesia 2015 (jilid I, terjemahan Bapak) sebaiknya ikut dikutip? Jilid I tidak memuat kaidah persilangan (1928 hlm. 174). Tiga kalimat berbeda antara kedua edisi: jarak sopran–alto, syarat gerak melangkah pada tumpang tindih, dan bas di atas tenor (rincian di `study/persiapan-pembimbing-1.md`).
 3. Apakah Strube buku ajar mata kuliah harmoni di program studi? (Untuk alasan pemilihan sumber.)
 4. Bagaimana aturan program studi tentang pengungkapan penggunaan alat bantu AI dalam penelitian dan penulisan?
 5. Apakah format halaman depan sudah sesuai pedoman 2026?

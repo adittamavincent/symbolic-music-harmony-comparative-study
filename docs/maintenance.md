@@ -10,6 +10,7 @@ Research correctness remains open. Computational research has now moved into `re
 - Fixed `make notes` to depend on the `slides` target. Previously it depended on `presentation.pdf`, which had no Make recipe, so a fresh notes build failed.
 - Added generated `docs/final-thesis/thesis/main.tex` to `.gitignore`, matching the proposal entry points.
 - Replaced Make help's proposal-to-thesis diff example with a note about the unverified thesis-ref support.
+- 2026-10-03: Reorganized `docs/final-thesis/` into `supervision/`, `study/`, and `records/`, with a folder map in its README. `PROGRESS.md` now holds the current status only; its dated history moved to `records/research-log.md`. Removed the unused legacy scripts listed under *Structure and naming*.
 
 The original audit made no experiment-behavior or academic-claim changes. Later v3 preparation changed draft claims and research ownership as recorded below; no milestone tags were created.
 
@@ -49,7 +50,7 @@ The original audit made no experiment-behavior or academic-claim changes. Later 
 | Git and metadata helpers | Extract shared ref resolution, phase-aware lookup, and metadata parsing from the two Python document helpers. | These are duplicated and already disagree with the current-build path. |
 | Repaired 2026-10-02 | `sidebydiff.py` is split by responsibility: Git and source assembly ([sidebydiff.py](../scripts/sidebydiff.py)), pairing and rows ([diff_layout.py](../scripts/diff_layout.py)), word highlighting ([diff_tokens.py](../scripts/diff_tokens.py)), and references ([diff_bibliography.py](../scripts/diff_bibliography.py)), each with its own tests in `scripts/tests/`. | — |
 | Model bootstrap | Move the embedded Coconet JavaScript/package template into tracked source files and let bootstrap copy them. | The current JavaScript lives in a Python string and its generated copy is overwritten by setup. |
-| Legacy entry points | Keep `setup.py` as a compatibility wrapper until callers are accounted for; prefer `make setup`. Consider retiring `proposal_diff.sh` after confirming nothing uses it. | `setup.py` is not Python package metadata. The shell diff is an independent older implementation that is not called by Make. |
+| Repaired 2026-10-03 | `setup.py` imports `research.scripts.bootstrap_models` directly, like the other root entry points. The intermediate `scripts/bootstrap_models.py` wrapper and the unused `scripts/proposal_diff.sh` (an older latexdiff implementation not called by Make or any document) were removed. Prefer `make setup`. | — |
 | Python style | Keep `snake_case`; remove unused imports, redundant variables, and stale comments after the correctness fixes. Use a single formatter/linter configuration if adopted. | Cosmetic edits can be kept separate from changes that alter measured results. |
 | Condition IDs and CSV names | Preserve existing identifiers until all adapters, summaries, plotting, docs, and archived data can migrate together. | `A_neutral`–`D_full`, uppercase output filenames, and capitalized summary columns are active contracts. |
 | Display names | Use a shared mapping for `DeepBach`, `Coconet`, and `NotaGen` when revising result schemas. | `model.capitalize()` currently yields `Deepbach`/`Notagen`, and plotting depends on those spellings. |

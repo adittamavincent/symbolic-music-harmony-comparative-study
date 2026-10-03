@@ -72,7 +72,7 @@ Add one row per distinct request. Close a row only when the change and its evide
 
 ## Impact of the method reset (2026-10-02)
 
-The researcher changed the design on 2026-10-02 (see PROGRESS.md, "Method reset"). No new lecturer comments were supplied. The table shows how each earlier request is met by the new design; the original notes above are unchanged.
+The researcher changed the design on 2026-10-02 (see the 2026-10-02 entries in `records/research-log.md`). No new lecturer comments were supplied. The table shows how each earlier request is met by the new design; the original notes above are unchanged.
 
 | ID | How the 2026-10-02 design meets it | Still to confirm |
 | --- | --- | --- |
