@@ -5,6 +5,7 @@ This directory owns the computational research for final thesis v3. Commands bel
 | Path | Job |
 | --- | --- |
 | `voice_leading_v2.py` | Measurement instrument for protocol version 2: the five Strube rules, counted per measure |
+| `harmonization_io.py` | Shared MusicXML input and output for protocol version 2: reads a melody, writes the four-voice result, and holds the Coconet and DeepBach input adapters and output parsers |
 | `strube_evaluator.py` | Instrument version 1 (parallels and a soprano leading-tone check), kept unchanged as the historical instrument |
 | `tests/` | Software checks with known inputs and expected behavior; not the main research dataset |
 | `experiments/strube_conditions.json` | Version-1 condition matrix (A–D), superseded by protocol version 2 and kept as history |

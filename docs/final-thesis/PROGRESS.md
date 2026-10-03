@@ -32,6 +32,7 @@ The lecturers did not ask for NotaGen's removal, the A–D replacement, the five
 - Manuscript: front matter and BAB I–III. `make thesis` built `scratch/thesis.pdf` (63 pages) on 2026-10-02.
 - Instrument v2: `research/voice_leading_v2.py`. Its 20 software checks passed with `make test` on 2026-10-02. Validation checks 3–5 were run on the music21 Bach chorales (results in `research/protocol.md`). Check 2, the Strube textbook fixtures, has not been run because the figures are not typed yet.
 - Strube: rule pages located in the 1928 edition and in the 2015 Indonesian translation by Pembimbing I (`research/literature/strube-rule-pages.csv`; translation pages in [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md)). Exercise inventory: 71 melody candidates and 47 given basses in exercises 1–118 (`research/literature/strube-exercise-inventory.csv`).
+- Shared MusicXML input/output (IO version 1.0, 2026-10-03): `research/harmonization_io.py` reads melodies, writes four-voice results, and holds the Coconet and DeepBach adapters. Its 27 software checks pass, and Bach's harmonizations of all 345 eligible corpus chorales survive the round trip with identical rule counts. No model has been run through it; the generation runners for protocol version 2 are not written.
 - Instrument v1 (historical, kept unchanged): `research/strube_evaluator.py`, four software checks, the A–D condition manifest, and generation adapters that hard-code BWV 66.6. Its known defects are listed in [maintenance.md](../maintenance.md).
 - Local outputs contain dry-run metadata, OpenAlex search results, and the instrument v2 validation runs only. No generated MIDI dataset, pilot, main data, statistical result, lecturer approval, Git milestone tag, or submission exists.
 
@@ -74,10 +75,11 @@ The handout is [supervision/bimbingan-v3.md](supervision/bimbingan-v3.md). In ad
 ### Decisions before main data
 
 1. Contingency if fewer than 30 eligible Strube melodies remain after typing and model checks; see the risk table in `research/protocol.md`.
-2. Maximum melody length both models can process, and how the Coconet adapter handles full-length melodies (the current adapter uses 32 sixteenth steps).
+2. Maximum melody length both models can process. The new Coconet adapter passes the full melody length; whether Coconet handles it in memory is a pilot check.
 3. Confirmation that DeepBach's pretrained resources used the default contiguous split, so training membership of Bach melodies can be recorded.
 4. Points raised in `study/persiapan-pembimbing-1.md` on 2026-10-02: how the Wilcoxon test handles zero differences; whether to test the model × origin interaction; how to treat fermatas that the Strube melodies may lack; whether to report hidden fifths and all voice crossings as additional descriptive data.
-5. Freeze definitions, generation settings, the Bach sample seed, and the analysis plan before main generation.
+5. Whether to use each implementation's default sampling settings as found in the sources (Coconet 96 iterations, temperature 0.99; DeepBach 500 iterations), and how to report that Coconet output cannot contain repeated notes in alto, tenor, and bass.
+6. Freeze definitions, generation settings, the Bach sample seed, and the analysis plan before main generation.
 
 ### Citation checks before submission
 

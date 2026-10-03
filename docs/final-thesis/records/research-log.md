@@ -242,6 +242,16 @@ The researcher supplied a scan of the Indonesian translation (`references/teori 
 
 Study guide for the supervisor meeting: [persiapan-pembimbing-1.md](../study/persiapan-pembimbing-1.md). Updated: `defense-qa.md` (Q12, Q28, gap table), `bimbingan-v3.md` (sample count, question 2), the exercise inventory. The manuscript still cites only the 1928 edition; whether to cite the translation is a supervisor question.
 
+## 2026-10-03 — Shared MusicXML input and output
+
+Recorded by the assistant at the researcher's request.
+
+- Did: wrote `research/harmonization_io.py` (IO version 1.0) and `research/tests/test_harmonization_io.py`; added the tests to `make test`. The researcher chose MusicXML as the shared format after comparing it with MIDI, because MIDI loses pitch spelling, fermatas, and reliable key, meter, and voice information.
+- Found in the model sources (DeepBach master `6d75cb9`; magenta-js master, read 2026-10-03): Coconet `infill` fills every silent step unless a mask is given, so soprano rests need an explicit mask; it returns one-step notes, so repeated notes in generated voices cannot be recovered; its defaults are 96 iterations and temperature 0.99, not the 20 iterations of the version-1 runner. DeepBach's vocabulary is keyed by spelled names, and an unknown name is silently added with a warning, so the adapter checks the vocabulary first; its output can contain START/END/OOR symbols that its own score writer prints as rests.
+- Found in the corpus: music21 pads short measures with rests on MusicXML export. Before the fix, 6 of 345 Bach sopranos changed length (5 final measures, 1 encoded rest measure in *Christ lag in Todesbanden*). The writer now declares the missing time and reads every file back.
+- Checked: 27 software checks pass; Bach's own harmonizations of all 345 eligible chorales, rebuilt through the writer, give the same five rule counts and measure counts as the originals. Existing instrument checks still pass. No model was loaded.
+- Next: write the protocol-version-2 generation runners on top of the adapters (run directories, attempt log, effective settings), move the Coconet runner into a tracked JavaScript file, and run the pilot.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.
