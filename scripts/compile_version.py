@@ -15,7 +15,7 @@ import subprocess
 import sys
 import tempfile
 
-from build_pdf import compile_pdf
+from build_pdf import compile_pdf, export_submission_pdf
 
 PHASES = ("proposal", "thesis")
 FIRST_THESIS_VERSION = 3
@@ -217,6 +217,7 @@ def build(phase, ref, scratch="scratch"):
     if not pdf_path:
         return 1
     print(f"=== Done: {pdf_path} ({os.path.getsize(pdf_path)} bytes) ===")
+    export_submission_pdf(pdf_path, phase, label)
     return 0
 
 

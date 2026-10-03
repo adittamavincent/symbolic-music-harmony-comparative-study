@@ -17,7 +17,7 @@ import subprocess
 import sys
 import tempfile
 
-from build_pdf import compile_pdf
+from build_pdf import compile_pdf, export_submission_pdf
 from diff_bibliography import (bibliography_rows, diff_bib_files, extract_citation_keys,
                                render_bibliography_rows)
 from diff_layout import Comparison, render_change_map
@@ -671,6 +671,7 @@ def main():
     if pdf_path:
         size = os.path.getsize(pdf_path)
         print(f"=== Done: {pdf_path} ({size} bytes) ===")
+        export_submission_pdf(pdf_path, "diff", tag1, tag2)
     else:
         print(f"PDF not generated -- check {outdir}/{diff_output_stem(tag1, tag2)}.log")
         return 1

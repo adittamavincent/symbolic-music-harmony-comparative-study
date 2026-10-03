@@ -128,7 +128,7 @@ proposal: $(PROPOSAL_TEX)
 	@if [ -n "$(PROPOSAL_ARGS)" ]; then \
 		python3 scripts/compile_version.py proposal $(PROPOSAL_ARGS); \
 	else \
-		$(PDF_BUILD) $< $(PROPOSAL_PDF) $(PDF_BUILD_FLAGS); \
+		$(PDF_BUILD) $< $(PROPOSAL_PDF) $(PDF_BUILD_FLAGS) --submission proposal v2; \
 	fi
 
 slides: $(SLIDES_TEX)
@@ -176,7 +176,7 @@ thesis: $(THESIS_TEX)
 	@if [ -n "$(THESIS_ARGS)" ]; then \
 		python3 scripts/compile_version.py thesis $(THESIS_ARGS); \
 	else \
-		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS); \
+		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v3; \
 	fi
 
 # Thesis metadata is tracked in $(THESIS_DIR)/metadata.tex; no .env.local values.

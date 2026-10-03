@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Compile a PDF in temporary storage and publish only a successful output."""
+import argparse
 import os
 from pathlib import Path
 import re
@@ -10,8 +11,31 @@ import tempfile
 
 
 ROOT = Path(__file__).resolve().parent.parent
+# Submission identity and short name supplied by the researcher.
+SUBMISSION_ID = "23104810131_Vincent"
 AUX_EXTENSIONS = ("aux", "log", "bcf", "bbl", "blg", "run.xml", "fdb_latexmk",
                   "fls", "out", "toc", "nav", "snm", "vrb", "synctex.gz")
+
+
+def export_submission_pdf(pdf_path, kind, revision, other_revision=None):
+    """Publish an identical PDF copy with the researcher's submission naming."""
+    prefixes = {"proposal": "Proposal", "thesis": "Skripsi", "diff": "Diff"}
+
+    def label(ref):
+        ref = re.sub(r"^(?:proposal|thesis)/(?=v\d+$)", "", ref)
+        return re.sub(r"[^A-Za-z0-9._-]", "_", ref)
+
+    versions = label(revision)
+    if other_revision is not None:
+        versions += "-" + label(other_revision)
+    source = Path(pdf_path).resolve()
+    destination = source.parent / f"{prefixes[kind]}_{versions}_{SUBMISSION_ID}.pdf"
+    with tempfile.TemporaryDirectory(prefix="submission-", dir=source.parent) as temporary:
+        staged = Path(temporary) / destination.name
+        shutil.copyfile(source, staged)
+        staged.replace(destination)
+    print(f"PDF untuk dikirim: {destination}")
+    return str(destination)
 
 
 def clean_auxiliary_files():
@@ -85,7 +109,17 @@ if __name__ == "__main__":
     if sys.argv[1:] == ["--clean-aux"]:
         clean_auxiliary_files()
         sys.exit(0)
-    result = compile_pdf(sys.argv[1], sys.argv[2], force="--force" in sys.argv[3:])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("tex_path")
+    parser.add_argument("pdf_path")
+    parser.add_argument("--force", action="store_true")
+    parser.add_argument("--submission", nargs=2, metavar=("KIND", "REVISION"))
+    args = parser.parse_args()
+    if args.submission and args.submission[0] not in ("proposal", "thesis"):
+        parser.error("--submission KIND must be proposal or thesis")
+    result = compile_pdf(args.tex_path, args.pdf_path, force=args.force)
     if result:
         print(f"PDF: {result}")
+        if args.submission:
+            export_submission_pdf(result, *args.submission)
     sys.exit(0 if result else 1)

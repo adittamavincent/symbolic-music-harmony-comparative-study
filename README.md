@@ -220,6 +220,17 @@ Templates regenerate when their template or `.env.local` changes. Every document
 
 Make builds compile in temporary directories and publish only successful PDFs to `scratch/`. Saved proposals and diffs also stage their generated TeX, bibliography, and assets temporarily. Temporary files are removed after the build. Failed builds preserve a named `.log` in `scratch/` and leave the previous successful PDF intact. Presenter notes read `scratch/presentation.pdf` after building slides. Generated current entry-point `.tex` files remain beside their templates.
 
+Proposal, thesis, and diff builds also publish an identical copy for sending, using `<Jenis>_<Versi>_23104810131_Vincent.pdf`. `make proposal` uses the current proposal revision v2; `make thesis` uses the current thesis revision v3. Saved revisions use their resolved tag label; untagged refs use the full commit ID.
+
+| Command | Copy for sending, inside `scratch/` |
+| --- | --- |
+| `make proposal v2` | `Proposal_v2_23104810131_Vincent.pdf` |
+| `make thesis` or `make thesis v3` | `Skripsi_v3_23104810131_Vincent.pdf` |
+| `make diff proposal/v1 proposal/v2` | `Diff_v1-v2_23104810131_Vincent.pdf` |
+| `make diff proposal/v2 thesis/v3` | `Diff_v2-v3_23104810131_Vincent.pdf` |
+
+The submission identity is set once in `scripts/build_pdf.py` (`SUBMISSION_ID`). These copies preserve the PDF bytes; they do not change the cover, contents, or page count. A successful rebuild replaces the copy for that revision or pair.
+
 The shared builder adds embedded PDF bookmarks to current documents, saved proposals, and diffs, and requests the outline panel when opening in a supporting viewer. It loads `scripts/pdf-navigation.sty` in a temporary source copy, preserving the original source and historical Git snapshots. Slides and presenter notes define bookmarks for each slide; Q&A includes its unnumbered section headings.
 
 The VS Code on-save recipe still invokes `latexmk` directly with its editor configuration. Use Make for the temporary-file cleanup and `scratch/` output workflow; run Make again after changing metadata.
@@ -443,7 +454,7 @@ The version-2 instrument is `research/voice_leading_v2.py`. Its corpus validatio
 
 Keep the phase folders, Indonesian chapter names, numeric chapter prefixes, Python `snake_case`, and uppercase metadata keys. Use full milestone names such as `proposal/v2` and `thesis/v3`.
 
-Keep `A_neutral`, `B_key`, `C_satb`, `D_full`, output filenames, and CSV columns stable while scripts depend on them. For a submission archive, use a descriptive name such as `thesis-v3-2026-09-28.pdf`; this does not require renaming the build's `scratch/thesis.pdf`.
+Keep `A_neutral`, `B_key`, `C_satb`, `D_full`, output filenames, and CSV columns stable while scripts depend on them. For document submissions, use the automatically generated `Proposal_`, `Skripsi_`, and `Diff_` copies described above.
 
 Correct evaluation validity and version-path selection first, then consolidate helpers and dependency management. Moving folders or renaming every script now would add churn without resolving those problems. See the [maintenance audit](docs/maintenance.md) for locations and proposed changes.
 
