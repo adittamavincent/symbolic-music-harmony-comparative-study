@@ -19,17 +19,15 @@ Peran setiap sumber:
 
 ## Celah yang harus ditutup sebelum sidang
 
-Diperbarui 2 Oktober 2026 setelah buku Strube 1928 dibaca dan instrumen v2 diimplementasikan.
+Diperbarui 3 Oktober 2026. Celah yang sudah tertutup penuh dihapus dari tabel.
 
 | Celah | Kenapa berbahaya | Cara menutup | Status |
 | --- | --- | --- | --- |
 | Halaman Strube untuk lima kaidah | Pertanyaan "di halaman berapa?" | Kaidah ditemukan: paralel hlm. 9 dan 12, jarak hlm. 20, persilangan hlm. 174, tumpang tindih hlm. 12–13 (`strube-rule-pages.csv`) | Tertutup; cocokkan sekali dengan buku cetak |
-| Apakah Strube memuat tumpang tindih | Satu kaidah bisa kehilangan dasar | Ada di hlm. 12, dengan pengecualian gerak melangkah | Tertutup |
 | Jumlah latihan melodi Strube | Separuh desain | 71 latihan melodi bernomor di hlm. 11–80. Latihan 67–68 (hlm. 48, tidak ada di PDF 1928) terlihat di terjemahan 2015 hlm. 58 sebagai latihan melodi | Tertutup; cocokkan hlm. 48 dengan buku 1928 cetak bila tersedia |
 | Contoh cetak Strube sebagai kasus uji | Validasi langkah 2 | Sembilan gambar terdaftar di `strube-example-fixtures.csv`; perlu diketik ke MusicXML | Terbuka (kerja peneliti, sekitar 20–30 menit) |
-| Abstrak masih desain lama | Kontradiksi di halaman awal | Abstrak Indonesia dan Inggris ditulis ulang | Tertutup |
-| Kode instrumen | Klaim BAB III belum ada wujudnya | `research/voice_leading_v2.py`, 20 uji perangkat lunak, validasi langkah 3–5 sudah dijalankan | Tertutup untuk instrumen; adapter generasi belum |
-| Pilot dan adapter generasi | Batas panjang melodi dan kosakata DeepBach belum diketahui | Adapter melodi bebas, perbaikan pipeline, pilot | Terbuka (tahap penelitian setelah proposal disetujui) |
+| Kode instrumen dan format data | Klaim BAB III belum ada wujudnya | `research/voice_leading_v2.py` (20 uji perangkat lunak; validasi langkah 3–5 sudah dijalankan) dan `research/harmonization_io.py` (masukan dan keluaran MusicXML untuk kedua model, 27 uji perangkat lunak) | Tertutup untuk instrumen dan format data; runner generasi belum |
+| Pilot | Batas panjang melodi, kosakata DeepBach, dan memori Coconet belum diuji pada model | Runner generasi di atas adapter MusicXML, perbaikan pipeline lain, pilot | Terbuka (tahap penelitian setelah proposal disetujui) |
 | Persetujuan pembimbing | Desain berubah besar dari proposal | Bawa naskah v3 dan `bimbingan-v3.md` | Terbuka |
 | Terjemahan Strube oleh Pembimbing I | Pembimbing I menerjemahkan buku Strube (2015); tiga kalimat kaidah berbeda dari edisi 1928 | Pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 1; tanyakan cara mengutip terjemahan | Terbuka |
 | Halaman Cohen, Hodges–Lehmann, Creswell, Sugiyono | Penguji bisa minta halaman | Buka sumber, catat di `reading-notes.csv` | Terbuka (kecil) |
@@ -108,7 +106,7 @@ Karena Strube sendiri membolehkan persilangan sesekali bila menghasilkan gerak s
 Strube mendefinisikan tumpang tindih dan menyatakan gerak itu hanya dipakai bila salah satu suara bergerak melangkah (hlm. 12); Gambar 33 hlm. 13 menandai kasus kedua suara melompat sebagai "avoid". Instrumen mengikuti batas itu: melangkah berarti satu atau dua semiton.
 
 **16c. Kenapa kuint dengan gerak berlawanan tidak dihitung, padahal music21 menghitungnya?**
-Strube hlm. 9 menyatakan kuint dan oktaf berurutan dengan gerak berlawanan tidak bermasalah. Pada 371 chorale Bach, semua 69 penandaan tambahan music21 adalah kasus gerak berlawanan; untuk kasus lain kedua implementasi identik.
+Strube hlm. 9 menyatakan kuint dan oktaf berurutan dengan gerak berlawanan tidak bermasalah. Pada 345 chorale Bach yang memenuhi syarat (dari 371 di korpus music21), semua 69 penandaan tambahan music21 adalah kasus gerak berlawanan; untuk kasus lain kedua implementasi identik.
 
 **17. Apa beda persilangan dan tumpang tindih suara?**
 Persilangan terjadi pada satu saat: suara bawah berbunyi lebih tinggi daripada suara atas. Tumpang tindih terjadi pada perpindahan: suara bergerak melewati nada yang baru saja dibunyikan suara di sebelahnya, walaupun pada saat baru keduanya tidak bersilangan. Definisi tumpang tindih sengaja mensyaratkan tidak ada persilangan agar satu kejadian tidak dihitung dua kali.
@@ -151,8 +149,7 @@ Lima harmonisasi dari melodi yang sama tidak independen. Menghitungnya sebagai 6
 Kriteria kelayakan sama untuk kedua kelompok, lalu melodi Bach diambil secara acak dengan bilangan acak yang dicatat sebelum generasi. Untuk Strube, semua latihan melodi yang layak diikutsertakan, bukan dipilih.
 
 **28. Berapa latihan melodi di buku Strube, dan kenapa tidak semua dipakai?**
-Latihan 1–118 (hlm. 8–81) sudah diinventaris: 69 memberi melodi sopran, 47 memberi bas, dan 2 (latihan 67–68) tidak terbaca di scan. Yang dipakai adalah latihan melodi bernomor sampai bab mode minor (hlm. 11–80). Latihan bas tidak dipakai karena tugasnya memberi sopran. Latihan melodi sesudah bab mode minor dirancang untuk melatih suspensi, nada sisipan, dan antisipasi; pelanggaran yang dimaklumi karena nada non-akor butuh analisis akor, sehingga instrumen akan salah menghitungnya. Strube sendiri menyebut nada non-akor dinilai dari sudut pandang berbeda (hlm. 35). Melodi di bab chorale tidak dipakai karena diambil dari Bach (hlm. 174). Kriteria ini berdasarkan isi bab, bukan hasil.
-Latihan 67–68 di hlm. 48 tidak ada di scan 1928, tetapi terlihat sebagai latihan melodi di terjemahan 2015 hlm. 58, sehingga kandidatnya menjadi 71.
+Latihan 1–118 (hlm. 8–81) sudah diinventaris: 71 memberi melodi sopran dan 47 memberi bas. Latihan 67–68 ada di hlm. 48, yang tidak ada di scan 1928; keduanya dibaca dari terjemahan 2015 hlm. 58 sebagai latihan melodi. Yang dipakai adalah latihan melodi bernomor sampai bab mode minor (hlm. 11–80). Latihan bas tidak dipakai karena tugasnya memberi sopran. Latihan melodi sesudah bab mode minor dirancang untuk melatih suspensi, nada sisipan, dan antisipasi; pelanggaran yang dimaklumi karena nada non-akor butuh analisis akor, sehingga instrumen akan salah menghitungnya. Strube sendiri menyebut nada non-akor dinilai dari sudut pandang berbeda (hlm. 35). Melodi di bab chorale tidak dipakai karena diambil dari Bach (hlm. 174). Kriteria ini berdasarkan isi bab, bukan hasil.
 *Rawan bila:* hlm. 48 edisi 1928 belum dicocokkan dengan buku cetak.
 
 **29. Melodi Strube bisa berbeda dalam panjang, wilayah, dan tangga nada. Bagaimana tahu yang berpengaruh adalah asalnya?**
@@ -171,8 +168,8 @@ Kaidahnya dari Strube dan kategorinya dari rubrik Yan. Rumusnya disusun peneliti
 *Bukti:* BAB III Instrumen Pengukuran paragraf 1.
 
 **33. Tanpa penilai manusia, bagaimana Anda tahu program Anda benar?**
-Empat langkah. (1) Validitas isi: setiap kaidah dikaitkan dengan halaman Strube dan kategori Yan sebelum data. (2) Contoh cetak Strube dipakai sebagai kunci: program harus menandai contoh yang disebut salah oleh buku dan tidak menandai contoh yang benar; label benar/salahnya datang dari penulis buku, bukan dari peneliti. (3) Pemeriksaan silang dengan fungsi `VoiceLeadingQuartet` music21 pada 371 chorale. (4) Laju kuint dan oktaf sejajar pada chorale Bach dibandingkan dengan angka terbitan Huang (0,023 dan 0,009 per birama).
-Langkah 3–5 sudah dijalankan pada 371 chorale Bach (345 memenuhi syarat): tidak ada perbedaan dengan music21 untuk persilangan dan tumpang tindih; perbedaan paralel hanya kasus gerak berlawanan; dua kali run menghasilkan hash identik.
+Empat langkah validitas dan satu uji reliabilitas. (1) Validitas isi: setiap kaidah dikaitkan dengan halaman Strube dan kategori Yan sebelum data. (2) Contoh cetak Strube dipakai sebagai kunci: program harus menandai contoh yang disebut salah oleh buku dan tidak menandai contoh yang benar; label benar/salahnya datang dari penulis buku, bukan dari peneliti. (3) Pemeriksaan silang dengan fungsi `VoiceLeadingQuartet` music21 pada chorale korpus music21. (4) Laju kuint dan oktaf sejajar pada chorale Bach dibandingkan dengan angka terbitan Huang (0,023 dan 0,009 per birama). (5) Pengukuran ulang pada berkas yang sama harus memberi hasil identik.
+Langkah 3–5 sudah dijalankan pada 345 dari 371 chorale Bach yang memenuhi syarat: tidak ada perbedaan dengan music21 untuk persilangan dan tumpang tindih; perbedaan paralel hanya kasus gerak berlawanan; dua kali run menghasilkan hash identik.
 *Rawan bila:* langkah 2 belum ada karena gambar Strube belum diketik. Tutup dengan mengetik sembilan gambar di `strube-example-fixtures.csv`.
 
 **34. Pelanggaran yang sebenarnya bisa dimaklumi ikut terhitung. Bukankah hasilnya bias?**
@@ -184,8 +181,8 @@ Satuan per birama dipakai Huang, sehingga angka penelitian ini dapat dibandingka
 **36. Kenapa kisi seperenam belas?**
 Itu resolusi waktu kedua model: DeepBach membagi satu ketukan menjadi empat, Coconet memakai langkah seperenam belas. Yan juga memakai kuantisasi seperenam belas. Melodi dengan nilai lebih pendek atau triol dikeluarkan dari sampel.
 
-**37. MIDI tidak menyimpan ejaan nada. Bagaimana membedakan kuint murni dari sekst berkurang?**
-Tidak bisa dibedakan dari MIDI. Tujuh semiton dihitung sebagai kuint. Dalam tekstur chorale tonal, sekst berkurang jarang muncul, dan keterbatasan ini dicatat. Alasan yang sama membuat kategori sekon diperbesar tidak diukur.
+**37. Instrumen menghitung semiton. Bagaimana membedakan kuint murni dari sekst berkurang?**
+Tidak dibedakan. Tujuh semiton selalu dihitung sebagai kuint. Melodi masukan disimpan sebagai MusicXML sehingga ejaannya terjaga, dan keluaran DeepBach juga berejaan. Keluaran Coconet hanya berupa nomor nada MIDI, sehingga ejaan alto, tenor, dan bas Coconet ditentukan music21, bukan oleh model. Agar kedua model diukur dengan aturan yang sama, instrumen tidak memakai ejaan. Dalam tekstur chorale tonal, sekst berkurang jarang muncul, dan keterbatasan ini dicatat. Alasan yang sama membuat kategori sekon berlebih tidak diukur.
 
 **38. Angka Bach Anda tidak sama dengan Huang. Kenapa?**
 Dengan definisi Strube, laju Bach 0,0078 kuint dan 0,0030 oktaf per birama. Dengan definisi music21 yang ikut menghitung gerak berlawanan, 0,0176 dan 0,0059; Huang melaporkan 0,023 dan 0,009. Sebagian besar selisih berasal dari definisi gerak berlawanan, yang tidak dianggap bermasalah oleh Strube. Sisanya wajar karena versi data berbeda (382 karya JSB, termasuk duplikat, tanpa fermata) dan pengaturan penghitungan Huang tidak diterbitkan. Semua angka itu lebih dari 20 kali lebih rendah daripada 0,365 kuint per birama pada Coconet, jadi instrumen jelas membedakan tingkat Bach dari tingkat model.
@@ -200,6 +197,15 @@ Ya, dan itu justru yang dibuktikan: menjalankan ulang berkas yang sama dengan ve
 Harmonisasi itu tidak layak dianalisis. Sopran harus identik dengan masukan dalam tinggi nada dan saat mulai. Kegagalan dicatat dan dilaporkan per model dan per asal melodi, karena tingkat kegagalan juga merupakan hasil.
 
 ## G. Statistik
+
+**41a. Kenapa melodi dan hasil disimpan sebagai MusicXML, bukan MIDI?**
+MusicXML menyimpan ejaan nada, fermata, tangga nada, birama, birama gantung, dan pemisahan suara. MIDI tidak menyimpan ejaan dan fermata, sedangkan tangga nada dan birama hanya opsional. DeepBach memakai fermata dan tangga nada sebagai masukan, dan instrumen membaca fermata untuk penghitungan tambahan. Setiap model mempunyai penerjemah sendiri dari MusicXML ke format internalnya, lalu kembali ke MusicXML. Setiap berkas yang ditulis dibaca ulang dan dibandingkan dengan isi aslinya. Pada 345 chorale Bach, harmonisasi asli Bach yang ditulis ulang melalui jalur ini menghasilkan jumlah pelanggaran dan jumlah birama yang sama dengan aslinya. Berkas MIDI tetap disimpan untuk didengarkan.
+*Bukti:* `research/harmonization_io.py`; `research/protocol.md`, bagian *Shared input and output*.
+*Rawan bila:* ditanya apakah model sudah dijalankan lewat jalur ini. Jawab: belum; apakah kedua model menerima masukannya diperiksa saat pilot.
+
+**41b. Coconet tidak membedakan nada yang diulang dari nada yang ditahan. Apa akibatnya?**
+Keluaran Coconet berupa *piano roll*: setiap langkah seperenam belas hanya mencatat nada yang berbunyi, sehingga dua nada sama yang berurutan tidak dapat dibedakan dari satu nada panjang. Nada sama yang berurutan pada alto, tenor, dan bas Coconet karena itu digabung menjadi satu nada. Suara hasil Coconet tidak pernah mengulang nada, dan peristiwa bunyinya bisa lebih sedikit daripada DeepBach, sehingga kaidah yang dihitung per peristiwa (jarak dan persilangan) dapat tercatat lebih jarang. Ini batas representasi model dan dilaporkan sebagai keterbatasan perbandingan. Untuk sopran, bila tinggi nada keluaran sama dengan melodi pada setiap langkah, nada asli melodi dipakai kembali, mengikuti cara yang disediakan Magenta.js untuk memulihkan suara masukan (`replaceVoice`). Sopran yang berbeda pada satu langkah saja tetap gagal kontrol kualitas.
+*Rawan bila:* penguji menganggap penggabungan mengubah data. Jawab: penggabungan tidak mengubah tinggi nada atau waktu bunyi; ia hanya mengikuti apa yang dapat dinyatakan keluaran model.
 
 **42. Kenapa non-parametrik?**
 Laju pelanggaran tidak bisa negatif, banyak bernilai nol, dan tidak dapat diasumsikan normal. Huang juga memakai uji non-parametrik (Kruskal–Wallis dan Mann–Whitney).
@@ -313,13 +319,13 @@ Yang dikendalikan peneliti adalah masukan yang diberikan kepada model yang sama.
 Laju per birama mengikuti Huang. Pada melodi pendek, satu kejadian mengubah laju lebih banyak, dan birama gantung dihitung satu birama penuh. Panjang melodi dilaporkan sebagai ciri kelompok. Jumlah kejadian dan jumlah kesempatan juga disimpan, sehingga laju per kesempatan dapat dihitung sebagai pemeriksaan.
 
 **72. Melodi yang tidak dapat diproses model dikeluarkan. Bukankah yang terbuang justru melodi Strube yang paling tidak lazim?**
-Mungkin. DeepBach hanya menerima nada sopran yang ada di kosakata data latihnya, dan Coconet hanya nada MIDI 36–81. Melodi yang dikeluarkan dapat membuat kedua kelompok lebih mirip daripada aslinya. Karena itu, setiap pengeluaran dicatat beserta alasannya dan dilaporkan. Melodi tidak ditransposisi (Q31).
+Mungkin. DeepBach hanya menerima nada sopran yang ada di kosakata data latihnya, dan Coconet hanya nada MIDI 36–81. Kosakata DeepBach memakai nama nada berejaan, jadi F♯4 dan G♭4 adalah dua entri berbeda; ejaan yang diketik di MusicXML ikut menentukan kelayakan. Melodi yang dikeluarkan dapat membuat kedua kelompok lebih mirip daripada aslinya. Karena itu, setiap pengeluaran dicatat beserta alasannya dan dilaporkan. Melodi tidak ditransposisi (Q31).
 
 **73. Pertanyaan 2 menggabungkan melodi Bach dan Strube. Bagaimana jika perbedaan model hanya muncul pada salah satu asal?**
 Statistik deskriptif per model dan per asal melodi tetap dilaporkan, jadi pola seperti itu akan terlihat. Uji interaksi formal belum ada di protokol. Salah satu pilihan sederhana adalah menghitung selisih DeepBach dikurangi Coconet untuk setiap melodi, lalu membandingkan selisih itu antara kedua asal melodi dengan Mann–Whitney. Pilihan ini perlu disetujui sebelum protokol dibekukan.
 
 **74. Bisakah Coconet mengharmonisasi melodi utuh?**
-Belum diketahui. Adapter yang ada memakai 32 langkah seperenam belas, yaitu dua birama 4/4, sehingga terlalu pendek untuk kebanyakan melodi. Panjang maksimum diperiksa saat pilot. Jika melodi harus dipotong, kedua model harus menerima potongan yang sama, dan perubahan itu dicatat sebagai perubahan protokol. Lihat risiko di `research/protocol.md`.
+Belum diketahui. Adapter MusicXML yang baru memberikan melodi dengan panjang penuh; adapter versi 1 hanya memakai 32 langkah seperenam belas, yaitu dua birama 4/4. Apakah Coconet sanggup memproses melodi penuh dalam batas memori diperiksa saat pilot. Jika melodi harus dipotong, kedua model harus menerima potongan yang sama, dan perubahan itu dicatat sebagai perubahan protokol. Lihat risiko di `research/protocol.md`.
 
 ### Statistik
 
@@ -329,10 +335,10 @@ Secara bawaan, uji Wilcoxon di SciPy membuang pasangan yang selisihnya nol, sehi
 ### Praktis
 
 **76. Apa langkah berikutnya, dan kapan selesai?**
-Urutannya: mengetik 71 kandidat melodi dan sembilan contoh cetak Strube; menjalankan validasi langkah 2; membuat adapter generasi untuk melodi bebas; memperbaiki cacat pipeline di `docs/maintenance.md`; pilot; membekukan protokol; generasi utama; analisis. Siapkan perkiraan waktu sendiri sebelum bimbingan. Berkas ini tidak menetapkan tanggal.
+Urutannya: mengetik 71 kandidat melodi dan sembilan contoh cetak Strube; menjalankan validasi langkah 2; menulis runner generasi versi 2 di atas adapter MusicXML yang sudah ada, dengan folder per run dan catatan setiap percobaan; memperbaiki cacat pipeline lain di `docs/maintenance.md`; pilot; membekukan protokol; generasi utama; analisis. Siapkan perkiraan waktu sendiri sebelum bimbingan. Berkas ini tidak menetapkan tanggal.
 
 **77. Bagian mana yang Anda kerjakan dengan bantuan AI?**
-Lihat Q53. PROGRESS.md mencatat bahwa motto, halaman persembahan, dan kata pengantar dirancang dengan bantuan AI. [research-log.md](../records/research-log.md) mencatat bahwa penulisan ulang BAB I–III dan kode instrumen versi 2 dikerjakan asisten AI atas permintaan peneliti. Jawab jujur dan ikuti aturan prodi. Pastikan setiap kalimat di naskah dapat dijelaskan sendiri.
+Lihat Q53. PROGRESS.md mencatat bahwa motto, halaman persembahan, dan kata pengantar dirancang dengan bantuan AI. [research-log.md](../records/research-log.md) mencatat bahwa penulisan ulang BAB I–III, kode instrumen versi 2, dan adapter MusicXML dikerjakan asisten AI atas permintaan peneliti. Jawab jujur dan ikuti aturan prodi. Pastikan setiap kalimat di naskah dapat dijelaskan sendiri.
 
 **78. Kenapa mahasiswa musik mengerjakan penelitian komputasi? Apa sumbangannya bagi musik?**
 Yan dkk. menilai evaluasi model musik umumnya kurang ketat dari sudut teori musik. Keahlian musik dalam penelitian ini ada pada pemilihan dan perumusan kaidah, pembacaan pengecualian Strube, pemilihan soal latihan, dan penafsiran contoh partitur. Hasilnya berguna bagi pengajar harmoni yang mahasiswanya memakai alat semacam ini.

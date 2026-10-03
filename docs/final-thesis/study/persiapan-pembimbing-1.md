@@ -1,6 +1,6 @@
 # Persiapan sebelum mengirim naskah v3 ke Pembimbing I
 
-Disusun 2 Oktober 2026 untuk peneliti. Berkas ini bahan belajar, bukan bagian naskah. Semua tanya-jawab ada di [defense-qa.md](defense-qa.md); berkas ini berisi bahan pendukungnya. Kode seperti "Q14" merujuk ke nomor pertanyaan di berkas itu.
+Disusun 2 Oktober 2026 untuk peneliti, diperbarui 3 Oktober 2026. Berkas ini bahan belajar, bukan bagian naskah. Semua tanya-jawab ada di [defense-qa.md](defense-qa.md); berkas ini berisi bahan pendukungnya. Kode seperti "Q14" merujuk ke nomor pertanyaan di berkas itu.
 
 ## Urutan belajar
 
@@ -90,6 +90,7 @@ Setiap baris harus bisa dijawab dengan "karena ..." dan nama sumbernya.
 - **Unit analisis:** melodi. Lima harmonisasi dari satu melodi dirata-rata menjadi satu nilai per model.
 - **Uji satu arah dan dua arah:** satu arah hanya untuk kuint dan oktaf pada pertanyaan 3, karena arahnya sudah diperkirakan dari temuan Huang sebelum data dikumpulkan.
 - **Koreksi Holm, ukuran efek, analisis daya:** lihat Q25, Q45, dan Q48.
+- **MusicXML dan adapter:** melodi masuk dan harmonisasi keluar sebagai MusicXML, format partitur yang menyimpan ejaan nada, fermata, tangga nada, dan birama. Setiap model mempunyai penerjemah (adapter) sendiri ke format internalnya. Lihat Q41a dan Q41b.
 - ***Pseudo-Gibbs* dan *blocked Gibbs sampling*:** cara DeepBach dan Coconet mengisi ulang nada berkali-kali secara acak. Karena unsur acak inilah satu melodi diharmonisasi lima kali.
 
 ### Rumus dalam kalimat
@@ -166,7 +167,7 @@ Semua pertanyaan ada di [defense-qa.md](defense-qa.md). Pertanyaan khusus bimbin
 - [ ] Putuskan apakah terjemahan ikut dikutip, lalu tanyakan kepada Pembimbing I (bimbingan-v3.md, pertanyaan 2).
 - [ ] Tinjau halaman yang dirancang dengan bantuan AI: motto, persembahan, dan kata pengantar, termasuk "angkatan 2023", daftar ucapan terima kasih, dan butir "Diri saya sendiri". Ubah ke kata-kata sendiri bila perlu.
 - [ ] Pastikan nama penguji *Cognate* (Adityo Legowo) dan Dosen Pembimbing Akademik (Eki Satria). Keduanya belum dikonfirmasi di PROGRESS.md.
-- [ ] BAB III, subbab Sampel, menyatakan latihan yang layak "melampaui jumlah minimum". Kandidatnya 71, tetapi kelayakan (pengetikan, wilayah, kosakata DeepBach, panjang) belum diperiksa. Siapkan jawaban atau perhalus kalimat itu.
+- [ ] BAB III, subbab Sampel, menyatakan latihan yang layak "melampaui jumlah minimum". Kandidatnya 71, tetapi kelayakan (pengetikan, wilayah, kosakata DeepBach, panjang) belum diperiksa. Setelah melodi diketik, sebagian syarat itu diperiksa otomatis oleh `research/harmonization_io.py`; kosakata DeepBach dan panjang maksimum baru diketahui saat pilot. Siapkan jawaban atau perhalus kalimat itu.
 - [ ] Ketahui aturan prodi tentang pengungkapan bantuan AI.
-- [ ] Bangun PDF terbaru dengan `make thesis`. Pada 2 Oktober 2026 hasilnya `scratch/thesis.pdf` (63 halaman), dan 20 uji perangkat lunak instrumen lulus. Hasil uji ini menunjukkan perilaku program, bukan validitas instrumen.
+- [ ] Bangun PDF terbaru dengan `make thesis`. Pada 3 Oktober 2026 hasilnya `scratch/thesis.pdf` (63 halaman), dan `make test` lulus: 4 uji instrumen versi 1, 20 uji instrumen versi 2, dan 27 uji adapter MusicXML. Hasil uji ini menunjukkan perilaku program, bukan validitas instrumen.
 - [ ] Bawa PDF, bimbingan-v3.md, kedua edisi Strube, dan satu contoh hitung manual dari bagian 4.

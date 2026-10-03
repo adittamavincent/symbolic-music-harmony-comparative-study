@@ -32,8 +32,9 @@ Penelitian ini melanjutkan analisis Bach Doodle (Huang dkk., 2019), yang menemuk
 ## Yang sudah dikerjakan
 
 - BAB I–III, judul, dan abstrak disesuaikan dengan desain ini.
-- Instrumen versi 2 sudah dibuat dan diuji. Pada 371 chorale Bach, hasilnya sama dengan fungsi music21 untuk persilangan dan tumpang tindih. Perbedaan untuk paralel hanya pada kasus gerak berlawanan, yang dibolehkan Strube. Laju Bach jauh di bawah laju Coconet yang dilaporkan Huang dkk.
+- Instrumen versi 2 sudah dibuat dan diuji. Pada 345 dari 371 chorale Bach yang memenuhi syarat, hasilnya sama dengan fungsi music21 untuk persilangan dan tumpang tindih. Perbedaan untuk paralel hanya pada kasus gerak berlawanan, yang dibolehkan Strube. Laju Bach jauh di bawah laju Coconet yang dilaporkan Huang dkk.
 - Inventaris latihan Strube 1–118 selesai.
+- Format bersama untuk kedua model sudah dibuat: melodi masuk dan harmonisasi keluar sebagai MusicXML, dengan penerjemah tersendiri untuk DeepBach dan Coconet. Model belum dijalankan; pilot menunggu persetujuan desain.
 
 ## Pertanyaan untuk pembimbing
 

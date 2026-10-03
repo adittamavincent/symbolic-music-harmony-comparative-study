@@ -16,7 +16,7 @@ final-thesis/
 │   └── bimbingan-v3.md            One-page handout for the supervisor meeting
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
-│   ├── defense-qa.md              All practice questions and answers (Q1–Q78)
+│   ├── defense-qa.md              All practice questions and answers (Q1–Q78, with 16a–c and 41a–b)
 │   └── researcher-guide.md        Research fundamentals and reading list
 └── records/                       Running records
     ├── research-log.md            Dated history of decisions and findings
@@ -44,9 +44,9 @@ Research code, the protocol worksheet, and literature data live in [research/](.
 | `metadata.tex` | Title, researcher, committee, dates, institution |
 | `layout.tex` | Chapter heading (`\thesischapter`) and front-matter page layouts: cover heading, signatures |
 | `frontmatter/01-halaman-judul.tex` to `09-abstract.tex` | One file per front-matter page, in page order: halaman judul, pengajuan, pengesahan, pernyataan, motto, persembahan, kata pengantar, abstrak, abstract |
-| `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah dan pertanyaan, tujuan dan manfaat, sistematika |
-| `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka, landasan teori, asumsi dan hipotesis |
-| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data, validitas instrumen, analisis, alur penelitian |
+| `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah, pertanyaan penelitian, tujuan, manfaat, sistematika penulisan |
+| `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka, landasan teori, asumsi, hipotesis |
+| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data (variabel, melodi, generasi, instrumen, validitas, kontrol kualitas), analisis, alur penelitian |
 
 Each chapter file opens with its own `\thesischapter` heading. Every section and subsection heading carries a `\label{sec:...}` ID. Keep the ID when a heading is renamed or moved; `make diff` pairs revisions by these IDs. Give a new section a new ID.
 

@@ -252,6 +252,15 @@ Recorded by the assistant at the researcher's request.
 - Checked: 27 software checks pass; Bach's own harmonizations of all 345 eligible chorales, rebuilt through the writer, give the same five rule counts and measure counts as the originals. Existing instrument checks still pass. No model was loaded.
 - Next: write the protocol-version-2 generation runners on top of the adapters (run directories, attempt log, effective settings), move the Coconet runner into a tracked JavaScript file, and run the pilot.
 
+## 2026-10-03 — Records, study, and supervision files aligned
+
+Recorded by the assistant at the researcher's request.
+
+- Did: compared every file in `supervision/`, `study/`, and `records/` with the manuscript, `research/protocol.md`, and the code; rebuilt the thesis (63 pages) and ran `make test`.
+- Found: `feedback.md` described the 2026-09-30 answers (NotaGen, conditioning levels, blind annotation) in its main table and the 2026-10-02 design in a second table. Several files still gave 69 Strube melody candidates instead of 71, 371 chorales where 345 were evaluated, the 32-step Coconet adapter, and old section names (*Asumsi dan Hipotesis*). Defense question 37 said all outputs lack spelling; DeepBach output is spelled, Coconet output is not.
+- Changed and why: merged the two `feedback.md` tables into one table of current answers, leaving the original notes unchanged; corrected the counts, section names, and adapter status in `perubahan-v2-ke-v3.md`, `bimbingan-v3.md`, `defense-qa.md`, `persiapan-pembimbing-1.md`, `PROGRESS.md`, `README.md`, and `research/protocol.md`; removed two closed rows from the defense gap table; added defense questions 41a (MusicXML) and 41b (Coconet repeated notes); added two source rows for the model code read on 2026-10-03 to `reading-notes.csv`. Earlier log entries were left as written.
+- Next: unchanged from the previous entry.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

@@ -23,11 +23,12 @@ The study continues the Bach Doodle analysis of Huang et al. (2019, §6.3). Huan
 | Title and questions | Thesis v3 BAB I (2026-10-02) | Drafted; supervisor confirmation pending |
 | Strube edition | Original 1928 Oliver Ditson edition (`strube1928`), scanned PDF supplied by the researcher at `references/The Theory and Use of Chords.pdf` (147 PDF pages; at least p. 48 is missing, and pages from the Suspensions chapter onward are scanned as two-page spreads) | Confirmed 2026-10-02 |
 | Rule pages | `research/literature/strube-rule-pages.csv`: parallels pp. 9, 12; spacing p. 20; crossing p. 174; overlap pp. 12–13 | Filled 2026-10-02 from the scan (OCR plus page images); researcher to confirm against the print |
-| Strube melody inventory | `research/literature/strube-exercise-inventory.csv`: exercises 1–118 (pp. 8–81): 69 given-soprano candidates, 47 given basses, 67–68 on missing p. 48 | Filled 2026-10-02; key, meter, length, and typing pending |
+| Strube melody inventory | `research/literature/strube-exercise-inventory.csv`: exercises 1–118 (pp. 8–81): 71 given-soprano candidates, 47 given basses; 67–68 (p. 48, missing from the 1928 scan) read from the 2015 translation p. 58 | Filled 2026-10-02; key, meter, length, and typing pending |
 | Model identities | DeepBach repository commit and resource archive checksum; Magenta.js package version and checkpoint URL | Pending: record at pilot |
 | Sample size | At least 30 melodies per origin group (power analysis below) | Proposed |
 | Generations | Five per melody per model; default sampling settings of each implementation | Proposed |
 | Instrument version | `research/voice_leading_v2.py` (v2.0) with 20 software checks in `research/tests/test_voice_leading_v2.py`; validation checks 3–5 run on the Bach corpus | Implemented 2026-10-02; textbook fixtures (check 2) pending |
+| Shared input/output | `research/harmonization_io.py` (IO version 1.0): MusicXML melody in, four-part MusicXML out, adapters for both models; 27 software checks in `research/tests/test_harmonization_io.py` | Implemented 2026-10-03; model acceptance checked at the pilot |
 | Analysis plan | Below; freeze before main generation | Proposed |
 
 ## Models
@@ -64,7 +65,7 @@ Eligibility, applied identically to both groups:
 4. Length the pilot shows both models can process. Record any melody either model cannot process and why.
 5. Bach group only: the chorale has exactly four voices, so Bach's own harmonization can be measured as the reference.
 
-Strube group: inventory every exercise in the consulted edition (page, number, given voice, figured or not, key, mode, meter, length in measures, eligible yes/no, reason). Include all eligible numbered melody exercises from the first melody-harmonization exercises through the Minor Modes chapter (pp. 11–80; exercises 12–108). Exclude given basses (the task fixes the soprano); exclude melody exercises from the Suspensions chapter onward, because they are built around non-chord tones (suspensions, auxiliary tones, anticipations) whose exceptions need chord analysis that the instrument cannot apply (Strube p. 35 says non-chord tones are judged from a different viewpoint); exclude the chorale chapter (pp. 174–179), whose melodies are taken from J. S. Bach. The inventory found 69 candidate melodies in that range, above the 30-melody minimum; check exercises 67–68 on p. 48 in the printed book. Type each eligible melody into MusicXML with key, meter, and printed phrase endings; name files by page and exercise number; check each file against the printed page. Keep photos or scans of the book in the Git-ignored `references/` folder only; do not commit or publish them.
+Strube group: inventory every exercise in the consulted edition (page, number, given voice, figured or not, key, mode, meter, length in measures, eligible yes/no, reason). Include all eligible numbered melody exercises from the first melody-harmonization exercises through the Minor Modes chapter (pp. 11–80; exercises 12–108). Exclude given basses (the task fixes the soprano); exclude melody exercises from the Suspensions chapter onward, because they are built around non-chord tones (suspensions, auxiliary tones, anticipations) whose exceptions need chord analysis that the instrument cannot apply (Strube p. 35 says non-chord tones are judged from a different viewpoint); exclude the chorale chapter (pp. 174–179), whose melodies are taken from J. S. Bach. The inventory found 71 candidate melodies in that range, above the 30-melody minimum; exercises 67–68 were read from the 2015 translation (p. 58) and still need checking on p. 48 of the printed 1928 book. Type each eligible melody into MusicXML with key, meter, and printed phrase endings; name files by page and exercise number; check each file against the printed page. Keep photos or scans of the book in the Git-ignored `references/` folder only; do not commit or publish them.
 
 Bach group: soprano parts of the 371 music21 corpus chorales with key, meter, and fermatas. After eligibility filtering, draw a random sample with a recorded seed, of the same size as the Strube group and at least 30.
 
@@ -141,7 +142,7 @@ With 30 melodies per group, the plan is 30 × 2 groups × 2 models × 5 = 600 ge
 
 | Risk | Check | Contingency |
 | --- | --- | --- |
-| Strube melody exercises turn out ineligible after typing (range, grid, model limits) | Typing and pilot | 69 candidates give a margin; fewer than 30 eligible: use all and report the minimum detectable effect |
+| Strube melody exercises turn out ineligible after typing (range, grid, model limits) | Typing and pilot | 71 candidates give a margin; fewer than 30 eligible: use all and report the minimum detectable effect |
 | Rule coverage in Strube | Resolved 2026-10-02 | All five rules found (pp. 9, 12–13, 20, 174); crossing narrowed to crossing above the soprano and overlap given the stepwise exception, per Strube |
 | Strube prints few voice-leading examples | Fixture list | Nine printed figures listed in `strube-example-fixtures.csv` (Figs. 21, 22, 30, 32, 33, 76); supplement with constructed edge cases already in the test suite |
 | Melody notes outside DeepBach's soprano vocabulary | Pilot | Ineligible; record. Do not transpose, because transposition changes the melody's distance from the training data |

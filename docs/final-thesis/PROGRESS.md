@@ -1,6 +1,6 @@
 # v3: final-thesis progress
 
-Updated: 2026-10-03. Active manuscript: `thesis/`. Status: BAB I–III drafted for protocol version 2 (machine-only design); instrument version 2 implemented and partly validated; no pilot or main data; not ready for submission.
+Updated: 2026-10-03. Active manuscript: `thesis/`. Status: BAB I–III drafted for protocol version 2 (machine-only design); instrument version 2 implemented and partly validated; shared MusicXML input/output for both models implemented; no model run, pilot, or main data; not ready for submission.
 
 This file holds the current status only. Dated history is in [records/research-log.md](records/research-log.md). The design and analysis plan are in [research/protocol.md](../../research/protocol.md). Changes since proposal v2, with their basis, are in [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md).
 
@@ -29,8 +29,9 @@ The lecturers did not ask for NotaGen's removal, the A–D replacement, the five
 
 ## What is evidenced now
 
-- Manuscript: front matter and BAB I–III. `make thesis` built `scratch/thesis.pdf` (63 pages) on 2026-10-02.
-- Instrument v2: `research/voice_leading_v2.py`. Its 20 software checks passed with `make test` on 2026-10-02. Validation checks 3–5 were run on the music21 Bach chorales (results in `research/protocol.md`). Check 2, the Strube textbook fixtures, has not been run because the figures are not typed yet.
+- Manuscript: front matter and BAB I–III. `make thesis` built `scratch/thesis.pdf` (63 pages) on 2026-10-03.
+- Software checks: `make test` passed on 2026-10-03 (4 checks for instrument v1, 20 for instrument v2, 27 for the MusicXML input/output).
+- Instrument v2: `research/voice_leading_v2.py`. Validation checks 3–5 were run on the music21 Bach chorales (results in `research/protocol.md`). Check 2, the Strube textbook fixtures, has not been run because the figures are not typed yet.
 - Strube: rule pages located in the 1928 edition and in the 2015 Indonesian translation by Pembimbing I (`research/literature/strube-rule-pages.csv`; translation pages in [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md)). Exercise inventory: 71 melody candidates and 47 given basses in exercises 1–118 (`research/literature/strube-exercise-inventory.csv`).
 - Shared MusicXML input/output (IO version 1.0, 2026-10-03): `research/harmonization_io.py` reads melodies, writes four-voice results, and holds the Coconet and DeepBach adapters. Its 27 software checks pass, and Bach's harmonizations of all 345 eligible corpus chorales survive the round trip with identical rule counts. No model has been run through it; the generation runners for protocol version 2 are not written.
 - Instrument v1 (historical, kept unchanged): `research/strube_evaluator.py`, four software checks, the A–D condition manifest, and generation adapters that hard-code BWV 66.6. Its known defects are listed in [maintenance.md](../maintenance.md).
@@ -46,7 +47,7 @@ These are this project's proposed completion criteria. Confirm department requir
 | G2. Literature | Read core sources; every retained claim mapped to a source page/section; search log supports the stated gap | Assistant verification for core sources; researcher reading not yet recorded; many sources checked from abstracts only | Read the core sources and fill `researcher_read_status` in [records/reading-notes.csv](records/reading-notes.csv) |
 | G3. Instrument | Strube pages for the five rules, exceptions, v2 definitions implemented, textbook fixtures pass, music21 cross-check, Huang Bach-rate comparison | Mostly done: pages found in both editions, v2 implemented and tested, checks 3–5 run; textbook fixtures pending | Confirm pages in print; type the nine figures |
 | G4. Comparative protocol | Melody inventory and eligibility, Bach sample seed, model revisions and checksums, generation settings, frozen analysis plan | Protocol version 2 drafted; inventory complete, typing and eligibility checks pending | Type melodies; agree the protocol; freeze before main generation |
-| G5. Pipeline integrity | Timing conversion fixed, quality exclusions applied, isolated runs, failed-file/count checks, reproducible records | Open | Work through [maintenance findings](../maintenance.md#research-correctness) before main generation |
+| G5. Pipeline integrity | Timing conversion fixed, quality exclusions applied, isolated runs, failed-file/count checks, reproducible records | Partly: the MusicXML input/output places notes by step, reads every written file back, and records ineligible melodies and failed outputs with a reason; version-2 generation runners, run isolation, and completion checks are open | Work through [maintenance findings](../maintenance.md#research-correctness) before main generation |
 | G6. Pilot | Both models process melodies from both groups, preserve the soprano, and pass quality control; pilot kept separate | Not run | Record failures and limits; do not select favourable outputs |
 | G7. Main data and analysis | Frozen protocol, raw artifacts, all attempts, actual eligible counts, run-specific analysis and figures | Not run | Collect and review the agreed dataset |
 | G8. Final manuscript | BAB I–III match executed methods; results and conclusion chapters, added after main data, cite measured artifacts and answer the questions; abstracts and appendices complete | BAB I–III working draft; results and conclusion chapters not written | Review interpretations and write conclusions from data |
@@ -57,7 +58,7 @@ These are this project's proposed completion criteria. Confirm department requir
 ### Researcher tasks
 
 1. Confirm the rule pages against both printed editions of Strube, and check 1928 p. 48 (exercises 67–68, read from translation p. 58).
-2. Type the 71 candidate melodies into MusicXML and fill the key, meter, length, and fermata columns of the inventory. Type the nine textbook figures in `strube-example-fixtures.csv`.
+2. Type the 71 candidate melodies into MusicXML, check each file with `read_melody` in `research/harmonization_io.py`, and fill the key, meter, length, and fermata columns of the inventory. Type the nine textbook figures in `strube-example-fixtures.csv`.
 3. Read the core sources and record your own reading in the reading ledger.
 4. Review the AI-drafted motto, halaman persembahan, and kata pengantar, including their personal details.
 5. Confirm Adityo Legowo as Cognate and Eki Satria as Dosen Pembimbing Akademik. Pembimbing I, Pembimbing II, and Cognate still print NIPs because their NUPTKs are unknown.

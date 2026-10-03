@@ -1,6 +1,6 @@
 # Perubahan dari proposal v2 ke naskah v3
 
-Disusun 2 Oktober 2026. Dokumen ini menjelaskan apa yang berubah dari proposal v2 (tag `proposal/v2`) ke naskah v3, mengapa berubah, dan dasar setiap perubahan.
+Disusun 2 Oktober 2026, diperbarui 3 Oktober 2026. Dokumen ini menjelaskan apa yang berubah dari proposal v2 (tag `proposal/v2`) ke naskah v3, mengapa berubah, dan dasar setiap perubahan.
 
 ## Asal revisi
 
@@ -23,7 +23,7 @@ Pembedaan ini penting saat sidang. Jika ditanya "apakah dosen meminta NotaGen di
 | Variabel | Variabel independen empat kondisi instruksi; variabel dependen *Strube Score* | X1 model, X2 asal melodi, Y laju pelanggaran per birama untuk lima kaidah | Masukan dosen F06, F07; perubahan isi variabel adalah tindak lanjut peneliti |
 | Hipotesis | Tidak dirumuskan sebagai H0/H1 | H0/H1 untuk pertanyaan 2 dan 3; arah untuk kuint dan oktaf mengikuti temuan Huang dkk. (2019) | Masukan dosen F07 |
 | Landasan teori | Teori harmoni fungsional Strube dan formalisasi matematis arsitektur model | Grand theory harmoni fungsional, middle theory kaidah gerak suara Strube, applied theory definisi operasional, teori pendukung model generatif dan distribusi data latih | Masukan dosen F08, F12 |
-| Rujukan Strube | Dikutip tanpa halaman | Setiap kaidah dikutip dengan halaman edisi 1928: hlm. 9, 12–13, 20, 174 | Masukan dosen F05 ("perlu Strube"); halaman dibaca peneliti dari buku |
+| Rujukan Strube | Dikutip tanpa halaman | Setiap kaidah dikutip dengan halaman edisi 1928: hlm. 9, 12–13, 20, 174 | Masukan dosen F05 ("perlu Strube"); halaman dicari asisten dari pindaian edisi 1928 (OCR dan gambar halaman) dan perlu dicocokkan peneliti dengan buku cetak |
 | Rumus | Rumus tanpa penjelasan asal | Rumus dinyatakan sebagai definisi operasional susunan peneliti, simbolnya didefinisikan, dan setiap syarat dirujuk ke halaman Strube | Masukan dosen F10 |
 | Posisi peneliti | Tidak dibahas | Paragraf posisionalitas: insider terhadap tradisi teori, outsider terhadap model, refleksivitas, dan langkah pengendalian bias | Masukan dosen F09 |
 | Model | DeepBach, Coconet, NotaGen | DeepBach dan Coconet | Tindak lanjut peneliti: NotaGen tidak dapat diberi melodi yang harus dipertahankan |
@@ -48,7 +48,7 @@ Pembedaan ini penting saat sidang. Jika ditanya "apakah dosen meminta NotaGen di
 | F04 | "Pakai: 5W 1H" | Semua pertanyaan diawali "Bagaimana" | BAB I Pertanyaan Penelitian |
 | F05 | "Q3 tidak boleh naratif, perlu Strube" | Pertanyaan 3 berbentuk pertanyaan langsung; semua pertanyaan menyebut kaidah Strube; kaidah dikutip dengan halaman | BAB I; BAB II Landasan Teori |
 | F06 | "efektivitas / peningkatan … terhadap … var terikat" | Pertanyaan 3: pengaruh asal melodi terhadap tingkat kepatuhan | BAB I; BAB III Variabel |
-| F07 | "Quant: harus ada hipotesis dan variabel" | Variabel X1, X2, Y; hipotesis H0/H1 per kaidah | BAB II Asumsi dan Hipotesis; BAB III Variabel |
+| F07 | "Quant: harus ada hipotesis dan variabel" | Variabel X1, X2, Y; hipotesis H0/H1 per kaidah | BAB II Asumsi, Hipotesis; BAB III Variabel Penelitian |
 | F08 | Grand theory | Harmoni fungsional sebagai grand theory | BAB II Landasan Teori |
 | F09 | Posisionalitas, insider/outsider, refleksivitas | Paragraf posisi peneliti dan pengendalian bias | BAB III akhir Metode Pendekatan |
 | F10 | Rumus matematis: ada sumbernya? | Rumus diatribusikan sebagai definisi operasional peneliti, simbol didefinisikan, syarat dirujuk ke Strube; rumus skor tanpa sumber diganti | BAB III Instrumen Pengukuran |
@@ -69,7 +69,7 @@ Peneliti kemudian mengikatkan setiap pilihan pada sumber tertulis:
 - **Desain dan ukuran:** analisis Bach Doodle (Huang dkk., 2019, §6.3). Kuint dan oktaf sejajar dihitung per birama dengan music21, dan pelanggaran meningkat ketika melodi tidak menyerupai data latih. Gagasan ini menjadi variabel asal melodi.
 - **Kategori kesalahan:** rubrik Yan dkk. (2018), dibatasi pada kategori yang dapat diukur tanpa analisis akor.
 - **Rumusan dan pengecualian kaidah:** Strube (1928). Persilangan dibolehkan Strube kecuali melewati sopran (hlm. 174), dan tumpang tindih dibolehkan bila satu suara melangkah (hlm. 12–13), sehingga kedua kaidah dirumuskan mengikuti batas itu.
-- **Melodi soal:** latihan melodi Strube hlm. 11–80 (69 latihan). Latihan bab nada non-akor dan melodi chorale Bach dikeluarkan dengan alasan tertulis.
+- **Melodi soal:** latihan melodi Strube hlm. 11–80 (71 latihan; latihan 67–68 dibaca dari terjemahan 2015 hlm. 58 karena hlm. 48 tidak ada di pindaian 1928). Latihan bab nada non-akor dan melodi chorale Bach dikeluarkan dengan alasan tertulis.
 
 Seluruh pengukuran dilakukan secara komputasional. Penilai manusia tidak digunakan karena berada di luar cakupan dan sumber daya penelitian sarjana ini; keterbatasan ini dinyatakan sebagai batas klaim.
 
@@ -91,7 +91,8 @@ Seluruh pengukuran dilakukan secara komputasional. Penilai manusia tidak digunak
 | Inventaris latihan Strube | [strube-exercise-inventory.csv](../../../research/literature/strube-exercise-inventory.csv) |
 | Instrumen versi 2 dan hasil validasinya | [research/voice_leading_v2.py](../../../research/voice_leading_v2.py); protokol bagian "Results of checks 3–5" |
 | Catatan kronologis | [research-log.md](../records/research-log.md), [PROGRESS.md](../PROGRESS.md) |
-| Perbandingan teks berdampingan | `make diff proposal/v2 head` (setelah perubahan di-commit) |
+| Format masukan dan keluaran model (MusicXML) | [research/harmonization_io.py](../../../research/harmonization_io.py); protokol bagian "Shared input and output" |
+| Perbandingan teks berdampingan | `make diff proposal/v2 head` |
 
 ## Kalimat untuk menjelaskan revisi
 
