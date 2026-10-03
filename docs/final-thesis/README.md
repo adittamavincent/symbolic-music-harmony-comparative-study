@@ -17,6 +17,7 @@ final-thesis/
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
 │   ├── defense-qa.md              All practice questions and answers (Q1–Q78, with 16a–c and 41a–b)
+│   ├── model-dan-istilah.md       DeepBach, Coconet, and technical terms in plain Indonesian
 │   └── researcher-guide.md        Research fundamentals and reading list
 └── records/                       Running records
     ├── research-log.md            Dated history of decisions and findings
@@ -29,6 +30,7 @@ Where to start:
 | --- | --- |
 | Know what is done and what is open | [PROGRESS.md](PROGRESS.md) |
 | Prepare for Pembimbing I | [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md), then [study/defense-qa.md](study/defense-qa.md) |
+| Understand how DeepBach and Coconet work | [study/model-dan-istilah.md](study/model-dan-istilah.md) |
 | Explain why the design changed after v2 | [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md) |
 | Check what the lecturers actually asked | [supervision/feedback.md](supervision/feedback.md) |
 | Find when and why something was decided | [records/research-log.md](records/research-log.md) |

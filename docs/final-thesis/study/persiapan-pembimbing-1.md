@@ -6,7 +6,7 @@ Disusun 2 Oktober 2026 untuk peneliti, diperbarui 3 Oktober 2026. Berkas ini bah
 
 1. Pelajari bagian 1. Pembimbing I adalah penerjemah buku Strube, jadi bagian ini paling mungkin muncul di bimbingan pertama.
 2. Kuasai rantai argumen di bagian 2 sampai bisa dijelaskan dalam dua menit tanpa catatan. Kalimat pegangannya ada di awal defense-qa.md.
-3. Pahami konsep dan rumus di bagian 3, lalu kerjakan latihan hitung manual di bagian 4.
+3. Pahami konsep dan rumus di bagian 3, lalu kerjakan latihan hitung manual di bagian 4. Cara kerja DeepBach dan Coconet serta istilah teknisnya dijelaskan di [model-dan-istilah.md](model-dan-istilah.md).
 4. Baca sendiri sumber inti di bagian 5. Kolom `researcher_read_status` di [reading-notes.csv](../records/reading-notes.csv) masih kosong untuk semua sumber.
 5. Latih defense-qa.md, terutama bagian J (Q59–Q78) yang disusun untuk bimbingan Pembimbing I.
 6. Selesaikan daftar periksa di bagian 7 sebelum mengirim.
