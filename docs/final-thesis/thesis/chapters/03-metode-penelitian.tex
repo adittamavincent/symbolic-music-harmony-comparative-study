@@ -95,9 +95,10 @@ Jarak antar-suara atas diperiksa pada pasangan sopran--alto dan alto--tenor \par
 Tumpang tindih suara diperiksa pada tiga pasangan suara yang bersebelahan. Kejadian dihitung apabila suara bawah bergerak lebih tinggi daripada nada sebelumnya pada suara atas, atau suara atas bergerak lebih rendah daripada nada sebelumnya pada suara bawah \parencite[12]{strube1928}, dengan dua syarat: kedua suara tidak bersilangan pada peristiwa tersebut, sehingga satu kejadian tidak dihitung dua kali, dan tidak ada suara pada pasangan itu yang bergerak melangkah, yaitu satu atau dua semiton, karena Strube membolehkan tumpang tindih dengan gerak melangkah \parencite[12--13]{strube1928}. Dengan $\text{Langkah}_{v}(t) = \mathds{1}\left(|\Delta p_{v,t}| \in \{1, 2\}\right)$:
 
 {\small
-\begin{equation}
-\text{Tumpang}_{ij}(t) = \mathds{1}\left(p_{j,t} > p_{i,t-1} \lor p_{i,t} < p_{j,t-1}\right) \times \mathds{1}\left(d_{ij,t} \geq 0\right) \times \left(1 - \max\left(\text{Langkah}_{i}(t), \text{Langkah}_{j}(t)\right)\right)
-\end{equation}
+\begin{multline}
+\text{Tumpang}_{ij}(t) = \mathds{1}\left(p_{j,t} > p_{i,t-1} \lor p_{i,t} < p_{j,t-1}\right) \times \mathds{1}\left(d_{ij,t} \geq 0\right) \\
+\times \left(1 - \max\left(\text{Langkah}_{i}(t), \text{Langkah}_{j}(t)\right)\right)
+\end{multline}
 }
 
 Karena sopran diberikan sebagai soal, setiap pasangan yang diperiksa melibatkan sedikitnya satu suara yang dihasilkan model. Seluruh penandaan karena itu mencerminkan keputusan model terhadap melodi yang diberikan. Ringkasan setiap kaidah ditunjukkan pada Tabel~\ref{tab:kaidah}.
