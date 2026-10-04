@@ -11,7 +11,7 @@ This file holds the current status only. Dated history is in [records/research-l
 | v1 | Proposal | `proposal/v1` tag |
 | v2 | Proposal | `proposal/v2` tag; reviewed in Seminar Musikologi 2 (F01–F12) |
 | v3 | Final thesis | `thesis/v3` tag (2026-10-03); BAB I–III, audit, defense materials |
-| v4 | Final thesis | Working tree, 2026-10-04: revision after a peer review (P01–P17) and the open audit findings; pipeline ready to run; no tag yet |
+| v4 | Final thesis | `thesis/v4` tag (2026-10-04): revision after a peer review (P01–P17) and the open audit findings; pipeline ready to run |
 
 Lecturer notes from the v2 review are F01–F12 in [supervision/feedback.md](supervision/feedback.md). The peer review of v3 by a fellow student is in [supervision/review-teman-2026-10-04.md](supervision/review-teman-2026-10-04.md); it is not lecturer feedback. No supervisor comments on v3 or v4 have been recorded yet.
 
