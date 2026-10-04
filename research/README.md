@@ -1,50 +1,70 @@
 # Research workspace
 
-This directory owns the computational research for final thesis v3. Commands below run from the repository root. The academic manuscript lives in `docs/final-thesis/thesis/`.
+This directory owns the computational research for the final thesis (v4, protocol version 2.1). Commands below run from the repository root. The academic manuscript lives in `docs/final-thesis/thesis/`; the design is in [protocol.md](protocol.md) and its machine-readable settings in `experiments/protocol_v2.json`.
 
 | Path | Job |
 | --- | --- |
-| `voice_leading_v2.py` | Measurement instrument for protocol version 2: the five Strube rules, counted per measure |
-| `harmonization_io.py` | Shared MusicXML input and output for protocol version 2: reads a melody, writes the four-voice result, and holds the Coconet and DeepBach input adapters and output parsers |
-| `strube_evaluator.py` | Instrument version 1 (parallels and a soprano leading-tone check), kept unchanged as the historical instrument |
-| `tests/` | Software checks with known inputs and expected behavior; not the main research dataset |
-| `experiments/strube_conditions.json` | Version-1 condition matrix (A–D), superseded by protocol version 2 and kept as history |
-| `experiments/scripts/` | Version-1 model adapters, generation orchestration, evaluation, plotting; `validate_instrument_v2.py` runs validation checks 3–5 |
-| `scripts/bootstrap_models.py` | Download/setup third-party implementations and write the Coconet runner |
-| `scripts/openalex_search.py` | Bounded, repeatable literature search with CSV, JSONL, and query manifest |
-| `literature/` | OpenAlex batch plan (`openalex_queries.json`), Strube rule pages, exercise inventory, textbook fixture list, screening notes |
-| `requirements.txt` | Research Python dependencies; mostly unpinned |
-| `protocol.md` | Protocol version 2: design, instrument definitions, validation results, analysis plan |
-| `models/` | Local model clones/checkpoints, ignored by Git; may not exist yet |
-| `outputs/` | Local metadata, MIDI, CSV, charts, ignored by Git |
+| `voice_leading_v2.py` | Measurement instrument (version 2.0): the five Strube rules, counted per measure |
+| `harmonization_io.py` | Shared MusicXML input and output (IO version 1.0): reads a melody, writes the four-voice result, holds the Coconet and DeepBach encoders and output parsers |
+| `melody_text.py` | Plain-text typing format for the Strube melodies, converted to MusicXML and read back |
+| `melody_sets.py` | Bach frame from the music21 corpus, typed Strube set, duplicates, features, seeded Bach sample, inventory templates |
+| `generation_v2.py` | Run directories, attempt log, and the DeepBach, Coconet, and fake backends |
+| `coconet/` | Tracked Node runner for Magenta.js Coconet and its pinned `package.json` |
+| `evaluate_v2.py` | Quality control and measurement of a run (main, fermata, merged variants), Bach reference |
+| `analysis_v2.py` | Descriptive statistics, Wilcoxon, Mann–Whitney, Holm, effect sizes, power, LaTeX tables, box plots |
+| `run_checks_v2.py` | Completeness check of a run; seeded discussion examples with score excerpts |
+| `deepbach_membership.py` | Estimate which Bach chorales were in DeepBach's training portion |
+| `experiments/scripts/v2.py` | Command line for all of the above (`make` targets call it) |
+| `scripts/bootstrap_v2.py` | Install DeepBach (pinned commit and resources) and Coconet (Magenta.js 1.23.1); writes `models/MODELS.json` |
+| `strube_evaluator.py`, `experiments/scripts/run_*.py`, `scripts/bootstrap_models.py`, `run_all.py` | Version 1 instrument and pipeline, kept unchanged as history; do not use for study data |
+| `tests/` | Software checks with known inputs; not research data |
+| `literature/` | OpenAlex plan, screening notes, Strube rule pages, exercise inventory, typed melodies, fixture list |
+| `requirements.txt`, `requirements-lock.txt` | Dependencies; the lock records the exact versions of the Python 3.12 environment |
+| `models/`, `outputs/` | Local model code and weights, and all generated files; ignored by Git |
 
-Keep `tests` and `experiments` as separate names inside this workspace. A software test checks implementation behavior; an experiment collects evidence about a research question. Instrument validation also needs independently annotated musical examples. Listening to generated samples supports inspection but does not automatically constitute a formal listening study.
+Software tests check implementation behavior. Instrument validation, pilot data, and main data are separate kinds of evidence; passing tests does not validate the instrument or answer the research questions.
 
-## Commands
+## Environment
 
 ```bash
+uv venv .venv --python 3.12
+uv pip install --python .venv/bin/python -r research/requirements-lock.txt
 make test
-.venv/bin/python research/experiments/scripts/run_experiment.py --dry-run
-make setup
-make exp
-make eval
-make plot
 ```
 
-The first two commands inspect the existing instrument/settings without model generation. The remaining commands operate the existing, unfinished pipeline. Resolve the [readiness gates](../docs/final-thesis/PROGRESS.md#completion-gates) before treating their outputs as final research data. Setup may download third-party code and dependencies; generation may download checkpoints.
+Python 3.12 replaced 3.10 on 2026-10-04: SciPy 1.15.3, the last release for Python 3.10, no longer loads on this macOS. Node.js 18 or later is needed for Coconet.
 
-`make test` uses `uv run`; the direct `.venv/bin/python` command uses the existing local environment. Install dependencies from the repository root with `uv pip install -r research/requirements.txt` after creating/activating the environment as described in the root README.
+## Running the study
 
-## Folder transition
+Each step writes files that the next step reads. Nothing below has been run with a model yet.
 
-The old root `experiments/`, `tests/`, and local `outputs/` moved here. Update direct commands to start with `research/`. The root `run_all.py`, `strube_evaluator.py`, `setup.py`, and `requirements.txt` retain their previous entry-point roles and delegate here. `strube_evaluator.py` is instrument version 1, kept unchanged as the historical instrument; instrument version 2 is `voice_leading_v2.py`.
+```bash
+make dry-run-v2          # the whole chain with fake backends in a temporary folder; no model, no research data
+make melody-templates    # once: empty typing templates for the 71 Strube candidates (already created)
+# type the melodies in research/literature/strube-melodies/ (see its README), then:
+make melodies            # Bach frame + typed Strube set -> research/outputs/melodies/manifest.csv; fills the inventory
+make setup-v2            # downloads DeepBach code and weights and Magenta.js; records checksums
+make preflight           # can each model encode each melody? (no generation)
+make membership          # DeepBach training membership estimate
+make select              # main sample (seeded) and pilot set
+make pilot               # pilot run -> research/outputs/runs/pilot-<time>/
+make evaluate RUN=research/outputs/runs/pilot-<time>
+make analyze RUN=research/outputs/runs/pilot-<time>
+make check-run RUN=research/outputs/runs/pilot-<time>
+```
 
-Each script's existing `PROJECT_ROOT` now points to this research workspace. Relative internal paths remain `experiments/`, `models/`, and `outputs/`. Historical metadata retains its original paths as provenance; do not interpret those paths as new runtime locations.
+After the pilot, record what was learned in `docs/final-thesis/records/research-log.md`, settle the open decisions in `docs/final-thesis/PROGRESS.md`, agree the protocol with the supervisor, and set `"frozen": true` in `experiments/protocol_v2.json`. Then:
+
+```bash
+make generate            # main run; refuses while the protocol is not frozen
+make evaluate RUN=research/outputs/runs/main-<time>
+make analyze RUN=research/outputs/runs/main-<time>
+make examples RUN=research/outputs/runs/main-<time>
+make check-run RUN=research/outputs/runs/main-<time>
+```
+
+`make analyze` writes the tables for BAB IV (`analysis/tables/*.tex`, in Indonesian), the box plots (`figures/`), and `analysis/summary.json`. A run that stops halfway continues with `uv run python research/experiments/scripts/v2.py generate --stage main --resume <run-dir>`; failed attempts are retried only with `--retry-failed` and are logged as new attempts.
 
 ## Data records
 
-The current runner uses shared output folders. Run isolation has not been implemented. Do not assume that rerunning with fewer samples removes old files or that `LATEST_RUN_METADATA.json` proves successful generation.
-
-Before main collection, implement run-specific generation, evaluation, and plotting paths together. The intended layout is `outputs/<run-id>/` with raw generation, attempt log, effective configuration, per-file evaluation, analysis, and figures bound to that run. Keep pilot and main runs distinct and retain every failed attempt. This is a proposed layout, not a current command-line feature.
-
-For every final table, record the run ID, code revision, instrument version, manifest snapshot, model/checkpoint revisions and hashes, environment, seed policy, requested/actual counts, exclusion reasons, and analysis command. Back up the evidence bundle outside ignored folders; Git currently does not preserve raw outputs or checkpoints. Do not overwrite old measurements when changing the instrument.
+A run directory is never overwritten. It holds `run.json` (protocol snapshot, code revision and whether the working tree was clean, environment, model manifest), the melodies given to the models, `attempts.jsonl` (one line per attempt, append-only), raw model output, four-part MusicXML and MIDI, and later `evaluation/`, `analysis/`, `figures/`, and `examples/`. Back the run directories up outside the repository; Git does not keep them. Do not change the instrument without a new version number, and keep earlier measurements when it changes.

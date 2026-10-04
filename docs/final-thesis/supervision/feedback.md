@@ -68,4 +68,6 @@ The interpretations below are ours. The table shows how the manuscript answers e
 | F11 | Qualitative or quantitative; cite a common source (Creswell or Sugiyono) | Quantitative. Question 1 descriptive, question 2 comparative, question 3 causal-associative with melody origin as the input the researcher sets. No human raters, so no qualitative strand. | III.A cites `creswell2018` and `sugiyono2019` | Sugiyono edition and pages; Creswell definition page |
 | F12 | Grand theory (repeated) | Same as F08 | Same as F08 | Same as F08 |
 
+Later reviews: a fellow student's reading of v3 (4 October 2026) is recorded separately as P01–P17 in [review-teman-2026-10-04.md](review-teman-2026-10-04.md). It is peer feedback, not lecturer feedback, and is not added to this table.
+
 Add one row per distinct request. Close a row only when the change and its evidence are linked. Record later supervisor decisions with dates; do not replace the original review note with our interpretation.

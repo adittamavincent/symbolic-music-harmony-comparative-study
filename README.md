@@ -1,8 +1,8 @@
 # Symbolic Music Harmony Comparative Study
 
-This repository contains proposal v1/v2, the continuing final-thesis v3 draft, and experiment code for comparing DeepBach, Coconet, and NotaGen against selected harmony rules from Gustav Strube. The academic text is in Indonesian.
+This repository contains proposal v1/v2, final-thesis v3 (tag `thesis/v3`), the active final-thesis v4, and experiment code for measuring how often DeepBach and Coconet break five voice-leading rules from Gustav Strube. The academic text is in Indonesian.
 
-On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). The measurement instrument for version 2 exists (`research/voice_leading_v2.py`); the generation adapters described below still implement the earlier version-1 design and have not yet been updated.
+On 2026-10-02 the v3 method was revised to a machine-only design that continues Huang et al. (2019): DeepBach and Coconet harmonize the same soprano melodies from Bach chorales and from Strube's exercises, and five voice-leading rules are counted per measure ([research/protocol.md](research/protocol.md), version 2). Protocol version 2.1 (2026-10-04) is implemented end to end in `research/` (melody preparation, generation with both models, evaluation, statistics, tables, figures) and checked with fake backends; no model has been run. See [research/README.md](research/README.md). The version-1 commands (`make setup`, `make exp`, `make eval`, `make plot`) remain as history.
 
 Start final-thesis work with [the researcher guide](docs/final-thesis/study/researcher-guide.md) and [the progress record](docs/final-thesis/PROGRESS.md). Lecturer review notes belong in [feedback.md](docs/final-thesis/supervision/feedback.md).
 
@@ -16,7 +16,7 @@ Run commands from the repository root.
 | --- | --- |
 | See my branch and uncommitted changes | `git status --short --branch` |
 | See saved milestones | `git tag --list --sort=version:refname` |
-| Build the current final-thesis v3 draft | `make thesis` |
+| Build the current final-thesis v4 draft | `make thesis` |
 | Build the current proposal | `make proposal` |
 | Build all proposal documents | `make proposal-phase` |
 | Build all current document PDFs | `make all` |
@@ -27,7 +27,8 @@ Run commands from the repository root.
 | Rebuild the latest committed thesis | `make thesis head` |
 | Compare the two saved proposals | `make diff proposal/v1 proposal/v2` |
 | Compare a proposal with the latest commit | `make diff proposal/v1 head` |
-| Check the evaluator | `make test` |
+| Check the evaluator and pipeline | `make test` |
+| Run the whole experiment chain without models | `make dry-run-v2` |
 | Preview generation settings without loading models | `uv run python research/experiments/scripts/run_experiment.py --dry-run` |
 | Evaluate existing generated MIDI | `make eval`, then `make plot` |
 | Find known problems and cleanup priorities | Read [the maintenance audit](docs/maintenance.md) |
@@ -41,7 +42,7 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 | --- | --- |
 | Proposal | Chapters 1–3, schedule, slides, presenter notes, and Q&A are present. |
 | Saved proposal versions | `proposal/v1` and `proposal/v2` exist. |
-| Thesis v3 | Front matter and BAB I–III, following the department's 2026 research-proposal outline. Results and conclusion chapters wait for main data; the earlier five-chapter draft remains in Git history. |
+| Thesis v4 | Front matter and BAB I–III, following the department's 2026 research-proposal outline. Results and conclusion chapters wait for main data; the earlier five-chapter draft remains in Git history. |
 | Thesis versions | No `thesis/v*` tags exist yet. |
 | Thesis defense slides | No template or build recipe exists. `thesis-slides` is only a phony Make target and produces nothing. |
 | Evaluator | Instrument v2 (`research/voice_leading_v2.py`) measures the five Strube rules; validation checks 3–5 have been run on the Bach chorales and the textbook fixtures are pending. Instrument v1 (`research/strube_evaluator.py`: parallel fifths/octaves and a soprano leading-tone check) is kept unchanged as the historical instrument. |
@@ -75,12 +76,12 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 │   ├── README.md / maintenance.md   Document guide and technical findings
 │   ├── proposal-phase/             Proposal v1/v2 sources, slides, shared assets
 │   └── final-thesis/               Map in its README.md
-│       ├── PROGRESS.md              v3 status, completion gates, open items
+│       ├── PROGRESS.md              v4 status, completion gates, open items
 │       ├── eval.md                  Writing checks
-│       ├── supervision/             Lecturer notes, v2→v3 changes, meeting handout
+│       ├── supervision/             Lecturer notes, peer review, v2→v3 and v3→v4 changes, handouts
 │       ├── study/                   Supervisor preparation, defense Q&A, researcher guide
 │       ├── records/                 Research log and reading ledger
-│       └── thesis/                  Active v3 template, cover, BAB I–III
+│       └── thesis/                  Active v4 template, cover, BAB I–III
 ├── research/
 │   ├── README.md / protocol.md      Research commands and design decisions
 │   ├── requirements.txt            Canonical Python dependencies
@@ -109,10 +110,10 @@ Local model/output directories and LaTeX build artifacts are ignored and may be 
 | Read or edit source | Git and a text editor |
 | Build current documents | Make, `envsubst`, `latexmk`, pdfLaTeX, Biber, and the template's TeX packages |
 | Build saved proposals or visual diffs | Document tools plus Python 3 |
-| Run evaluator/tests | Python 3.10+ and Python dependencies |
+| Run evaluator/tests | Python 3.12 and Python dependencies (`research/requirements-lock.txt`) |
 | Generate music | Evaluator tools plus model repositories/resources; Node/npm for Coconet |
 
-Python 3.10 is the baseline used by the local environment. There is no Node version file or dependency lockfile in this repository. Document builds do not require model downloads or Node.
+Python 3.12 is the baseline used by the local environment since 2026-10-04. Coconet needs Node.js 18 or later; its exact packages are pinned in `research/coconet/package.json`. Document builds do not require model downloads or Node.
 
 For a fresh checkout:
 
@@ -148,14 +149,18 @@ The `ENV_FILE` variable currently changes file dependencies, but the Makefile st
 For a fresh Python setup:
 
 ```bash
-uv venv .venv --python 3.10
-uv pip install --python .venv/bin/python -r requirements.txt
+uv venv .venv --python 3.12
+uv pip install --python .venv/bin/python -r research/requirements-lock.txt
 make test
 ```
 
-The commands below use `uv run python`. With the existing environment, `.venv/bin/python` is also a direct option. `requirements.txt` pins `music21==9.3.0`; other packages are unpinned. There is no `pyproject.toml` or `uv.lock`.
+The commands below use `uv run python`. With the existing environment, `.venv/bin/python` is also a direct option. `research/requirements-lock.txt` records the exact versions of the Python 3.12 environment (2026-10-04); `requirements.txt` pins only `music21==9.3.0`. Python 3.10 is no longer usable on this Mac: SciPy 1.15.3, its last SciPy release, fails to load.
 
 ### Model setup, when generating music
+
+Protocol version 2.1 uses `make setup-v2`, which installs DeepBach at the pinned commit with its pretrained resources and Magenta.js 1.23.1 for Coconet, and records checksums in `research/models/MODELS.json`. The study order is in [research/README.md](research/README.md).
+
+The version-1 setup below is kept as history:
 
 ```bash
 make setup
@@ -220,12 +225,13 @@ Templates regenerate when their template or `.env.local` changes. Every document
 
 Make builds compile in temporary directories and publish only successful PDFs to `scratch/`. Saved proposals and diffs also stage their generated TeX, bibliography, and assets temporarily. Temporary files are removed after the build. Failed builds preserve a named `.log` in `scratch/` and leave the previous successful PDF intact. Presenter notes read `scratch/presentation.pdf` after building slides. Generated current entry-point `.tex` files remain beside their templates.
 
-Proposal, thesis, and diff builds also publish an identical copy for sending, using `<Jenis>_<Versi>_23104810131_Vincent.pdf`. `make proposal` uses the current proposal revision v2; `make thesis` uses the current thesis revision v3. Saved revisions use their resolved tag label; untagged refs use the full commit ID.
+Proposal, thesis, and diff builds also publish an identical copy for sending, using `<Jenis>_<Versi>_23104810131_Vincent.pdf`. `make proposal` uses the current proposal revision v2; `make thesis` uses the current thesis revision v4. Saved revisions use their resolved tag label; untagged refs use the full commit ID.
 
 | Command | Copy for sending, inside `scratch/` |
 | --- | --- |
 | `make proposal v2` | `Proposal_v2_23104810131_Vincent.pdf` |
-| `make thesis` or `make thesis v3` | `Skripsi_v3_23104810131_Vincent.pdf` |
+| `make thesis` | `Skripsi_v4_23104810131_Vincent.pdf` |
+| `make thesis v3` | `Skripsi_v3_23104810131_Vincent.pdf` |
 | `make diff proposal/v1 proposal/v2` | `Diff_v1-v2_23104810131_Vincent.pdf` |
 | `make diff proposal/v2 thesis/v3` | `Diff_v2-v3_23104810131_Vincent.pdf` |
 
@@ -288,23 +294,23 @@ git show --no-patch 'proposal/v2^{commit}'
 
 Use `docs:` for writing/documentation, `fix:` for incorrect behavior, `feat:` for new behavior, `refactor:` for restructuring, and `chore:` for maintenance. Example: `docs: revise thesis methodology after advisor feedback`.
 
-### Save final-thesis v3
+### Save a final-thesis milestone
 
-The researcher uses one continuing revision sequence: proposal v1, proposal v2, then final thesis v3. The next milestone is `thesis/v3`. Do not restart the active manuscript at `thesis/v1` or call it proposal v3.
+The researcher uses one continuing revision sequence: proposal v1, proposal v2, then final thesis v3 (tagged `thesis/v3` on 2026-10-03) and v4 (active). The next milestone is `thesis/v4`. Do not restart the active manuscript at `thesis/v1` or call it proposal v3.
 
 Build and inspect the active manuscript with `make thesis`. Review `git diff` and the [completion gates](docs/final-thesis/PROGRESS.md#completion-gates), then commit the intended sources. Include research/protocol/shared-asset changes when they belong to the same reviewed snapshot.
 
 After committing a draft that is ready to preserve as a review milestone:
 
 ```bash
-git tag -a thesis/v3 -m "Final-thesis v3 continuing proposal v2"
+git tag -a thesis/v4 -m "Final-thesis v4 continuing thesis v3"
 git push origin main
-git push origin thesis/v3
+git push origin thesis/v4
 ```
 
 These commands are a recipe, not a record of actions taken here. Check the branch before pushing; push the actual branch if it differs from `main`. Keep published tags fixed. A review milestone can be a draft; its readiness should be recorded explicitly.
 
-Preserve the submitted/reviewed PDF as `thesis-v3-YYYY-MM-DD.pdf` with the actual date, matching metadata, and research evidence. These artifacts are ignored by Git. The next continuing thesis milestone would be `thesis/v4` when appropriate.
+Preserve the submitted/reviewed PDF as `thesis-v4-YYYY-MM-DD.pdf` with the actual date, matching metadata, and research evidence. These artifacts are ignored by Git.
 
 Use the diff command below to compare committed v3 sources with a proposal milestone.
 
@@ -315,7 +321,7 @@ Revisions v1 and v2 are proposals; v3 and later are thesis revisions. Each comma
 ```bash
 make proposal v1                    # scratch/proposal_v1.pdf (also: proposal/v1)
 make proposal v2                    # scratch/proposal_v2.pdf
-make thesis v3                      # scratch/thesis_v3.pdf, once the thesis/v3 tag exists
+make thesis v3                      # scratch/thesis_v3.pdf (tag thesis/v3)
 make thesis head                    # scratch/thesis_<commit-ID>.pdf, latest commit
 make thesis 9896cb5                 # any thesis-phase commit
 make proposal v3                    # rejected: v3 is a thesis revision
@@ -474,5 +480,5 @@ Correct evaluation validity and version-path selection first, then consolidate h
 | Setup reported success but npm was absent | Bootstrap only warns in that case. Install npm and rerun setup before Coconet generation. |
 | NotaGen retries need inspection | Use `NOTAGEN_VERBOSE=1`; `NOTAGEN_MAX_ATTEMPTS` defaults to 5 per requested sample. Inspect failed ABC files. |
 | Empty or unexpectedly large result counts | Check missing folders and stale MIDI; archive outputs between independent experiments. |
-| Historical build rejected | Read the message: v1–v2 and pre-thesis commits use `make proposal <ref>`; v3+, `head`, and thesis-phase commits use `make thesis <ref>`. `thesis/v3` exists only after it is tagged. |
+| Historical build rejected | Read the message: v1–v2 and pre-thesis commits use `make proposal <ref>`; v3+, `head`, and thesis-phase commits use `make thesis <ref>`. `thesis/v4` exists only after it is tagged. |
 | A PDF remains after a failed Make build | This is the previous successful PDF. Read the named failure log in `scratch/`; Make reports failure and does not publish a partial PDF. |

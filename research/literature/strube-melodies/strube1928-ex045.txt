@@ -1,0 +1,8 @@
+# Ketik melodi latihan ini dari cetakan Strube (1928). Petunjuk: research/literature/strube-melodies/README.md
+kode: strube1928-ex045
+sumber: Strube 1928, hlm. 31, latihan 45 (PDF hlm. 37)
+kunci: 
+mode: 
+birama: 
+anakan: 0
+nada: 

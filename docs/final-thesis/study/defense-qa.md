@@ -107,7 +107,7 @@ Karena Strube sendiri membolehkan persilangan sesekali bila menghasilkan gerak s
 Strube mendefinisikan tumpang tindih dan menyatakan gerak itu hanya dipakai bila salah satu suara bergerak melangkah (hlm. 12); Gambar 33 hlm. 13 menandai kasus kedua suara melompat sebagai "avoid". Instrumen mengikuti batas itu: melangkah berarti satu atau dua semiton.
 
 **16c. Kenapa kuint dengan gerak berlawanan tidak dihitung, padahal music21 menghitungnya?**
-Strube hlm. 9 menyatakan kuint dan oktaf berurutan dengan gerak berlawanan tidak bermasalah. Pada 345 chorale Bach yang memenuhi syarat (dari 371 di korpus music21), semua 69 penandaan tambahan music21 adalah kasus gerak berlawanan; untuk kasus lain kedua implementasi identik.
+Strube hlm. 9 menyatakan kuint dan oktaf berurutan dengan gerak berlawanan tidak bermasalah. Pada 345 entri chorale Bach yang memenuhi syarat (dari 371 entri daftar music21, yang mewakili 350 berkas; lihat Q111), semua 69 penandaan tambahan music21 adalah kasus gerak berlawanan; untuk kasus lain kedua implementasi identik.
 
 **17. Apa beda persilangan dan tumpang tindih suara?**
 Persilangan terjadi pada satu saat: suara bawah berbunyi lebih tinggi daripada suara atas. Tumpang tindih terjadi pada perpindahan: suara bergerak melewati nada yang baru saja dibunyikan suara di sebelahnya, walaupun pada saat baru keduanya tidak bersilangan. Definisi tumpang tindih sengaja mensyaratkan tidak ada persilangan agar satu kejadian tidak dihitung dua kali.
@@ -141,7 +141,7 @@ Kelompok Bach memang didefinisikan sebagai melodi dari jenis musik yang dipelaja
 
 **25. Kenapa 30 melodi per kelompok?**
 Dari analisis daya. Untuk mendeteksi efek besar (d = 0,8 menurut Cohen) dengan α = 0,05 dua arah dan daya 0,8, uji t membutuhkan 25,5 per kelompok. Efisiensi uji peringkat terhadap uji t paling rendah 0,864 untuk distribusi kontinu apa pun (Hodges dan Lehmann), jadi 25,5 / 0,864 = 29,5, dibulatkan menjadi 30.
-*Rawan bila:* ditanya kenapa efek besar, bukan sedang. Jawab: jumlah latihan dalam satu buku terbatas; dengan 30 per kelompok efek terkecil yang terdeteksi sekitar d = 0,78; efek sedang butuh sekitar 74 per kelompok. Efek terkecil yang dapat dideteksi dilaporkan dengan n yang benar-benar tercapai.
+*Rawan bila:* ditanya kenapa efek besar, bukan sedang. Jawab: jumlah latihan dalam satu buku terbatas; dengan 30 per kelompok efek terkecil yang terdeteksi sekitar d = 0,79; efek sedang butuh sekitar 74 per kelompok. Efek terkecil yang dapat dideteksi dilaporkan dengan n yang benar-benar tercapai.
 
 **26. Ada 600 harmonisasi. Kenapa n bukan 600?**
 Lima harmonisasi dari melodi yang sama tidak independen. Menghitungnya sebagai 600 observasi akan membuat uji terlalu mudah signifikan. Laju kelima harmonisasi dirata-ratakan menjadi satu nilai per melodi per model; unit analisisnya melodi. Angka lima dipilih untuk meredam hasil acak satu kali generasi dengan beban komputasi yang terjangkau; menambah generasi tidak menambah jumlah observasi independen, yang ditentukan oleh jumlah melodi.
@@ -170,7 +170,7 @@ Kaidahnya dari Strube dan kategorinya dari rubrik Yan. Rumusnya disusun peneliti
 
 **33. Tanpa penilai manusia, bagaimana Anda tahu program Anda benar?**
 Empat langkah validitas dan satu uji reliabilitas. (1) Validitas isi: setiap kaidah dikaitkan dengan halaman Strube dan kategori Yan sebelum data. (2) Contoh cetak Strube dipakai sebagai kunci: program harus menandai contoh yang disebut salah oleh buku dan tidak menandai contoh yang benar; label benar/salahnya datang dari penulis buku, bukan dari peneliti. (3) Pemeriksaan silang dengan fungsi `VoiceLeadingQuartet` music21 pada chorale korpus music21. (4) Laju kuint dan oktaf sejajar pada chorale Bach dibandingkan dengan angka terbitan Huang (0,023 dan 0,009 per birama). (5) Pengukuran ulang pada berkas yang sama harus memberi hasil identik.
-Langkah 3–5 sudah dijalankan pada 345 dari 371 chorale Bach yang memenuhi syarat: tidak ada perbedaan dengan music21 untuk persilangan dan tumpang tindih; perbedaan paralel hanya kasus gerak berlawanan; dua kali run menghasilkan hash identik.
+Langkah 3–5 sudah dijalankan pada 345 dari 371 entri chorale Bach (327 berkas berbeda; hasil per berkas hampir sama, lihat protokol versi 2.1): tidak ada perbedaan dengan music21 untuk persilangan dan tumpang tindih; perbedaan paralel hanya kasus gerak berlawanan; dua kali run menghasilkan hash identik.
 *Rawan bila:* langkah 2 belum ada karena gambar Strube belum diketik. Tutup dengan mengetik sembilan gambar di `strube-example-fixtures.csv`.
 
 **34. Pelanggaran yang sebenarnya bisa dimaklumi ikut terhitung. Bukankah hasilnya bias?**
@@ -221,7 +221,7 @@ Arahnya berasal dari temuan Huang dan ditetapkan sebelum data dikumpulkan di pro
 Ketika lima kaidah diuji sekaligus, peluang mendapat satu hasil signifikan secara kebetulan meningkat. Holm mengurutkan nilai p dan menyesuaikan ambangnya bertahap, sehingga kesalahan keseluruhan tetap 0,05. Holm dipakai per kelompok pengujian: lima kaidah untuk pertanyaan 2, dan lima kaidah per model untuk pertanyaan 3.
 
 **46. Kalau tidak signifikan, berarti kedua model sama?**
-Tidak. Tidak signifikan berarti data tidak cukup untuk menolak H0. Menyimpulkan kesetaraan butuh pendekatan lain, misalnya uji Bayesian non-parametrik seperti yang dipakai Yin dkk.
+Tidak. Tidak signifikan berarti data tidak cukup untuk menolak H0. Menyimpulkan kesetaraan butuh pendekatan lain, misalnya uji kesetaraan atau uji Bayesian; penelitian ini tidak memakainya, sehingga hasil tidak signifikan hanya dilaporkan sebagai tidak cukup bukti.
 
 **47. Kenapa tidak Kruskal–Wallis seperti di proposal dan di Huang?**
 Kruskal–Wallis untuk tiga kelompok atau lebih. Desain sekarang membandingkan dua kelompok pada setiap pengujian. Huang sendiri melanjutkan Kruskal–Wallis dengan Mann–Whitney antar-pasangan kelompok.
@@ -393,7 +393,7 @@ Penelitian ini membatasi diri pada dua asal melodi agar desainnya sesuai dengan 
 ### Metodologi dan statistik
 
 **89. Populasi Anda harmonisasi atau melodi?**
-Melodi. Populasi pertama adalah melodi sopran 371 chorale dalam korpus music21; populasi kedua adalah latihan harmonisasi melodi dalam buku Strube. Harmonisasi adalah pengamatan berulang untuk setiap melodi dan dirata-ratakan menjadi satu nilai per melodi per model.
+Melodi. Populasi pertama adalah melodi sopran chorale dalam korpus music21 (371 nomor Riemenschneider untuk 350 berkas); populasi kedua adalah latihan harmonisasi melodi dalam buku Strube. Harmonisasi adalah pengamatan berulang untuk setiap melodi dan dirata-ratakan menjadi satu nilai per melodi per model.
 *Bukti:* BAB III Populasi dan Sampel (direvisi 3 Oktober 2026; sebelumnya populasi ditulis sebagai harmonisasi, padahal unit analisisnya melodi).
 
 **90. Semua latihan Strube yang layak dipakai. Kalau itu sensus, untuk apa uji statistik?**
@@ -449,6 +449,55 @@ Belum dapat dijawab karena data utama belum ada. Siapkan jawabannya dari data, b
 - Berapa melodi yang gagal diproses atau gagal kontrol kualitas pada setiap model dan asal melodi, dan apakah kegagalan itu berkaitan dengan asal melodi?
 - Tunjukkan satu contoh penandaan di partitur. Apakah secara musikal itu memang kesalahan?
 - Apa yang harus dilakukan pengajar harmoni dengan temuan ini?
+
+## L. Materi baru naskah v4 (4 Oktober 2026)
+
+Pertanyaan ini muncul dari landasan teori dan tinjauan pustaka yang disusun ulang di v4. Jawaban dirujuk ke halaman yang sudah diperiksa; baca sumbernya sebelum sidang.
+
+**102. Landasan teorimu teori siapa?**
+Ada dua kelompok. Teori tentang objek (model dan evaluasinya): Briot, Hadjeres, dan Pachet (2020) tentang lima dimensi sistem pembuat musik berbasis *deep learning*; Storkey (2008) tentang pergeseran dataset; Pearce, Meredith, dan Wiggins (2002) tentang cara mengevaluasi program penyusun musik. Teori tentang fokus (kaidah): Strube (1928) untuk kaidah dan fungsi akor, Huron (2001) untuk alasan perseptual kaidah. Setiap teori dipakai untuk menafsirkan satu pertanyaan penelitian (lihat Kerangka Berpikir).
+*Rawan bila:* ditanya mengapa bukan satu teori saja. Jawab: template departemen meminta teori tentang objek dan tentang fokus; setiap teori menjawab bagian yang berbeda dari data.
+
+**103. Apa kegunaan teori Briot dkk. dalam penelitianmu?**
+Untuk menafsirkan pertanyaan 2. Briot dkk. membedakan tujuan, representasi, arsitektur, tantangan, dan strategi (hlm. 11–13). DeepBach dan Coconet punya tujuan yang sama di sini, tetapi berbeda representasi (nama nada dengan simbol tahan vs *piano roll*), arsitektur (LSTM vs konvolusional), strategi (*pseudo-Gibbs* vs *blocked Gibbs*), dan data latih. Jadi perbedaan hasil tidak boleh disebut akibat arsitektur saja.
+
+**104. Apa itu pergeseran dataset, dan apa hubungannya dengan asal melodi?**
+Storkey: data saat model dipakai bisa berbeda dari data saat model dilatih; pergeseran kovariat berarti hanya sebaran masukan yang berubah. Di sini masukannya melodi sopran. Kaidah yang harus dipenuhi tidak berubah, tetapi melodi Strube bukan berasal dari korpus yang dipelajari. Penerapan ini adalah tafsiran peneliti; Huang dkk. (2019, hlm. 798) memakai gagasan yang sama dengan istilah *out of distribution*.
+*Rawan bila:* penguji bertanya apakah melodi Strube benar-benar di luar distribusi. Jawab jujur: belum tentu. Dari 318 melodi Bach di kerangka sampel, hanya 1 yang keluar dari batas Huang; melodi Strube juga mungkin di dalam batas. Karena itu ciri melodi diukur dan pengaruhnya dibaca sebagai pengaruh asal melodi secara keseluruhan.
+
+**105. Mengapa Pearce dkk. relevan untuk "evaluasi musik hasil AI"?**
+Pearce dkk. menyatakan bahwa cara evaluasi harus sesuai dengan motivasi pembuatan program. Model yang dilatih pada *chorale* Bach adalah model gaya. Menurut mereka (mengikuti Meredith), model gaya diuji dengan menghasilkan karya baru lalu memeriksa kesesuaiannya dengan gaya melalui prosedur eksplisit. Lima kaidah Strube adalah satu prosedur eksplisit yang terbatas; karena itu penelitian ini tidak menyimpulkan mutu gaya secara keseluruhan.
+
+**106. Huron itu siapa dan apa yang ia jelaskan?**
+David Huron, ahli kognisi musik (Ohio State University). Dalam *Tone and Voice* (2001) ia menurunkan kaidah gerak suara buku ajar dari prinsip persepsi pendengaran, dengan tujuan alur suara yang terdengar mandiri (hlm. 2). Kaidah jarak dari prinsip penyamaran minimum (hlm. 18, 33); kuint dan oktaf sejajar dari fusi nada dan ko-modulasi nada (hlm. 19, 31, 37); persilangan dan tumpang tindih dari kedekatan nada (hlm. 24, 35). Kelima kaidahmu ada dalam daftar kaidah intinya (hlm. 5).
+*Rawan bila:* ditanya apakah penelitianmu mengukur persepsi. Jawab: tidak. Huron dipakai untuk menafsirkan arti pelanggaran, bukan sebagai hasil pengukuran.
+
+**107. Kenapa grand theory sekarang dirujuk ke Strube, bukan Schoenberg?**
+Karena halaman Schoenberg belum dapat diperiksa, sedangkan Strube sendiri menyatakan dalam Preface bahwa bukunya menekankan fungsi harmonis akor, dan di hlm. 6 menyebut trinada tonika, subdominan, dan dominan. Jawaban untuk F08/F12 tetap sama: grand theory-nya harmoni tonal fungsional.
+
+**108. Apa beda tinjauan pustaka dan landasan teori di naskahmu?**
+Tinjauan pustaka berisi penelitian terdahulu (jurnal dan prosiding) yang dibahas dari cara, temuan, dan hubungannya dengan penelitian ini, lalu dirangkum dalam tabel posisi penelitian. Landasan teori berisi teori ahli yang dipakai menafsirkan data. Pembagian ini mengikuti template departemen.
+
+**109. Studi Leemhuis dkk. membuktikan apa?**
+Harmonisasi model mereka sering dikira karya Bach oleh mahasiswa musik dan musikolog (Bach hanya dikenali pada 61 dan 66 persen pasangan), tetapi seorang guru teori musik tetap menemukan pelanggaran gerak suara pada dua contoh. Artinya, lulus uji dengar tidak sama dengan patuh kaidah, dan pelanggaran belum pernah dihitung pada seluruh keluaran.
+
+**110. Choi dkk. sudah menekan kuint sejajar. Kenapa penelitianmu masih perlu?**
+Choi dkk. melatih model baru dan mengukur hasilnya dengan jarak sebaran ciri, bukan laju per birama. Mereka juga menemukan bahwa penyaringan paralel saat generasi memperburuk ciri lain, terutama gerak bas (hlm. 193–194). Penelitian ini mengukur model yang sudah dipakai orang, sebagaimana adanya, pada lima kaidah.
+
+**111. Kenapa korpus music21 disebut 350 berkas, bukan 371 chorale?**
+Daftar Riemenschneider di music21 punya 371 nomor, tetapi 21 nomor menunjuk berkas yang sama. Program menyimpan entri pertama setiap berkas. Dari 350 berkas, 23 tidak layak (umumnya lebih dari empat suara) dan 9 mengulang melodi chorale lain, sehingga kerangka sampel berisi 318 melodi.
+
+**112. Bagaimana kalau Coconet tidak bisa diulang persis?**
+Magenta.js tidak menyediakan pengaturan *seed*. Karena itu seluruh keluaran mentah Coconet disimpan, sehingga pengukuran selalu dapat diulang dari arsip. DeepBach diberi *seed* tercatat untuk setiap percobaan.
+
+**113. Apa itu analisis kepekaan keempat?**
+Coconet tidak dapat menulis nada sama yang diulang pada alto, tenor, dan bas, sedangkan DeepBach dan Bach dapat. Jarak dan persilangan dihitung pada setiap peristiwa bunyi, jadi nada yang diulang menambah hitungan. Analisis keempat menyatukan nada sama yang berurutan pada semua sumber sebelum diukur, supaya ketiga sumber dibaca dengan cara yang sama. Hitungan utama tidak berubah.
+
+**114. Bagaimana kamu memastikan sitasimu tidak dikarang AI?**
+Setiap entri dicek ke Crossref atau OpenAlex, dan setiap kalimat yang mengutip dicocokkan dengan teks lengkap atau abstraknya; halaman dicantumkan bila teks lengkap tersedia. Catatannya di `records/reading-notes.csv`. Dua nama penulis yang salah ditemukan dan diperbaiki; sumber yang tidak benar-benar dipakai dihapus.
+
+**115. Siapa Manda dalam riwayat revisi?**
+Teman satu angkatan yang membaca v3. Catatannya dipakai sebagai masukan teman sebaya, bukan masukan dosen. Jangan menyebut perubahan v4 sebagai permintaan dosen.
 
 ## Cara berlatih
 

@@ -1,0 +1,8 @@
+# Uji perangkat lunak: melodi buatan, bukan latihan Strube.
+kode: fixture-ex002
+sumber: melodi uji buatan peneliti (bukan Strube)
+kunci: -1
+mode: minor
+birama: 3/4
+anakan: 0
+nada: D5:2 E5:1 | F5:1 E5:1 D5:1 | C#5:2 D5:1 | E5:1.5 F5:0.5 E5:1 | D5:3!

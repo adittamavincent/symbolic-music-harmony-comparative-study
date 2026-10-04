@@ -164,3 +164,23 @@ All 44 tooling checks passed, including the exact F.3 titles, partial title edit
 Updated on 2026-09-30. `make proposal <ref>` and `make thesis <ref>` share [compile_version.py](../scripts/compile_version.py). v1–v2 are proposal revisions and v3 onward are thesis revisions. Bare versions (`v2`, `3`) resolve to the tag of their phase; up to three digits count as a version, so longer digit strings remain commit IDs. Untagged refs take the phase of the manuscript they contain: a commit with a thesis template is rejected by `make proposal`, and a commit without one is rejected by `make thesis`. The builder reads that phase's template at the commit, inlines `\input` files recursively while leaving commented inputs alone, and stages the class, bibliography, and images stored beside the class at that commit.
 
 Eight new regression checks cover tag resolution, cross-phase rejection, missing `thesis/v3`, `head` labelling and phase inference, untagged proposal commits, committed-source staging, and unknown refs. All tooling checks passed. Built `make proposal v1` and `make proposal v2` (byte sizes identical to the previous builds) and `make thesis head` (the committed five-chapter draft). `make proposal v3`, `make proposal head`, `make thesis v2`, and `make thesis v3` (no tag yet) exit with the intended messages.
+
+## Protocol 2.1 pipeline and environment (2026-10-04)
+
+The version-2 pipeline now replaces the version-1 runners for study data. Version-1 code is unchanged and still has the defects listed under *Research correctness*; the table rows map to version-2 code as follows.
+
+| Version-1 finding | Version-2 answer | Evidence |
+| --- | --- | --- |
+| Batch evaluation drops `parse_quality` and averages padded voices | `evaluate_v2.py` writes a QC row per attempt and measures only outputs that pass; per-melody means record k of n valid | `test_pipeline_v2.py` (quality reasons, evaluation and completeness) |
+| Coconet reconstruction appends notes and shifts offsets | `harmonization_io.coconet_voices` places notes by step (IO 1.0) | `test_harmonization_io.py` |
+| Condition manifest and hard-coded settings differ from executed settings | Settings come from `research/experiments/protocol_v2.json`; each run copies the protocol and the backends' effective settings into `run.json` | `test_pipeline_v2.py` (run identity) |
+| Fixed filenames mix runs | Each run has its own directory; a run is never overwritten; attempts are appended | `test_pipeline_v2.py` (resume, retry, overwrite refusal) |
+| Quantization collapses onsets | Instrument v2 reads a sixteenth-step grid and rejects off-grid notes | `test_voice_leading_v2.py` |
+| Incomplete runs report success | `v2.py check` compares attempts with melodies × models × generations, re-hashes every score, and checks evaluation coverage; exit code 1 on any problem | `test_pipeline_v2.py` |
+
+Other changes:
+
+- Python environment moved to 3.12. SciPy 1.15.3, the last release for Python 3.10, failed to load on this macOS (`dyld`: "section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero" in `_spropack`). The old `.venv` was moved out of the repository; the new one has SciPy 1.18.1, NumPy 2.5.3, music21 9.3.0, PyTorch 2.14.1 (`research/requirements-lock.txt`). `make test` passes.
+- Coconet runs from a tracked Node script (`research/coconet/run_coconet_v2.js`) with pinned packages (`@magenta/music` 1.23.1, `node-fetch` 2.7.0; the Magenta.js node bundle requires `node-fetch` but lists it only as a development dependency). This answers the *Model bootstrap* recommendation for version 2; the version-1 bootstrap still embeds its JavaScript.
+- The music21 chorale iterator lists 371 entries for 350 files. `melody_sets.py` keeps the first entry of each file; validation checks 3–5 from 2026-10-02 were recomputed on distinct files (`research/protocol.md`, Version 2.1).
+- `make thesis` publishes `Skripsi_v4_23104810131_Vincent.pdf`; the thesis template loads the TikZ `positioning` and `calc` libraries for the kerangka berpikir figure.

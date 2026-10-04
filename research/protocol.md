@@ -1,6 +1,6 @@
-# v3 protocol worksheet
+# Protocol worksheet (thesis v3–v4)
 
-Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Status: proposed design, not yet executed and not yet agreed with the supervisor. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
+Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Protocol version 2.1, 2026-10-04 (thesis v4): settings pinned, quality control and sensitivity analyses completed, pipeline implemented; see [Version 2.1](#version-21-2026-10-04). Status: proposed design, not yet executed and not yet agreed with the supervisor. Machine-readable settings: `research/experiments/protocol_v2.json`. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
 
 ## Design in one paragraph
 
@@ -24,19 +24,20 @@ The study continues the Bach Doodle analysis of Huang et al. (2019, §6.3). Huan
 | Strube edition | Original 1928 Oliver Ditson edition (`strube1928`), scanned PDF supplied by the researcher at `references/The Theory and Use of Chords.pdf` (147 PDF pages; at least p. 48 is missing, and pages from the Suspensions chapter onward are scanned as two-page spreads) | Confirmed 2026-10-02 |
 | Rule pages | `research/literature/strube-rule-pages.csv`: parallels pp. 9, 12; spacing p. 20; crossing p. 174; overlap pp. 12–13 | Filled 2026-10-02 from the scan (OCR plus page images); researcher to confirm against the print |
 | Strube melody inventory | `research/literature/strube-exercise-inventory.csv`: exercises 1–118 (pp. 8–81): 71 given-soprano candidates, 47 given basses; 67–68 (p. 48, missing from the 1928 scan) read from the 2015 translation p. 58 | Filled 2026-10-02; key, meter, length, and typing pending |
-| Model identities | DeepBach repository commit and resource archive checksum; Magenta.js package version and checkpoint URL | Pending: record at pilot |
+| Model identities | DeepBach commit `6d75cb9` (pinned in `protocol_v2.json`); resources archive SHA-256 recorded by `make setup-v2`; Magenta.js `@magenta/music` 1.23.1 with `node-fetch` 2.7.0, checkpoint `coconet/bach` | Pinned 2026-10-04; checksums recorded at setup |
 | Sample size | At least 30 melodies per origin group (power analysis below) | Proposed |
-| Generations | Five per melody per model; default sampling settings of each implementation | Proposed |
+| Generations | Five per melody per model; DeepBach 500 iterations, temperature 1.0, 8 parallel updates per voice; Coconet 96 iterations, temperature 0.99 | Proposed; settings pinned 2026-10-04 |
 | Instrument version | `research/voice_leading_v2.py` (v2.0) with 20 software checks in `research/tests/test_voice_leading_v2.py`; validation checks 3–5 run on the Bach corpus | Implemented 2026-10-02; textbook fixtures (check 2) pending |
 | Shared input/output | `research/harmonization_io.py` (IO version 1.0): MusicXML melody in, four-part MusicXML out, adapters for both models; 27 software checks in `research/tests/test_harmonization_io.py` | Implemented 2026-10-03; model acceptance checked at the pilot |
-| Analysis plan | Below; freeze before main generation | Proposed |
+| Analysis plan | Below; implemented in `research/analysis_v2.py`; freeze before main generation | Proposed; implemented 2026-10-04 |
+| Pipeline | `research/experiments/scripts/v2.py` and `make` targets (see `research/README.md`); checked end to end with fake backends (`make dry-run-v2`) | Implemented 2026-10-04; no model run |
 
 ## Models
 
 Record for each model: repository URL and commit, weight/checkpoint source URL and SHA-256, runtime versions, effective sampling settings, and the exact constraint mechanism.
 
 - DeepBach: soprano fixed as a positional constraint; key and fermata metadata derived from the melody notation. DeepBach builds a per-voice note vocabulary from its training data (with transpositions); a soprano note outside that vocabulary cannot be encoded, so such melodies are ineligible.
-- Coconet: soprano written into the piano roll; the other three voices are infilled. Magenta.js uses MIDI pitches 36–81 (`MIN_PITCH = 36`, `NUM_PITCHES = 46` in `coconet_utils.ts`). Maximum practical sequence length and memory use must be checked at the pilot; the version-1 adapter defaults to 32 sixteenth steps, which is too short for most melodies.
+- Coconet: soprano written into the piano roll; the other three voices are infilled. Magenta.js uses MIDI pitches 36–81 (`MIN_PITCH = 36`, `NUM_PITCHES = 46` in `coconet_utils.ts`). Maximum practical sequence length, memory use, and time per generation must be checked at the pilot; the version-2 adapter passes the full melody length (the version-1 adapter's 32 steps were too short).
 
 ### Shared input and output (IO version 1.0)
 
@@ -74,7 +75,7 @@ Melody features computed automatically for the manipulation check: number of mea
 ## Generation
 
 - Five generations per melody per model, with the implementation's default sampling settings recorded and held constant. Five is a judgment: it reduces the influence of a single random generation on each melody's value at affordable compute; it does not add independent observations. Record random seeds where the interface supports them; otherwise rely on archived raw outputs for reproducibility.
-- Store each run in its own directory with the melody ID, model ID, run index, raw output, effective settings, and status.
+- Store each run in its own directory with the melody ID, model ID, run index, raw output, effective settings, and status (implemented 2026-10-04 in `research/generation_v2.py`; see Version 2.1).
 - Do not regenerate failures silently. A failed attempt is logged with its reason. Analysis uses the valid generations; melodies with fewer than five valid generations are flagged for the sensitivity analysis.
 
 ## Instrument version 2
@@ -92,12 +93,12 @@ Definitions are the researcher's operationalisation. Each rule must be traced to
 - Strube exceptions not applied because they need harmonic analysis: diminished-to-perfect fifths when passing (pp. 34–35), fifths at a chord repetition (p. 35), retarded fifths produced by a suspension (p. 83). Fifths and octaves reached by contrary motion are not counted (p. 9).
 - Rate per rule: count divided by the number of measures in the input melody (a pickup measure counts as one). Also store counts and opportunities (motions or events checked).
 - Weighted penalty index: (P5 + P8 + 0.5 × (spacing + crossing + overlap)) / measures, using the Yan rubric weights (1 for the parallel category, 0.5 for categories 9–11).
-- Main count includes every occurrence, following Huang et al. Sensitivity count excludes motions from a fermata note to the following event. Non-chord-tone excuses are not applied because they need chord analysis.
+- Main count includes every occurrence, following Huang et al. Sensitivity count excludes every motion that starts while the soprano holds a fermata note (the whole fermata note, not only the move into the next phrase; audit A06). Non-chord-tone excuses are not applied because they need chord analysis.
 - Semitone arithmetic treats 7 semitones as a perfect fifth; a diminished sixth spelled enharmonically is counted as a fifth. MIDI outputs carry no spelling, so this is recorded as a limitation.
 
 Excluded Yan categories and reasons: 1 (doubled chordal seventh), 2 (doubled leading tone), 4 (seventh resolution), 6 (non-stylistic progression), 7 (non-tertian chord) need chord, function, or key interpretation, which carries analyst disagreement and would require human checking. Category 5 (soprano leading-tone resolution) concerns the given soprano, not a generated voice. Category 8 (augmented second) needs pitch spelling, which MIDI does not keep. Covered (hidden) fifths and octaves (Strube p. 12) are not in the Yan rubric.
 
-Known v1 code defects that must be fixed before the pilot (from `docs/maintenance.md`): `quantize([0.25])` collapses onsets; fourths are counted as fifth candidates; parallels use shared onsets instead of sounding sonorities; batch evaluation drops `parse_quality`; Coconet MIDI reconstruction uses `append` and shifts offsets; shared output folders mix stale files; adapters hard-code settings and ignore the manifest; incomplete runs report success.
+Known v1 code defects (from `docs/maintenance.md`), kept unchanged in the historical v1 code and not used by the version-2 pipeline, which replaces each of them (instrument v2 grid, IO version 1.0, `generation_v2.py` run directories and attempt log, `run_checks_v2.py` completeness checks): `quantize([0.25])` collapses onsets; fourths are counted as fifth candidates; parallels use shared onsets instead of sounding sonorities; batch evaluation drops `parse_quality`; Coconet MIDI reconstruction uses `append` and shifts offsets; shared output folders mix stale files; adapters hard-code settings and ignore the manifest; incomplete runs report success.
 
 ## Validation without human graders
 
@@ -134,7 +135,7 @@ A harmonization is analysable when it has four separable voices, each voice is m
 
 ### Sample-size rationale
 
-Computed 2026-10-02 with statsmodels (`TTestIndPower`): a two-sample t-test needs 25.5 per group to detect d = 0.8 (Cohen's large effect) at α = 0.05 two-sided with power 0.8. The asymptotic relative efficiency of rank tests to the t-test is at least 0.864 for any continuous distribution (Hodges and Lehmann 1956), so 25.5 / 0.864 = 29.5, rounded to 30 per group. Minimum detectable effects at 0.8 power with this adjustment: n = 15 → d ≈ 1.15; n = 20 → d ≈ 0.98; n = 25 → d ≈ 0.87; n = 30 → d ≈ 0.78. For question 2 (paired), about 39 melody pairs detect d_z = 0.5 at α = 0.05; 60 melodies exceed this. Holm correction lowers power for the smaller p-values; report achieved minimum detectable effects with the actual n.
+Computed 2026-10-02 with statsmodels (`TTestIndPower`): a two-sample t-test needs 25.5 per group to detect d = 0.8 (Cohen's large effect) at α = 0.05 two-sided with power 0.8. The asymptotic relative efficiency of rank tests to the t-test is at least 0.864 for any continuous distribution (Hodges and Lehmann 1956), so 25.5 / 0.864 = 29.5, rounded to 30 per group. Minimum detectable effects at 0.8 power with this adjustment: n = 15 → d ≈ 1.15; n = 20 → d ≈ 0.98; n = 25 → d ≈ 0.87; n = 30 → d ≈ 0.78. Recomputed 2026-10-04 with SciPy (`analysis_v2.minimum_detectable_d`): 1.15, 0.98, 0.87, and 0.79 for n = 15, 20, 25, 30; the 0.78 above for n = 30 was a rounding slip. For question 2 (paired), about 39 melody pairs detect d_z = 0.5 at α = 0.05; 60 melodies exceed this. Holm correction lowers power for the smaller p-values; report achieved minimum detectable effects with the actual n.
 
 With 30 melodies per group, the plan is 30 × 2 groups × 2 models × 5 = 600 generations.
 
@@ -149,6 +150,23 @@ With 30 melodies per group, the plan is 30 × 2 groups × 2 models × 5 = 600 ge
 | Coconet length or memory limits | Pilot | Process in fixed segments only if both models can be given identical segments; otherwise record ineligibility |
 | 3/4 or other meters behave differently | Pilot | Keep, but report meter as a melody feature |
 | Instrument disagrees strongly with Huang's Bach rates | Validation 4 | Trace the cause before the pilot; document instrument changes as a new version |
+
+## Version 2.1 (2026-10-04)
+
+Changes from version 2, made for thesis v4 before any model was run. Instrument definitions (version 2.0) are unchanged.
+
+- **Bach frame.** `music21.corpus.chorales.Iterator()` lists 371 Riemenschneider numbers that point to 350 distinct files; 21 entries repeat a file under a second number. The melody builder (`research/melody_sets.py`) keeps the first entry and marks repeats. Of the 350 files, 23 fail eligibility (19 with more than four parts, 2 with 32nd notes, 2 with grace notes; see `research/outputs/melodies/manifest.csv`) and 9 repeat the soprano of an earlier chorale exactly (same intervals and rhythm in any transposition). The sampling frame is 318 melodies before the DeepBach vocabulary check. Only 1 of the 318 lies outside Huang et al.'s limits (MIDI 60–81, largest leap one octave).
+- **Validation checks 3–5 counted repeated files.** The 2026-10-02 run evaluated 345 iterator entries, which are 327 distinct files. Recomputed from `per_chorale.csv` with each file once (5,096 measures): 0.0080 parallel fifths, 0.0031 parallel octaves, 0.073 spacing, 0.0098 crossing, 0.094 overlap per measure (fermata-excluded: 0.0063 fifths, 0.0022 octaves, 0.045 overlap). The differences from the reported figures are in the fourth decimal and do not change the conclusions of checks 3–5.
+- **Melody duplicates.** A Bach melody that repeats an earlier chorale's soprano cannot be sampled; a Strube melody that repeats a Bach soprano is marked and excluded (audit A20).
+- **Strube typing.** Melodies are typed as text (`research/literature/strube-melodies/`, format in its README) and converted to MusicXML by `research/melody_text.py`, which applies the key signature and measure-scoped accidentals, checks every measure's length, and reads the file back with the evaluator's parser. 71 empty templates were created from the inventory.
+- **Preflight.** Before sampling, every eligible melody is encoded for both models without generating (`v2.py preflight`); a melody either model refuses is ineligible.
+- **Sample and pilot.** Main sample: every eligible Strube melody plus a Bach sample of the same size, at least 30, drawn with seed 20261004. Pilot: 3 Bach melodies drawn (seed 41004) from outside the main sample and 3 Strube melodies; pilot Strube melodies stay in the main census because the Strube group is a census (decision 10 proposed, pending supervisor agreement).
+- **Generation.** Settings as in the decisions table. Each attempt has a deterministic seed derived from root seed 20261004, the model, the melody, and the generation index; DeepBach seeds Python, NumPy, and PyTorch with it. Magenta.js samples without a seed, so Coconet attempts are reproducible only through their archived raw output. Each run lives in `research/outputs/runs/<run-id>/` with `run.json` (protocol snapshot, code revision, environment, model manifest), copied melodies, an append-only `attempts.jsonl`, raw outputs, and four-part MusicXML. Failed attempts are kept; retries only with `--retry-failed`, logged as new attempts. The main stage refuses to run while `protocol_v2.json` has `"frozen": false`.
+- **Quality control (audit A07).** Added: output length equals the melody, and every generated voice sounds at least one note. Rests inside a voice remain allowed.
+- **Sensitivity analysis d (decision 7, audit A05).** Every source (both models and Bach) is also measured after merging consecutive equal pitches in every voice into one held note, which puts DeepBach's restruck notes and Coconet's unrestruck output on the same sounding representation. The main count is unchanged.
+- **Training membership (audit A21).** `research/deepbach_membership.py` repeats DeepBach's example counting per chorale. Sensitivity analysis b runs only if the total equals the length of the tensor dataset shipped with the pretrained resources; otherwise membership stays unknown.
+- **Statistics.** Wilcoxon on DeepBach minus Coconet with `zero_method="wilcox"`; an all-zero difference set is reported without a p-value. Effect sizes: matched-pairs rank-biserial (positive = DeepBach higher) and rank-biserial (positive = Strube higher). Holm families: question 2 (five rules), question 3 per model (five rules each); the weighted index is tested outside the families. Minimum detectable effects are reported for the analysed n.
+- **Environment.** The research environment moved from Python 3.10 (SciPy 1.15.3, whose compiled module no longer loads on this macOS) to Python 3.12 (SciPy 1.18.1, NumPy 2.5.3, music21 9.3.0, PyTorch 2.14.1); exact versions are in `research/requirements-lock.txt`.
 
 ## Superseded design (version 1)
 

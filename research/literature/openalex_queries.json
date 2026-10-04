@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; NotaGen sebagai model yang disaring keluar",
+  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; v4 menambah landasan teori (Huron, Briot dkk., pergeseran dataset, metodologi evaluasi gaya) dan studi harmonisasi chorale yang diuji pendengar",
   "queries": [
     {
       "id": "q01-evaluation-surveys",
@@ -169,7 +169,55 @@
       "search": "computational voice leading evaluation onset sustained notes",
       "from_year": null,
       "limit": 30
+    },
+    {
+      "id": "q22-voice-leading-perception",
+      "theme": "Teori perseptual gerak suara",
+      "purpose": "Temukan teori ahli yang menjelaskan alasan kaidah gerak suara (pemisahan suara, fusi nada) untuk landasan teori v4.",
+      "search": "voice leading rules perceptual principles auditory stream segregation",
+      "from_year": null,
+      "limit": 30
+    },
+    {
+      "id": "q23-dataset-shift-theory",
+      "theme": "Teori pergeseran distribusi data",
+      "purpose": "Temukan definisi pergeseran dataset dan pergeseran kovariat sebagai dasar teori asal melodi.",
+      "search": "dataset shift covariate shift training and test distributions differ",
+      "from_year": null,
+      "limit": 30
+    },
+    {
+      "id": "q24-style-model-evaluation-methodology",
+      "theme": "Metodologi evaluasi model gaya musik",
+      "purpose": "Temukan kerangka evaluasi program komposisi menurut motivasinya, khususnya pemodelan gaya musik.",
+      "search": "motivations methodologies evaluation computer programs composition musical style modelling",
+      "from_year": null,
+      "limit": 30
+    },
+    {
+      "id": "q25-chorale-harmonization-listening",
+      "theme": "Harmonisasi chorale yang diuji pendengar",
+      "purpose": "Temukan studi harmonisasi chorale berbasis jaringan saraf yang dinilai pendengar ahli dan catatan pelanggaran gerak suaranya.",
+      "search": "Bach chorale harmonization neural network expert listening test",
+      "from_year": 2015,
+      "limit": 30
+    },
+    {
+      "id": "q26-deep-learning-music-generation-book",
+      "theme": "Kerangka umum model generatif musik",
+      "purpose": "Temukan buku atau tinjauan yang memberi kerangka dimensi (tujuan, representasi, arsitektur, strategi) model generatif musik.",
+      "search": "deep learning techniques for music generation representation architecture strategy",
+      "from_year": 2017,
+      "limit": 20
+    },
+    {
+      "id": "q27-ai-music-education-indonesia",
+      "theme": "Sumber berbahasa Indonesia",
+      "purpose": "Cari penelitian berbahasa Indonesia tentang kecerdasan buatan dalam musik dan pendidikan musik.",
+      "search": "kecerdasan buatan pendidikan musik",
+      "from_year": 2020,
+      "limit": 30
     }
   ],
-  "plan_revision": "2026-10-03-audit"
+  "plan_revision": "2026-10-04-v4"
 }

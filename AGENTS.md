@@ -4,12 +4,12 @@ This repository contains one continuing undergraduate thesis project. The academ
 
 - `proposal/v1` and `proposal/v2` are proposal milestones.
 - v2 was reviewed in the course Seminar Musikologi 2 by its lecturers, Bu Suryati and Pak Galih, during an in-class, one-to-one tutoring session, according to the researcher. The researcher's notes are recorded in `docs/final-thesis/supervision/feedback.md` (F01–F12); `docs/final-thesis/supervision/perubahan-v2-ke-v3.md` separates changes that answer those notes from changes the researcher decided.
-- The active revision is **v3**, the final-thesis phase continuing from that proposal. Do not restart numbering as thesis v1 or call the active work proposal v3.
-- `docs/final-thesis/thesis/` owns the active manuscript. v3 follows the department's 2026 research proposal outline (Proposal Tugas Akhir Penelitian): BAB I Pendahuluan, BAB II Tinjauan Pustaka dan Landasan Teori, BAB III Metode Penelitian. Results and conclusion chapters are added only after main data exist. The chapters are a working draft, not evidence that the thesis is complete.
+- Thesis v3 is tagged `thesis/v3` (2026-10-03) and is locked. The active revision is **v4** (working tree), revised after a peer review by a fellow student recorded in `docs/final-thesis/supervision/review-teman-2026-10-04.md` (P01–P17; peer feedback, not lecturer feedback). Do not restart numbering as thesis v1 or call the active work a proposal.
+- `docs/final-thesis/thesis/` owns the active manuscript. v4 follows the department's 2026 research proposal outline (Proposal Tugas Akhir Penelitian): BAB I Pendahuluan, BAB II Tinjauan Pustaka dan Landasan Teori, BAB III Metode Penelitian. Results and conclusion chapters are added only after main data exist. The chapters are a working draft, not evidence that the thesis is complete.
 - `docs/final-thesis/PROGRESS.md` records current readiness, evidence, and unresolved decisions; dated history goes in `docs/final-thesis/records/research-log.md`. `supervision/feedback.md` records lecturer comments once supplied. `docs/final-thesis/README.md` maps the folder.
 - `docs/proposal-phase/` preserves the proposal sources. Leave these unchanged during final-thesis work unless the user requests a proposal edit.
 - `research/` owns the evaluator, software tests, generation experiments, model setup, dependencies, and local research outputs. Root Python files are compatibility entry points.
-- Run Make commands from the repository root. `make thesis` builds v3 from the working tree. `make proposal v1|v2` and `make thesis v3|head|<commit>` rebuild committed revisions with the current tooling; v1–v2 are proposal revisions and v3 onward are thesis revisions, and each command rejects the other phase. A future `thesis/v3` tag identifies a reviewed source snapshot; no such tag has been created yet.
+- Run Make commands from the repository root. `make thesis` builds v4 from the working tree. `make proposal v1|v2` and `make thesis v3|head|<commit>` rebuild committed revisions with the current tooling; v1–v2 are proposal revisions and v3 onward are thesis revisions, and each command rejects the other phase. A `thesis/v4` tag should be created only after the v4 sources are committed and reviewed.
 
 # Research and writing rules
 
@@ -23,7 +23,7 @@ Changing quantization, voice mapping, rule definitions, denominators, or conditi
 
 Follow the user's no-AI-slop editing instructions: read the complete affected draft, preserve its voice and meaning, make the minimum effective edit, remove filler and unsupported emphasis, and explain changes. Check writing against `docs/final-thesis/eval.md` before delivery.
 
-Do not claim architectural causation from this model comparison (DeepBach and Coconet since protocol version 2, 2026-10-02; three models before). Model training data, checkpoints, interfaces, and output formats differ. State what the actual comparison supports.
+Do not claim architectural causation from this model comparison (DeepBach and Coconet since protocol version 2, 2026-10-02; three models before). Protocol version 2.1 (2026-10-04) pins settings and seeds; the pipeline is `research/experiments/scripts/v2.py` with Make targets. Do not run model setup, generation, or the pilot unless the researcher asks; `make dry-run-v2` uses fake backends only. Model training data, checkpoints, interfaces, and output formats differ. State what the actual comparison supports.
 
 The current thesis reuses the proposal class for formatting. Department-specific final-thesis formatting and front-matter requirements still need confirmation from the researcher and supervisor.
 

@@ -1,0 +1,11 @@
+{
+  "name": "coconet-runner-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Coconet harmonization through Magenta.js for protocol version 2; installed by research/scripts/bootstrap_v2.py",
+  "main": "run_coconet_v2.js",
+  "dependencies": {
+    "@magenta/music": "1.23.1",
+    "node-fetch": "2.7.0"
+  }
+}

@@ -42,6 +42,8 @@ endif
 
 .PHONY: all help \
         setup setup-models test exp run-all eval plot \
+        setup-v2 melody-templates melodies preflight membership select pilot generate \
+        evaluate analyze examples check-run dry-run-v2 \
         proposal-phase docs proposal slides notes qna compile present \
         thesis final-phase thesis-slides \
         diff diff-clean aux-clean clean clean-docs
@@ -57,12 +59,24 @@ help:
 		"  make all             Build seluruh PDF proposal dan skripsi final" \
 		"  make help            Tampilkan daftar perintah" \
 		"" \
-		"🔬 PIPELINE RISET & EKSPERIMEN:" \
-		"  make setup           Bootstrap dependensi model (DeepBach, NotaGen, Coconet)" \
-		"  make test            Jalankan uji validitas instrumen (Face Validity)" \
-		"  make exp             Jalankan full pipeline eksperimen (run_all.py)" \
-		"  make eval            Jalankan evaluasi Strube batch pada file MIDI" \
-		"  make plot            Generate visualisasi hasil grafik" \
+		"🔬 PIPELINE RISET PROTOKOL v2 (lihat research/README.md):" \
+		"  make test              Uji perangkat lunak (instrumen v1, v2, MusicXML, pipeline v2)" \
+		"  make dry-run-v2        Seluruh rantai dengan backend palsu, tanpa model" \
+		"  make setup-v2          Pasang DeepBach (commit terkunci) dan Coconet/Magenta.js 1.23.1" \
+		"  make melody-templates  Buat templat ketik untuk 71 kandidat melodi Strube" \
+		"  make melodies          Bangun kerangka Bach dan ubah melodi Strube yang sudah diketik" \
+		"  make preflight         Cek setiap melodi terhadap masukan kedua model" \
+		"  make membership        Perkirakan data latih DeepBach per chorale" \
+		"  make select            Tetapkan sampel utama (seed tercatat) dan set uji coba" \
+		"  make pilot             Jalankan uji coba (pilot)" \
+		"  make generate          Jalankan generasi utama (menolak bila protokol belum dibekukan)" \
+		"  make evaluate RUN=...  Kontrol kualitas dan pengukuran satu run" \
+		"  make analyze RUN=...   Statistik, tabel LaTeX, dan grafik satu run" \
+		"  make examples RUN=...  Contoh partitur acak untuk pembahasan" \
+		"  make check-run RUN=... Cek kelengkapan satu run" \
+		"" \
+		"🗄  PIPELINE VERSI 1 (riwayat, jangan dipakai untuk data utama):" \
+		"  make setup / exp / eval / plot" \
 		"" \
 		"📄 DOKUMEN FASE PROPOSAL (docs/proposal-phase/):" \
 		"  make proposal        Build naskah proposal PDF (working tree)" \
@@ -73,8 +87,8 @@ help:
 		"  make proposal-phase  Build semua artefak proposal" \
 		"" \
 		"🎓 DOKUMEN FASE SKRIPSI FINAL (docs/final-thesis/):" \
-		"  make thesis          Build naskah skripsi v3 (Bab I-III) PDF (working tree)" \
-		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, head, ID commit" \
+		"  make thesis          Build naskah skripsi v4 (Bab I-III) PDF (working tree)" \
+		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, v4, head, ID commit" \
 		"  make final-phase     Build semua artefak skripsi final" \
 		"" \
 		"🔍 VERSIONING & DIFFING:" \
@@ -105,6 +119,45 @@ test:
 	uv run python research/tests/test_strube_validity.py
 	uv run python -m unittest research/tests/test_voice_leading_v2.py
 	uv run python -m unittest research/tests/test_harmonization_io.py
+	uv run python -m unittest research/tests/test_pipeline_v2.py
+
+# Protocol version 2 (research/experiments/scripts/v2.py). RUN=path/to/run for run-level targets.
+V2 := uv run python research/experiments/scripts/v2.py
+
+setup-v2:
+	uv run python research/scripts/bootstrap_v2.py
+
+melody-templates:
+	$(V2) templates
+
+melodies:
+	$(V2) melodies --update-inventory
+
+preflight:
+	$(V2) preflight
+
+membership:
+	$(V2) membership
+
+select:
+	$(V2) select
+
+pilot:
+	$(V2) generate --stage pilot
+
+generate:
+	$(V2) generate --stage main
+
+evaluate analyze examples:
+	@test -n "$(RUN)" || { echo "Usage: make $@ RUN=research/outputs/runs/<run-id>"; exit 2; }
+	$(V2) $@ $(RUN)
+
+check-run:
+	@test -n "$(RUN)" || { echo "Usage: make check-run RUN=research/outputs/runs/<run-id>"; exit 2; }
+	$(V2) check $(RUN)
+
+dry-run-v2:
+	$(V2) dry-run
 
 exp: run-all
 
@@ -176,7 +229,7 @@ thesis: $(THESIS_TEX)
 	@if [ -n "$(THESIS_ARGS)" ]; then \
 		python3 scripts/compile_version.py thesis $(THESIS_ARGS); \
 	else \
-		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v3; \
+		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v4; \
 	fi
 
 # Thesis metadata is tracked in $(THESIS_DIR)/metadata.tex; no .env.local values.
