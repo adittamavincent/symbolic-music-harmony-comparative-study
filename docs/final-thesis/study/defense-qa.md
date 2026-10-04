@@ -351,7 +351,7 @@ Ditambahkan setelah audit BAB I–III pada 3 Oktober 2026. Pertanyaan disusun me
 ### Format, bahasa, dan sumber
 
 **79. Template prodi meminta latar belakang 2–3 halaman dan menggabungkan rumusan masalah dengan pertanyaan penelitian. Kenapa naskah Anda berbeda?**
-Struktur BAB I mengikuti skripsi S-1 Musik 2026 yang sudah disetujui: Intan dan Nourmalita menulis rumusan masalah sebagai prosa lalu pertanyaan penelitian sebagai bagian tersendiri, dan empat dari enam skripsi memuat sistematika penulisan. Latar belakang sekarang sekitar empat halaman (sekitar 1.100 kata); skripsi acuan memakai sekitar 1.570–2.410 kata.
+Struktur BAB I mengikuti skripsi S-1 Musik 2026 yang sudah disetujui: Intan dan Nourmalita menulis rumusan masalah sebagai prosa lalu pertanyaan penelitian sebagai bagian tersendiri. Sistematika penulisan tidak dimuat sejak v4 karena template prodi tidak memintanya dan uraian per bab terasa seperti buku; dua dari enam skripsi S-1 acuan juga tidak memuatnya. Latar belakang sekarang sekitar empat halaman (sekitar 1.100 kata); skripsi acuan memakai sekitar 1.570–2.410 kata.
 *Bukti:* `records/research-log.md`, entri 2026-10-02 tentang perbandingan BAB I dengan skripsi acuan.
 *Rawan bila:* penguji memegang template sebagai aturan wajib. Tanyakan kepada pembimbing sebelum sidang bentuk mana yang dipakai prodi untuk skripsi.
 

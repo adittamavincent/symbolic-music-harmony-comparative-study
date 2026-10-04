@@ -285,6 +285,8 @@ Recorded by the assistant at the researcher's request ("v3 udah locked … bikin
 - Checked: `make test` passes (4 + 20 + 27 + 26); `make dry-run-v2` completes with fake backends; `make thesis` builds 70 pages without LaTeX warnings; lint for prose colons, unitalicized terms, em dashes, and cross-chapter references.
 - Next: researcher types the 71 Strube melodies and nine textbook figures; bring `supervision/bimbingan-v4.md` to Pembimbing I; then `make setup-v2`, `make preflight`, `make select`, `make pilot`.
 
+- Follow-up the same day, at the researcher's request: removed I.F *Sistematika Penulisan* (the researcher reported that Manda thought it unnecessary; the template does not require it, and P14 objects to chapter-by-chapter cross-references), removed the remaining within-text references ("dibahas pada subbab berikut", "diuraikan di bawah", "pada akhir subbab ini"), and set the abstract keyword lines without indentation. References to Strube's own book chapters and to tables and figures stay.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

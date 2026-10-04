@@ -67,7 +67,7 @@ The handout is [supervision/bimbingan-v4.md](supervision/bimbingan-v4.md). In ad
 
 - Front matter: the cover and submission page say *Skripsi*; confirm the wording required for this phase, the signatory roles, and the format.
 - Appendices: candidates are the rule-definition sheets, the melody inventory, the typed melodies, and a pseudocode appendix for the instrument.
-- Sistematika Penulisan describes the planned BAB IV and BAB V; confirm this is acceptable before those chapters exist.
+- Sistematika Penulisan was removed in v4 (the template does not require it); confirm the supervisor does not expect it.
 
 ### Decisions before main data
 

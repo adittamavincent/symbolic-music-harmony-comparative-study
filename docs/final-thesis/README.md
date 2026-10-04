@@ -51,7 +51,7 @@ Research code, the protocol worksheet, and literature data live in [research/](.
 | `metadata.tex` | Title, researcher, committee, dates, institution |
 | `layout.tex` | Chapter heading (`\thesischapter`) and front-matter page layouts: cover heading, signatures |
 | `frontmatter/01-halaman-judul.tex` to `09-abstract.tex` | One file per front-matter page, in page order: halaman judul, pengajuan, pengesahan, pernyataan, motto, persembahan, kata pengantar, abstrak, abstract |
-| `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah, pertanyaan penelitian, tujuan, manfaat, sistematika penulisan |
+| `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah, pertanyaan penelitian, tujuan, manfaat (no sistematika penulisan since v4) |
 | `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka (with comparison table), landasan teori (Briot et al., Storkey, Pearce et al., Strube, Huron), kerangka berpikir, asumsi, hipotesis |
 | `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data (variabel, melodi, generasi, instrumen, validitas, kontrol kualitas), analisis, alur penelitian |
 
