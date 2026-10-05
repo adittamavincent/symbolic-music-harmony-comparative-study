@@ -46,7 +46,7 @@ endif
         evaluate analyze examples check-run dry-run-v2 \
         proposal-phase docs proposal slides notes qna compile present \
         thesis final-phase thesis-slides \
-        diff diff-clean aux-clean clean clean-docs
+        diff diff-clean tag-amend aux-clean clean clean-docs
 
 all: proposal-phase final-phase
 
@@ -101,6 +101,8 @@ help:
 		"                           Ref: tag, ID commit, branch, head/HEAD (commit terakhir)" \
 		"                           proposal = tag proposal/v* terbaru; thesis = head" \
 		"  make diff-clean          Hapus file artefak diff" \
+		"  make tag-amend           Pindahkan tag versi terbaru ke HEAD (lokal, tanpa push)" \
+		"                           DRY_RUN=1 hanya menampilkan perintah" \
 		"" \
 		"🧹 CLEANUP:" \
 		"  PDF hasil Make disimpan di scratch/; file bantu dibersihkan otomatis" \
@@ -254,6 +256,10 @@ diff: $(DIFF_SCRIPT)
 
 diff-clean:
 	rm -f $(foreach ext,$(DIFF_EXTENSIONS),scratch/proposal_diff*.$(ext))
+
+# Move the latest proposal/v* or thesis/v* tag to HEAD locally; nothing is pushed.
+tag-amend:
+	@bash scripts/amend_latest_tag.sh
 
 aux-clean:
 	$(PDF_BUILD) --clean-aux
