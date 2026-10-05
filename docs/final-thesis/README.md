@@ -33,6 +33,7 @@ Where to start:
 | You want to | Open |
 | --- | --- |
 | Understand your own study in plain language | [study/researcher-guide.md](study/researcher-guide.md) |
+| Read every note in one file | `make reading`, then `scratch/bahan-bacaan_<version>.pdf` (study, supervision, records, protocol at the latest `thesis/v*` tag; `make reading head` for the latest commit; links between notes work inside the PDF) |
 | Know what is done and what is open | [PROGRESS.md](PROGRESS.md) |
 | Prepare for Pembimbing I | [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md), then [study/defense-qa.md](study/defense-qa.md) |
 | Understand how DeepBach and Coconet work | [study/model-dan-istilah.md](study/model-dan-istilah.md) |

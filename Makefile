@@ -39,6 +39,10 @@ THESIS_PDF := scratch/thesis.pdf
 MAP_TEX := $(THESIS_DOCS_DIR)/supervision/peta-versi.tex
 MAP_PDF := scratch/peta-versi.pdf
 
+# Reading PDF: study, supervision, record, and protocol Markdown notes in one file,
+# taken from Git at the latest thesis version tag (or a given ref)
+READING_PDFS := scratch/bahan-bacaan_*.pdf
+
 PDF_BUILD := python3 scripts/build_pdf.py
 ifdef FORCE
   PDF_BUILD_FLAGS := --force
@@ -49,7 +53,7 @@ endif
         setup-v2 melody-templates melodies preflight membership select pilot generate \
         evaluate analyze examples check-run dry-run-v2 \
         proposal-phase docs proposal slides notes qna compile present \
-        thesis map final-phase thesis-slides \
+        thesis map reading final-phase thesis-slides \
         diff diff-clean tag-amend aux-clean clean clean-docs
 
 all: proposal-phase final-phase
@@ -94,6 +98,9 @@ help:
 		"  make thesis          Build naskah skripsi v4 (Bab I-III) PDF (working tree)" \
 		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, v4, head, ID commit" \
 		"  make map             Build peta versi: versi, pemberi masukan, status bab" \
+		"  make reading         Gabung catatan Markdown (study, supervision, records, protokol)" \
+		"                       dari tag versi terbaru jadi satu PDF: scratch/bahan-bacaan_<versi>.pdf" \
+		"  make reading <ref>   Bahan bacaan dari revisi lain: v3, thesis/v4, head, ID commit" \
 		"  make final-phase     Build semua artefak skripsi final" \
 		"" \
 		"🔍 VERSIONING & DIFFING:" \
@@ -243,6 +250,10 @@ thesis: $(THESIS_TEX)
 map: $(MAP_TEX)
 	$(PDF_BUILD) $< $(MAP_PDF) $(PDF_BUILD_FLAGS)
 
+# Needs pandoc and LuaLaTeX; the reading order is PARTS in scripts/build_reading.py.
+reading:
+	python3 scripts/build_reading.py $(READING_ARGS)
+
 # Thesis metadata is tracked in $(THESIS_DIR)/metadata.tex; no .env.local values.
 $(THESIS_TEX): $(THESIS_TEMPLATE)
 	cp $< $@
@@ -281,6 +292,10 @@ ifeq ($(firstword $(MAKECMDGOALS)),thesis)
   THESIS_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(THESIS_ARGS):;@:)
 endif
+ifeq ($(firstword $(MAKECMDGOALS)),reading)
+  READING_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(READING_ARGS):;@:)
+endif
 
 # ==============================================================================
 # CLEANUP
@@ -290,7 +305,7 @@ clean: clean-docs diff-clean
 clean-docs: aux-clean
 	rm -rf $(PROPOSAL_DIR)/build $(PROPOSAL_PRES_DIR)/build $(THESIS_DIR)/build
 	rm -f $(PROPOSAL_TEX) $(SLIDES_TEX) $(NOTES_TEX) $(QNA_TEX) $(THESIS_TEX)
-	rm -f $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF) $(THESIS_PDF) $(MAP_PDF)
+	rm -f $(PROPOSAL_PDF) $(SLIDES_PDF) $(NOTES_PDF) $(QNA_PDF) $(THESIS_PDF) $(MAP_PDF) $(READING_PDFS)
 	rm -f $(PROPOSAL_DIR)/*.aux $(PROPOSAL_DIR)/*.log $(PROPOSAL_DIR)/*.fls $(PROPOSAL_DIR)/*.fdb_latexmk $(PROPOSAL_DIR)/*.bbl $(PROPOSAL_DIR)/*.bcf $(PROPOSAL_DIR)/*.blg $(PROPOSAL_DIR)/*.run.xml $(PROPOSAL_DIR)/*.out $(PROPOSAL_DIR)/*.toc $(PROPOSAL_DIR)/*.synctex.gz
 	rm -f $(PROPOSAL_PRES_DIR)/*.aux $(PROPOSAL_PRES_DIR)/*.log $(PROPOSAL_PRES_DIR)/*.fls $(PROPOSAL_PRES_DIR)/*.fdb_latexmk $(PROPOSAL_PRES_DIR)/*.nav $(PROPOSAL_PRES_DIR)/*.snm $(PROPOSAL_PRES_DIR)/*.out $(PROPOSAL_PRES_DIR)/*.toc $(PROPOSAL_PRES_DIR)/*.synctex.gz
 	rm -f $(THESIS_DIR)/*.aux $(THESIS_DIR)/*.log $(THESIS_DIR)/*.fls $(THESIS_DIR)/*.fdb_latexmk $(THESIS_DIR)/*.bbl $(THESIS_DIR)/*.bcf $(THESIS_DIR)/*.blg $(THESIS_DIR)/*.run.xml $(THESIS_DIR)/*.out $(THESIS_DIR)/*.toc $(THESIS_DIR)/*.synctex.gz

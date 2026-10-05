@@ -217,6 +217,7 @@ The build flow is `.env.local + .tex.template → generated .tex → latexmk/Bib
 | `make proposal-phase` | All four proposal PDFs |
 | `make thesis` | `scratch/thesis.pdf` |
 | `make map` | `scratch/peta-versi.pdf` (version map: revisions, reviewers, chapter status) |
+| `make reading` | `scratch/bahan-bacaan_<version>.pdf`: the study, supervision, record, and protocol Markdown notes in one PDF, read from Git at the latest `thesis/v*` tag; `make reading <ref>` takes `v3`, `head`, or a commit ID (needs pandoc and LuaLaTeX; order set in `scripts/build_reading.py`) |
 | `make final-phase` | Thesis PDF and version map |
 | `make all` | All four proposal PDFs and the thesis PDF |
 
