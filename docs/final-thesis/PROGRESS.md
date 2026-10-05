@@ -15,6 +15,8 @@ This file holds the current status only. Dated history is in [records/research-l
 
 Lecturer notes from the v2 review are F01–F12 in [supervision/feedback.md](supervision/feedback.md). The peer review of v3 by a fellow student is in [supervision/review-teman-2026-10-04.md](supervision/review-teman-2026-10-04.md); it is not lecturer feedback. No supervisor comments on v3 or v4 have been recorded yet.
 
+The version map with every reviewer, feedback type, and chapter status per version is built with `make map` (`scratch/peta-versi.pdf`; source [supervision/peta-versi.tex](supervision/peta-versi.tex)). Update it when a version is tagged or a new reviewer appears.
+
 ## Current design
 
 Unchanged from v3 in substance (see `research/protocol.md`):

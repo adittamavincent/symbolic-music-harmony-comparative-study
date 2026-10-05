@@ -11,7 +11,7 @@ The documents are separated by academic phase. Run build commands from the repos
 
 Edit chapters and `.tex.template` files. Make generates top-level `.tex` files from templates and local metadata; generated files are ignored by Git.
 
-`make proposal-phase` builds all four proposal documents. `make final-phase` currently builds only the thesis. Thesis defense slides have not been implemented.
+`make proposal-phase` builds all four proposal documents. `make final-phase` builds the thesis and the version map (`make map`). Thesis defense slides have not been implemented.
 
 Proposal tags preserve earlier source snapshots. They do not prevent later edits to proposal files or shared assets. Proposal and thesis chapters are independent copies.
 

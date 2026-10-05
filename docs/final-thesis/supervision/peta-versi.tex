@@ -1,0 +1,292 @@
+% Peta versi naskah: proposal v1 sampai skripsi v4.
+% Build dari root repositori: make map  ->  scratch/peta-versi.pdf
+% Perbarui setiap kali tag versi baru dibuat atau ada pemberi masukan baru.
+\documentclass[a4paper,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{newtxtext,newtxmath}
+\usepackage[landscape,margin=1.5cm]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tabularx,booktabs,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlist{nosep,leftmargin=*}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% Satu warna per jenis sumber perubahan; dipakai di peta dan tabel.
+\definecolor{dosen}{HTML}{1F5FA8}
+\definecolor{pembimbing}{HTML}{0B7A75}
+\definecolor{teman}{HTML}{2E8B3E}
+\definecolor{audit}{HTML}{7A4FB0}
+\definecolor{peneliti}{HTML}{C0661A}
+\definecolor{alat}{HTML}{8A6D9E}
+\definecolor{tidaktercatat}{HTML}{8C8C8C}
+\definecolor{fproposal}{HTML}{F3EEE3}
+\definecolor{fskripsi}{HTML}{E6EEF6}
+% Status bab.
+\definecolor{sada}{HTML}{DCEFD9}
+\definecolor{subah}{HTML}{FBE7C6}
+\definecolor{sbelum}{HTML}{EEEEEE}
+\definecolor{shapus}{HTML}{F6D5D5}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize Peta versi naskah, diperbarui 5 Oktober 2026}
+\fancyfoot[R]{\footnotesize\thepage}
+
+\tikzset{
+  versi/.style={draw=black!70, thick, rounded corners=2pt, fill=white,
+    text width=5.6cm, inner sep=5pt, align=left, font=\footnotesize},
+  sumber/.style={draw=#1, very thick, rounded corners=2pt, fill=#1!10,
+    text width=6.0cm, inner sep=4pt, align=left, font=\scriptsize},
+  sumberputus/.style={sumber=#1, dashed},
+  alur/.style={-{Stealth[length=3mm]}, very thick, black!70},
+  masuk/.style={-{Stealth[length=2mm]}, thick, #1},
+  bab/.style={draw=black!50, rounded corners=1pt, minimum width=2.3cm,
+    minimum height=0.9cm, align=center, font=\scriptsize},
+}
+
+\begin{document}
+
+{\LARGE\bfseries Peta Versi Naskah}\par
+\vspace{2pt}
+Proposal v1 sampai skripsi v4: pemicu revisi, pemberi masukan, jenisnya, dan status bab. Rincian setiap perubahan ada di \texttt{perubahan-v2-ke-v3.md}, \texttt{perubahan-v3-ke-v4.md}, \texttt{feedback.md}, dan \texttt{review-teman-2026-10-04.md}.
+
+\vspace{4pt}
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % Versi
+  \node[versi] (v1) at (0,0) {%
+    \textbf{\normalsize v1} \hfill \texttt{proposal/v1}\\
+    23 Juni 2026 \hfill \texttt{ccb5d59}\\[2pt]
+    \textit{Evaluasi Kepatuhan Harmoni Fungsional Output Model Generatif Musik Simbolik: Studi Komparatif Teori Gustav Strube}\\[2pt]
+    Model: DeepBach, Coconet, NotaGen\\
+    Isi: BAB I--III, Jadwal Penelitian\\
+    Dipresentasikan kepada penguji sidang proposal};
+  \node[versi] (v2) at (6.8,0) {%
+    \textbf{\normalsize v2} \hfill \texttt{proposal/v2}\\
+    3 Juli 2026 \hfill \texttt{ffdfed5}\\[2pt]
+    \textit{Evaluasi Akurasi Kaidah Harmoni Fungsional pada Musik Simbolik Hasil Generasi LSTM, CNN, dan Transformer}\\[2pt]
+    Model: DeepBach, Coconet, NotaGen\\
+    Isi: BAB I--III, Jadwal Penelitian\\
+    Dibahas di Seminar Musikologi 2};
+  \node[versi] (v3) at (13.6,0) {%
+    \textbf{\normalsize v3} \hfill \texttt{thesis/v3}\\
+    3 Oktober 2026 \hfill \texttt{acd513c}\\[2pt]
+    \textit{Evaluasi Musik Hasil AI DeepBach dan Coconet: Pengaruh Asal Melodi terhadap Kepatuhan Kaidah Gerak Suara Strube}\\[2pt]
+    Model: DeepBach, Coconet\\
+    Isi: front matter, BAB I--III\\
+    Dibaca Manda (PDF 63 halaman)};
+  \node[versi] (v4) at (20.4,0) {%
+    \textbf{\normalsize v4} \hfill \texttt{thesis/v4}\\
+    4 Oktober 2026 \hfill \texttt{eeb18be}\\[2pt]
+    Judul sama dengan v3\\[2pt]
+    Model: DeepBach, Coconet\\
+    Isi: front matter, BAB I--III (70 halaman)\\
+    Protokol 2.1; pipeline siap, belum dijalankan\\
+    Tag dipindah ke HEAD 5 Oktober 2026};
+
+  % Fase
+  \begin{scope}[on background layer]
+    \node[fit=(v1)(v2), fill=fproposal, rounded corners=4pt, inner sep=8pt,
+      label={[font=\small\bfseries, anchor=north west]south west:Fase proposal}] (fp) {};
+    \node[fit=(v3)(v4), fill=fskripsi, rounded corners=4pt, inner sep=8pt,
+      label={[font=\small\bfseries, anchor=north west]south west:Fase skripsi}] (fs) {};
+  \end{scope}
+
+  % Alur antarversi
+  \draw[alur] (v1.east) -- node[below, font=\scriptsize, align=center, yshift=-2pt] {65\%\\kata\\sama} (v2.west);
+  \draw[alur] (v2.east) -- node[below, font=\scriptsize, align=center, yshift=-2pt] {5\%\\kata\\sama} (v3.west);
+  \draw[alur] (v3.east) -- (v4.west);
+
+  % Sumber v1 -> v2
+  \node[sumberputus=tidaktercatat, anchor=south] (s12a) at (3.4,3.0) {%
+    \textbf{Penguji sidang proposal v1} \hfill \textit{penguji}\\
+    Catatan sidang tidak tersimpan. Belum diketahui apakah v2 menjawab penguji.};
+  \node[sumber=alat, anchor=south] (s12b) at (3.4,4.25) {%
+    \textbf{Jules, PR \#1 (2 Juli 2026)} \hfill \textit{alat bantu AI}\\
+    Tinjauan pustaka diperluas; notasi rumus diperbaiki; diterima peneliti.};
+  \node[sumber=peneliti, anchor=south] (s12c) at (3.4,5.5) {%
+    \textbf{Peneliti} \hfill \textit{keputusan peneliti}\\
+    Judul baru; subbab formalisasi matematis, definisi operasional, \textit{Bach Paradox}, limitasi desain; kolom penguji.};
+
+  % Sumber v2 -> v3
+  \node[sumber=dosen, anchor=south] (s23a) at (10.2,3.0) {%
+    \textbf{Bu Suryati dan Pak Galih} \hfill \textit{dosen pengampu}\\
+    Seminar Musikologi 2, bimbingan di kelas. \textbf{F01--F12}: judul, pendekatan kuantitatif, rumusan 5W1H, variabel dan hipotesis, \textit{grand theory}, posisionalitas, sumber rumus.};
+  \node[sumber=peneliti, anchor=south] (s23b) at (10.2,4.75) {%
+    \textbf{Peneliti} \hfill \textit{keputusan peneliti}\\
+    NotaGen dan kondisi A--D dihapus; asal melodi jadi X2; acuan Huang dkk.\ (2019); lima kaidah; tanpa penilai manusia.};
+  \node[sumber=tidaktercatat, anchor=south] (s23c) at (10.2,6.15) {%
+    \textbf{Template Proposal TA Penelitian 2026} \hfill \textit{acuan}\\
+    Struktur BAB I--III; contoh skripsi Prodi Musik 2026.};
+
+  % Sumber v3 -> v4
+  \node[sumber=teman, anchor=south] (s34a) at (17.0,3.0) {%
+    \textbf{Manda} \hfill \textit{teman satu angkatan}\\
+    Panggilan 4 Oktober 2026. \textbf{P01--P17}: tanda baca, istilah asing, sitasi, bahasa BAB I, tinjauan pustaka per studi, landasan teori per ahli.};
+  \node[sumberputus=tidaktercatat, anchor=south] (s34b) at (17.0,4.6) {%
+    \textbf{Prof.\ Andre, Bu Suryati (lewat Manda)} \hfill \textit{tidak langsung}\\
+    Dalam P04, P08, P09. Belum dikonfirmasi dosen.};
+  \node[sumber=audit, anchor=south] (s34c) at (17.0,5.55) {%
+    \textbf{Audit 3 Oktober 2026} \hfill \textit{asisten AI}\\
+    \textbf{A01--A39}: kerangka sampel, fermata, batas validitas, kontrol kualitas, sitasi.};
+  \node[sumber=peneliti, anchor=south] (s34d) at (17.0,6.65) {%
+    \textbf{Peneliti} \hfill \textit{keputusan peneliti}\\
+    Sistematika Penulisan dihapus; protokol 2.1 dan pipeline.};
+
+  \foreach \s/\c in {s12a/tidaktercatat, s23a/dosen, s34a/teman}
+    \draw[masuk=\c] (\s.south) -- ++(0,-0.75);
+
+  % Draf tanpa tag dan langkah berikutnya
+  \node[sumberputus=tidaktercatat, anchor=north, text width=5.6cm] (draf) at (10.2,-3.15) {%
+    \textbf{Draf tanpa tag \texttt{bb7afc4}} (14 Agustus 2026)\\
+    Draf lima bab dan infrastruktur riset. BAB IV--V dihapus 30 September 2026 karena template meminta BAB I--III sebelum data ada. Tidak dihitung sebagai versi.};
+  \draw[masuk=tidaktercatat, dashed] (draf.north) -- ++(0,0.45);
+
+  \node[sumberputus=pembimbing, anchor=north, text width=5.6cm] (next) at (20.4,-3.15) {%
+    \textbf{Berikutnya: bimbingan} \hfill \textit{pembimbing}\\
+    Pembimbing I A.\ Gathut Bintarto Triprasetyo; Pembimbing II Veronica Yoni Kaestri. Belum ada catatan. Bahan: \texttt{bimbingan-v4.md}.};
+  \draw[masuk=pembimbing, dashed] (v4.south) -- (next.north);
+\end{tikzpicture}
+\end{center}
+
+\vspace{2pt}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[font=\small\bfseries, anchor=west] at (0,0) {Jenis sumber:};
+  \foreach \c/\t [count=\i] in {dosen/Masukan dosen, pembimbing/Pembimbing (belum ada), teman/Review teman,
+      audit/Audit asisten AI, peneliti/Keputusan peneliti, alat/Alat bantu AI, tidaktercatat/{Acuan, tidak langsung, tidak tercatat}}
+    \node[draw=\c, very thick, fill=\c!10, rounded corners=1pt, font=\scriptsize, anchor=west, inner sep=3pt]
+      at ({2.2+(\i-1)*3.35},0) {\t};
+  \node[font=\scriptsize, anchor=west] at (2.2,-0.5) {Garis putus-putus: catatan tidak tersimpan, belum dikonfirmasi, atau belum terjadi.};
+\end{tikzpicture}
+
+\vspace{6pt}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[font=\small\bfseries, anchor=west] at (0,0) {Status bab sekarang (v4):};
+  \node[bab, fill=sada] at (5.6,0) {BAB I\\Ada, direvisi};
+  \node[bab, fill=sada] at (8.1,0) {BAB II\\Ada, direvisi};
+  \node[bab, fill=sada] at (10.6,0) {BAB III\\Ada, direvisi};
+  \node[bab, fill=sbelum, dashed] at (13.1,0) {BAB IV\\Butuh data utama};
+  \node[bab, fill=sbelum, dashed] at (15.6,0) {BAB V\\Butuh BAB IV};
+  \node[bab, fill=sbelum, dashed] at (18.1,0) {Lampiran\\Belum};
+\end{tikzpicture}
+
+\newpage
+\section{Struktur naskah per versi}
+
+\begin{tabularx}{\linewidth}{L{3.6cm} Y Y Y Y}
+\toprule
+\textbf{Bagian} & \textbf{v1} & \textbf{v2} & \textbf{v3} & \textbf{v4} \\
+\midrule
+Front matter & \cellcolor{sada}Sampul, pengesahan, abstrak, \textit{abstract} & \cellcolor{subah}Ditambah kolom Penguji I dan II & \cellcolor{subah}Lengkap: judul, pengajuan, pengesahan, pernyataan, motto, persembahan, kata pengantar, abstrak, \textit{abstract}, daftar isi, gambar, tabel & \cellcolor{subah}Sama dengan v3; kata kunci diganti \\
+BAB I Pendahuluan & \cellcolor{sada}Ada & \cellcolor{subah}Ada; suntingan & \cellcolor{subah}Ditulis ulang; ditambah Pertanyaan Penelitian dan Sistematika Penulisan & \cellcolor{subah}Direvisi; Sistematika Penulisan dihapus \\
+BAB II Tinjauan Pustaka dan Landasan Teori & \cellcolor{sada}Ada & \cellcolor{subah}Ditambah formalisasi matematis & \cellcolor{subah}Ditulis ulang; ditambah Asumsi dan Hipotesis & \cellcolor{subah}Landasan teori per ahli; Kerangka Berpikir; tabel perbandingan studi \\
+BAB III Metode Penelitian & \cellcolor{sada}Ada; Sistematika Penulisan di akhir bab & \cellcolor{subah}Ditambah tiga subbab & \cellcolor{subah}Ditulis ulang menurut template 2026 & \cellcolor{subah}Angka sampel, pengaturan model, \textit{seed} \\
+Jadwal Penelitian & \cellcolor{sada}Ada & \cellcolor{sada}Ada & \cellcolor{shapus}Dihapus & \cellcolor{sbelum}-- \\
+BAB IV Hasil dan Pembahasan & \cellcolor{sbelum}-- & \cellcolor{sbelum}-- & \cellcolor{sbelum}Belum & \cellcolor{sbelum}Belum; menunggu data utama \\
+BAB V Kesimpulan dan Saran & \cellcolor{sbelum}-- & \cellcolor{sbelum}-- & \cellcolor{sbelum}Belum & \cellcolor{sbelum}Belum; menunggu BAB IV \\
+Daftar Pustaka & \cellcolor{sada}Ada & \cellcolor{subah}Diperluas & \cellcolor{subah}50 kunci sitasi & \cellcolor{subah}38 kunci, semua dicek \\
+Lampiran & \cellcolor{sbelum}-- & \cellcolor{sbelum}-- & \cellcolor{sbelum}-- & \cellcolor{sbelum}Belum; kandidat di \texttt{PROGRESS.md} \\
+\bottomrule
+\end{tabularx}
+
+\vspace{2pt}
+{\scriptsize Warna: \colorbox{sada}{ada} \colorbox{subah}{berubah dari versi sebelumnya} \colorbox{shapus}{dihapus} \colorbox{sbelum}{belum ada}. Antara v2 dan v3 ada draf lima bab tanpa tag (\texttt{bb7afc4}); BAB IV--V draf itu dihapus dan tidak dihitung.}
+
+\section{Status bab saat ini (v4)}
+
+\begin{tabularx}{\linewidth}{L{2.2cm} L{6cm} Y}
+\toprule
+\textbf{Bab} & \textbf{Status} & \textbf{Yang masih terbuka} \\
+\midrule
+BAB I & Ada, direvisi setelah review teman & Persetujuan judul dan pertanyaan penelitian oleh pembimbing \\
+BAB II & Ada, landasan teori disusun ulang & Bacaan peneliti sendiri atas sumber inti; halaman cetak Briot dkk.\ (2020) \\
+BAB III & Ada, sesuai protokol 2.1 & Pengetikan 71 melodi Strube; pilot; pembekuan protokol \\
+BAB IV & Belum ditulis & Butuh pilot dan data utama \\
+BAB V & Belum ditulis & Butuh BAB IV \\
+\bottomrule
+\end{tabularx}
+
+Status lengkap dan gerbang penyelesaian ada di \texttt{PROGRESS.md}.
+
+\section{Perubahan per versi}
+
+\textbf{v1 ke v2 (proposal).} Dasar perubahan tidak tercatat. Belum diketahui apakah perubahan ini menjawab catatan penguji sidang proposal v1; konfirmasi ke peneliti sebelum menyebut dasarnya. Yang berubah menurut sumber di kedua tag (sekitar 65\% kata sama):
+\begin{itemize}
+  \item Judul berganti dari \textit{Evaluasi Kepatuhan Harmoni Fungsional Output Model Generatif Musik Simbolik: Studi Komparatif Teori Gustav Strube} ke \textit{Evaluasi Akurasi Kaidah Harmoni Fungsional pada Musik Simbolik Hasil Generasi LSTM, CNN, dan Transformer}. Model yang diuji tetap DeepBach, Coconet, dan NotaGen.
+  \item BAB II: subbab baru \textit{Formalisasi Matematis Ruang Kosakata dan Arsitektur Model}. BAB III: subbab baru \textit{Definisi Operasional Variabel}, \textit{Penanganan Bach Paradox}, dan \textit{Limitasi Desain Komparatif}.
+  \item Tinjauan pustaka diperluas dan notasi rumus diperbaiki lewat PR \#1 (alat bantu AI, diterima peneliti).
+  \item Halaman pengesahan: kolom Penguji I dan II ditambahkan; kolom pembimbing akademik diganti pembimbing skripsi.
+\end{itemize}
+
+\textbf{v2 ke v3 (proposal ke skripsi).} Pemicu: pembahasan v2 di kelas Seminar Musikologi 2. Hanya sekitar 5\% kata v2 yang tersisa; v3 adalah penulisan ulang.
+\begin{itemize}
+  \item \textcolor{dosen}{\textbf{Masukan dosen (F01--F12):}} judul berpola ``evaluasi musik hasil'', pendekatan kuantitatif dengan rujukan Creswell dan Sugiyono, rumusan masalah berupa paragraf lalu daftar, pertanyaan 5W1H yang menyebut Strube, variabel dan hipotesis, \textit{grand theory}, posisionalitas peneliti, dan sumber rumus.
+  \item \textcolor{peneliti}{\textbf{Keputusan peneliti:}} NotaGen dan tingkat kendali A--D dihapus; asal melodi menjadi variabel bebas kedua; Huang dkk.\ (2019) menjadi studi acuan; lima kaidah dari rubrik Yan dkk.\ (2018) dirumuskan menurut Strube; \textit{Strube Score} diganti laju pelanggaran per birama; tanpa penilai manusia; struktur mengikuti template 2026.
+\end{itemize}
+
+\textbf{v3 ke v4 (skripsi).} Pemicu: review teman dan audit. Tidak ada masukan dosen baru; F01--F12 tetap dipenuhi.
+\begin{itemize}
+  \item \textcolor{teman}{\textbf{Review teman (P01--P17):}} tanda baca dan istilah asing, kata kunci, pemeriksaan semua sitasi, bahasa BAB I yang lebih sederhana, rumusan masalah satu paragraf, tinjauan pustaka per studi dengan tabel perbandingan, landasan teori menurut nama ahli.
+  \item \textcolor{audit}{\textbf{Audit asisten AI (A01--A39):}} kerangka sampel Bach (371 nomor = 350 berkas, 318 melodi layak), rumusan fermata sesuai kode, batas klaim validitas, kontrol kualitas tambahan, analisis kepekaan keempat.
+  \item \textcolor{peneliti}{\textbf{Keputusan peneliti:}} Sistematika Penulisan dan rujukan antarbagian dihapus; protokol 2.1 dan pipeline eksperimen disiapkan tanpa dijalankan.
+\end{itemize}
+Tidak berubah: judul, pertanyaan penelitian, variabel, hipotesis, lima kaidah, instrumen 2.0, dan desain tanpa penilai manusia.
+
+\section{Cara memperbarui}
+
+Sumber peta ini adalah \texttt{docs/final-thesis/supervision/peta-versi.tex}; bangun dengan \texttt{make map}. Tambahkan satu kotak versi di peta dan satu kolom di tabel struktur setiap kali tag versi baru dibuat. Tambahkan pemberi masukan baru ke daftarnya beserta jenis dan kode catatannya. Catatan dosen atau pembimbing dicatat di \texttt{feedback.md}; review lain di berkas terpisah seperti review teman. Jangan menaikkan jenis pemberi masukan: laporan tidak langsung tetap laporan tidak langsung sampai dosen yang bersangkutan mengonfirmasinya.
+
+\newpage
+\section{Daftar pemberi masukan}
+
+\begin{tabularx}{\linewidth}{L{4.2cm} L{4.2cm} L{3.2cm} L{2.4cm} L{2.6cm} Y}
+\toprule
+\textbf{Pemberi} & \textbf{Peran} & \textbf{Jenis} & \textbf{Versi dibaca} & \textbf{Kode catatan} & \textbf{Status} \\
+\midrule
+Penguji sidang proposal & Penguji & Masukan penguji & v1 & -- & Pesan tag \texttt{proposal/v1} menyebut v1 dipresentasikan kepada penguji. Catatan sidang tidak tersimpan. \\
+Bu Suryati & Dosen pengampu Seminar Musikologi 2 & \textcolor{dosen}{Masukan dosen} & v2 & F01--F12 (bersama) & Ditanggapi di v3; persetujuan atas jawaban belum ada. Pembagian catatan per dosen tidak tercatat. \\
+Pak Galih & Dosen pengampu Seminar Musikologi 2 & \textcolor{dosen}{Masukan dosen} & v2 & F01--F12 (bersama) & Sama seperti di atas \\
+Manda & Teman satu angkatan & \textcolor{teman}{Review teman} & v3 & P01--P17 & Ditanggapi di v4 \\
+Prof.\ Andre & Disebut Manda & Laporan tidak langsung & -- & Dalam P04, P09 & Belum dikonfirmasi \\
+Asisten AI (Claude) & Auditor dan penyusun draf atas permintaan peneliti & \textcolor{audit}{Audit asisten AI} & v3 & A01--A39 & Sebagian ditangani di v4 \\
+Jules (google-labs-jules) & Alat AI lewat PR \#1 & \textcolor{alat}{Alat bantu AI} & draf v2 & -- & Masuk ke v2 \\
+A.\ Gathut Bintarto Triprasetyo & Pembimbing I & \textcolor{pembimbing}{Masukan pembimbing} & -- & -- & Belum ada pertemuan tercatat; bahan \texttt{bimbingan-v4.md} \\
+Veronica Yoni Kaestri & Pembimbing II & \textcolor{pembimbing}{Masukan pembimbing} & -- & -- & Belum ada catatan \\
+\bottomrule
+\end{tabularx}
+
+\section{Jenis sumber perubahan}
+
+Setiap perubahan dicatat dengan satu dasar. Jenis dasar menentukan cara menjelaskannya di depan dosen.
+
+\begin{tabularx}{\linewidth}{L{4.2cm} Y L{5.4cm} L{5.4cm}}
+\toprule
+\textbf{Jenis} & \textbf{Arti} & \textbf{Contoh} & \textbf{Boleh disebut ``permintaan dosen''?} \\
+\midrule
+\textcolor{dosen}{\textbf{Masukan dosen}} & Catatan dosen yang membaca naskah & F01--F12 & Ya, untuk catatan itu saja \\
+\textcolor{pembimbing}{\textbf{Masukan pembimbing}} & Catatan Pembimbing I atau II & Belum ada & Ya, setelah tercatat \\
+\textbf{Masukan penguji} & Catatan penguji sidang & Belum tercatat & Ya, setelah tercatat \\
+\textcolor{teman}{\textbf{Review teman}} & Pembacaan oleh mahasiswa lain & P01--P17 & Tidak \\
+\textcolor{tidaktercatat}{\textbf{Laporan tidak langsung}} & Ucapan dosen yang disampaikan orang lain & Prof.\ Andre dan Bu Suryati lewat Manda (P04, P08, P09) & Tidak; tandai belum dikonfirmasi \\
+\textcolor{audit}{\textbf{Audit asisten AI}} & Pemeriksaan naskah, kode, dan sitasi oleh asisten AI atas permintaan peneliti & A01--A39 & Tidak \\
+\textcolor{peneliti}{\textbf{Keputusan peneliti}} & Pilihan peneliti, termasuk tindak lanjut agar masukan lain dapat dipenuhi & Penghapusan NotaGen; desain tanpa penilai manusia & Tidak \\
+\textcolor{tidaktercatat}{\textbf{Acuan departemen}} & Template \textit{Proposal TA Penelitian 2026} dan contoh skripsi Prodi Musik 2026 & Struktur BAB I--III; halaman pengesahan & Tidak; sebut sebagai template \\
+\textcolor{alat}{\textbf{Alat bantu AI}} & Suntingan alat AI yang diterima peneliti & PR \#1 oleh Jules di v2 & Tidak \\
+\bottomrule
+\end{tabularx}
+
+\end{document}

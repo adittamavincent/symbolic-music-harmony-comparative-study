@@ -287,6 +287,21 @@ Recorded by the assistant at the researcher's request ("v3 udah locked … bikin
 
 - Follow-up the same day, at the researcher's request: removed I.F *Sistematika Penulisan* (the researcher reported that Manda thought it unnecessary; the template does not require it, and P14 objects to chapter-by-chapter cross-references), removed the remaining within-text references ("dibahas pada subbab berikut", "diuraikan di bawah", "pada akhir subbab ini"), and set the abstract keyword lines without indentation. References to Strube's own book chapters and to tables and figures stay.
 
+## 2026-10-05 — Register edit for P06
+
+Recorded by the assistant at the researcher's request ("yang Bahasa terlalu formal itu aku juga setuju, ayo kita ubah ... in some places, add shuffling for SPOK ... scarce is okay").
+
+- Did: listed P01–P17 against the v4 sources; read BAB I–III in full; loosened about 50 stiff sentences.
+- Changed and why: moved mid-sentence "karena itu" and "dengan demikian" (English "therefore" calques, 13 cases) to the front or merged it into "sehingga", varying the connective; replaced several "merupakan" and nominal phrases with plain verbs; rewrote the count-first "dua hal. Pertama ... Kedua ..." in II.A.3; reordered a few sentences to start with the adverbial or a clefted predicate (for example "Yang dievaluasi dalam penelitian ini adalah ...", "Meskipun repertoarnya berbeda, ..."). One meaning fix: Coconet raw outputs are stored "agar pengukurannya dapat diulang" instead of claiming that this guarantees reproducible generation.
+- Not changed: terms (including "laju pelanggaran"), citations, numbers, hypotheses, formulas, Strube rule list, abstract and front matter.
+- Open from the P01–P17 check: "dataset" is still upright in four places (P02); ask Manda about P03 and have her reread v4 (P17); confirm "sintesis" (P09) and the theory structure (P12) with the supervisor.
+- Second pass the same day ("istilah dari terjemahan pak gathut, boleh lah ... yang indo ga lazim itu ... no ai slop harus di gas ... abstrak perlu diubah ... laju pelanggaran pakai opsi satu"):
+  - Terms: "laju pelanggaran" became "pelanggaran per birama" in BAB I–III, the figure, the hypotheses, and both abstracts ("violations per measure"); the symbol $L_r$ is unchanged. Unusual Indonesian coinages replaced: *seed*, *temperature*, *loss function*, *pre-training* (English, italic, glossed at first use); "analisis sensitivitas", "anotator", "satuan not seperenam belas", "kejadian yang ditandai", "alat untuk mengarahkan model", "harmoni apa saja yang dianggap sah". *dataset* italicized (closes the P02 leftover).
+  - Pak Gathut's translation (OCR of the 2015 scan, pp. 12–18 and 43–44): it uses "Paralel Kuint / Kuint Sejajar", "Paralel Oktaf atau Unison", "tumpang tindih", "sifat sebagai nada lewat", "tidak … murni". The manuscript terms already match; "kuint lewat" became "kuint yang bersifat lewat". "Unisono" kept (KBBI form) although the translation writes "unison".
+  - No-AI-slop: the three Landasan Teori closers that repeated "Kerangka ini dipakai untuk menafsirkan hasil pertanyaan penelitian …" now differ; dropped a redundant "bukan hukum mutlak" (II.B) and "bukan sumber data" (III.A); split five "…, sehingga …" sentences in BAB III; "bukan kesalahan yang pasti" became "belum tentu kesalahan".
+  - Not changed: study notes (`study/defense-qa.md`, `study/persiapan-pembimbing-1.md`) and `research/protocol.md` still say "laju"; code and CSV names unchanged.
+- Checked: `make thesis` builds (69 pages).
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

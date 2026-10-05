@@ -11,6 +11,7 @@ final-thesis/
 ├── eval.md                        Writing checks applied before delivery
 ├── thesis/                        Manuscript source (LaTeX)
 ├── supervision/                   From and for the lecturers
+│   ├── peta-versi.tex             Version map (make map): every revision, who gave feedback, chapter status
 │   ├── feedback.md                Lecturer notes F01–F12 from the v2 review, with actions
 │   ├── perubahan-v2-ke-v3.md      Every change from proposal v2 to v3 and its basis
 │   ├── review-teman-2026-10-04.md Peer review of v3 by a fellow student (P01–P17; not lecturer feedback)
@@ -34,6 +35,7 @@ Where to start:
 | Know what is done and what is open | [PROGRESS.md](PROGRESS.md) |
 | Prepare for Pembimbing I | [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md), then [study/defense-qa.md](study/defense-qa.md) |
 | Understand how DeepBach and Coconet work | [study/model-dan-istilah.md](study/model-dan-istilah.md) |
+| See every version, its feedback source, and chapter status | `make map`, then `scratch/peta-versi.pdf` (source: [supervision/peta-versi.tex](supervision/peta-versi.tex)) |
 | Explain why the design changed after v2 | [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md) |
 | Explain what changed in v4 | [supervision/perubahan-v3-ke-v4.md](supervision/perubahan-v3-ke-v4.md) |
 | Prepare the v4 supervisor meeting | [supervision/bimbingan-v4.md](supervision/bimbingan-v4.md) |
@@ -69,6 +71,6 @@ make -B thesis
 
 The PDF is `scratch/thesis.pdf` from the repository root. Make removes temporary auxiliary files after compiling. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, current PDFs, and legacy build files. `make aux-clean` preserves PDFs.
 
-`make final-phase` currently builds only the thesis. Final defense slides are not implemented. `thesis/v3` exists; create `thesis/v4` after the v4 sources are committed and checked. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
+`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3` exists; create `thesis/v4` after the v4 sources are committed and checked. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
 
 Use [eval.md](eval.md) to check writing. See [maintenance.md](../maintenance.md) for instrument and tooling issues. Do not fill absent findings with expected outcomes.

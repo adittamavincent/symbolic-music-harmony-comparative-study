@@ -216,7 +216,8 @@ The build flow is `.env.local + .tex.template → generated .tex → latexmk/Bib
 | `make qna` | `scratch/qna.pdf` |
 | `make proposal-phase` | All four proposal PDFs |
 | `make thesis` | `scratch/thesis.pdf` |
-| `make final-phase` | Thesis PDF only |
+| `make map` | `scratch/peta-versi.pdf` (version map: revisions, reviewers, chapter status) |
+| `make final-phase` | Thesis PDF and version map |
 | `make all` | All four proposal PDFs and the thesis PDF |
 
 Aliases: `make docs` means `make proposal-phase`; `make compile` means `make proposal`; `make present` means `make slides`. Bare `make` builds all current document PDFs; `make help` lists commands.
