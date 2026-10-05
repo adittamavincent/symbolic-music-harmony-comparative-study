@@ -335,6 +335,26 @@ class SourceAssemblyTests(unittest.TestCase):
         self.assertIn(r"\label{L-tab:a} Tabel~\ref{L-tab:a} \parencite[9]{x_v1, y_v1}", labeled)
         self.assertIn(r"\label{R-tab:a} \section{A}\label{diffn1} \parencite{x}", labeled)
 
+    def test_starred_references_and_wildcard_citations_keep_their_meaning(self):
+        body = (r"\begin{leftside}\ref*{sec:a} \autoref*{fig:b} \nameref{sec:a} "
+                r"\citeauthor{x} \citeyear[2]{x} \nocite{*}\end{leftside}")
+        labeled = diff.label_sides(body)
+        for command in (r"\ref*{L-sec:a}", r"\autoref*{L-fig:b}", r"\nameref{L-sec:a}",
+                        r"\citeauthor{x_v1}", r"\citeyear[2]{x_v1}", r"\nocite{*}"):
+            self.assertIn(command, labeled)
+
+    def test_caption_and_modified_bibliography_handlers_are_in_the_generated_document(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(diff, "build_full_proposal", return_value="Text."), \
+                patch.object(diff, "find_git_path", return_value=None), \
+                patch.object(diff, "version_definitions", return_value=""), \
+                patch.object(diff, "side_setup", return_value=""), \
+                patch.object(diff, "extract_template_packages", return_value=[]):
+            latex = Path(diff.generate_diff_latex("old", "new", directory)).read_text()
+        self.assertIn(r"\newcommand{\diffcaptionlabel}[2]", latex)
+        for status, begin in (("moddel", "bibdelbegin"), ("modins", "bibinsbegin")):
+            self.assertIn(rf"\iffieldequalstr{{userc}}{{{status}}}{{\{begin}}}", latex)
+            self.assertIn(rf"\iffieldequalstr{{userc}}{{{status}}}{{\bibtcbend}}", latex)
+
 
 class ThesisLayoutTests(GitRepoCase):
     """The v3 layout: chapter files hold their headings, the preamble inputs metadata and layout."""
@@ -383,7 +403,7 @@ class ThesisLayoutTests(GitRepoCase):
         self.assertIn("Nama Peneliti", latex)
         self.assertIn(r"\providecommand{\signatory}{}\renewcommand{\signatory}[2]", latex)
         self.assertNotIn(r"\label{sec:latar-belakang}", latex)
-        self.assertNotIn(r"\label{R-sec:latar-belakang}", latex)
+        self.assertIn(r"\label{R-sec:latar-belakang}", latex)
 
 
 if __name__ == "__main__":

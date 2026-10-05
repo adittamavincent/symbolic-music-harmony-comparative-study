@@ -3,10 +3,11 @@ r"""
 Generate a side-by-side PDF comparison of two committed manuscript versions.
 
 Read each version's chapters, nested inputs, cover wording, and preamble
-macros from Git. diff_layout pairs front-matter pages by role and headings by
-ID (\label, else the title slug), aligns the text under them sentence by
-sentence, and renders rows that keep paired parts side by side. A change map
-on the first page lists every pair with its status and shared-word share.
+macros and graphics from Git. diff_layout pairs front-matter pages by role and
+headings by ID (\label, else the title slug), anchors identical paragraphs,
+then aligns similar paragraphs and renders each pair in its own flowing row.
+A change map lists pages, headings, figures and tables with their status and
+shared-word share. Captions and references flag visible numbering changes.
 diff_bibliography lines up the reference lists entry by entry.
 """
 
@@ -18,6 +19,7 @@ import sys
 import tempfile
 
 from build_pdf import compile_pdf, export_submission_pdf
+from diff_assets import stage_graphics
 from diff_bibliography import (bibliography_rows, diff_bib_files, extract_citation_keys,
                                render_bibliography_rows)
 from diff_layout import Comparison, render_change_map
@@ -30,7 +32,7 @@ TEXT_MACRO = re.compile(r'\\(?:newcommand|providecommand)\*?\s*(?:\{\\([A-Za-z]+
 DEFINITION = re.compile(r'\\(?:newcommand|renewcommand|providecommand)(\*?)\s*(\{\\[A-Za-z@]+\}|\\[A-Za-z@]+)')
 CHAPTER_DEFINITION = re.compile(r'\\newcommand\{\\thesischapter\}\[2\]')
 # Labels from the sources get a side prefix; the diff's own labels start with "diff".
-SOURCE_LABEL = re.compile(r'\\(label|ref|pageref|eqref|autoref)\{(?!diff)([^{}]*)\}')
+SOURCE_LABEL = re.compile(r'\\(label|ref\*?|pageref\*?|eqref|autoref\*?|nameref\*?)\{(?!diff)([^{}]*)\}')
 CITATION = re.compile(r'\\(parencite|cite|textcite|nocite|citeauthor|citeyear)(\*?(?:\[[^\]]*\])*)\{([^}]+)\}')
 
 
@@ -78,7 +80,11 @@ def resolve_git_ref(ref):
 
 def strip_comments(text):
     """Remove comments as TeX does: the rest of the line, its end, and the next indent."""
-    return re.sub(r'(?<!\\)%[^\n]*(?:\n[ \t]*)?', '', text)
+    tokens = re.compile(
+        r'(?P<literal>\\begin\{(?P<environment>verbatim\*?|lstlisting|minted)\}.*?'
+        r'\\end\{(?P=environment)\}|\\verb\*?(?P<delimiter>[^\w\s])[^\n]*?(?P=delimiter))'
+        r'|(?P<comment>(?<!\\)%[^\n]*(?:\n[ \t]*)?)', re.S)
+    return tokens.sub(lambda match: match.group(0) if match.group('literal') else '', text)
 
 
 def clean_latex_for_diff(text, class_source=None):
@@ -415,7 +421,8 @@ def label_sides(body):
     def left(match):
         content = SOURCE_LABEL.sub(lambda m: rf"\{m.group(1)}{{L-{m.group(2)}}}", match.group(1))
         content = CITATION.sub(lambda m: rf"\{m.group(1)}{m.group(2)}{{" + ", ".join(
-            key.strip() + "_v1" for key in m.group(3).split(",") if key.strip()) + "}", content)
+            key.strip() + "_v1" if key.strip() != "*" else "*"
+            for key in m.group(3).split(",") if key.strip()) + "}", content)
         return f"\\begin{{leftside}}{content}\\end{{leftside}}"
 
     def right(match):
@@ -457,7 +464,7 @@ def diff_output_stem(ref1, ref2):
     return f"proposal_diff_{names[0]}_{names[1]}"
 
 
-SIDE_COUNTERS = ("section", "subsection", "subsubsection", "table", "figure", "equation")
+SIDE_COUNTERS = ("section", "subsection", "subsubsection", "table", "figure", "equation", "footnote")
 
 
 def side_environment(name, setup):
@@ -488,6 +495,8 @@ def generate_diff_latex(tag1, tag2, outdir):
     new_full, new_definitions = extract_source_definitions(build_full_proposal(tag2))
     old_full = expand_text_macros(old_full, text_macros(version_definitions(tag1, old_definitions)))
     new_full = expand_text_macros(new_full, text_macros(version_definitions(tag2, new_definitions)))
+    old_full = stage_graphics(tag1, old_full, outdir, find_git_path(tag1, "main.tex.template"))
+    new_full = stage_graphics(tag2, new_full, outdir, find_git_path(tag2, "main.tex.template"))
     left_setup = side_setup(tag1, old_definitions)
     right_setup = side_setup(tag2, new_definitions)
     template_packages = list(dict.fromkeys(extract_template_packages(tag1) + extract_template_packages(tag2)))
@@ -541,15 +550,6 @@ def generate_diff_latex(tag1, tag2, outdir):
     with open(os.path.join(outdir, bib_filename2), "w") as f:
         f.write(bib_content_v2)
 
-    # Find logo locally
-    local_logo_path = None
-    for root, dirs, files in os.walk("."):
-        if "logo-isi.png" in files:
-            local_logo_path = os.path.join(root, "logo-isi.png")
-            break
-    if local_logo_path:
-        shutil.copy(local_logo_path, os.path.join(outdir, "logo-isi.png"))
-
     latex = [
         r"\documentclass{isi-proposal}",
         r"\geometry{a3paper,landscape}", # Two A4 page areas; inherit the source class margins
@@ -559,8 +559,8 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\usepackage{etoolbox}",
         r"\usepackage{longtable}",
         r"\usepackage[most]{tcolorbox}",
-        # Strong colors mark changed words inside corresponding sentences;
-        # pale colors mark text without a counterpart.
+        # Strong colors mark edits in corresponding text/objects; pale colors
+        # mark text/objects without a counterpart.
         r"\definecolor{delhl}{RGB}{255,183,183}",
         r"\definecolor{inshl}{RGB}{166,229,171}",
         r"\definecolor{delpl}{RGB}{255,232,232}",
@@ -572,6 +572,12 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\DeclareRobustCommand{\bibinscolor}{\color{instext}}",
         r"\newcommand{\diffmoved}[1]{\par\noindent{\footnotesize\itshape\color{gray}[#1]}\par}",
         r"\newcommand{\diffinline}[2]{{\setlength{\fboxsep}{0pt}\colorbox{#1}{\strut #2}}}",
+        # Keep the source's caption command/counter; color its generated label
+        # when the object changed or acquired a new number.
+        r"\makeatletter",
+        r"\newcommand{\diffcaptionlabel}[2]{\expandafter\def\csname fnum@#1\endcsname{\diffinline{#2}{\csname #1name\endcsname~\csname the#1\endcsname}}}",
+        r"\newcommand{\diffequationlabel}[1]{\def\tagform@##1{\maketag@@@{\diffinline{#1}{(\ignorespaces ##1\unskip\@@italiccorr)}}}}",
+        r"\makeatother",
         r"\newcommand{\diffkey}[3]{{\setlength{\fboxsep}{1.5pt}\colorbox{#1}{\strut kiri}\,\colorbox{#2}{\strut kanan}}~#3}",
         # No inset or added caption: retain the source equation's usable width.
         r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",
@@ -588,11 +594,15 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\renewbibmacro*{begentry}{%",
         r"  \iffieldequalstr{userc}{del}{\bibdelbegin}{}%",
         r"  \iffieldequalstr{userc}{ins}{\bibinsbegin}{}%",
+        r"  \iffieldequalstr{userc}{moddel}{\bibdelbegin}{}%",
+        r"  \iffieldequalstr{userc}{modins}{\bibinsbegin}{}%",
         r"}",
         r"\renewbibmacro*{finentry}{%",
         r"  \finentry",
         r"  \iffieldequalstr{userc}{del}{\bibtcbend}{}%",
         r"  \iffieldequalstr{userc}{ins}{\bibtcbend}{}%",
+        r"  \iffieldequalstr{userc}{moddel}{\bibtcbend}{}%",
+        r"  \iffieldequalstr{userc}{modins}{\bibtcbend}{}%",
         r"}",
         # Fallback metadata; each side redefines the macros its version defines.
         load_env_macros(),

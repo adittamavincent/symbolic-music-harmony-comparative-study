@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from itertools import pairwise
 
-from diff_tokens import read_braced_argument, render_group, word_level_render
+from diff_tokens import graphic_end, read_braced_argument, render_group, word_level_render
 
 CONTROL = re.compile(r'\\([a-zA-Z@]+\*?|.)', re.S)
 ENVIRONMENT_NAME = re.compile(r'\s*\{([^{}]*)\}')
@@ -39,6 +39,90 @@ ATOMIC_ENVIRONMENTS = re.compile(
     r'|verbatim|lstlisting|minted|tabular|tabularx|longtable|array)\*?')
 # A table without a counterpart gets one background, which keeps its rules whole.
 TABULAR = re.compile(r'\\begin\{(?:tabular|tabularx|longtable|array)\*?\}')
+STANDALONE_ENVIRONMENTS = frozenset({
+    "figure", "table", "enumerate", "itemize", "description", "tikzpicture",
+    "equation", "align", "alignat", "flalign", "multline", "gather", "displaymath",
+    "verbatim", "lstlisting", "minted", "tabular", "tabularx", "longtable", "array",
+})
+LITERAL_ENVIRONMENTS = frozenset({"verbatim", "lstlisting", "minted"})
+# These commands print objects/numbers even when visible_words has no words.
+VISIBLE_OBJECT = re.compile(
+    r'\\(?:includegraphics|rule|ref|pageref|eqref|autoref|nameref)\*?\b'
+    r'|\\begin\{(?:' + '|'.join(sorted(STANDALONE_ENVIRONMENTS - {
+        "figure", "table", "enumerate", "itemize", "description"})) + r')\*?\}|\\\[')
+
+
+def source_key(text):
+    """Ignore source line wrapping; retain words, markup and object arguments."""
+    return " ".join(text.split())
+
+
+def content_key(text):
+    """Labels/navigation have no visible content; other markup can change it."""
+    return source_key(re.sub(r'\\label\{[^{}]*\}', '', NAVIGATION.sub('', text)))
+
+
+def has_highlight(text):
+    return bool(re.search(r'\\(?:delhighlight|inhighlight|delpale|inspale|diffinline|fcolorbox|diffcaptionlabel|diffequationlabel)\b'
+                          r'|\\begin\{diffmath\}', text))
+
+
+def chunk_type(text):
+    """Keep prose, lists, figures, tables and equations from pairing by accident."""
+    environment = re.match(r'\s*\\begin\{([^{}]+)\}', text)
+    if environment:
+        name = environment.group(1).rstrip('*')
+        if name in ("enumerate", "itemize", "description"):
+            return "list"
+        if name in STANDALONE_ENVIRONMENTS:
+            return name
+    if text.lstrip().startswith(r"\["):
+        return "displaymath"
+    return "prose"
+
+
+def object_id(text):
+    """A figure/table/equation label identifies an object across revisions."""
+    if chunk_type(text) in ("prose", "list"):
+        return ""
+    label = re.search(r'\\label\{([^{}]+)\}', text)
+    return label.group(1) if label else ""
+
+
+def equation_rows(text):
+    """Numbered AMS rows; nested matrices/splits do not start extra equations."""
+    match = re.search(r'\\begin\{(equation|align|alignat|flalign|gather|multline)\}', text)
+    if not match:
+        return []
+    end = text.rfind(r"\end{" + match.group(1) + "}")
+    body = text[match.end():end]
+    if match.group(1) in ("equation", "multline"):
+        return [] if re.search(r'\\(?:notag|nonumber)\b', body) else [body]
+    rows, start, pos, braces, environments = [], 0, 0, 0, []
+    while pos < len(body):
+        if body[pos] == "\\":
+            command = CONTROL.match(body, pos)
+            name, stop = command.group(1), command.end()
+            if name in ("begin", "end"):
+                environment = ENVIRONMENT_NAME.match(body, stop)
+                if environment:
+                    stop = environment.end()
+                    if name == "begin":
+                        environments.append(environment.group(1))
+                    elif environments:
+                        environments.pop()
+            elif name == "\\" and not braces and not environments:
+                rows.append(body[start:pos])
+                start = stop
+            pos = stop
+            continue
+        if body[pos] == "{":
+            braces += 1
+        elif body[pos] == "}":
+            braces -= 1
+        pos += 1
+    rows.append(body[start:])
+    return [row for row in rows if row.strip() and not re.search(r'\\(?:notag|nonumber)\b', row)]
 
 # Pairing weights: identities outweigh content, so a shared page role or
 # heading ID anchors the rows even when the text around it was rewritten.
@@ -130,6 +214,7 @@ class Block:
     owner: int = -1           # index of the page or heading a chunk belongs to
     items: int = 0            # list items in a chunk that is a list environment
     words: list = field(default_factory=list)
+    label: str = ""           # original reference target, retained on its own side
 
 
 def _at_line_start(text, pos):
@@ -155,7 +240,8 @@ def _parse_heading(text, pos, name):
         end = label.end()
     key = label.group(1).split(":", 1)[-1] if label else slug(title)
     return Block("heading", title, key, text[pos:prefix_end].rstrip(), HEADING_LEVELS[base],
-                 numbered=not match.group(1), words=visible_words(title)), end
+                 numbered=not match.group(1), words=visible_words(title),
+                 label=label.group(1) if label else ""), end
 
 
 def parse_blocks(text):
@@ -178,19 +264,49 @@ def parse_blocks(text):
                 environment = ENVIRONMENT_NAME.match(text, end)
                 if environment:
                     end = environment.end()
+                    standalone = environment.group(1).rstrip('*') in STANDALONE_ENVIRONMENTS
                     if name == "begin":
+                        if standalone and braces == groups == 0 and not environments:
+                            flush(pos)
+                            start = pos
                         environments.append(environment.group(1))
+                        if environment.group(1).rstrip('*') in LITERAL_ENVIRONMENTS:
+                            closing = text.find(r"\end{" + environment.group(1) + "}", end)
+                            if closing < 0:
+                                raise ValueError(f"Unclosed literal environment: {environment.group(1)}")
+                            end = closing
                     elif environments:
                         environments.pop()
+                        if standalone and braces == groups == 0 and not environments:
+                            flush(end)
+                            start = end
             elif name in ("begingroup", "["):
+                if name == "[" and braces == groups == 0 and not environments:
+                    flush(pos)
+                    start = pos
                 groups += 1
             elif name in ("endgroup", "]"):
                 groups -= 1
+                if name == "]" and braces == groups == 0 and not environments:
+                    flush(end)
+                    start = end
             elif braces == 0 and groups == 0 and not environments:
                 if name in ("newpage", "clearpage"):
                     flush(pos)
                     blocks.append(Block("break"))
                     start = end
+                elif name == "par":
+                    flush(pos)
+                    start = end
+                elif name.rstrip('*') == "includegraphics" and _at_line_start(text, pos):
+                    graphic_stop = graphic_end(text, pos)
+                    line_end = text.find('\n', graphic_stop) if graphic_stop is not None else -1
+                    if graphic_stop is not None and not text[graphic_stop:line_end if line_end >= 0 else len(text)].strip():
+                        flush(pos)
+                        start = pos
+                        end = graphic_stop
+                        flush(end)
+                        start = end
                 elif name.rstrip("*") in HEADING_LEVELS and _at_line_start(text, pos):
                     heading = _parse_heading(text, pos, name)
                     if heading:
@@ -340,6 +456,11 @@ def split_fragments(text):
                         if not atomic and braces == 0:
                             cuts.add(pos)
                         atomic.append(env)
+                        if env.rstrip('*') in LITERAL_ENVIRONMENTS:
+                            closing = text.find(r"\end{" + env + "}", end)
+                            if closing < 0:
+                                raise ValueError(f"Unclosed literal environment: {env}")
+                            end = closing
                     elif atomic:
                         atomic.pop()
                         if not atomic and braces == 0:
@@ -400,7 +521,8 @@ def split_fragments(text):
             fragments[-1].tail += lead
             core = core.lstrip()
         fragments.append(Fragment(core, piece[len(piece.rstrip()):], visible_words(core),
-                                  bool(re.search(r'[^\W_]', LAYOUT_COMMAND.sub(' ', core)))))
+                                  bool(VISIBLE_OBJECT.search(core) or
+                                       re.search(r'[^\W_]', LAYOUT_COMMAND.sub(' ', core)))))
     return fragments
 
 
@@ -583,6 +705,9 @@ class Comparison:
         self.old = parse_blocks(old_text)
         self.new = parse_blocks(new_text)
         self.sides = {"old": self.old, "new": self.new}
+        self.object_numbers, self.reference_numbers = {}, {"old": {}, "new": {}}
+        self.reference_titles = {"old": {}, "new": {}}
+        self._index_numbers()
         self._index_features()
         self.counterpart = {}
         self.moved = set()
@@ -604,6 +729,46 @@ class Comparison:
         self._compare_rows()
 
     # Similarity features -------------------------------------------------
+
+    def _index_numbers(self):
+        """Track the source's ordinary figure/table and heading counter order."""
+        for side, blocks in self.sides.items():
+            counters = {"figure": 0, "table": 0, "equation": 0}
+            chapter, headings = "", [0, 0, 0]
+            for index, block in enumerate(blocks):
+                if block.kind == "heading":
+                    if block.level == 0:
+                        chapter, headings = block.prefix, [0, 0, 0]
+                    elif block.numbered:
+                        headings[block.level - 1] += 1
+                        headings[block.level:] = [0] * (3 - block.level)
+                        if block.label:
+                            self.reference_numbers[side][block.label] = (chapter, tuple(headings[:block.level]))
+                    if block.label:
+                        self.reference_titles[side][block.label] = block.text
+                elif block.kind == "chunk":
+                    kind = chunk_type(block.text)
+                    if kind in ("figure", "table"):
+                        # Starred captions deliberately carry no number.
+                        count = len(re.findall(r'\\caption(?![A-Za-z*])', block.text))
+                        if not count:
+                            continue
+                        counters[kind] += count
+                        self.object_numbers[side, index] = counters[kind]
+                        for label in re.findall(r'\\label\{([^{}]+)\}', block.text):
+                            self.reference_numbers[side][label] = (kind, counters[kind])
+                    else:
+                        rows = equation_rows(block.text)
+                        for row in rows:
+                            counters["equation"] += 1
+                            for label in re.findall(r'\\label\{([^{}]+)\}', row):
+                                self.reference_numbers[side][label] = ("equation", counters["equation"])
+                        if rows:
+                            self.object_numbers[side, index] = counters["equation"]
+
+    def _number_changed(self, side, index, other_index):
+        other_side = "new" if side == "old" else "old"
+        return self.object_numbers.get((side, index)) != self.object_numbers.get((other_side, other_index))
 
     def _index_features(self):
         everything = [("old", i, block) for i, block in enumerate(self.old)] + \
@@ -650,6 +815,13 @@ class Comparison:
             return 1.0 if a.key == b.key else 0.0
         if a.kind == "heading":
             return self.heading_scores(i, j)[0]
+        if chunk_type(a.text) != chunk_type(b.text):
+            return 0.0
+        if source_key(a.text) == source_key(b.text):
+            return 1.1  # exact paragraphs anchor repeated or near-identical passages
+        old_id, new_id = object_id(a.text), object_id(b.text)
+        if old_id and new_id:
+            return 1.0 if old_id == new_id else 0.0
         similarity = self._cosine("chunk", i, j)
         # Lists between the same two anchors compare item by item even when
         # their wording changed: an item number is an identity.
@@ -703,11 +875,33 @@ class Comparison:
             # Text under a moved heading is compared at the moved heading.
             if ("old", self.old[k].owner) in moved_owners or ("new", self.new[m].owner) in moved_owners:
                 return None
+            old_owner, new_owner = self.old[k].owner, self.new[m].owner
+            if (("old", old_owner) in self.counterpart and self.counterpart["old", old_owner] != new_owner
+                    or ("new", new_owner) in self.counterpart and self.counterpart["new", new_owner] != old_owner):
+                return None
             value = self.score(k, m)
             return value - THRESHOLD["chunk"] if value > THRESHOLD["chunk"] else None
 
+        # Fix exact paragraph anchors first. A collection of merely similar
+        # paragraphs must not displace an unchanged paragraph, particularly
+        # when successive paragraphs repeat much of the same vocabulary.
+        def keys(side, indices):
+            return [(chunk_type(self.sides[side][k].text), source_key(self.sides[side][k].text))
+                    if self.sides[side][k].kind == "chunk" else (side, k) for k in indices]
+
+        matcher = SequenceMatcher(None, keys("old", old_items), keys("new", new_items), autojunk=False)
+        exact = [(a + offset, b + offset) for a, b, count in matcher.get_matching_blocks()
+                 for offset in range(count) if gain(a + offset, b + offset) is not None]
+        pairs, old_start, new_start = [], 0, 0
+        for a, b in exact + [(len(old_items), len(new_items))]:
+            pairs.extend((old_start + i if i is not None else None, new_start + j if j is not None else None)
+                         for i, j in align_sequences(a - old_start, b - new_start,
+                                                     lambda i, j, oi=old_start, nj=new_start: gain(oi + i, nj + j)))
+            if a < len(old_items):
+                pairs.append((a, b))
+            old_start, new_start = a + 1, b + 1
         return [(old_items[a] if a is not None else None, new_items[b] if b is not None else None)
-                for a, b in align_sequences(len(old_items), len(new_items), gain)]
+                for a, b in pairs]
 
     def _find_heading_moves(self):
         """Pair unpaired headings that changed position: an unchanged ID or clearly shared text."""
@@ -729,8 +923,8 @@ class Comparison:
                     and ("old", self.old[i].owner) not in moved_owners]
         lone_new = [j for i, j in self.pairs if i is None and self.new[j].kind == "chunk"
                     and ("new", self.new[j].owner) not in moved_owners]
-        self._accept_moves([(self._cosine("chunk", i, j), i, j) for i in lone_old for j in lone_new
-                            if self._cosine("chunk", i, j) >= MOVE_THRESHOLD])
+        self._accept_moves([(self.score(i, j), i, j) for i in lone_old for j in lone_new
+                            if self.score(i, j) >= MOVE_THRESHOLD])
 
     def _accept_moves(self, candidates):
         for _, i, j in sorted(candidates, reverse=True):
@@ -764,36 +958,39 @@ class Comparison:
         return ops
 
     def _build_rows(self):
-        rows, row = [], Row()
-        new_page, previous_paired = False, False
+        """Synchronize every paragraph/object pair, leaving insertions a blank side.
+
+        Structured front matter stays together because font/group/layout scopes
+        may span its short lines. Body rows remain breakable paracol content;
+        synchronization adds space only up to the taller counterpart.
+        """
+        rows = []
+        new_page, structured = False, False
         for op in self.operations():
             if op[0] == "break":
                 new_page = True
                 continue
             _, i, j = op
-            paired = i is not None and j is not None
             kind = (self.old[i] if i is not None else self.new[j]).kind
-            # Paired pages and headings anchor a row, and paired paragraphs
-            # follow them. Unpaired text on both sides shares one row, so a
-            # rewritten passage sits beside the passage it replaced; an
-            # unpaired heading opens its own row unless its column is empty.
-            own_side = row.old if i is not None else row.new
-            starts = (new_page or (paired and kind != "chunk") or paired != previous_paired
-                      or (not paired and kind == "heading" and bool(own_side)))
-            if starts and (row.old or row.new):
-                rows.append(row)
-                row = Row()
-            if new_page:
-                row.new_page = True
-                new_page = False
+            if kind == "page":
+                structured = all(self._structured_page(side, index) for side, index in
+                                 (("old", i), ("new", j)) if index is not None)
+            elif kind == "heading" or new_page:
+                structured = False
+            if not rows or new_page or kind != "chunk" or not structured:
+                rows.append(Row(new_page=new_page))
+            row = rows[-1]
+            new_page = False
             if i is not None:
                 row.old.append(i)
             if j is not None:
                 row.new.append(j)
-            previous_paired = paired
-        if row.old or row.new:
-            rows.append(row)
         return rows
+
+    def _structured_page(self, side, owner):
+        fragments = [f for k in self._chunks_of(side, owner)
+                     for f in split_fragments(self.sides[side][k].text) if f.visible]
+        return bool(fragments) and sum(len(f.words) for f in fragments) <= LINE_WORDS * len(fragments)
 
     def _chunks_of(self, side, owner):
         return [k for k, block in enumerate(self.sides[side])
@@ -814,7 +1011,19 @@ class Comparison:
                 groups.append(([index], [other]))
         grouped = set()
         for old_chunks, new_chunks in groups:
-            self._compare_chunks(old_chunks, new_chunks)
+            # A moved section's children still have paragraph counterparts.
+            # Record them so unchanged children receive only the section move
+            # marker, rather than being mistaken for deletions and insertions.
+            pairs = align_sequences(len(old_chunks), len(new_chunks),
+                                    lambda a, b: self.score(old_chunks[a], new_chunks[b])
+                                    if self.score(old_chunks[a], new_chunks[b]) > THRESHOLD["chunk"] else None)
+            for a, b in pairs:
+                left = [old_chunks[a]] if a is not None else []
+                right = [new_chunks[b]] if b is not None else []
+                if left and right:
+                    self.counterpart["old", left[0]] = right[0]
+                    self.counterpart["new", right[0]] = left[0]
+                self._compare_chunks(left, right)
             grouped.update(("old", k) for k in old_chunks)
             grouped.update(("new", k) for k in new_chunks)
         for row in self.rows:
@@ -864,14 +1073,19 @@ class Comparison:
         if other is None:
             pair = word_level_render(block.text, "", "pale") if side == "old" else word_level_render("", block.text, "pale")
             title = pair[0] if side == "old" else pair[1]
-        elif slug(other.text) == slug(block.text):
-            title = block.text  # same words; capitals or markup only
+        elif other.text == block.text or (other.level != block.level and
+                                         source_key(other.text).casefold() == source_key(block.text).casefold()):
+            title = block.text  # chapter promotion commonly uppercases the same title
         else:
             old, new = (block, other) if side == "old" else (other, block)
             title = word_level_render(old.text, new.text)[0 if side == "old" else 1]
         heading = f"{block.prefix}{{{title.strip()}}}"
+        if other is not None and (other.level != block.level or other.numbered != block.numbered):
+            heading = r"\diffmoved{tingkat atau penomoran judul diubah}" + "\n" + heading
         if block.level > 0 and block.numbered:
             heading += rf"\label{{{self.heading_label(side, index)}}}"
+        if block.label:
+            heading += rf"\label{{{block.label}}}"
         if (side, index) in self.moved:
             note = "dipindahkan ke posisi baru" if side == "old" else "dipindahkan dari posisi lama"
             heading = rf"\diffmoved{{{note}}}" + "\n" + heading
@@ -883,6 +1097,39 @@ class Comparison:
             return self.render_heading(side, index)
         if block.kind == "chunk":
             text = render_fragments(self.fragments[side, index])
+            other_index = self.counterpart.get((side, index))
+            other_side = "new" if side == "old" else "old"
+            other = self.sides[other_side][other_index] if other_index is not None else None
+            # Some opaque commands affect layout or print objects but cannot
+            # safely enter soul. If word rendering could mark nothing, flag
+            # the complete balanced block rather than silently losing the edit.
+            changed = other is None or content_key(block.text) != content_key(other.text)
+            peer_text = render_fragments(self.fragments[other_side, other_index]) if other is not None else ""
+            if (changed and text and not has_highlight(text) and not has_highlight(peer_text)
+                    and any(f.visible for f in self.fragments[side, index])):
+                color = ("del" if side == "old" else "ins") + ("hl" if other is not None else "pl")
+                text = f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}"
+            kind = chunk_type(block.text)
+            if (kind in ("figure", "table") and (side, index) in self.object_numbers and
+                    (changed or self._number_changed(side, index, other_index))):
+                color = ("del" if side == "old" else "ins") + ("hl" if other is not None else "pl")
+                text = rf"\diffcaptionlabel{{{kind}}}{{{color}}}" + "\n" + text
+            elif (kind not in ("figure", "table") and equation_rows(block.text) and
+                  other is not None and self._number_changed(side, index, other_index)):
+                color = "delhl" if side == "old" else "inshl"
+                text = rf"\diffequationlabel{{{color}}}" + "\n" + text
+            # A stable target can acquire a different printed number after an
+            # earlier insertion. Highlight that resolved reference as well.
+            def reference(match):
+                key = match.group(2)
+                values = self.reference_titles if match.group(1).rstrip('*') == "nameref" else self.reference_numbers
+                old_number = values["old"].get(key)
+                new_number = values["new"].get(key)
+                if old_number is not None and new_number is not None and old_number != new_number:
+                    color = "delhl" if side == "old" else "inshl"
+                    return rf"\diffinline{{{color}}}{{{match.group(0)}}}"
+                return match.group(0)
+            text = re.sub(r'\\(ref|eqref|autoref|nameref)\*?\{([^{}]+)\}', reference, text)
             if (side, index) in self.moved:
                 note = "dipindahkan ke posisi baru" if side == "old" else "dipindahkan dari posisi lama"
                 text = rf"\diffmoved{{{note}}}" + "\n" + text
@@ -917,6 +1164,13 @@ class Comparison:
 
     def _reference(self, side, index, chapters):
         block = self.sides[side][index]
+        if block.kind == "chunk":
+            kind = chunk_type(block.text)
+            name = {"figure": "Gambar", "table": "Tabel"}.get(kind, "Persamaan")
+            number = self.object_numbers.get((side, index))
+            caption = re.search(r'\\caption\*?(?:\[[^\]]*\])?\s*(?=\{)', block.text)
+            title = read_braced_argument(block.text, caption.end())[0] if caption else ""
+            return f"{name}{' ' + str(number) if number is not None else ''}: {title}".rstrip(': ')
         if block.kind == "page":
             return block.text
         if block.level == 0:
@@ -928,7 +1182,7 @@ class Comparison:
         return rf"{chapter}\ref{{{self.heading_label(side, index)}}} {block.text}"
 
     def change_map(self):
-        """Rows (left, right, status, similarity) for every page and heading."""
+        """Rows for every page, heading, captioned figure and captioned table."""
         chapters, current = {}, {"old": "", "new": ""}
         for side, blocks in self.sides.items():
             for index, block in enumerate(blocks):
@@ -943,7 +1197,8 @@ class Comparison:
                 continue
             _, i, j = op
             block = self.old[i] if i is not None else self.new[j]
-            if block.kind not in ("page", "heading"):
+            if block.kind not in ("page", "heading") and not (
+                    block.kind == "chunk" and chunk_type(block.text) in ("figure", "table")):
                 continue
             if i is not None and ("old", i) in self.moved:
                 continue  # listed once, at its new position
@@ -959,18 +1214,34 @@ class Comparison:
             return left, right, "baru", None
         if j is None:
             return left, right, "dihapus", None
-        old_total, old_same = self.unit_counts("old", i)
-        new_total, new_same = self.unit_counts("new", j)
+        a, b = self.old[i], self.new[j]
+        if a.kind == "chunk":
+            old_total = sum(len(f.words) for f in self.fragments["old", i])
+            new_total = sum(len(f.words) for f in self.fragments["new", j])
+            old_same = sum(f.same for f in self.fragments["old", i])
+            new_same = sum(f.same for f in self.fragments["new", j])
+        else:
+            old_total, old_same = self.unit_counts("old", i)
+            new_total, new_same = self.unit_counts("new", j)
         total = old_total + new_total
         similarity = (old_same + new_same) / total if total else None
-        same_title = slug(self.old[i].text) == slug(self.new[j].text)
+        same_title = (a.text == b.text or a.level != b.level and
+                      source_key(a.text).casefold() == source_key(b.text).casefold())
+        old_chunks = [i] if a.kind == "chunk" else self._chunks_of("old", i)
+        new_chunks = [j] if b.kind == "chunk" else self._chunks_of("new", j)
+        unchanged = ([content_key(self.old[k].text) for k in old_chunks] == [content_key(self.new[k].text) for k in new_chunks]
+                     and all(not self._number_changed("old", k, self.counterpart.get(("old", k))) for k in old_chunks)
+                     and not any(has_highlight(self.render_block(side, k)) for side, chunks in
+                                 (("old", old_chunks), ("new", new_chunks)) for k in chunks))
         if similarity is None:
-            status = "sama" if same_title else "judul diubah"
+            status = "sama" if unchanged else "diubah"
         else:
-            status = ("sama" if similarity >= 0.98 else "diubah sedikit" if similarity >= 0.7
+            status = ("sama" if unchanged else "diubah sedikit" if similarity >= 0.7
                       else "diubah" if similarity >= 0.3 else "ditulis ulang")
-            if not same_title and self.old[i].kind == "heading":
-                status += ", judul diubah"
+        if not same_title and a.kind == "heading":
+            status += ", judul diubah"
+        if a.level != b.level or a.numbered != b.numbered:
+            status += ", struktur judul diubah"
         if ("new", j) in self.moved:
             status = "dipindahkan, " + status
         return left, right, status, similarity
@@ -985,7 +1256,7 @@ class Comparison:
 
 
 def render_change_map(comparison, left_name, right_name):
-    """A full-width table that lists how each page and heading was paired."""
+    """A full-width table of paired pages, headings, figures and tables."""
     def cell(text):
         return text if text else r"\textemdash"
 
@@ -995,9 +1266,11 @@ def render_change_map(comparison, left_name, right_name):
         rf"\noindent Kata yang sama di kedua versi: {round(100 * comparison.overall_similarity())}\% "
         r"dari seluruh kata teks.\par",
         r"\noindent\diffkey{delpl}{inspl}{Warna pucat: teks tanpa padanan (dihapus, baru, atau ditulis ulang).}\quad "
-        r"\diffkey{delhl}{inshl}{Warna tegas: kata yang berubah dalam kalimat yang bersesuaian.}\par",
-        r"\noindent Teks tanpa warna sama di kedua versi. Bagian dipasangkan menurut ID: peran halaman, "
-        r"label \texttt{sec:...}, atau judul; bagian tanpa ID yang sama dipasangkan menurut isi.\par",
+        r"\diffkey{delhl}{inshl}{Warna tegas: perubahan pada teks atau objek yang berpasangan.}\par",
+        r"\noindent Paragraf identik menjadi patokan; paragraf lainnya dipasangkan menurut kemiripan isi "
+        r"di antara bagian yang bersesuaian. Sisipan dan penghapusan menyisakan sisi kosong. "
+        r"Label gambar dan tabel berwarna bila isi atau nomornya berubah. Persentase kata sama "
+        r"mengukur kemiripan kata; perubahan format atau objek tetap diberi status berubah.\par",
         r"\medskip",
         r"\begin{longtable}{@{}p{0.35\linewidth}p{0.35\linewidth}p{0.17\linewidth}r@{}}",
         r"\textbf{Kiri} & \textbf{Kanan} & \textbf{Status} & \textbf{Kata sama}\\ \hline",

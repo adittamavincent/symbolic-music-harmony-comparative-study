@@ -90,7 +90,16 @@ def compute_lcs(a, b):
 DISPLAY_MATH_ENVIRONMENTS = r"(?:equation|multline|align|alignat|flalign|gather|displaymath)\*?"
 DISPLAY_MATH_START = re.compile(r'\\begin\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\[')
 DISPLAY_MATH_END = re.compile(r'\\end\{' + DISPLAY_MATH_ENVIRONMENTS + r'\}|\\\]')
-CITATION_OPTION = re.compile(r'\\(?:parencite|cite|textcite|citeauthor|citeyear)\*?(?:\[[^\]]*\])*\[[^\]]*$')
+OPTIONAL_ARGUMENT = re.compile(r'\\[A-Za-z]+\*?(?:\{[^{}]*\})?\[')
+# These environments contain syntax that must stay whole. A changed path,
+# alignment rule, or verbatim line cannot be wrapped as though it were prose.
+ATOMIC_BLOCK = re.compile(
+    r'\\begin\{(?:tikzpicture|verbatim|Verbatim|lstlisting|minted|tabular|tabularx|longtable|array)\*?\}')
+VERBATIM_BLOCK = re.compile(r'\\begin\{(?:verbatim|Verbatim|lstlisting|minted)\*?\}')
+CONTAINER_COMMAND = re.compile(r'^\s*\\(captionof|caption|footnotetext|footnote|href|hyperref)\*?(?![A-Za-z])')
+INLINE_VISIBLE_COMMAND = re.compile(
+    r'(?<!\\)\\(footnotetext|footnote|href|hyperref|ref|pageref|eqref|autoref|nameref|cref|Cref|url|nolinkurl)\*?(?![A-Za-z])')
+GRAPHIC_START = re.compile(r'(?<!\\)\\includegraphics\*?(?![A-Za-z])')
 
 
 UNSAFE_HIGHLIGHT_PATTERNS = (
@@ -121,6 +130,7 @@ def tokenize_words(text):
     # Keep compact environment wrappers separate from visible heading words.
     # Include begin arguments so highlights cannot replace an environment's size.
     # Line breaks and paragraph ends are structure: a word before them still compares.
+    text = isolate_graphics(text)
     text = re.sub(r'\\begin\{[^{}]+\}(?:\[[^\]]*\])?(?:\{[^{}]*\})*|\\end\{[^{}]+\}|\\(?:begingroup|endgroup|par)\b'
                   r'|\\\\\*?(?:\[[^\]]*\])?',
                   lambda match: " " + match.group(0) + " ", text)
@@ -173,9 +183,10 @@ def tokenize_words(text):
             if DISPLAY_MATH_END.search(val):
                 display_math = False
 
-            # A citation's optional page argument may contain spaces.
-            open_citation = CITATION_OPTION.search(" ".join(buf))
-            if brace_balance <= 0 and not math_mode and not display_math and not open_citation:
+            # Optional titles, citation pages, and graphic options can contain
+            # spaces too; preserve them as part of their owning command.
+            if (brace_balance <= 0 and not math_mode and not display_math
+                    and not unfinished_optional_argument(" ".join(buf))):
                 flush()
                 brace_balance = 0
     flush()
@@ -221,8 +232,15 @@ def classify_token_style(style, val):
     if DISPLAY_MATH_START.search(val) and DISPLAY_MATH_END.search(val):
         return style + "_display"
     val_strip = val.strip()
+    if inline_parts(val_strip):
+        return style + "_compound"
+    if container_parts(val_strip):
+        return style + "_container"
     val_clean = re.sub(r'[\.,;:\?!\)]+$', '', val_strip)
     val_clean = re.sub(r'^\(', '', val_clean)
+
+    if graphic_end(val_clean) == len(val_clean):
+        return style + "_object"
 
     if re.match(r'^\$([^$]*)\$$', val_clean):
         if is_safe_to_highlight_token(val, is_math=True):
@@ -239,6 +257,11 @@ def classify_token_style(style, val):
             # Citation expansion is unsafe inside soul's text reconstruction.
             return style + "_box"
         return None
+
+    # These macros resolve references or print their own escaped URL text;
+    # soul must never reconstruct the target argument as ordinary words.
+    if re.match(r'^\\(?:ref|pageref|eqref|autoref|nameref|cref|Cref|url|nolinkurl)\*?\{.*\}$', val_clean, re.S):
+        return style + "_box"
 
     if text_atoms(val_strip):
         return style + "_text"
@@ -262,6 +285,15 @@ def apply_highlight(style, text):
     color = style.split("_")[0]
     if style.endswith("_display"):
         return f"\\begin{{diffmath}}{{{color}}}\n{text}\n\\end{{diffmath}}\n"
+    if style.endswith("_container"):
+        return render_container(text, [True] * len(token_atoms(("W", text))), color) + " "
+    if style.endswith("_compound"):
+        return render_inline_parts(text, [True] * len(token_atoms(("W", text))), color) + " "
+    if style.endswith("_object"):
+        # An opaque image hides a zero-inset background. A small colored
+        # frame remains visible without touching the filename or options.
+        return (f"{{\\setlength{{\\fboxsep}}{{1pt}}\\setlength{{\\fboxrule}}{{1pt}}"
+                f"\\fcolorbox{{{color}}}{{{color}}}{{{text}}}}} ")
     if style.endswith("_text"):
         hl_cmd = HIGHLIGHT_COMMANDS[color]
         # Parentheses and punctuation belong to the changed text as well.
@@ -327,8 +359,12 @@ CITATION_TOKEN = re.compile(r'^\\(parencite|cite|textcite|citeauthor|citeyear)\{
 STYLES = {"textbf": "+bold", "bfseries": "+bold", "textmd": "-bold", "mdseries": "-bold",
           "textit": "+italic", "emph": "+italic", "itshape": "+italic", "slshape": "+italic",
           "textup": "-italic", "upshape": "-italic", "underline": "+underline", "uline": "+underline",
-          "texttt": "+mono", "ttfamily": "+mono", "textsc": "+smallcaps", "scshape": "+smallcaps",
+          "texttt": "family:mono", "ttfamily": "family:mono", "textsf": "family:sans", "sffamily": "family:sans",
+          "textrm": "family:serif", "rmfamily": "family:serif", "textsc": "+smallcaps", "scshape": "+smallcaps",
           "textnormal": "-all", "normalfont": "-all"}
+STYLES.update({name: "size:" + name for name in FONT_SWITCHES
+               if name in {"tiny", "scriptsize", "footnotesize", "small", "normalsize",
+                           "large", "Large", "LARGE", "huge", "Huge"}})
 
 
 def visible_style(names):
@@ -337,7 +373,16 @@ def visible_style(names):
     for name in names:
         effect = STYLES.get(name, "")
         if effect == "-all":
-            style.clear()
+            # \normalfont resets the family, series, and shape, not its size.
+            style = {value for value in style if value.startswith("size:")}
+        elif effect.startswith("family:"):
+            style -= {"mono", "family:sans"}
+            if effect != "family:serif":
+                style.add("mono" if effect == "family:mono" else effect)
+        elif effect.startswith("size:"):
+            style = {value for value in style if not value.startswith("size:")}
+            if effect != "size:normalsize":
+                style.add(effect)
         elif effect.startswith("+"):
             style.add(effect[1:])
         elif effect.startswith("-"):
@@ -406,9 +451,184 @@ def token_atoms(token):
     kind, value = token
     if kind == "NL":
         return [("NL",)]
+    parts = inline_parts(value.strip())
+    if parts:
+        return [atom for part in parts for atom in token_atoms(("W", part))]
+    parts = container_parts(value.strip())
+    if parts:
+        prefix, content, suffix = parts
+        children = [atom for child in tokenize_words(content) for atom in token_atoms(child)]
+        return [("container", prefix, suffix), *children]
     if classify_token_style("delhl", value) == "delhl_text":
         return [("W", context, word) for context, word in text_atoms(value.strip())] or [("T", value)]
     return [("T", value)]
+
+
+def read_optional_argument(text, pos):
+    """Skip an optional argument, including nested groups and escaped brackets."""
+    while pos < len(text) and text[pos].isspace():
+        pos += 1
+    if pos >= len(text) or text[pos] != "[":
+        return pos
+    brackets, braces, cursor = 1, 0, pos + 1
+    while cursor < len(text):
+        char = text[cursor]
+        if char == "\\":
+            cursor += 2
+            continue
+        if char == "{":
+            braces += 1
+        elif char == "}":
+            braces -= 1
+        elif not braces and char == "[":
+            brackets += 1
+        elif not braces and char == "]":
+            brackets -= 1
+            if brackets == 0:
+                return cursor + 1
+        cursor += 1
+    raise ValueError("Unclosed optional LaTeX argument")
+
+
+def unfinished_optional_argument(text):
+    """Whether a buffered command still has an open optional argument."""
+    for match in OPTIONAL_ARGUMENT.finditer(text):
+        pos = match.end() - 1
+        try:
+            while pos < len(text) and text[pos] == "[":
+                pos = read_optional_argument(text, pos)
+        except ValueError:
+            return True
+    return False
+
+
+def graphic_end(text, start=0):
+    """End of one complete graphic command, never an adjacent caption or macro."""
+    command = GRAPHIC_START.match(text, start)
+    if not command:
+        return None
+    try:
+        pos = command.end()
+        while pos < len(text):
+            while pos < len(text) and text[pos].isspace():
+                pos += 1
+            if pos >= len(text) or text[pos] != "[":
+                break
+            pos = read_optional_argument(text, pos)
+        _, end = read_braced_argument(text, pos)
+        return end
+    except ValueError:
+        return None
+
+
+def isolate_graphics(text):
+    """Separate adjacent graphic/caption commands without splitting image syntax."""
+    pieces, cursor = [], 0
+    for match in GRAPHIC_START.finditer(text):
+        if match.start() < cursor:
+            continue
+        end = graphic_end(text, match.start())
+        if end is None:
+            continue
+        pieces.extend((text[cursor:match.start()], " ", text[match.start():end]))
+        if end < len(text) and text[end] == "\\":
+            pieces.append(" ")
+        cursor = end
+    pieces.append(text[cursor:])
+    return "".join(pieces)
+
+
+def container_parts(text):
+    """Return a visible argument's exact wrapper, content, and trailing source.
+
+    Caption and footnote counters remain native. Hyperlink targets and short
+    caption titles participate as metadata, so a changed target also marks
+    the displayed wording even when that wording itself stayed the same.
+    """
+    command = CONTAINER_COMMAND.match(text)
+    if not command:
+        return None
+    try:
+        pos = command.end()
+        if command.group(1) == "captionof":
+            _, pos = read_braced_argument(text, pos)
+        pos = read_optional_argument(text, pos)
+        if command.group(1) == "href":
+            _, pos = read_braced_argument(text, pos)
+        while pos < len(text) and text[pos].isspace():
+            pos += 1
+        content, end = read_braced_argument(text, pos)
+        return text[:pos + 1], content, text[end - 1:]
+    except ValueError:
+        return None
+
+
+def inline_parts(text):
+    """Split attached visible commands while retaining their original adjacency.
+
+    A footnote superscript in ``word\\footnote{...}`` has no intervening
+    space. These pieces compare independently and join without adding one.
+    Groups remain balanced; commands nested inside a visible argument are
+    handled when that argument is rendered recursively.
+    """
+    pieces, last, pos, braces = [], 0, 0, 0
+    while pos < len(text):
+        char = text[pos]
+        if char == "\\":
+            match = INLINE_VISIBLE_COMMAND.match(text, pos) if not braces else None
+            if match:
+                try:
+                    end = read_optional_argument(text, match.end())
+                    if match.group(1) == "href":
+                        _, end = read_braced_argument(text, end)
+                    _, end = read_braced_argument(text, end)
+                except ValueError:
+                    pos += 2
+                    continue
+                if pos > last:
+                    pieces.append(text[last:pos])
+                pieces.append(text[pos:end])
+                last = pos = end
+                continue
+            pos += 2
+            continue
+        if char == "{":
+            braces += 1
+        elif char == "}":
+            braces -= 1
+        pos += 1
+    if not pieces:
+        return None
+    if last < len(text):
+        pieces.append(text[last:])
+    return pieces if len(pieces) > 1 else None
+
+
+def render_inline_parts(text, flags, color):
+    """Render attached pieces without introducing spaces before a footnote."""
+    rendered, offset = [], 0
+    for part in inline_parts(text.strip()):
+        atoms = token_atoms(("W", part))
+        part_flags = flags[offset:offset + len(atoms)]
+        offset += len(atoms)
+        if not any(part_flags):
+            rendered.append(part)
+            continue
+        actions = token_actions([("W", part)], [atoms], part_flags, color)
+        rendered.append(_render_runs(actions).removesuffix(" "))
+    return "".join(rendered)
+
+
+def render_container(text, flags, color):
+    """Paint a caption/footnote/link argument without boxing its command."""
+    prefix, content, suffix = container_parts(text.strip())
+    children = tokenize_words(content)
+    child_atoms = [token_atoms(child) for child in children]
+    child_flags = flags[1:]
+    if flags[0]:
+        child_flags = [True] * sum(len(atoms) for atoms in child_atoms)
+    rendered = _render_runs(_merge_runs(token_actions(children, child_atoms, child_flags, color)))
+    return prefix + rendered.rstrip(" ") + suffix
 
 
 def changed_flags(old, new):
@@ -445,7 +665,13 @@ def token_actions(tokens, atoms, changed, color):
                 value = f"\\mbox{{{value}}}"
             actions.append((style, value))
         else:
-            actions.append(("mixed", paint(decompose(value.strip()), flags, HIGHLIGHT_COMMANDS[color], color)))
+            if inline_parts(value.strip()):
+                rendered = render_inline_parts(value, flags, color)
+            elif container_parts(value.strip()):
+                rendered = render_container(value, flags, color)
+            else:
+                rendered = paint(decompose(value.strip()), flags, HIGHLIGHT_COMMANDS[color], color)
+            actions.append(("mixed", rendered))
     return actions
 
 
@@ -484,10 +710,13 @@ def render_group(old_texts, new_texts, tone="strong"):
     sentence split in two, or two lines merged into one, keeps its shared words.
     """
     old_color, new_color = tone_colors(tone)
-    # TikZ path syntax such as `\node (a) [style] {...};` breaks when any
-    # token is wrapped in a highlight macro, so mark the whole block instead.
-    if any("\\begin{tikzpicture}" in text for text in (*old_texts, *new_texts)):
-        if "".join(old_texts).split() == "".join(new_texts).split():
+    # Keep paths, table rules, and code intact and give a changed object a
+    # block background. Whitespace-only edits do not change its rendering.
+    if any(ATOMIC_BLOCK.search(text) for text in (*old_texts, *new_texts)):
+        old_source, new_source = "".join(old_texts), "".join(new_texts)
+        verbatim = VERBATIM_BLOCK.search(old_source) or VERBATIM_BLOCK.search(new_source)
+        unchanged = old_source == new_source if verbatim else old_source.split() == new_source.split()
+        if unchanged:
             return list(old_texts), list(new_texts)
 
         def block(color, text):

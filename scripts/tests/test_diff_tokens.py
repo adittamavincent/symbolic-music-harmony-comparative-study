@@ -153,6 +153,18 @@ class MathAndFormulaTests(unittest.TestCase):
 
 
 class ProseTokenTests(unittest.TestCase):
+    def test_changed_font_size_and_family_are_visible_changes(self):
+        for old, new in ((r"{\small ukuran}", r"{\large ukuran}"),
+                         (r"\textsf{huruf}", r"\textrm{huruf}"),
+                         (r"{\sffamily huruf}", r"{\rmfamily huruf}")):
+            with self.subTest(old=old, new=new):
+                left, right = tokens.word_level_render(old, new)
+                self.assertIn(r"\delhighlight", left)
+                self.assertIn(r"\inhighlight", right)
+                self.assertNotIn("highlight{\\", left + right)
+        left, right = tokens.word_level_render(r"{\normalsize\textrm{Same}}", "Same")
+        self.assertNotIn("highlight", left + right)
+
     def test_words_inside_formatting_compare_one_by_one(self):
         old, new = tokens.word_level_render(r"Mengukur \textit{constraint adherence} ketiga",
                                             r"Mengukur \textit{constraint compliance} kedua")
@@ -207,6 +219,116 @@ class ProseTokenTests(unittest.TestCase):
         _, new = tokens.word_level_render("", r"kuint \parencite[35]{strube1928}: lalu")
         self.assertIn(r"\diffinline{inshl}{\parencite[35]{strube1928}:}", new)
         self.assertNotIn(r"\inhighlight{\parencite", new)
+
+
+class ObjectHighlightTests(unittest.TestCase):
+    def test_added_research_flow_caption_is_flagged_without_changing_its_counter(self):
+        source = r"\caption{Rancangan Alur Penelitian}"
+        left, right = tokens.word_level_render("", source, "pale")
+        self.assertEqual(left, "")
+        self.assertEqual(right.strip(), r"\caption{\inspale{Rancangan}\diffspace{inspl}\inspale{Alur}\diffspace{inspl}\inspale{Penelitian}}")
+        self.assertEqual(right.count(r"\caption{"), 1)
+        self.assertNotIn("renewcommand", right)
+        self.assertNotIn("fcolorbox", right)
+
+    def test_caption_content_compares_nested_words_math_and_citations(self):
+        old = r"\caption[Short title]{Rancangan \textit{Alur Penelitian} $x$ \parencite[9, 12]{source}}"
+        new = old.replace("Penelitian", "Analisis").replace("$x$", "$y$").replace("source}", "revised}")
+        left, right = tokens.word_level_render(old, new)
+        self.assertIn(r"\caption[Short title]{Rancangan \textit{Alur \delhighlight{Penelitian}}", left)
+        self.assertIn(r"\caption[Short title]{Rancangan \textit{Alur \inhighlight{Analisis}}", right)
+        self.assertIn(r"\diffinline{inshl}{\ensuremath{y}}", right)
+        self.assertIn(r"\diffinline{inshl}{\parencite[9, 12]{revised}}", right)
+        self.assertNotIn(r"highlight{Rancangan}", left + right)
+        self.assertNotIn(r"highlight{Alur}", left + right)
+        self.assertNotIn(r"highlight{\parencite", left + right)
+
+    def test_starred_and_captionof_wrappers_keep_their_native_arguments(self):
+        for prefix in (r"\caption*", r"\caption*[Short {nested title}]",
+                       r"\captionof{figure}", r"\captionof{table}[Short title]"):
+            with self.subTest(prefix=prefix):
+                left, right = tokens.word_level_render(prefix + "{Same old label}", prefix + "{Same new label}")
+                self.assertEqual(left.strip(), prefix + r"{Same \delhighlight{old} label}")
+                self.assertEqual(right.strip(), prefix + r"{Same \inhighlight{new} label}")
+
+    def test_changed_short_caption_and_hyperlink_target_also_flag_the_displayed_text(self):
+        for old, new in ((r"\caption[Old title]{Same caption}", r"\caption[New title]{Same caption}"),
+                         (r"\href{https://old.example/a_b}{Same label}", r"\href{https://new.example/a_b}{Same label}"),
+                         (r"\hyperref[old]{Same label}", r"\hyperref[new]{Same label}")):
+            with self.subTest(old=old):
+                left, right = tokens.word_level_render(old, new)
+                self.assertIn(r"\delhighlight{Same}", left)
+                self.assertIn(r"\inhighlight{Same}", right)
+                self.assertNotIn(r"\diffinline", left + right)
+
+    def test_reference_targets_and_urls_are_highlighted_as_safe_whole_commands(self):
+        for command in ("ref", "ref*", "pageref", "eqref", "autoref", "nameref", "cref", "Cref", "url", "nolinkurl"):
+            with self.subTest(command=command):
+                old = "\\" + command + "{old_target}"
+                new = "\\" + command + "{new_target}"
+                left, right = tokens.word_level_render(old, new)
+                self.assertEqual(left.strip(), r"\diffinline{delhl}{" + old + "}")
+                self.assertEqual(right.strip(), r"\diffinline{inshl}{" + new + "}")
+
+    def test_footnote_body_is_highlighted_inside_its_command(self):
+        left, right = tokens.word_level_render(r"\footnote[2]{An old \textit{note text}.}",
+                                               r"\footnote[2]{An new \textit{note text}.}")
+        self.assertEqual(left.strip(), r"\footnote[2]{An \delhighlight{old} \textit{note text}.}")
+        self.assertEqual(right.strip(), r"\footnote[2]{An \inhighlight{new} \textit{note text}.}")
+        self.assertNotIn("diffinline", left + right)
+
+    def test_attached_footnote_and_nested_link_compare_without_a_space_before_the_superscript(self):
+        old = r"Old prose note\footnote{Footnote with \href{https://example.com}{old link}.}"
+        new = r"New prose note\footnote{Footnote with \href{https://example.com}{new link}.}"
+        left, right = tokens.word_level_render(old, new)
+        self.assertIn(r"\delhighlight{Old}", left)
+        self.assertIn(r"\inhighlight{New}", right)
+        self.assertIn(r"note\footnote{Footnote with \href{https://example.com}{\delhighlight{old} link}.}", left)
+        self.assertIn(r"note\footnote{Footnote with \href{https://example.com}{\inhighlight{new} link}.}", right)
+        self.assertNotIn(r"note \footnote", left + right)
+        self.assertNotIn("fcolorbox", left + right)
+
+    def test_attached_link_and_reference_commands_keep_their_adjacent_text(self):
+        left, right = tokens.word_level_render(r"See\href{https://example.com}{old label},Figure\ref{old}.",
+                                               r"See\href{https://example.com}{new label},Figure\ref{new}.")
+        self.assertIn(r"See\href{https://example.com}{\delhighlight{old} label},Figure\diffinline{delhl}{\ref{old}}.", left)
+        self.assertIn(r"See\href{https://example.com}{\inhighlight{new} label},Figure\diffinline{inshl}{\ref{new}}.", right)
+
+    def test_changed_graphic_path_and_options_get_a_visible_frame_without_touching_the_syntax(self):
+        graphic = r"\includegraphics[width=\textwidth, trim={1pt 2pt 3pt 4pt},clip]{figures/my_image.pdf}"
+        revised = graphic.replace("my_image.pdf", "new_image.pdf")
+        left, right = tokens.word_level_render(graphic, revised)
+        self.assertIn(r"\fcolorbox{delhl}{delhl}{" + graphic + "}", left)
+        self.assertIn(r"\fcolorbox{inshl}{inshl}{" + revised + "}", right)
+        self.assertNotIn(r"highlight{my_image", left)
+        unchanged = tokens.word_level_render(graphic, graphic)
+        self.assertEqual(unchanged, (graphic, graphic))
+        _, added = tokens.word_level_render("", graphic + ".", "pale")
+        self.assertIn(r"\fcolorbox{inspl}{inspl}{" + graphic + ".}", added)
+
+    def test_caption_after_same_line_graphic_compares_without_flagging_the_unchanged_image(self):
+        graphic = r"\includegraphics[width=\linewidth]{same_image.pdf}"
+        old = graphic + r"\caption{Same old caption}"
+        new = graphic + r"\caption{Same new caption}"
+        left, right = tokens.word_level_render(old, new)
+        self.assertIn(graphic, left)
+        self.assertIn(graphic, right)
+        self.assertIn(r"\caption{Same \delhighlight{old} caption}", left)
+        self.assertIn(r"\caption{Same \inhighlight{new} caption}", right)
+        self.assertNotIn("fcolorbox", left + right)
+
+    def test_changed_table_commands_and_verbatim_text_keep_whole_source_blocks(self):
+        for old, new in ((r"\begin{tabular}{ll} A & B \\ \hline \end{tabular}",
+                         r"\begin{tabular}{ll} A & B \\ \cline{1-2} \end{tabular}"),
+                        ("\\begin{verbatim}\npath old_image\n\\end{verbatim}",
+                         "\\begin{verbatim}\npath new_image\n\\end{verbatim}"),
+                        ("\\begin{verbatim}\n  indentation\n\\end{verbatim}",
+                         "\\begin{verbatim}\n    indentation\n\\end{verbatim}")):
+            with self.subTest(old=old):
+                left, right = tokens.word_level_render(old, new)
+                self.assertEqual(left, "\\begin{diffmath}{delhl}\n" + old + "\n\\end{diffmath}\n")
+                self.assertEqual(right, "\\begin{diffmath}{inshl}\n" + new + "\n\\end{diffmath}\n")
+                self.assertNotIn("highlight", left + right)
 
 
 if __name__ == "__main__":

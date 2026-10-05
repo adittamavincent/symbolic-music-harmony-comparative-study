@@ -1,4 +1,4 @@
-"""Pairing manuscript parts by ID and comparing their sentences, independent of TeX."""
+"""Keep paragraph/object alignment and change flags independent of TeX compilation."""
 import re
 import sys
 import unittest
@@ -34,6 +34,19 @@ def page(title, body):
     return r"\phantomsection" + "\n" + rf"\addcontentsline{{toc}}{{matter}}{{{title}}}" + "\n" + body
 
 
+def manuscript(*paragraphs):
+    """A body section with real paragraph breaks, rather than literal slash-n."""
+    return r"\section{Pembahasan}" + "\n\n" + "\n\n".join(paragraphs)
+
+
+def chunk_pairs(comparison):
+    """Paragraph/object source pairs, including the blank side of an insertion."""
+    return [(comparison.old[i].text if i is not None else None,
+             comparison.new[j].text if j is not None else None)
+            for i, j in comparison.pairs
+            if (comparison.old[i] if i is not None else comparison.new[j]).kind == "chunk"]
+
+
 class BlockTests(unittest.TestCase):
     def test_blocks_keep_headings_paragraphs_breaks_and_heading_ids(self):
         blocks = layout.parse_blocks("\n".join((
@@ -49,6 +62,28 @@ class BlockTests(unittest.TestCase):
         self.assertEqual((blocks[0].level, blocks[4].level), (1, 2))
         self.assertEqual(blocks[1].owner, 0)
         self.assertEqual(blocks[5].owner, 4)
+
+    def test_explicit_paragraph_commands_split_body_paragraphs(self):
+        source = r"\section{Pembahasan}" + "\n" + r"Alpha paragraph.\par Beta paragraph.\par Gamma paragraph."
+        blocks = layout.parse_blocks(source)
+        self.assertEqual([block.text for block in blocks if block.kind == "chunk"],
+                         ["Alpha paragraph.", "Beta paragraph.", "Gamma paragraph."])
+
+    def test_standalone_objects_without_blank_lines_are_separate_body_rows(self):
+        objects = {
+            "figure": r"\begin{figure}\includegraphics{flow.pdf}\caption{Rancangan Alur Penelitian}\end{figure}",
+            "list": r"\begin{enumerate}\item Pertama.\item Kedua.\end{enumerate}",
+            "equation": r"\begin{equation}1+2=3\end{equation}",
+            "table": r"\begin{table}\begin{tabular}{ll}A & B\\\end{tabular}\end{table}",
+        }
+        for kind, object_source in objects.items():
+            with self.subTest(kind=kind):
+                source = r"\section{Pembahasan}" + "\nBefore paragraph.\n" + object_source + "\nAfter paragraph."
+                chunks = [block.text for block in layout.parse_blocks(source) if block.kind == "chunk"]
+                self.assertEqual(chunks, ["Before paragraph.", object_source, "After paragraph."])
+                comparison = layout.Comparison(source, source)
+                self.assertEqual(len(comparison.rows), 4)
+                self.assertTrue(all(len(row.old) == len(row.new) == 1 for row in comparison.rows))
 
     def test_chapter_headings_and_environments_stay_whole(self):
         blocks = layout.parse_blocks("\n".join((
@@ -92,6 +127,91 @@ class BlockTests(unittest.TestCase):
 
 
 class PairingTests(unittest.TestCase):
+    def test_inserted_paragraph_leaves_a_blank_left_row_without_shifting_later_pairs(self):
+        a, b, c = "Alpha opening paragraph.", "Beta body paragraph.", "Gamma closing paragraph."
+        d = "Delta inserted paragraph."
+        comparison = layout.Comparison(manuscript(a, b, c), manuscript(a, d, b, c))
+        self.assertEqual(chunk_pairs(comparison), [(a, a), (None, d), (b, b), (c, c)])
+        self.assertEqual(len(comparison.rows), 5)
+        rows = rows_text(comparison)
+        self.assertEqual(rows[2][0], "")
+        self.assertIn(r"\inspale{Delta}", rows[2][1])
+        self.assertEqual(rows[3], (b, b))
+        self.assertEqual(rows[4], (c, c))
+
+    def test_deleted_paragraph_leaves_a_blank_right_row_without_shifting_later_pairs(self):
+        a, b, c = "Alpha opening paragraph.", "Beta body paragraph.", "Gamma closing paragraph."
+        d = "Delta deleted paragraph."
+        comparison = layout.Comparison(manuscript(a, d, b, c), manuscript(a, b, c))
+        self.assertEqual(chunk_pairs(comparison), [(a, a), (d, None), (b, b), (c, c)])
+        rows = rows_text(comparison)
+        self.assertEqual(rows[2][1], "")
+        self.assertIn(r"\delpale{Delta}", rows[2][0])
+        self.assertEqual(rows[3], (b, b))
+        self.assertEqual(rows[4], (c, c))
+
+    def test_similar_edited_paragraphs_share_a_row_and_mark_only_changed_words(self):
+        old = "Model menyusun nada dan mengisi suara bawah secara bertahap."
+        new = "Model menyusun nada dan mengisi suara bawah secara serentak."
+        closing = "Evaluasi mencatat pelanggaran pada setiap keluaran."
+        comparison = layout.Comparison(manuscript(old, closing), manuscript(new, closing))
+        self.assertEqual(chunk_pairs(comparison), [(old, new), (closing, closing)])
+        left, right = rows_text(comparison)[1]
+        self.assertIn(r"\delhighlight{bertahap.}", left)
+        self.assertIn(r"\inhighlight{serentak.}", right)
+        self.assertNotRegex(left + right, r"(?:highlight|pale)\{(?:Model|suara|bawah)\}")
+
+    def test_exact_paragraph_anchors_survive_a_near_identical_insertion(self):
+        a = "Tahap pertama mencatat keluaran model dan menghitung pelanggaran."
+        b = "Tahap kedua mencatat keluaran model dan menghitung pelanggaran."
+        c = "Tahap ketiga mencatat keluaran model dan menghitung pelanggaran."
+        inserted = "Tahap tambahan mencatat keluaran model dan menghitung pelanggaran."
+        comparison = layout.Comparison(manuscript(a, b, c), manuscript(a, inserted, b, c))
+        self.assertEqual(chunk_pairs(comparison), [(a, a), (None, inserted), (b, b), (c, c)])
+        self.assertEqual(rows_text(comparison)[2][0], "")
+
+    def test_repeated_paragraphs_keep_the_insertion_between_the_correct_occurrences(self):
+        repeated = "Pengukuran dilakukan dengan aturan yang sama."
+        middle = "Bagian tengah mencatat hasil pengukuran."
+        closing = "Peneliti memeriksa kembali hasil akhir."
+        inserted = "Perubahan tambahan diterapkan sesudah bagian tengah."
+        comparison = layout.Comparison(manuscript(repeated, middle, repeated, closing),
+                                       manuscript(repeated, middle, inserted, repeated, closing))
+        self.assertEqual(chunk_pairs(comparison), [
+            (repeated, repeated), (middle, middle), (None, inserted),
+            (repeated, repeated), (closing, closing),
+        ])
+
+    def test_moved_paragraph_has_position_flags_and_keeps_intervening_paragraphs_paired(self):
+        first = "Alpha establishes the study background and motivation."
+        moved = "Gamma reports measurement validity and researcher decisions."
+        middle = "Beta describes sample preparation and input collection."
+        last = "Delta concludes the evaluation procedure and output records."
+        comparison = layout.Comparison(manuscript(first, middle, moved, last),
+                                       manuscript(first, moved, middle, last))
+        self.assertEqual(len(comparison.moved), 2)
+        old_moved = next(i for side, i in comparison.moved if side == "old")
+        new_moved = comparison.counterpart["old", old_moved]
+        self.assertEqual(comparison.old[old_moved].text, comparison.new[new_moved].text)
+        self.assertIn(comparison.old[old_moved].text, (middle, moved))
+        rendered = comparison.render()
+        self.assertIn(r"\diffmoved{dipindahkan ke posisi baru}", rendered)
+        self.assertIn(r"\diffmoved{dipindahkan dari posisi lama}", rendered)
+        self.assertNotIn("highlight", rendered)
+
+    def test_every_source_block_occurs_once_in_each_side_and_keeps_source_order(self):
+        figure = r"\begin{figure}\includegraphics{flow.pdf}\caption{Alur penelitian}\end{figure}"
+        old = manuscript("Alpha introduction.", "Beta method.", figure, "Gamma discussion.")
+        new = manuscript("Alpha introduction.", "Delta inserted text.", figure,
+                         "Beta method with revised detail.", "Gamma discussion.")
+        comparison = layout.Comparison(old, new)
+        for side, blocks in comparison.sides.items():
+            with self.subTest(side=side):
+                expected = [index for index, block in enumerate(blocks) if block.kind != "break"]
+                actual = [index for row in comparison.rows for index in getattr(row, side)]
+                self.assertEqual(actual, expected)
+                self.assertEqual(len(actual), len(set(actual)))
+
     def test_added_frontmatter_pages_leave_approval_beside_approval(self):
         old = "\n\\newpage\n".join((
             r"\begingroup PROPOSAL SKRIPSI \endgroup",
@@ -153,7 +273,10 @@ class PairingTests(unittest.TestCase):
         left, right = rows_text(comparison)[0]
         self.assertIn(r"\delhighlight{Metode}", left)
         self.assertIn(r"\inhighlight{Penelitian}", right)
-        self.assertNotIn(r"\label{sec:metode}", left + right)
+        self.assertEqual(left.count(r"\label{sec:metode}"), 1)
+        self.assertEqual(right.count(r"\label{sec:metode}"), 1)
+        self.assertIn(r"\label{diffo0}", left)
+        self.assertIn(r"\label{diffn0}", right)
 
     def test_chapter_title_matches_a_section_with_the_same_words_without_highlights(self):
         old = r"\section{Metode Penelitian}" + "\n" + r"\subsection{Sampel}" + "\nSama."
@@ -267,15 +390,97 @@ class RenderingTests(unittest.TestCase):
         self.assertIn(r"\begin{minipage}{0.48\textwidth}\raggedright Original signature.\end{minipage}", rendered)
         self.assertNotIn(r"\raggedright" + "\n", rendered.replace("Original", ""))
 
-    def test_long_section_flows_in_one_row_and_an_added_paragraph_is_pale(self):
+    def test_long_section_flows_in_paragraph_rows_without_boxes_and_an_addition_is_pale(self):
         old = "\\section{Long}\n\n" + "\n\n".join(f"Paragraph {i} text." for i in range(80))
         new = old + "\n\nAdditional paragraph."
         rendered = layout.Comparison(old, new).render()
-        self.assertEqual(rendered.count(r"\switchcolumn*"), 2)
+        self.assertEqual(rendered.count(r"\switchcolumn*"), 82)
         self.assertNotIn("minipage", rendered)
         self.assertNotIn(r"\newpage", rendered)
         self.assertIn(r"\inspale{Additional}\diffspace{inspl}\inspale{paragraph.}", rendered)
         self.assertIn("Paragraph 79 text.", rendered)
+
+    def test_object_only_fragments_remain_visible_and_insertions_receive_flags(self):
+        objects = (
+            r"\begin{equation}1+2=3\end{equation}",
+            r"\[1+2=3\]",
+            r"\includegraphics[width=0.8\linewidth]{flow.pdf}",
+            r"\begin{tikzpicture}\draw (0,0) -- (1,1);\end{tikzpicture}",
+        )
+        for object_source in objects:
+            with self.subTest(source=object_source):
+                fragments = layout.split_fragments(object_source)
+                self.assertTrue(any(fragment.visible for fragment in fragments))
+                self.assertEqual("".join(fragment.core + fragment.tail for fragment in fragments), object_source)
+                comparison = layout.Comparison(manuscript("Before."), manuscript("Before.", object_source))
+                inserted = rows_text(comparison)[-1]
+                self.assertEqual(inserted[0], "")
+                self.assertRegex(inserted[1], r"diffmath|fcolorbox")
+                self.assertIn("inspl", inserted[1])
+                self.assertIn(re.sub(r"\s+", "", object_source), re.sub(r"\s+", "", inserted[1]))
+                self.assertLessEqual(inserted[1].count(r"\begin{diffmath}"), 1)
+                self.assertNotEqual(comparison.change_map()[0][2], "sama")
+
+    def test_inserted_research_flow_figure_flags_caption_and_image(self):
+        figure = (r"\begin{figure}" + "\n" + r"\includegraphics{research-flow.pdf}" + "\n"
+                  + r"\caption{Rancangan Alur Penelitian}\label{fig:alur}" + "\n" + r"\end{figure}")
+        paragraph = "Prosedur penelitian memuat tahap persiapan dan evaluasi."
+        comparison = layout.Comparison(manuscript(paragraph), manuscript(paragraph, figure))
+        self.assertEqual(chunk_pairs(comparison), [(paragraph, paragraph), (None, figure)])
+        inserted = rows_text(comparison)[-1]
+        self.assertEqual(inserted[0], "")
+        self.assertIn("inspl", inserted[1])
+        self.assertIn("research-flow.pdf", inserted[1])
+        self.assertIn("Rancangan", inserted[1])
+        self.assertIn("Alur", inserted[1])
+        self.assertIn("Penelitian", inserted[1])
+        self.assertNotEqual(comparison.change_map()[0][2], "sama")
+
+    def test_figure_image_replacement_is_flagged_even_with_an_unchanged_caption(self):
+        old_figure = (r"\begin{figure}\includegraphics{flow-v3.pdf}"
+                      r"\caption{Rancangan Alur Penelitian}\label{fig:alur}\end{figure}")
+        new_figure = old_figure.replace("flow-v3.pdf", "flow-v4.pdf")
+        comparison = layout.Comparison(manuscript(old_figure), manuscript(new_figure))
+        self.assertEqual(chunk_pairs(comparison), [(old_figure, new_figure)])
+        left, right = rows_text(comparison)[1]
+        self.assertIn("flow-v3.pdf", left)
+        self.assertIn("flow-v4.pdf", right)
+        self.assertRegex(left, r"delhl|delpl")
+        self.assertRegex(right, r"inshl|inspl")
+        self.assertIn(r"\diffcaptionlabel{figure}{delhl}", left)
+        self.assertIn(r"\diffcaptionlabel{figure}{inshl}", right)
+        self.assertNotEqual(comparison.change_map()[0][2], "sama")
+
+    def test_inserted_figure_flags_later_caption_numbers_and_stable_references(self):
+        existing = (r"\begin{figure}\includegraphics{existing.pdf}"
+                    r"\caption{Gambar tetap}\label{fig:tetap}\end{figure}")
+        inserted = (r"\begin{figure}\includegraphics{inserted.pdf}"
+                    r"\caption{Gambar tambahan}\label{fig:tambahan}\end{figure}")
+        reference = r"Peneliti menjelaskan hasil pada Gambar \ref{fig:tetap}."
+        comparison = layout.Comparison(manuscript(existing, reference),
+                                       manuscript(inserted, existing, reference))
+        self.assertEqual(chunk_pairs(comparison), [(None, inserted), (existing, existing), (reference, reference)])
+        old_index = next(index for index, block in enumerate(comparison.old) if block.text == existing)
+        new_index = comparison.counterpart["old", old_index]
+        self.assertEqual(comparison.object_numbers["old", old_index], 1)
+        self.assertEqual(comparison.object_numbers["new", new_index], 2)
+        left, right = rows_text(comparison)[2]
+        self.assertIn(r"\diffcaptionlabel{figure}{delhl}", left)
+        self.assertIn(r"\diffcaptionlabel{figure}{inshl}", right)
+        left, right = rows_text(comparison)[3]
+        self.assertIn(r"\diffinline{delhl}{\ref{fig:tetap}}", left)
+        self.assertIn(r"\diffinline{inshl}{\ref{fig:tetap}}", right)
+
+    def test_caption_revision_marks_the_caption_without_rewriting_shared_words(self):
+        old_figure = (r"\begin{figure}\includegraphics{flow.pdf}"
+                      r"\caption{Rancangan Alur Penelitian}\label{fig:alur}\end{figure}")
+        new_figure = old_figure.replace("Penelitian}", "Evaluasi}")
+        comparison = layout.Comparison(manuscript(old_figure), manuscript(new_figure))
+        self.assertEqual(chunk_pairs(comparison), [(old_figure, new_figure)])
+        left, right = rows_text(comparison)[1]
+        self.assertIn(r"\delhighlight{Penelitian}", left)
+        self.assertIn(r"\inhighlight{Evaluasi}", right)
+        self.assertNotRegex(left + right, r"highlight\{(?:Rancangan|Alur)\}")
 
     def test_source_page_breaks_start_both_columns_on_a_new_page_once(self):
         old = "\\section{A}\nFirst.\n\\section{B}\nSecond."
@@ -302,6 +507,35 @@ class RenderingTests(unittest.TestCase):
 
 
 class ChangeMapTests(unittest.TestCase):
+    def test_tiny_edit_in_a_long_section_is_never_reported_as_unchanged(self):
+        paragraphs = [f"Paragraf {i} mencatat pengukuran keluaran model dalam penelitian ini."
+                      for i in range(120)]
+        updated = paragraphs.copy()
+        updated[60] = updated[60].replace("pengukuran", "evaluasi")
+        comparison = layout.Comparison(manuscript(*paragraphs), manuscript(*updated))
+        self.assertGreater(comparison.change_map()[0][3], 0.98)
+        self.assertNotEqual(comparison.change_map()[0][2], "sama")
+        rendered = comparison.render()
+        self.assertIn(r"\delhighlight{pengukuran}", rendered)
+        self.assertIn(r"\inhighlight{evaluasi}", rendered)
+
+    def test_formatting_only_paragraph_and_heading_edits_are_reported(self):
+        changes = (
+            (manuscript("Isi penelitian."), manuscript(r"\textbf{Isi} penelitian.")),
+            (r"\section{Pembahasan}" + "\nIsi sama.",
+             r"\section{\textit{Pembahasan}}" + "\nIsi sama."),
+            (r"\section{Pembahasan}" + "\nIsi sama.",
+             r"\section*{Pembahasan}" + "\nIsi sama."),
+            (r"\section{Pembahasan}" + "\nIsi sama.",
+             r"\subsection{Pembahasan}" + "\nIsi sama."),
+        )
+        for old, new in changes:
+            with self.subTest(new=new):
+                comparison = layout.Comparison(old, new)
+                self.assertEqual(len(comparison.change_map()), 1)
+                self.assertNotEqual(comparison.change_map()[0][2], "sama")
+                self.assertRegex(comparison.render(), r"highlight|pale|diffmoved|diffmath")
+
     def test_status_reflects_shared_words_and_title_changes(self):
         old = "\n".join((r"\section{Same}", "Alpha beta gamma delta.",
                          r"\section{Rewritten}", "Completely different wording here.",
