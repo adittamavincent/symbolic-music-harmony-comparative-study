@@ -22,7 +22,7 @@ final-thesis/
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
 │   ├── defense-qa.md              All practice questions and answers (Q1–Q115, with 16a–c and 41a–b)
 │   ├── model-dan-istilah.md       DeepBach, Coconet, and technical terms in plain Indonesian
-│   └── researcher-guide.md        Research fundamentals and reading list
+│   └── researcher-guide.md        Start here: the study and its five theories in plain Indonesian, study order, reading list
 └── records/                       Running records
     ├── research-log.md            Dated history of decisions and findings
     └── reading-notes.csv          Source verification and the researcher's own reading
@@ -32,6 +32,7 @@ Where to start:
 
 | You want to | Open |
 | --- | --- |
+| Understand your own study in plain language | [study/researcher-guide.md](study/researcher-guide.md) |
 | Know what is done and what is open | [PROGRESS.md](PROGRESS.md) |
 | Prepare for Pembimbing I | [study/persiapan-pembimbing-1.md](study/persiapan-pembimbing-1.md), then [study/defense-qa.md](study/defense-qa.md) |
 | Understand how DeepBach and Coconet work | [study/model-dan-istilah.md](study/model-dan-istilah.md) |

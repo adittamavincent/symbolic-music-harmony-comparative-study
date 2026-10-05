@@ -1,6 +1,6 @@
 # v4: final-thesis progress
 
-Updated: 2026-10-04. Active manuscript: `thesis/`, revision v4 (v3 is tagged `thesis/v3`). Status: BAB I–III revised for protocol version 2.1, with a rebuilt landasan teori and verified citations; the full experiment pipeline is implemented and checked with fake backends; no model has been run; no pilot or main data; not ready for submission as a complete thesis.
+Updated: 2026-10-05. Active manuscript: `thesis/`, revision v4 (v3 is tagged `thesis/v3`). Status: BAB I–III revised for protocol version 2.1, with a rebuilt landasan teori and verified citations; the full experiment pipeline is implemented and checked with fake backends; no model has been run; no pilot or main data; not ready for submission as a complete thesis.
 
 This file holds the current status only. Dated history is in [records/research-log.md](records/research-log.md). The design and analysis plan are in [research/protocol.md](../../research/protocol.md). Changes since v3, with their basis, are in [supervision/perubahan-v3-ke-v4.md](supervision/perubahan-v3-ke-v4.md); changes since proposal v2 in [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md).
 
@@ -27,7 +27,8 @@ Unchanged from v3 in substance (see `research/protocol.md`):
 
 ## What is evidenced now
 
-- Manuscript: front matter and BAB I–III, v4. `make thesis` built `scratch/thesis.pdf` and `scratch/Skripsi_v4_23104810131_Vincent.pdf` (70 pages) on 2026-10-04 without LaTeX warnings.
+- Manuscript: front matter and BAB I–III, v4. `make thesis` built `scratch/thesis.pdf` and `scratch/Skripsi_v4_23104810131_Vincent.pdf` (70 pages) on 2026-10-04 without LaTeX warnings; after the 2026-10-05 register and terminology edit the build is 69 pages.
+- Study notes (`study/`) were checked against v4 and protocol 2.1 on 2026-10-05; `researcher-guide.md` is now the plain-Indonesian entry point.
 - Citations: 38 keys cited; each checked against Crossref or OpenAlex metadata and its full text or abstract (`records/reading-notes.csv`, rows dated 2026-10-04). Full text with page numbers for Hadjeres et al., Huang et al. (2017, 2019), Choi et al., Leemhuis et al., Huron, Pearce et al., Storkey (author copy), Ridhwan and Wisnugraha, Strube; Briot et al. read in the arXiv version of the book. Literature search record: `research/literature/screening-2026-10-04.md`.
 - Software checks: `make test` passes (4 checks for instrument v1, 20 for instrument v2, 27 for MusicXML input/output, 26 for the protocol-2.1 pipeline). `make dry-run-v2` runs generation, evaluation, analysis, tables, figures, examples, and the completeness check end to end with fake backends.
 - Bach frame: 371 iterator entries = 350 distinct files; 23 ineligible, 9 repeat another chorale's soprano; 318 melodies in the sampling frame before the DeepBach vocabulary check; 1 of 318 lies outside Huang et al.'s limits (`research/outputs/melodies/manifest.csv`, Git-ignored; rebuilt by `make melodies`).
@@ -42,7 +43,7 @@ These are this project's proposed completion criteria. Confirm department requir
 | Gate | Evidence needed to close it | Current status | Researcher action |
 | --- | --- | --- | --- |
 | G1. Feedback and scope | Review notes, agreed questions/title, deadline, department guide | F01–F12 answered; peer review P01–P17 answered; title, questions, theory structure, and machine-only design await supervisor agreement | Bring `supervision/bimbingan-v4.md` to Pembimbing I |
-| G2. Literature | Core sources read; every claim mapped to a source page; search log supports the gap | Assistant verification done for every cited key; researcher's own reading not yet recorded | Read the core sources (list in `study/researcher-guide.md` and the new theory sources) and fill `researcher_read_status` |
+| G2. Literature | Core sources read; every claim mapped to a source page; search log supports the gap | Assistant verification done for every cited key; researcher's own reading not yet recorded | Read the core sources (list in `study/researcher-guide.md`, section 7) and fill `researcher_read_status` |
 | G3. Instrument | Rule pages, v2 definitions, textbook fixtures, music21 cross-check, Huang comparison | Mostly done; textbook fixtures pending | Type the nine figures in `strube-example-fixtures.csv` |
 | G4. Comparative protocol | Melody inventory and eligibility, sample seed, model revisions, settings, frozen analysis plan | Protocol 2.1 written; settings and seeds fixed; typing pending; not frozen | Type the 71 melodies; agree the protocol; freeze after the pilot |
 | G5. Pipeline integrity | Isolated runs, attempt log, failure records, completeness checks, reproducible records | Implemented and tested with fake backends | Run `make setup-v2` and `make preflight` when ready |

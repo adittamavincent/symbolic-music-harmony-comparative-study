@@ -21,7 +21,7 @@ Disusun 4 Oktober 2026 untuk dibawa bersama PDF `Skripsi_v4_23104810131_Vincent.
 
 ## Desain singkat (tidak berubah)
 
-Melodi yang sama diberikan kepada DeepBach dan Coconet. Asal melodi: sopran *chorale* Bach dan latihan melodi Strube. Lima kaidah dihitung otomatis per birama dengan music21, tanpa penilai manusia. X1 model, X2 asal melodi, Y laju pelanggaran per birama. Uji Wilcoxon (model) dan Mann–Whitney (asal melodi), koreksi Holm.
+Melodi yang sama diberikan kepada DeepBach dan Coconet. Asal melodi: sopran *chorale* Bach dan latihan melodi Strube. Lima kaidah dihitung otomatis per birama dengan music21, tanpa penilai manusia. X1 model, X2 asal melodi, Y pelanggaran per birama. Uji Wilcoxon (model) dan Mann–Whitney (asal melodi), koreksi Holm.
 
 ## Kesiapan eksperimen
 
