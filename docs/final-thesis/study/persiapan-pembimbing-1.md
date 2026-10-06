@@ -2,13 +2,15 @@
 
 Disusun 2 Oktober 2026 untuk peneliti, diperbarui 5 Oktober 2026 untuk naskah v4. Berkas ini bahan belajar, bukan bagian naskah. Semua tanya-jawab ada di [defense-qa.md](defense-qa.md); berkas ini berisi bahan pendukungnya. Kode seperti "Q14" merujuk ke nomor pertanyaan di berkas itu. Yang dibawa ke bimbingan adalah PDF v4 dan [bimbingan-v4.md](../supervision/bimbingan-v4.md).
 
+Bimbingan pertama sudah berlangsung (transkrip diserahkan 6 Oktober 2026). Catatannya G01–G15 di [feedback.md](../supervision/feedback.md); arah revisi dan persiapan bimbingan berikutnya ada di [rencana-v5.md](../supervision/rencana-v5.md). Bahan di bawah tetap berguna untuk Strube dan terjemahan Pak Gathut.
+
 ## Urutan belajar
 
 1. Pelajari bagian 1. Pembimbing I adalah penerjemah buku Strube, jadi bagian ini paling mungkin muncul di bimbingan.
 2. Kuasai rantai argumen di bagian 2 sampai bisa dijelaskan dalam dua menit tanpa catatan. Kalimat pegangannya ada di awal defense-qa.md, dan gambaran besarnya di [researcher-guide.md](researcher-guide.md) bagian 1.
 3. Pahami konsep dan rumus di bagian 3, lalu kerjakan latihan hitung manual di bagian 4. Cara kerja DeepBach dan Coconet dijelaskan di [model-dan-istilah.md](model-dan-istilah.md).
 4. Baca sendiri sumber inti di bagian 5. Kolom `researcher_read_status` di [reading-notes.csv](../records/reading-notes.csv) masih kosong untuk semua sumber.
-5. Latih defense-qa.md bagian J (Q59–Q78) untuk Pembimbing I dan bagian L (Q102–Q115) untuk materi baru v4.
+5. Latih defense-qa.md bagian J (Q59–Q78) untuk Pembimbing I dan bagian L (Q102–Q115) untuk materi baru v4. Setelah bimbingan 6 Oktober 2026, latih juga bagian M (Q116–Q123).
 6. Selesaikan daftar periksa di bagian 7 sebelum mengirim.
 
 ## 1. Pembimbing I menerjemahkan buku Strube
@@ -175,7 +177,7 @@ Sumber yang hanya diperiksa dari abstraknya tercantum di [PROGRESS.md](../PROGRE
 
 ## 6. Pertanyaan dan jawaban
 
-Semua pertanyaan ada di [defense-qa.md](defense-qa.md). Pertanyaan khusus bimbingan Pembimbing I ada di bagian J (Q59–Q78): Strube dan terjemahan (Q59–Q63), teori (Q64–Q67), desain (Q68–Q74), statistik (Q75), dan hal praktis (Q76–Q78). Materi baru v4 ada di bagian L (Q102–Q115), terutama landasan teori (Q102–Q107).
+Semua pertanyaan ada di [defense-qa.md](defense-qa.md). Pertanyaan khusus bimbingan Pembimbing I ada di bagian J (Q59–Q78): Strube dan terjemahan (Q59–Q63), teori (Q64–Q67), desain (Q68–Q74), statistik (Q75), dan hal praktis (Q76–Q78). Materi baru v4 ada di bagian L (Q102–Q115), terutama landasan teori (Q102–Q107). Pertanyaan yang muncul di bimbingan pertama dengan Pak Gathut ada di bagian M (Q116–Q123).
 
 ## 7. Daftar periksa sebelum mengirim
 

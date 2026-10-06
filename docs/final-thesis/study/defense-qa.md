@@ -1,6 +1,6 @@
 # Simulasi pertanyaan sidang
 
-Disusun 2 Oktober 2026 untuk desain v3 (protokol versi 2), diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1). Berkas ini untuk latihan menjawab, bukan bagian naskah. Jawaban mengikuti BAB I–III v4 dan `research/protocol.md`. Rujukan seperti "BAB II.B.3" memakai penomoran PDF: bab, huruf subbab, nomor sub-subbab. Gambaran besar penelitian dalam bahasa sederhana ada di [researcher-guide.md](researcher-guide.md). Bagian **Rawan bila** menunjukkan kapan jawaban bisa patah dan apa yang harus dilakukan sebelum sidang.
+Disusun 2 Oktober 2026 untuk desain v3 (protokol versi 2), diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1); bagian M ditambahkan 6 Oktober 2026 setelah bimbingan dengan Pembimbing I. Berkas ini untuk latihan menjawab, bukan bagian naskah. Jawaban mengikuti BAB I–III v4 dan `research/protocol.md`. Rujukan seperti "BAB II.B.3" memakai penomoran PDF: bab, huruf subbab, nomor sub-subbab. Gambaran besar penelitian dalam bahasa sederhana ada di [researcher-guide.md](researcher-guide.md). Bagian **Rawan bila** menunjukkan kapan jawaban bisa patah dan apa yang harus dilakukan sebelum sidang.
 
 ## Pegangan
 
@@ -504,8 +504,40 @@ Setiap entri dicek ke Crossref atau OpenAlex, dan setiap kalimat yang mengutip d
 **115. Siapa Manda dalam riwayat revisi?**
 Teman satu angkatan yang membaca v3. Catatannya dipakai sebagai masukan teman sebaya, bukan masukan dosen. Jangan menyebut perubahan v4 sebagai permintaan dosen.
 
+## M. Pertanyaan dari bimbingan Pembimbing I (6 Oktober 2026)
+
+Pertanyaan ini muncul atau tersirat dalam bimbingan dengan Pak Gathut (catatan G01–G15 di [feedback.md](../supervision/feedback.md)). Arah v5 belum diputuskan; jawaban yang bergantung pada arah itu ditandai. Halaman Strube dibaca asisten dari pindaian 1928 ([rencana-v5.md](../supervision/rencana-v5.md) bagian 3); cocokkan dengan buku cetak.
+
+**116. Strube kamu pakai untuk apa?** (G04)
+Strube memberi tiga hal: bunyi kaidah beserta halamannya, pengecualiannya, dan konteks setiap soal, yaitu bab tempat soal itu ditulis. Model tidak membaca Strube; Strube dipakai untuk memeriksa dan membaca keluaran model.
+*Rawan bila:* kamu menjawab "untuk melacak kemiripan Bach dan Strube lewat AI". Itu terdengar seperti tujuan penelitian yang lain.
+
+**117. Apakah model bisa mendeteksi konteks soal?** (G01)
+Tidak. DeepBach dan Coconet belajar dari *chorale* Bach. Masukannya hanya melodi dalam bentuk partitur digital, tanpa teks perintah dan tanpa keterangan bab. Model tidak tahu bahwa sebuah soal dibuat untuk melatih sekstan Napoli atau trinada pokok. Konteks itu dibawa peneliti saat memilih soal dan membaca hasilnya.
+
+**118. Kalau keluarannya acak, untuk apa diukur?** (G03)
+Model memilih nada berdasarkan peluang, jadi melodi yang sama bisa diharmonisasi berbeda setiap kali. Satu keluaran tidak banyak berarti. Bila melodi yang sama dijalankan berkali-kali, terlihat seberapa sering sebuah pelanggaran muncul dan di birama mana. Huang dkk. juga menghitung pada jutaan harmonisasi, bukan satu.
+
+**119. Soal dari bab awal dan bab akhir Strube diperlakukan sama. Bukankah itu keliru?** (G02)
+Itu kelemahan desain v4, yang menggabungkan 71 melodi dari sepuluh bab. Strube sendiri membuat kaidah bergantung pada tahap: kuint sejajar antara IV dan II disebut tidak berbahaya, tetapi dihindari "for the present" (1928, hlm. 45), dan latihan 76 diberi tanda tempat sekstan Napoli dipakai (hlm. 55). Karena itu v5 membatasi konteks (lihat 120).
+*Rawan bila:* v5 tetap memakai 71 melodi. Jawabannya harus menunjukkan analisis per bab.
+
+**120. Kenapa bab *chorale*, padahal melodinya dari Bach?** (G06; berlaku bila pilihan A atau C dipakai)
+Karena itu konteks yang dijelaskan Strube untuk tugas ini (hlm. 174), dan juga jenis musik yang dipelajari model. Bab ini ada di akhir buku, setelah semua bab akor, jadi kosakata akornya sudah lengkap. Informasinya ada pada perbandingan tiga hal untuk melodi yang sama: pedoman Strube, harmonisasi Bach, dan keluaran model.
+*Rawan bila:* ditanya apakah model hanya menyalin Bach. Melodinya hampir pasti ada di data latih. Karena itu bagian nada yang sama dengan Bach (`copy_share`) dilaporkan, dan kemiripan tidak disebut pemahaman.
+
+**121. Apa bedanya sistem pakar dengan model AI?** (G13)
+Program berbasis aturan menulis kaidahnya secara eksplisit; masukan yang sama selalu memberi hasil yang sama, dan setiap keputusan bisa dijelaskan. Model AI tidak diberi kaidah. Ia mempelajari peluang dari contoh. Dalam penelitian ini program berbasis aturan (instrumen versi 2.0) memeriksa keluaran model AI. Dalam naskah, sebut "program pemeriksa berbasis aturan".
+
+**122. Kenapa studi kasus, bukan perbandingan dua model dengan banyak melodi?** (G05, G07; berlaku bila pilihan A atau C dipakai)
+Atas saran Pembimbing I, lingkupnya dibatasi supaya setiap pelanggaran bisa dibaca dalam konteksnya dan hasilnya selesai dalam waktu yang tersedia. Perbandingan dua model dan banyak melodi tetap mungkin, dan dicatat sebagai saran penelitian lanjutan.
+*Rawan bila:* ditanya soal generalisasi. Jawab terus terang: satu kasus tidak mewakili soal lain atau model lain.
+
+**123. Paralel kadang dibolehkan. Bagaimana kamu tahu sebuah paralel salah?** (G09)
+Program menandai kejadian menurut definisi operasional. Tanda itu belum vonis musikal. Setiap paralel yang ditandai dalam kasus dibaca bersama progresi akornya dan pengecualian Strube, misalnya kuint yang bersifat lewat (hlm. 34–35), IV–II (hlm. 45), dan pedoman *chorale* (hlm. 174). Pembacaan ini analisis partitur oleh peneliti sendiri, bukan penilaian oleh penilai lain, jadi desain tanpa penilai manusia tetap berlaku.
+
 ## Cara berlatih
 
-1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, 52, 102, dan 104 tanpa membaca. Sebelum bimbingan dengan Pembimbing I, pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md), bagian J, dan bagian L.
+1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, 52, 102, dan 104 tanpa membaca. Sebelum bimbingan dengan Pembimbing I, pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md), bagian J, bagian L, dan bagian M.
 2. Minta teman bertanya acak dari daftar ini dan memotong jawaban yang lebih dari satu menit.
 3. Setelah setiap celah di tabel atas ditutup, perbarui jawaban yang terkait dan hapus tanda **Wajib ditutup**.

@@ -37,3 +37,7 @@ Melodi yang sama diberikan kepada DeepBach dan Coconet. Asal melodi: sopran *cho
 4. Apakah Strube dipakai sebagai buku ajar mata kuliah harmoni di program studi?
 5. Bagaimana aturan program studi tentang pengungkapan penggunaan alat bantu AI dalam penelitian dan penulisan?
 6. Setelah uji coba, apakah protokol dapat dibekukan untuk pengumpulan data utama?
+
+## Sesudah pertemuan
+
+Pertemuan dengan Pak Gathut tercatat sebagai G01–G15 di [feedback.md](feedback.md) (transkrip diserahkan 6 Oktober 2026). Beliau menyarankan lingkup dibatasi menjadi studi kasus dalam konteks *chorale* Strube. Pertanyaan 1–6 di atas tidak tampak dibahas dalam transkrip; yang masih relevan dipindahkan ke [rencana-v5.md](rencana-v5.md) bagian 8.

@@ -1,6 +1,6 @@
 # Panduan peneliti: memahami penelitianmu sendiri
 
-Diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1). Berkas ini bahan belajar, bukan bagian naskah. Urutan dan saran di sini adalah rekomendasi asisten setelah membaca naskah dan kode, bukan aturan prodi. Versi sebelumnya (berbahasa Inggris, untuk v3) ada di riwayat Git.
+Diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1); bagian 6 diperbarui 6 Oktober 2026 setelah bimbingan dengan Pembimbing I. Berkas ini bahan belajar, bukan bagian naskah. Urutan dan saran di sini adalah rekomendasi asisten setelah membaca naskah dan kode, bukan aturan prodi. Versi sebelumnya (berbahasa Inggris, untuk v3) ada di riwayat Git.
 
 ## Isi folder `study/`
 
@@ -9,7 +9,7 @@ Diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1). Berkas ini bahan belaj
 | researcher-guide.md (berkas ini) | Penelitianmu dalam bahasa sederhana, lima teori BAB II, dasar-dasar penelitian, daftar bacaan | Pertama kali, atau saat gambaran besarnya mulai kabur |
 | [model-dan-istilah.md](model-dan-istilah.md) | Cara kerja DeepBach dan Coconet, kamus istilah | Ada istilah teknis yang membingungkan |
 | [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) | Strube dan terjemahan Pak Gathut, rantai argumen, angka penting, latihan hitung, daftar periksa | Sebelum bimbingan dengan Pembimbing I |
-| [defense-qa.md](defense-qa.md) | Q1–Q115, latihan menjawab | Setelah paham, untuk latihan lisan |
+| [defense-qa.md](defense-qa.md) | Q1–Q123, latihan menjawab | Setelah paham, untuk latihan lisan |
 
 Urutan belajar yang disarankan:
 
@@ -198,7 +198,7 @@ Alur kerja yang praktis: bekukan BAB III dulu, tulis bab hasil dan kesimpulan da
 
 ## 6. Sudah sampai mana
 
-Status lengkap selalu ada di [PROGRESS.md](../PROGRESS.md). Ringkasannya per 5 Oktober 2026:
+Status lengkap selalu ada di [PROGRESS.md](../PROGRESS.md). Ringkasannya per 6 Oktober 2026:
 
 | Sudah ada | Belum ada |
 | --- | --- |
@@ -207,14 +207,16 @@ Status lengkap selalu ada di [PROGRESS.md](../PROGRESS.md). Ringkasannya per 5 O
 | Pipeline lengkap (melodi, generasi, evaluasi, analisis, tabel, grafik) diuji dengan model palsu; `make test` lulus | Model belum dipasang dan belum dijalankan |
 | Kerangka sampel Bach: 318 melodi | 71 melodi Strube belum diketik (templatnya sudah ada) |
 | Protokol 2.1: pengaturan, *seed*, analisis sensitivitas | Uji coba, data utama, bab hasil dan kesimpulan, persetujuan pembimbing |
+| Bimbingan pertama dengan Pak Gathut, catatan G01–G15 | Keputusan arah v5 |
 
-Tugasmu berikutnya, berurutan:
+Pak Gathut menyarankan lingkupnya dibatasi menjadi studi kasus dalam konteks *chorale* Strube, karena setiap soal Strube punya konteks bab yang tidak diketahui model. Pilihan arah, rekomendasi, dan daftar tugas yang lengkap ada di [rencana-v5.md](../supervision/rencana-v5.md). Ringkasnya:
 
-1. Ketik 71 melodi latihan Strube di `research/literature/strube-melodies/` (format di README folder itu), jalankan `make melodies`, lalu cocokkan setiap berkas dengan halaman cetak.
-2. Ketik sembilan contoh cetak di `strube-example-fixtures.csv` untuk validasi langkah 2.
-3. Bawa naskah v4 dan [bimbingan-v4.md](../supervision/bimbingan-v4.md) ke Pembimbing I.
-4. Baca sumber inti (bagian 7) dan isi `researcher_read_status` di [reading-notes.csv](../records/reading-notes.csv).
-5. Setelah itu baru `make setup-v2`, `make preflight`, `make select`, dan `make pilot`.
+1. Tahan dulu pengetikan 71 melodi latihan Strube sampai arah v5 diputuskan.
+2. Baca bab "Harmonization of Chorales" Strube (1928, hlm. 174–179) di buku cetak, juga hlm. 45 dan 55.
+3. Putuskan arah v5, lalu konfirmasi ke Pak Gathut; lapor ke Bu Yoni.
+4. Ketik sembilan contoh cetak di `strube-example-fixtures.csv` untuk validasi langkah 2. Ini perlu di semua pilihan.
+5. Baca sumber inti (bagian 7) dan isi `researcher_read_status` di [reading-notes.csv](../records/reading-notes.csv).
+6. Model baru dipasang dan dijalankan setelah protokol versi baru disepakati.
 
 Keputusan desain dicatat di [research/protocol.md](../../../research/protocol.md). Cacat teknis dan perbaikannya dicatat di [maintenance.md](../../maintenance.md).
 
@@ -231,7 +233,7 @@ Pinjam lewat perpustakaan atau akses kampus bila bisa. Mulailah dari bagian yang
 | 3 | Strube, *The Theory and Use of Chords* (1928), dan terjemahan *Teori dan Penggunaan Akor (I)* oleh A. Gathut Bintarto T. (2015), Pembimbing I ([katalog perpustakaan ISI](https://opac.isi.ac.id/index.php?id=29353&p=show_detail)) | Baca bunyi kaidah, pengecualian, dan contoh cetak di kedua edisi. Peta halaman dan tiga perbedaan teks ada di [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 1 |
 | 4 | Huang dkk. (2019) §6.3, hlm. 798; Yan dkk. (2018) §4 dan rubrik suplemennya | Desain, ukuran, dan kategori kaidah berasal dari dua makalah ini. Bagian yang dibaca ada di [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 5 |
 | 5 | Hadjeres dkk., [DeepBach](https://proceedings.mlr.press/v70/hadjeres17a.html); Huang dkk., [Counterpoint by Convolution](https://archives.ismir.net/ismir2017/paper/000187.pdf) | Catat representasi, data latih, kendali yang tersedia, dan cara mengambil sampel. DeepBach memakai *pseudo-Gibbs sampling*; menyebutnya LSTM biasa yang menulis dari kiri ke kanan itu keliru |
-| 6 | Sumber landasan teori: Briot dkk. ([DOI buku](https://doi.org/10.1007/978-3-319-70163-9), hlm. 11–13 dan 243–249); [Storkey (2008)](https://homepages.inf.ed.ac.uk/amos/publications/Storkey2009TrainingTestDifferent.pdf); [Pearce dkk. (2002)](https://doi.org/10.1177/102986490200600203); [Huron (2001)](https://doi.org/10.1525/mp.2001.19.1.1), hlm. 2–5 dan 18–37 | Untuk setiap teori, tulis satu kalimat intinya dan pertanyaan penelitian yang dibantunya. Cocokkan dengan bagian 2 berkas ini. Halaman cetak Briot dkk. belum dicek di buku (PROGRESS, tugas 5) |
+| 6 | Sumber landasan teori: Briot dkk. ([DOI buku](https://doi.org/10.1007/978-3-319-70163-9), hlm. 11–13 dan 243–249); [Storkey (2008)](https://homepages.inf.ed.ac.uk/amos/publications/Storkey2009TrainingTestDifferent.pdf); [Pearce dkk. (2002)](https://doi.org/10.1177/102986490200600203); [Huron (2001)](https://doi.org/10.1525/mp.2001.19.1.1), hlm. 2–5 dan 18–37 | Untuk setiap teori, tulis satu kalimat intinya dan pertanyaan penelitian yang dibantunya. Cocokkan dengan bagian 2 berkas ini. Halaman cetak Briot dkk. belum dicek di buku (PROGRESS, tugas 7) |
 | 7 | Leemhuis dkk. (2020); Choi dkk. (2023); Fang dkk., [Bach or Mock?](https://arxiv.org/html/2006.13329v3); Wang dkk., [NotaGen](https://arxiv.org/html/2502.18008v5) | Jelaskan kenapa uji dengar tidak sama dengan patuh kaidah (Leemhuis), kenapa menekan paralel bisa merusak ciri lain (Choi), kenapa skor Fang mengukur kedekatan gaya, bukan pelanggaran, dan kenapa NotaGen tidak dipakai |
 | 8 | [NeurIPS reproducibility checklist](https://neurips.cc/public/guides/PaperChecklist) dan laporan [Pineau dkk.](https://www.jmlr.org/papers/v22/20-303.html) | Pakai daftar pertanyaannya untuk memeriksa paket buktimu: metode, lingkungan, data, ketidakpastian, perintah yang bisa diulang. Ini panduan riset, bukan aturan kampusmu |
 

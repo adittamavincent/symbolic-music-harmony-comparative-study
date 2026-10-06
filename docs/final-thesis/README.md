@@ -1,6 +1,6 @@
 # Final thesis v4
 
-v3 continued proposal v2 as the final thesis and is tagged `thesis/v3`; v4 is the active revision. Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
+v3 continued proposal v2 as the final thesis and is tagged `thesis/v3`; v4 is tagged `thesis/v4` and is still the text in the working tree. v5 is being planned after the first meeting with Pembimbing I ([supervision/rencana-v5.md](supervision/rencana-v5.md)). Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
 
 ## What is in this folder
 
@@ -12,15 +12,16 @@ final-thesis/
 ├── thesis/                        Manuscript source (LaTeX)
 ├── supervision/                   From and for the lecturers
 │   ├── peta-versi.tex             Version map (make map): every revision, who gave feedback, chapter status
-│   ├── feedback.md                Lecturer notes F01–F12 from the v2 review, with actions
+│   ├── feedback.md                Lecturer notes F01–F12 (v2 review) and Pembimbing I notes G01–G15 (v4), with actions
 │   ├── perubahan-v2-ke-v3.md      Every change from proposal v2 to v3 and its basis
 │   ├── review-teman-2026-10-04.md Peer review of v3 by a fellow student (P01–P17; not lecturer feedback)
 │   ├── perubahan-v3-ke-v4.md      Every change from v3 to v4 and its basis
 │   ├── bimbingan-v3.md            Handout for the v3 supervisor meeting
-│   └── bimbingan-v4.md            Handout for the v4 meeting with Pembimbing I
+│   ├── bimbingan-v4.md            Handout for the v4 meeting with Pembimbing I
+│   └── rencana-v5.md              Plan for v5 after that meeting: options, questions, tasks
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
-│   ├── defense-qa.md              All practice questions and answers (Q1–Q115, with 16a–c and 41a–b)
+│   ├── defense-qa.md              All practice questions and answers (Q1–Q123, with 16a–c and 41a–b)
 │   ├── model-dan-istilah.md       DeepBach, Coconet, and technical terms in plain Indonesian
 │   └── researcher-guide.md        Start here: the study and its five theories in plain Indonesian, study order, reading list
 └── records/                       Running records
@@ -41,6 +42,7 @@ Where to start:
 | Explain why the design changed after v2 | [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md) |
 | Explain what changed in v4 | [supervision/perubahan-v3-ke-v4.md](supervision/perubahan-v3-ke-v4.md) |
 | Prepare the v4 supervisor meeting | [supervision/bimbingan-v4.md](supervision/bimbingan-v4.md) |
+| Know what Pembimbing I said and what to do for v5 | [supervision/rencana-v5.md](supervision/rencana-v5.md), then G01–G15 in [supervision/feedback.md](supervision/feedback.md) |
 | Check what the lecturers actually asked | [supervision/feedback.md](supervision/feedback.md) |
 | Find when and why something was decided | [records/research-log.md](records/research-log.md) |
 | Edit the manuscript | The table below |
@@ -73,6 +75,6 @@ make -B thesis
 
 The PDF is `scratch/thesis.pdf` from the repository root. Make removes temporary auxiliary files after compiling. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, current PDFs, and legacy build files. `make aux-clean` preserves PDFs.
 
-`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3` exists; create `thesis/v4` after the v4 sources are committed and checked. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
+`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3` and `thesis/v4` exist; create `thesis/v5` after the v5 sources are committed and checked. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
 
 Use [eval.md](eval.md) to check writing. See [maintenance.md](../maintenance.md) for instrument and tooling issues. Do not fill absent findings with expected outcomes.

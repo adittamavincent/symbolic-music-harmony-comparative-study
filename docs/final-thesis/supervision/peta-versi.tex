@@ -1,4 +1,4 @@
-% Peta versi naskah: proposal v1 sampai skripsi v4.
+% Peta versi naskah: proposal v1 sampai skripsi v4, dengan rencana v5.
 % Build dari root repositori: make map  ->  scratch/peta-versi.pdf
 % Perbarui setiap kali tag versi baru dibuat atau ada pemberi masukan baru.
 \documentclass[a4paper,10pt]{article}
@@ -43,7 +43,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\fancyfoot[L]{\footnotesize Peta versi naskah, diperbarui 5 Oktober 2026}
+\fancyfoot[L]{\footnotesize Peta versi naskah, diperbarui 6 Oktober 2026}
 \fancyfoot[R]{\footnotesize\thepage}
 
 \tikzset{
@@ -62,7 +62,7 @@
 
 {\LARGE\bfseries Peta Versi Naskah}\par
 \vspace{2pt}
-Proposal v1 sampai skripsi v4: pemicu revisi, pemberi masukan, jenisnya, dan status bab. Rincian setiap perubahan ada di \texttt{perubahan-v2-ke-v3.md}, \texttt{perubahan-v3-ke-v4.md}, \texttt{feedback.md}, dan \texttt{review-teman-2026-10-04.md}.
+Proposal v1 sampai skripsi v4, dengan rencana v5: pemicu revisi, pemberi masukan, jenisnya, dan status bab. Rincian setiap perubahan ada di \texttt{perubahan-v2-ke-v3.md}, \texttt{perubahan-v3-ke-v4.md}, \texttt{feedback.md}, \texttt{review-teman-2026-10-04.md}, dan \texttt{rencana-v5.md}.
 
 \vspace{4pt}
 \begin{center}
@@ -156,17 +156,21 @@ Proposal v1 sampai skripsi v4: pemicu revisi, pemberi masukan, jenisnya, dan sta
     Draf lima bab dan infrastruktur riset. BAB IV--V dihapus 30 September 2026 karena template meminta BAB I--III sebelum data ada. Tidak dihitung sebagai versi.};
   \draw[masuk=tidaktercatat, dashed] (draf.north) -- ++(0,0.45);
 
-  \node[sumberputus=pembimbing, anchor=north, text width=5.6cm] (next) at (20.4,-3.15) {%
-    \textbf{Berikutnya: bimbingan} \hfill \textit{pembimbing}\\
-    Pembimbing I A.\ Gathut Bintarto Triprasetyo; Pembimbing II Veronica Yoni Kaestri. Belum ada catatan. Bahan: \texttt{bimbingan-v4.md}.};
-  \draw[masuk=pembimbing, dashed] (v4.south) -- (next.north);
+  \node[sumber=pembimbing, anchor=north, text width=5.6cm] (next) at (20.4,-3.15) {%
+    \textbf{Pembimbing I, Pak Gathut} \hfill \textit{pembimbing}\\
+    Bimbingan v4, transkrip diserahkan 6 Oktober 2026. \textbf{G01--G15}: batasi lingkup; setiap soal Strube punya konteks bab; studi kasus dalam konteks \textit{chorale} Strube; perbandingan dua model terlalu luas untuk sekarang.};
+  \draw[masuk=pembimbing] (v4.south) -- (next.north);
+  \node[sumberputus=tidaktercatat, anchor=north, text width=3.7cm] (v5) at (15.35,-3.15) {%
+    \textbf{v5 (rencana)} \hfill \textit{belum ada tag}\\
+    Arah belum diputuskan; pilihan A--C di \texttt{rencana-v5.md}. Pembimbing II menunggu Pembimbing I.};
+  \draw[alur, dashed] (next.west) -- (v5.east |- next.west);
 \end{tikzpicture}
 \end{center}
 
 \vspace{2pt}
 \begin{tikzpicture}[x=1cm,y=1cm]
   \node[font=\small\bfseries, anchor=west] at (0,0) {Jenis sumber:};
-  \foreach \c/\t [count=\i] in {dosen/Masukan dosen, pembimbing/Pembimbing (belum ada), teman/Review teman,
+  \foreach \c/\t [count=\i] in {dosen/Masukan dosen, pembimbing/Masukan pembimbing, teman/Review teman,
       audit/Audit asisten AI, peneliti/Keputusan peneliti, alat/Alat bantu AI, tidaktercatat/{Acuan, tidak langsung, tidak tercatat}}
     \node[draw=\c, very thick, fill=\c!10, rounded corners=1pt, font=\scriptsize, anchor=west, inner sep=3pt]
       at ({2.2+(\i-1)*3.35},0) {\t};
@@ -246,6 +250,12 @@ Status lengkap dan gerbang penyelesaian ada di \texttt{PROGRESS.md}.
 \end{itemize}
 Tidak berubah: judul, pertanyaan penelitian, variabel, hipotesis, lima kaidah, instrumen 2.0, dan desain tanpa penilai manusia.
 
+\textbf{v4 ke v5 (rencana, belum ada perubahan naskah).} Pemicu: bimbingan pertama dengan Pembimbing I.
+\begin{itemize}
+  \item \textcolor{pembimbing}{\textbf{Masukan pembimbing (G01--G15):}} batasi lingkup; soal Strube ditulis untuk tahap tertentu, sedangkan model tidak tahu konteks itu; ambil konteks \textit{chorale} Strube saja dan lacak kemiripannya dengan Bach; jadikan studi kasus; lokasi kesalahan berguna bagi pengajar; pertanyaan yang tersisa menjadi saran.
+  \item \textcolor{peneliti}{\textbf{Keputusan peneliti (belum diambil):}} pilihan A (satu melodi latihan 236, Coconet, dijalankan berulang), B (desain v4 dengan label bab), atau C (sepuluh melodi bab \textit{chorale}); rincian di \texttt{rencana-v5.md}.
+\end{itemize}
+
 \section{Cara memperbarui}
 
 Sumber peta ini adalah \texttt{docs/final-thesis/supervision/peta-versi.tex}; bangun dengan \texttt{make map}. Tambahkan satu kotak versi di peta dan satu kolom di tabel struktur setiap kali tag versi baru dibuat. Tambahkan pemberi masukan baru ke daftarnya beserta jenis dan kode catatannya. Catatan dosen atau pembimbing dicatat di \texttt{feedback.md}; review lain di berkas terpisah seperti review teman. Jangan menaikkan jenis pemberi masukan: laporan tidak langsung tetap laporan tidak langsung sampai dosen yang bersangkutan mengonfirmasinya.
@@ -264,8 +274,8 @@ Manda & Teman satu angkatan & \textcolor{teman}{Review teman} & v3 & P01--P17 & 
 Prof.\ Andre & Disebut Manda & Laporan tidak langsung & -- & Dalam P04, P09 & Belum dikonfirmasi \\
 Asisten AI (Claude) & Auditor dan penyusun draf atas permintaan peneliti & \textcolor{audit}{Audit asisten AI} & v3 & A01--A39 & Sebagian ditangani di v4 \\
 Jules (google-labs-jules) & Alat AI lewat PR \#1 & \textcolor{alat}{Alat bantu AI} & draf v2 & -- & Masuk ke v2 \\
-A.\ Gathut Bintarto Triprasetyo & Pembimbing I & \textcolor{pembimbing}{Masukan pembimbing} & -- & -- & Belum ada pertemuan tercatat; bahan \texttt{bimbingan-v4.md} \\
-Veronica Yoni Kaestri & Pembimbing II & \textcolor{pembimbing}{Masukan pembimbing} & -- & -- & Belum ada catatan \\
+A.\ Gathut Bintarto Triprasetyo & Pembimbing I & \textcolor{pembimbing}{Masukan pembimbing} & v4 (dijelaskan lisan) & G01--G15 & Arah v5 belum diputuskan; \texttt{rencana-v5.md} \\
+Veronica Yoni Kaestri & Pembimbing II & \textcolor{pembimbing}{Masukan pembimbing} & -- & -- & Belum ada catatan; menurut peneliti, menunggu Pembimbing I \\
 \bottomrule
 \end{tabularx}
 
@@ -278,7 +288,7 @@ Setiap perubahan dicatat dengan satu dasar. Jenis dasar menentukan cara menjelas
 \textbf{Jenis} & \textbf{Arti} & \textbf{Contoh} & \textbf{Boleh disebut ``permintaan dosen''?} \\
 \midrule
 \textcolor{dosen}{\textbf{Masukan dosen}} & Catatan dosen yang membaca naskah & F01--F12 & Ya, untuk catatan itu saja \\
-\textcolor{pembimbing}{\textbf{Masukan pembimbing}} & Catatan Pembimbing I atau II & Belum ada & Ya, setelah tercatat \\
+\textcolor{pembimbing}{\textbf{Masukan pembimbing}} & Catatan Pembimbing I atau II & G01--G15 & Ya, untuk catatan itu saja \\
 \textbf{Masukan penguji} & Catatan penguji sidang & Belum tercatat & Ya, setelah tercatat \\
 \textcolor{teman}{\textbf{Review teman}} & Pembacaan oleh mahasiswa lain & P01--P17 & Tidak \\
 \textcolor{tidaktercatat}{\textbf{Laporan tidak langsung}} & Ucapan dosen yang disampaikan orang lain & Prof.\ Andre dan Bu Suryati lewat Manda (P04, P08, P09) & Tidak; tandai belum dikonfirmasi \\

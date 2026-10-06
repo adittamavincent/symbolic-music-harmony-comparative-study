@@ -1,14 +1,19 @@
-# Lecturer feedback from proposal v2
+# Lecturer and supervisor feedback
+
+This file holds two records: the Seminar Musikologi 2 review of proposal v2 (F01–F12) and the first meeting with Pembimbing I about thesis v4 (G01–G15, [below](#pembimbing-i-meeting-on-thesis-v4)).
+
+## Lecturer feedback from proposal v2
 
 The researcher reports an in-class, one-to-one tutoring review of v2. The researcher supplied their own handwritten-style notes on 2026-09-30. The notes are the researcher's record, not the lecturer's exact wording. Speaker names and the review date were not supplied.
 
-## Review record
+### Review record
 
 - Review date: not supplied (the researcher described it as "kemarin", the day before 2026-09-30)
 - Lecturer(s): Bu Suryati and Pak Galih, lecturers of the course Seminar Musikologi 2 (supplied by the researcher on 2026-10-02; full names and titles not supplied)
 - Setting: in-class review in Seminar Musikologi 2
 - Reviewed version: proposal v2
 - Deadline and department guide: department template *Riset – Template Proposal TA Penelitian 2026* supplied locally under `references/`; deadline not supplied
+- Later description by the researcher (to Pembimbing I, recorded in the transcript of the G01–G15 meeting): the lecturers read the manuscript briefly for writing structure; the only substantive remark concerned the title, whose subject and predicate were reversed ("subjek predikatnya kebalik"). This is the researcher's recollection; F01–F12 below are unchanged.
 - Original notes, as written by the researcher:
 
 ```
@@ -40,7 +45,7 @@ Quant: harus ada hipotesis dan variabel
 
 The researcher also reported being unsure whether the reviewer asked for a qualitative or a quantitative design, and was asked to define the grand theory clearly.
 
-## Second set of notes (supplied 2026-09-30)
+### Second set of notes (supplied 2026-09-30)
 
 The researcher supplied further points from the same review context on 2026-09-30, written in their own words. The date of the lecturer remarks and the speaker were not supplied. Summary of the researcher's wording (Indonesian):
 
@@ -49,7 +54,7 @@ The researcher supplied further points from the same review context on 2026-09-3
 - State clearly whether the study is qualitative or quantitative, citing a common source such as Creswell or Sugiyono.
 - State the grand theory.
 
-## Action record
+### Action record
 
 The interpretations below are ours. The table shows how the manuscript answers each note on 2026-10-03; section locations were updated to v4 on 2026-10-05. The first answers (2026-09-30) were written for the earlier design with three models and conditioning levels A–D; the researcher replaced that design on 2026-10-02 without new lecturer comments. Both steps are in [research-log.md](../records/research-log.md).
 
@@ -71,3 +76,41 @@ The interpretations below are ours. The table shows how the manuscript answers e
 Later reviews: a fellow student's reading of v3 (4 October 2026) is recorded separately as P01–P17 in [review-teman-2026-10-04.md](review-teman-2026-10-04.md). It is peer feedback, not lecturer feedback, and is not added to this table.
 
 Add one row per distinct request. Close a row only when the change and its evidence are linked. Record later supervisor decisions with dates; do not replace the original review note with our interpretation.
+
+## Pembimbing I meeting on thesis v4
+
+### Meeting record
+
+- Supervisor: A. Gathut Bintarto Triprasetyo, Pembimbing I (translator of the 2015 Indonesian edition of Strube, volume I)
+- Meeting date: not stated in the transcript; the researcher supplied the transcript on 2026-10-06 ("setelah bertemu pembimbing 1 pak gathut")
+- Setting: one-to-one supervision meeting, recorded
+- Version discussed: thesis v4, explained orally by the researcher (models, Bach Doodle, Huang et al., melody origin). The transcript does not say whether Pak Gathut had read the v4 PDF or the handout `bimbingan-v4.md`.
+- Source: machine transcript with two speaker labels, kept outside the repository (`~/Downloads/transcript.txt` when supplied). Speaker labels often switch in the middle of a turn, and several words are misheard (for example "Google Doodle Bug" for Bach Doodle, "Bukasariha", "untuk Apache"). The rows below paraphrase only passages whose meaning is clear from the context; short quotes are the transcript's wording. Read the transcript itself before quoting him.
+
+### Notes and interpretation
+
+These are lecturer (supervisor) notes. Our interpretation and the consequences for v5 are ours; the options and the recommendation are in [rencana-v5.md](rencana-v5.md). No manuscript text has changed yet.
+
+| ID | What Pak Gathut said (paraphrase) | Our interpretation | Consequence for v5 | Still to confirm |
+| --- | --- | --- | --- | --- |
+| G01 | Strube's book proceeds in stages; at each stage it applies fixed rules. Strube traced how people arranged tones from habit and turned it into a guide ("panduan"). How strict ("saklek") is that guide, and does the application detect the context ("konteksnya sampai mana")? | The rules in Strube belong to the stage of the book where they are taught. The models know nothing about stages; they learned only from Bach chorales. | For every melody used, state the Strube chapter it comes from and what that chapter expects; apply rules and exceptions that fit that context. | — |
+| G02 | Each Strube exercise has its own purpose in context ("konteks peruntukannya"). The machine treats an exercise from the front of the book and one from the back alike. Feeding exercises without their context may not match, and in his estimate the result can stray too far ("melencengnya bisa terlalu jauh"). | v4 pools 71 melodies from ten chapters (Triads through Minor Modes) into one group and applies the same five rules to all of them. This is the point he questions. | Either annotate and analyse by chapter, or restrict the study to one context. Strube himself makes rules stage-dependent: parallel fifths between IV and II are "perfectly harmless" but avoided "for the present" (1928, p. 45); exercise 76 marks where the Neapolitan sixth is to be used (p. 55). | — |
+| G03 | The output is random and the progression is not constrained by context, so what is it for ("terus itu mau buat apa?"), unless the machine is given context, as a prompt does for a chatbot. | He asks what measuring an unconstrained, stochastic model tells us. The researcher answered that the input is MusicXML, not a text prompt, and that the same melody can give different outputs. | State why repeated generations are measured. In a case design the randomness becomes the object: how often and where a violation appears across many harmonizations of the same melody (G08). | — |
+| G04 | "Terus kamu gunakan Strube-nya buat apa?" The researcher answered that the first aim was to trace whether Strube's guide resembles Bach through the AI; Pak Gathut summarised the aim as tracing ("pelacakan"). | The role of Strube in the study did not come across in the oral explanation. | One clear statement of Strube's role in BAB I and II: source of the rules, of their context (chapter), and of the exceptions. Practice answer: `study/defense-qa.md` Q116. | — |
+| G05 | The study needs limits ("perlu dikasih batasan", "kamu harus membatasi", "saran saya dibatasi dulu aja"); the researcher's time is limited, so choose what gives results quickly. The choice is the researcher's ("tinggal kamu aja milih"); explore again and process it soon. | Advice to narrow the scope, not a rejection of the topic. | Design decision D0 in `PROGRESS.md`; options in `rencana-v5.md`. | Which narrowing he expects (G06, G07) |
+| G06 | Take only a context that Strube explains: if chorale, then the chorale context only, starting from Strube's chorale exercises. Then trace which works Strube's chorale context refers to; the information lies in where the similarity is. | Strube's chapter "Harmonization of Chorales" (1928, pp. 174–179) gives chorale-specific guidance and says its melodies are taken from J. S. Bach (p. 174). v4 excluded this chapter because its melodies would duplicate the Bach group. | Candidate material: the four-voice Model (no. 235) and exercise 236, melodies I–X. Identify the Bach chorale behind each melody and compare model output with Bach's own harmonization and with Strube's chorale guidance. Page 179 is missing from the scan (p. 177 was scanned twice). | That this chapter is the context he meant |
+| G07 | Make it a case: take one sample from Gustav (Strube), look at its context and its similarity with Bach, run it through the machine, then review where it leaves the rules ("ambil case-nya aja"; "untuk yang sekarang case aja dulu, kecil aja dulu"). Comparing the two AIs seemed too much for now ("terlalu ini"), though possible later. | A case study of a small number of melodies replaces the two-group comparison of v4 as the core; the model comparison becomes optional or future work. The sentence about the two AIs is partly garbled. | Title, questions, variables, hypotheses, sample, and analysis plan change. Conflicts with the quantitative design written to answer F02, F06, F07, and F11; the approach must be agreed again. | Number of melodies; one or two models; whether a descriptive case study without hypotheses is acceptable |
+| G08 | A machine can only show probabilities, and it works fast; the useful information is where errors are likely to occur, which gives insight to teachers ("insight buat pengajar"). | Report violations by their place in the score (measure, beat, phrase end, fermata), not only as rates per measure. | Analysis by position across repeated harmonizations of one melody; Manfaat Praktis aimed at harmony teachers. | — |
+| G09 | Example of Mozart's *Musical Joke* (two violins, viola, bass, two horns): counterpoint and parallels still matter with more than four parts. Parallels in specific examples must be read against the specific chord progression; the human element remains. | A parallel is judged in its harmonic context, not by counting alone. | Discuss each flagged parallel in the case against its progression and Strube's exceptions. The Mozart work is his example, not yet a cited source. | — |
+| G10 | Machines have no feeling or mood; teaching includes feeling that an ending ends and what mood it carries; "humanize" leaves many choices. Professors in Germany are still trying to understand Bach's thinking, and it still has gaps. | Expression and human judgment lie outside a rule count. | State this as a limitation (BAB III, later BAB V), linked to Pearce et al. and Huron in BAB II. | — |
+| G11 | Questions that remain belong in the suggestions: the research opens further possibilities, and not everything has to be solved or anticipated. | Unresolved questions go to Saran (BAB V). | If dropped, the two-model comparison, the 71-melody comparison, and melody origin become suggestions for further research. | — |
+| G12 | If the study stays with chorale, explain which rules are brought in to handle chorale. Chorale progressions are already complex; chorale is four independent voices, and vertical and horizontal probabilities differ, the horizontal being more fluctuating. | BAB II must explain the chorale-specific rules and the independence of the four voices. | Strube's chorale guidance on p. 174 (six-four chords rarely; ninth chords excluded except rootless forms; altered chords avoided except the augmented triad in first inversion and augmented-sixth chords; a root-position tonic triad on fermatas; half cadence on the dominant; cross-relation after a fermata permitted; crossing not over the soprano allowed; minor chorales often end on a major tonic; modulation mostly to near-related keys). Huron already covers voice independence. | Which of these the program checks and which the researcher analyses |
+| G13 | The researcher proposed combining a rule-based "expert system" with the AI output, to examine contexts where Strube allows parallels and report the share of errors there. Pak Gathut agreed and repeated: take a sample. | Researcher proposal, welcomed by the supervisor. Instrument v2 is already a rule-based checker; the new part would be a context layer for the chosen case. | Add context-aware checks or annotations for the case melody. | — |
+| G14 | The studies the thesis builds on come from computer science; ideally an expert in music and computer science would supervise this. That is acceptable, but use a case so the thesis is not too heavy to write. | Concern about technical depth and workload. | Keep the technical explanation short; add no new computer-science depth. | — |
+| G15 | On melody origin and the title, the transcript reads roughly "you do not say it directly, this is chorale that you discuss; chorale is already complex". | Possibly: the study is about chorale harmonization but the title and questions do not say so. Garbled. | Draft v5 titles name chorale (see `rencana-v5.md`). | Whether he asked for this |
+
+Remarks not entered as requests: the teaching gap at the institution (students struggle with basic I–IV–V progressions; knowledge, listening, and connection have to be built together), and career advice (study music computer science later). These concern teaching and the researcher's future, not the manuscript. The educational remark may still inform the background of v5.
+
+Pembimbing II: the researcher reported that Bu Yoni (Veronica Yoni Kaestri) asked that Pembimbing I see the work first. A remark about a signature or attendance record is unclear in the transcript.
+
+Questions from `bimbingan-v4.md` that the transcript does not show being discussed: the structure of the landasan teori, approval of the title and questions, citing his 2015 translation, Strube as the course textbook, the department rule on disclosing AI assistance, and freezing the protocol after the pilot. They remain open.
