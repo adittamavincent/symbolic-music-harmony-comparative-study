@@ -4,6 +4,8 @@ Disusun 6 Oktober 2026 dari transkrip bimbingan dengan Pak Gathut. Ini dokumen k
 
 Pilihan dan rekomendasi di bawah adalah usulan asisten setelah membaca transkrip, naskah v4, dan buku Strube. Keputusan arah ada di tanganmu (G05), lalu dikonfirmasi ke Pak Gathut.
 
+Pembaruan 8 Oktober 2026: atas arahan peneliti, pilihan A–C di bawah tidak dipakai. Usulan v5 sekarang di [rancangan-kesepakatan-v5.md](rancangan-kesepakatan-v5.md): v4 dengan empat perubahan, yaitu tetap dua model, 40 melodi *chorale* Bach dari korpus tanpa pengetikan, dan pertanyaan 3 tentang letak pelanggaran di sekitar fermata atau di dalam frasa. Lembar untuk bimbingan berikutnya ada di [bimbingan-arah-v5.md](bimbingan-arah-v5.md).
+
 ## 1. Inti masukan Pak Gathut
 
 1. **Batasi.** Lingkup v4 terlalu lebar untuk waktumu. Pilih yang cepat menghasilkan (G05, G14).

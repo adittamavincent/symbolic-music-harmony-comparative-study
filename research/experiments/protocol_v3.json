@@ -1,0 +1,91 @@
+{
+  "protocol_version": "3.0",
+  "protocol_date": "2026-10-08",
+  "previous_version": "2.1 (research/experiments/protocol_v2.json, kept unchanged as history)",
+  "frozen": false,
+  "frozen_note": "Set frozen to true, with the date, only after supervisor agreement and the pilot. The main stage refuses to run while frozen is false.",
+  "instrument_version": "2.0",
+  "io_version": "1.0",
+  "generations_per_melody": 5,
+  "root_seed": 20261004,
+  "melodies": {
+    "origins": [
+      "bach"
+    ],
+    "bach_sample_seed": 20261004,
+    "bach_sample_size": 40,
+    "bach_sample_rule": "40 eligible, non-duplicate Bach chorale sopranos from the music21 corpus that both models accept, drawn with bach_sample_seed; Strube states that his chorale exercises are Bach melodies (1928, p. 174), so no exercise is typed",
+    "pilot_size": 3,
+    "pilot_seed": 41004,
+    "pilot_from_outside_main_sample": true
+  },
+  "models": {
+    "deepbach": {
+      "repository": "https://github.com/Ghadjeres/DeepBach.git",
+      "commit": "6d75cb940f3aa53e02f9eade34d58e472e0c95d7",
+      "resources_urls": [
+        "https://www.dropbox.com/s/iuz4ml857ycyyat/deepbach_pytorch_resources.tar.gz?dl=1",
+        "https://www.dropbox.com/scl/fi/26o7byo483tsm9k3jfbaj/deepbach_pytorch_resources.tar.gz?rlkey=fqkddap7on2ix81wlj8tsqklp&dl=1"
+      ],
+      "resources_sha256": null,
+      "num_iterations": 500,
+      "temperature": 1.0,
+      "batch_size_per_voice": 8,
+      "hyperparameters": {
+        "note_embedding_dim": 20,
+        "meta_embedding_dim": 20,
+        "num_layers": 2,
+        "lstm_hidden_size": 256,
+        "dropout_lstm": 0.5,
+        "linear_hidden_size": 256
+      },
+      "source_of_defaults": "deepBach.py (num_iterations 500, model sizes) and DeepBach/model_manager.py generation() (temperature 1.0, batch_size_per_voice 8), commit 6d75cb9"
+    },
+    "coconet": {
+      "package": "@magenta/music@1.23.1",
+      "checkpoint_url": "https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach",
+      "numIterations": 96,
+      "temperature": 0.99,
+      "timeout_seconds_per_job": 1800,
+      "source_of_defaults": "music/src/coconet/model.ts infill() defaults, magenta-js master 96bad88"
+    }
+  },
+  "quality_control": {
+    "four_voices_on_grid": true,
+    "monophonic_voices": true,
+    "soprano_identical_to_input": true,
+    "output_length_equals_input": true,
+    "every_generated_voice_sounds": true
+  },
+  "analysis": {
+    "alpha": 0.05,
+    "rules": [
+      "parallel_fifths",
+      "parallel_octaves",
+      "spacing",
+      "crossing",
+      "overlap"
+    ],
+    "q1": "descriptive: each model and Bach's own harmonization of the same melodies, model minus Bach per melody, copy_share",
+    "q2_test": "Wilcoxon signed-rank, DeepBach minus Coconet per melody, two-sided, zero_method wilcox, method auto",
+    "zone_definition": "F: a motion whose start or arrival step lies inside a soprano note carrying a fermata (parallel fifths, parallel octaves, overlap), or an event inside such a note (spacing, crossing); I: everything else. Flags and opportunities are instrument 2.0 main counts (research/phrase_zones.py)",
+    "zone_test": "q3: Wilcoxon signed-rank per model on fermata-zone rate minus inside-phrase rate per melody; each rate is flags divided by opportunities, both summed over the melody's valid generations; two-sided, zero_method wilcox, method auto; melodies without opportunities in a zone are left out of that rule",
+    "holm_families": [
+      "q2: five rules",
+      "q3 DeepBach: five rules",
+      "q3 Coconet: five rules"
+    ],
+    "effect_sizes": "matched-pairs rank-biserial; positive means DeepBach higher (q2) or the fermata zone higher (q3)",
+    "secondary": "weighted penalty index for q2, tested outside the Holm family",
+    "bach_zone_pattern": "descriptive: the same zone rates on Bach's own harmonizations of the sampled melodies",
+    "sensitivity": [
+      "a: q2 with motions starting while the soprano holds a fermata note excluded",
+      "b: DeepBach seen versus unseen Bach melodies, only if the training membership is verified",
+      "c: q2 and q3 on melodies whose five generations all pass quality control for both models",
+      "d: q2 and q3 with repeated equal pitches merged in every voice before measuring"
+    ],
+    "examples_per_rule": 1,
+    "examples_seed": 20261005,
+    "optional_extension": "DeepBach with its fermata metadata removed, on the same melodies, as a manipulated variable; not part of 3.0 unless the supervisors ask for it"
+  }
+}

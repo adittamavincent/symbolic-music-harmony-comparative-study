@@ -36,9 +36,13 @@ PARTS = [
     ]),
     ("Status dan bimbingan", [
         f"{THESIS_DOCS}/PROGRESS.md",
+        f"{THESIS_DOCS}/supervision/bimbingan-arah-v5.md",
+        f"{THESIS_DOCS}/supervision/rancangan-kesepakatan-v5.md",
+        f"{THESIS_DOCS}/supervision/rencana-v5.md",
         f"{THESIS_DOCS}/supervision/bimbingan-v4.md",
         f"{THESIS_DOCS}/supervision/feedback.md",
         f"{THESIS_DOCS}/supervision/review-teman-2026-10-04.md",
+        f"{THESIS_DOCS}/supervision/perubahan-v4-ke-v5.md",
         f"{THESIS_DOCS}/supervision/perubahan-v3-ke-v4.md",
         f"{THESIS_DOCS}/supervision/perubahan-v2-ke-v3.md",
         f"{THESIS_DOCS}/supervision/bimbingan-v3.md",

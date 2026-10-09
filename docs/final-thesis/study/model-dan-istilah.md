@@ -151,7 +151,7 @@ Ini penjelasan yang mungkin, bukan temuan penelitian. Penelitian ini tidak mengu
 2. Bach sendiri kadang melanggar. Huang dkk. menghitung 0,023 kuint dan 0,009 oktaf sejajar per birama pada chorale Bach.
 3. Pengocokan dadu kadang memilih nada berpeluang kecil.
 4. Setiap tebakan melihat sekeliling, tetapi tidak ada pemeriksa akhir yang memastikan seluruh hasil bebas kesalahan.
-5. Bila melodi tidak menyerupai data latih (*out of distribution*), peluang yang dipelajari kurang cocok. Inilah gagasan Huang yang diuji ulang lewat pertanyaan 3. Di BAB II, gagasan ini dijelaskan dengan teori pergeseran *dataset* Storkey (2008): aturan yang benar tidak berubah, tetapi model hanya mendekati aturan itu dari contoh yang pernah dilihatnya.
+5. Bila melodi tidak menyerupai data latih (*out of distribution*), peluang yang dipelajari kurang cocok. Inilah gagasan Huang yang diuji ulang lewat pertanyaan 3 di v4, dengan teori pergeseran *dataset* Storkey (2008): aturan yang benar tidak berubah, tetapi model hanya mendekati aturan itu dari contoh yang pernah dilihatnya. Di v5 semua melodi berasal dari chorale Bach, dan pertanyaan 3 diganti letak pelanggaran dalam frasa, jadi gagasan ini tidak diuji lagi.
 6. Bentuk partitur membatasi hasil, misalnya Coconet tidak dapat menulis nada yang diulang. Pengaruhnya diperiksa dengan analisis sensitivitas d (Q113).
 
 ## 6. Kenapa hasil tidak boleh disebut "LSTM lebih baik daripada CNN"

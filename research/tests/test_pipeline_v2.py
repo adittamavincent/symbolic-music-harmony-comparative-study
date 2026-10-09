@@ -1,5 +1,6 @@
-"""Software checks for the protocol-version-2 pipeline: melody typing, melody sets,
-generation runs, quality control, measurement variants, statistics, and run checks.
+"""Software checks for the pipeline (protocol 3.0, with the 2.1 path kept): melody typing, melody sets,
+sample selection, generation runs, quality control, measurement variants, phrase zones, statistics,
+and run checks.
 
 No model is loaded. Generation is exercised with the fake backend, whose output
 is a fixed-interval stand-in and never research data.
@@ -15,11 +16,14 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import importlib.util
+
 import analysis_v2
 import evaluate_v2
 import generation_v2
 import melody_sets
 import numpy as np
+import phrase_zones
 import run_checks_v2
 from melody_text import (
     MelodyTextError,
@@ -32,6 +36,15 @@ from scipy import stats
 from voice_leading_v2 import VoiceGrid, evaluate_grids
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "strube-melodies"
+PROTOCOL_V21 = generation_v2.RESEARCH / "experiments" / "protocol_v2.json"
+
+
+def load_cli():
+    path = generation_v2.RESEARCH / "experiments" / "scripts" / "v2.py"
+    spec = importlib.util.spec_from_file_location("pipeline_cli", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def write_text(directory, name, body):
@@ -190,9 +203,28 @@ class RunTests(unittest.TestCase):
             score = next(run.dir.glob("scores/deepbach/*.musicxml"))
             score.write_text(score.read_text() + " ", encoding="utf-8")
             self.assertTrue(any("changed" in p for p in run_checks_v2.check_run(run.dir, ["deepbach", "coconet"], 2)))
-            summary = analysis_v2.analyze_run(run.dir)
+            flags = (run.dir / "evaluation" / "flags.csv").read_text(encoding="utf-8").splitlines()
+            self.assertTrue(flags[0].endswith(",zone"))
+            summary = analysis_v2.analyze_run(run.dir)  # protocol 3.0: zone test, no origin test
             self.assertEqual(len(summary["q2"]), 6)
+            self.assertEqual(len(summary["q3_zone"]), 10)
+            self.assertEqual(summary["q3"], [])
+            self.assertEqual(len(summary["zone_pattern"]), 15)
+            self.assertTrue((run.dir / "analysis" / "tables" / "q3_zona.tex").exists())
+            self.assertFalse((run.dir / "analysis" / "q3_mannwhitney.csv").exists())
+            figures = analysis_v2.plot_run(run.dir)
+            self.assertTrue(any(f.name == "zona_fermata.png" for f in figures))
+
+    def test_protocol_21_path_still_runs_the_origin_test(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = generation_v2.FakeBackend("deepbach"), generation_v2.FakeBackend("coconet", offsets=(8, 16, 24))
+            run = self.make_run(tmp, [a, b], protocol=generation_v2.load_protocol(PROTOCOL_V21))
+            for backend in (a, b):
+                generation_v2.generate(run, backend, 2, 1, progress=lambda m: None)
+            evaluate_v2.evaluate_run(run.dir)
+            summary = analysis_v2.analyze_run(run.dir)
             self.assertEqual(len(summary["q3"]), 12)
+            self.assertEqual(summary["q3_zone"], [])
             self.assertTrue((run.dir / "analysis" / "tables" / "q3_mannwhitney.tex").exists())
 
     def test_deepbach_symbols_parse_without_model(self):
@@ -240,6 +272,78 @@ class QualityAndVariantTests(unittest.TestCase):
         self.assertEqual(merged["counts"]["spacing"], 1)
 
 
+def event_grid(pitches, fermata_events=(), steps_per_event=4):
+    """A VoiceGrid with one note per event, each lasting steps_per_event sixteenths."""
+    midi, onset, fermata = [], [], []
+    for index, pitch in enumerate(pitches):
+        for step in range(steps_per_event):
+            midi.append(pitch)
+            onset.append(step == 0)
+            fermata.append(index in fermata_events)
+    return VoiceGrid(midi, [None] * len(midi), onset, fermata)
+
+
+class PhraseZoneTests(unittest.TestCase):
+    def grids(self):
+        # Fermata on the third soprano note. S-A fifths move 0->4 (inside the phrase) and 4->8 (arrive on the
+        # fermata). A-T spacing over an octave sounds on the fermata; S-A spacing over an octave after it.
+        return [event_grid([72, 74, 76, 77], fermata_events={2}), event_grid([65, 67, 69, 62]),
+                event_grid([55, 55, 55, 55]), event_grid([48, 48, 48, 48])]
+
+    def test_flags_are_sorted_by_zone(self):
+        grids = self.grids()
+        result = evaluate_grids(grids, 1)
+        counts, zones = phrase_zones.zone_counts(grids, result["flags"])
+        self.assertEqual(counts["parallel_fifths"]["F"][0], 1)
+        self.assertEqual(counts["parallel_fifths"]["I"][0], 1)
+        self.assertEqual(counts["spacing"]["F"][0], 1)
+        self.assertEqual(counts["spacing"]["I"][0], 1)
+        self.assertEqual(len(zones), len(result["flags"]))
+        by_flag = {(f["rule"], f["pair"], f["step"]): z for f, z in zip(result["flags"], zones)}
+        self.assertEqual(by_flag[("parallel_fifths", "S-A", 4)], "I")
+        self.assertEqual(by_flag[("parallel_fifths", "S-A", 8)], "F")
+
+    def test_zones_add_up_to_the_instrument_totals(self):
+        grids = self.grids()
+        result = evaluate_grids(grids, 1)
+        counts, _ = phrase_zones.zone_counts(grids, result["flags"])
+        for rule in result["counts"]:
+            self.assertEqual(counts[rule]["F"][0] + counts[rule]["I"][0], result["counts"][rule])
+            self.assertEqual(counts[rule]["F"][1] + counts[rule]["I"][1], result["opportunities"][rule])
+
+    def test_zone_rate_pools_counts_and_skips_empty_zones(self):
+        row = {"main_zone_overlap_F_count": "2", "main_zone_overlap_F_opportunities": "8",
+               "main_zone_overlap_I_count": "1", "main_zone_overlap_I_opportunities": "0"}
+        self.assertAlmostEqual(analysis_v2.zone_rate(row, "main", "overlap", "F"), 0.25)
+        self.assertIsNone(analysis_v2.zone_rate(row, "main", "overlap", "I"))
+
+
+class SelectionTests(unittest.TestCase):
+    def rows(self, n_bach, n_strube=0):
+        rows = [{"melody_id": f"bach-{i:03d}", "origin": "bach", "source": "corpus", "status": "eligible"}
+                for i in range(n_bach)]
+        return rows + [{"melody_id": f"strube-{i:03d}", "origin": "strube", "source": "typed", "status": "eligible"}
+                       for i in range(n_strube)]
+
+    def test_protocol_30_draws_bach_only_and_a_disjoint_pilot(self):
+        cli = load_cli()
+        settings = generation_v2.load_protocol()["melodies"]
+        main, pilot, n_strube, n_bach = cli.choose_samples(self.rows(60, 5), settings)
+        self.assertEqual((n_strube, n_bach, len(main)), (0, 40, 40))
+        self.assertTrue(all(r["origin"] == "bach" for r in main + pilot))
+        self.assertEqual(len(pilot), 3)
+        self.assertFalse({r["melody_id"] for r in pilot} & {r["melody_id"] for r in main})
+        again, _, _, _ = cli.choose_samples(self.rows(60, 5), settings)
+        self.assertEqual(main, again)
+
+    def test_protocol_21_keeps_strube_census(self):
+        cli = load_cli()
+        settings = generation_v2.load_protocol(PROTOCOL_V21)["melodies"]
+        main, pilot, n_strube, n_bach = cli.choose_samples(self.rows(60, 5), settings)
+        self.assertEqual((n_strube, n_bach, len(main)), (5, 30, 35))
+        self.assertEqual(len(pilot), 6)
+
+
 class StatisticsTests(unittest.TestCase):
     def test_holm(self):
         adjusted = analysis_v2.holm([0.01, 0.04, None, 0.03])
@@ -274,6 +378,8 @@ class StatisticsTests(unittest.TestCase):
         # protocol.md: n = 15, 20, 25 per group give 1.15, 0.98, 0.87 as in protocol.md; n = 30 gives 0.79 (protocol.md said 0.78)
         self.assertAlmostEqual(analysis_v2.minimum_detectable_d(30, 30), 0.79, delta=0.01)
         self.assertAlmostEqual(analysis_v2.minimum_detectable_d(20, 20), 0.98, delta=0.02)
+        # protocol 3.0: 40 paired melodies detect about d_z = 0.49
+        self.assertAlmostEqual(analysis_v2.minimum_detectable_d(40, paired=True), 0.49, delta=0.01)
 
 
 if __name__ == "__main__":

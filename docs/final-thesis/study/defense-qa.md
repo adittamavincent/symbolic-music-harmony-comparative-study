@@ -1,22 +1,22 @@
 # Simulasi pertanyaan sidang
 
-Disusun 2 Oktober 2026 untuk desain v3 (protokol versi 2), diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1); bagian M ditambahkan 6 Oktober 2026 setelah bimbingan dengan Pembimbing I. Berkas ini untuk latihan menjawab, bukan bagian naskah. Jawaban mengikuti BAB I–III v4 dan `research/protocol.md`. Rujukan seperti "BAB II.B.3" memakai penomoran PDF: bab, huruf subbab, nomor sub-subbab. Gambaran besar penelitian dalam bahasa sederhana ada di [researcher-guide.md](researcher-guide.md). Bagian **Rawan bila** menunjukkan kapan jawaban bisa patah dan apa yang harus dilakukan sebelum sidang.
+Disusun 2 Oktober 2026 untuk desain v3 (protokol versi 2), diperbarui 5 Oktober 2026 untuk naskah v4 (protokol 2.1); bagian M ditambahkan 6 Oktober 2026 setelah bimbingan dengan Pembimbing I, dan bagian N 8 Oktober 2026 untuk usulan kesepakatan v5. Berkas ini untuk latihan menjawab, bukan bagian naskah. Jawaban mengikuti BAB I–III v4 dan `research/protocol.md`. Untuk naskah v5 (protokol 3.0, 8 Oktober 2026), kalimat pegangan, peran sumber, tabel celah, dan bagian N sudah diperbarui. Jawaban Q3, 7, 8, 11, 25, 28–30, 33, 41–43, 47, 49, 51, 54, 55, 62, 68–73, 75, 76, 88–91, 93–95, 97, 98, 100–102, 104, dan 111 menyebut asal melodi, soal Strube, Storkey, atau uji Mann–Whitney; bagian itu berlaku untuk v4 dan perlu dibaca bersama [perubahan-v4-ke-v5.md](../supervision/perubahan-v4-ke-v5.md). Rujukan seperti "BAB II.B.3" memakai penomoran PDF: bab, huruf subbab, nomor sub-subbab. Gambaran besar penelitian dalam bahasa sederhana ada di [researcher-guide.md](researcher-guide.md). Bagian **Rawan bila** menunjukkan kapan jawaban bisa patah dan apa yang harus dilakukan sebelum sidang.
 
 ## Pegangan
 
 Kalimat yang perlu bisa diucapkan tanpa membaca:
 
-> Penelitian ini melanjutkan analisis Huang dkk. (2019) pada Bach Doodle. Mereka menghitung kuint dan oktaf sejajar secara otomatis pada harmonisasi Coconet dan menemukan bahwa pelanggaran lebih sering terjadi ketika melodi pengguna tidak menyerupai data latih. Saya menguji temuan itu secara terkendali: melodi yang sama diberikan kepada DeepBach dan Coconet, melodinya berasal dari chorale Bach dan dari latihan buku Strube, dan pelanggarannya dihitung untuk lima kaidah gerak suara.
+> Penelitian ini melanjutkan analisis Huang dkk. (2019) pada Bach Doodle. Mereka menghitung kuint dan oktaf sejajar secara otomatis pada harmonisasi Coconet, per birama, pada melodi bebas pengguna. Saya mengujinya secara terkendali dalam satu konteks yang dijelaskan Strube, yaitu harmonisasi chorale: melodi chorale Bach yang sama diberikan kepada DeepBach dan Coconet, pelanggarannya dihitung untuk lima kaidah gerak suara Strube, dibandingkan dengan harmonisasi Bach sendiri, dan dilihat letaknya, di sekitar fermata atau di dalam frasa.
 
 Peran setiap sumber:
 
 | Sumber | Perannya dalam penelitian |
 | --- | --- |
-| Huang dkk. (2019), §6.3 | Desain dan ukuran: hitung paralel per birama dengan music21, gagasan "di luar distribusi data latih", uji Mann–Whitney, angka Bach sebagai acuan |
+| Huang dkk. (2019), §6.3 | Desain dan ukuran: hitung paralel per birama dengan music21, angka Bach sebagai acuan, catatan bahwa paralel Bach dapat dimaklumi di batas frasa, data latih tanpa fermata |
 | Yan dkk. (2018) | Daftar kategori kesalahan dan bobotnya (kategori 3, 9, 10, 11) |
-| Strube | Teori: rumusan kaidah, pengecualian, contoh cetak untuk uji instrumen, melodi latihan, dan dasar *grand theory* (harmoni fungsional) |
-| Briot dkk. (2020) | Lima dimensi model; alasan perbedaan DeepBach dan Coconet tidak boleh disebut akibat arsitektur (pertanyaan 2) |
-| Storkey (2008) | Pergeseran *dataset*; alasan asal melodi dapat berpengaruh (pertanyaan 3) |
+| Strube | Teori: rumusan kaidah, pengecualian, contoh cetak untuk uji instrumen, konteks chorale dan fermata sebagai kadens (hlm. 174), dasar memakai melodi Bach (hlm. 174), dan dasar *grand theory* (harmoni fungsional) |
+| Briot dkk. (2020) | Lima dimensi model; alasan perbedaan DeepBach dan Coconet tidak boleh disebut akibat arsitektur (pertanyaan 2); DeepBach menerima fermata, Coconet tidak (pertanyaan 3) |
+| Storkey (2008) | Dipakai di v4 untuk asal melodi; tidak dipakai lagi di v5 |
 | Pearce dkk. (2002) | Evaluasi model gaya dengan prosedur eksplisit; batas kesimpulan (pertanyaan 1) |
 | Huron (2001) | Alasan perseptual setiap kaidah; arti musikal setiap jenis pelanggaran |
 | music21 | Alat pengurai dan pemeriksa silang |
@@ -28,10 +28,10 @@ Diperbarui 5 Oktober 2026. Celah yang sudah tertutup penuh dihapus dari tabel.
 | Celah | Kenapa berbahaya | Cara menutup | Status |
 | --- | --- | --- | --- |
 | Halaman Strube untuk lima kaidah | Pertanyaan "di halaman berapa?" | Kaidah ditemukan: paralel hlm. 9 dan 12, jarak hlm. 20, persilangan hlm. 174, tumpang tindih hlm. 12–13 (`strube-rule-pages.csv`) | Tertutup; cocokkan sekali dengan buku cetak |
-| Jumlah latihan melodi Strube | Separuh desain | 71 latihan melodi bernomor di hlm. 11–80. Latihan 67–68 (hlm. 48, tidak ada di PDF 1928) terlihat di terjemahan 2015 hlm. 58 sebagai latihan melodi | Kandidat tertutup; kelayakan baru diketahui setelah 71 melodi diketik (templat sudah ada) |
-| Contoh cetak Strube sebagai kasus uji | Validasi langkah 2 | Sembilan gambar terdaftar di `strube-example-fixtures.csv`; perlu diketik | Terbuka (kerja peneliti, sekitar 20–30 menit) |
-| Pilot | Batas panjang melodi, kosakata DeepBach, dan memori Coconet belum diuji pada model | Pipeline protokol 2.1 sudah lengkap dan diuji dengan model palsu; tinggal `make setup-v2`, `make preflight`, `make select`, `make pilot` | Terbuka (menunggu melodi Strube diketik) |
-| Persetujuan pembimbing | Desain berubah besar dari proposal | Bawa naskah v4 dan `bimbingan-v4.md` | Terbuka |
+| Jumlah latihan melodi Strube | Separuh desain v4 | 71 latihan melodi bernomor di hlm. 11–80 | Tidak berlaku di v5: melodi diambil dari korpus chorale Bach |
+| Contoh cetak Strube sebagai kasus uji | Validasi langkah 2 | Sembilan gambar terdaftar di `strube-example-fixtures.csv`; asisten menyiapkan drafnya, peneliti mencocokkan dengan buku | Terbuka |
+| Pilot | Batas panjang melodi, kosakata DeepBach, dan memori Coconet belum diuji pada model | Pipeline protokol 3.0 sudah lengkap dan diuji dengan model palsu; tinggal `make setup-v2`, `make preflight`, `make select`, `make pilot` | Terbuka (menunggu persetujuan protokol 3.0) |
+| Persetujuan pembimbing | Desain berubah dari v4 | Bawa `bimbingan-arah-v5.md` ke Bu Yoni, lalu ke Pak Gathut | Terbuka |
 | Terjemahan Strube oleh Pembimbing I | Pembimbing I menerjemahkan buku Strube (2015); tiga kalimat kaidah berbeda dari edisi 1928 | Pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 1; tanyakan cara mengutip terjemahan | Terbuka |
 | Bacaan peneliti sendiri | Penguji bisa bertanya isi sumber; kolom `researcher_read_status` masih kosong untuk semua sumber | Baca sumber inti ([persiapan-pembimbing-1.md](persiapan-pembimbing-1.md) bagian 5) dan catat | Terbuka |
 | Halaman Cohen, Hodges–Lehmann, Creswell, Sugiyono | Penguji bisa minta halaman | Buka sumber, catat di `reading-notes.csv` | Terbuka (kecil) |
@@ -536,8 +536,39 @@ Atas saran Pembimbing I, lingkupnya dibatasi supaya setiap pelanggaran bisa diba
 **123. Paralel kadang dibolehkan. Bagaimana kamu tahu sebuah paralel salah?** (G09)
 Program menandai kejadian menurut definisi operasional. Tanda itu belum vonis musikal. Setiap paralel yang ditandai dalam kasus dibaca bersama progresi akornya dan pengecualian Strube, misalnya kuint yang bersifat lewat (hlm. 34–35), IV–II (hlm. 45), dan pedoman *chorale* (hlm. 174). Pembacaan ini analisis partitur oleh peneliti sendiri, bukan penilaian oleh penilai lain, jadi desain tanpa penilai manusia tetap berlaku.
 
+## N. Usulan v5: dekat dengan v4 (8 Oktober 2026)
+
+Untuk bimbingan dengan Bu Yoni lalu Pak Gathut. Semua jawaban berlaku bila usulan di [rancangan-kesepakatan-v5.md](../supervision/rancangan-kesepakatan-v5.md) disepakati; belum ada yang disetujui pembimbing.
+
+**124. Apa yang berubah dari v4?**
+Empat hal. Soal Strube dari sepuluh bab tidak dipakai lagi; semua melodi dari *chorale* Bach. Pertanyaan 3 diganti dari asal melodi menjadi letak pelanggaran. Peran Strube dipertegas sebagai panduan yang merangkum praktik, ditambah pedoman bab *chorale* (hlm. 174). Judul, batas, dan saran disesuaikan. Dua model, lima kaidah, pembanding Bach, dan pertanyaan 1–2 tetap.
+
+**125. Pak Gathut menyarankan satu kasus dan menilai dua AI terlalu banyak. Kenapa tetap dua model?**
+Penelitian ini meneruskan evaluasi yang sebelumnya dilakukan per model, dan perbandingan keduanya pada melodi yang sama adalah sumbangan utamanya. Beliau juga menyebut perbandingan itu bisa dilakukan bila mau. Pembatasannya diterapkan pada konteks: satu konteks, *chorale*, bukan sepuluh bab.
+*Rawan bila:* beliau tetap meminta satu model. Cadangannya Coconet saja dengan desain yang sama.
+
+**126. Kenapa soal Strube tidak dipakai lagi?**
+Soal dari bab yang berbeda punya konteks yang berbeda, dan model tidak tahu konteks itu (G02). Strube sendiri mengambil soal *chorale*-nya dari Bach (hlm. 174), dan korpus menyediakan melodi itu beserta harmonisasi Bach sebagai jawaban. Pengaruh asal melodi masuk saran.
+
+**127. Apa temuan barunya?**
+Perbandingan DeepBach dan Coconet pada melodi yang sama untuk lima kaidah, ditambah letak pelanggarannya dalam frasa, dibanding Bach. Huang dkk. hanya menghitung paralel per birama pada Coconet. DeepBach menerima fermata dan Coconet tidak, jadi pola letak keduanya bisa dibandingkan.
+*Rawan bila:* ditanya apakah letak memang penting. Pada harmonisasi Bach sendiri, 54,8% tumpang tindih terjadi di zona fermata yang hanya memuat 17,1% kesempatan (eksplorasi instrumen pada 318 *chorale*, bukan data penelitian).
+
+**128. Model tidak diajari kaidah. Kenapa diuji pakai kaidah?**
+Patokannya praktik Bach, guru tempat model belajar, bukan nol pelanggaran. Kaidah Strube adalah lensa yang eksplisit untuk membaca keduanya. Huang dkk. juga membandingkan Coconet dengan angka Bach di data latih.
+
+**129. Mana variabel dan hipotesisnya?**
+X1 model, X2 letak dalam frasa, Y pelanggaran tiap kaidah. H1: DeepBach dan Coconet berbeda (sama dengan v4). H2: pada tiap model, laju pelanggaran di sekitar fermata berbeda dari laju di dalam frasa. Letak tidak dimanipulasi, jadi H2 dibaca sebagai hubungan.
+*Rawan bila:* diminta variabel yang benar-benar diatur peneliti. Tambahan siap pakai: DeepBach dengan dan tanpa informasi fermata pada melodi yang sama.
+
+**130. Apa manfaatnya untuk pengajar harmoni?**
+Pengajar tahu di bagian frasa dan pasangan suara mana harmonisasi model perlu diperiksa lebih teliti, dan bagaimana Bach menulis di bagian yang sama. Hasilnya berlaku untuk *checkpoint* yang diuji, pada melodi *chorale* Bach.
+
+**131. Kenapa judulnya tidak menyebut letak pelanggaran?**
+Judul dibatasi 15 kata. "Kepatuhan kaidah gerak suara Strube" mencakup ketiga pertanyaan: seberapa patuh, apakah kedua model berbeda, dan di bagian frasa mana pelanggaran muncul. "Harmonisasi chorale" adalah nama bab Strube yang menjadi konteksnya.
+
 ## Cara berlatih
 
-1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, 52, 102, dan 104 tanpa membaca. Sebelum bimbingan dengan Pembimbing I, pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md), bagian J, bagian L, dan bagian M.
+1. Ucapkan kalimat pegangan dan jawaban 1, 6, 7, 14, 16a, 24, 28, 33, 52, 102, dan 104 tanpa membaca. Sebelum bimbingan dengan Pembimbing I, pelajari [persiapan-pembimbing-1.md](persiapan-pembimbing-1.md), bagian J, bagian L, dan bagian M. Sebelum bimbingan arah v5 dengan Bu Yoni, latih bagian M dan N.
 2. Minta teman bertanya acak dari daftar ini dan memotong jawaban yang lebih dari satu menit.
 3. Setelah setiap celah di tabel atas ditutup, perbarui jawaban yang terkait dan hapus tanda **Wajib ditutup**.

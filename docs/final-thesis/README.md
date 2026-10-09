@@ -1,6 +1,6 @@
-# Final thesis v4
+# Final thesis v5
 
-v3 continued proposal v2 as the final thesis and is tagged `thesis/v3`; v4 is tagged `thesis/v4` and is still the text in the working tree. v5 is being planned after the first meeting with Pembimbing I ([supervision/rencana-v5.md](supervision/rencana-v5.md)). Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
+v3 continued proposal v2 as the final thesis and is tagged `thesis/v3`; v4 is tagged `thesis/v4`. v5, drafted on 2026-10-08 after the first meeting with Pembimbing I, is the text in the working tree; it is not tagged and not yet agreed by the supervisors ([supervision/perubahan-v4-ke-v5.md](supervision/perubahan-v4-ke-v5.md)). Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
 
 ## What is in this folder
 
@@ -16,9 +16,12 @@ final-thesis/
 │   ├── perubahan-v2-ke-v3.md      Every change from proposal v2 to v3 and its basis
 │   ├── review-teman-2026-10-04.md Peer review of v3 by a fellow student (P01–P17; not lecturer feedback)
 │   ├── perubahan-v3-ke-v4.md      Every change from v3 to v4 and its basis
+│   ├── perubahan-v4-ke-v5.md      Every change from v4 to v5 and its basis
 │   ├── bimbingan-v3.md            Handout for the v3 supervisor meeting
 │   ├── bimbingan-v4.md            Handout for the v4 meeting with Pembimbing I
-│   └── rencana-v5.md              Plan for v5 after that meeting: options, questions, tasks
+│   ├── rencana-v5.md              Plan for v5 after that meeting: options, questions, tasks
+│   ├── rancangan-kesepakatan-v5.md v5 design (v4 with four changes), reasons, questions it must answer
+│   └── bimbingan-arah-v5.md       Handout and agreement sheet for Pembimbing II, then Pembimbing I
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
 │   ├── defense-qa.md              All practice questions and answers (Q1–Q123, with 16a–c and 41a–b)
@@ -41,8 +44,10 @@ Where to start:
 | See every version, its feedback source, and chapter status | `make map`, then `scratch/peta-versi.pdf` (source: [supervision/peta-versi.tex](supervision/peta-versi.tex)) |
 | Explain why the design changed after v2 | [supervision/perubahan-v2-ke-v3.md](supervision/perubahan-v2-ke-v3.md) |
 | Explain what changed in v4 | [supervision/perubahan-v3-ke-v4.md](supervision/perubahan-v3-ke-v4.md) |
+| Explain what changed in v5 | [supervision/perubahan-v4-ke-v5.md](supervision/perubahan-v4-ke-v5.md) |
 | Prepare the v4 supervisor meeting | [supervision/bimbingan-v4.md](supervision/bimbingan-v4.md) |
 | Know what Pembimbing I said and what to do for v5 | [supervision/rencana-v5.md](supervision/rencana-v5.md), then G01–G15 in [supervision/feedback.md](supervision/feedback.md) |
+| Prepare the next meeting and reach one agreement on v5 | [supervision/rancangan-kesepakatan-v5.md](supervision/rancangan-kesepakatan-v5.md), then print [supervision/bimbingan-arah-v5.md](supervision/bimbingan-arah-v5.md) |
 | Check what the lecturers actually asked | [supervision/feedback.md](supervision/feedback.md) |
 | Find when and why something was decided | [records/research-log.md](records/research-log.md) |
 | Edit the manuscript | The table below |
@@ -58,8 +63,8 @@ Research code, the protocol worksheet, and literature data live in [research/](.
 | `layout.tex` | Chapter heading (`\thesischapter`) and front-matter page layouts: cover heading, signatures |
 | `frontmatter/01-halaman-judul.tex` to `09-abstract.tex` | One file per front-matter page, in page order: halaman judul, pengajuan, pengesahan, pernyataan, motto, persembahan, kata pengantar, abstrak, abstract |
 | `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah, pertanyaan penelitian, tujuan, manfaat (no sistematika penulisan since v4) |
-| `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka (with comparison table), landasan teori (Briot et al., Storkey, Pearce et al., Strube, Huron), kerangka berpikir, asumsi, hipotesis |
-| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data (variabel, melodi, generasi, instrumen, validitas, kontrol kualitas), analisis, alur penelitian |
+| `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka (with comparison table), landasan teori (Briot et al., Pearce et al., Strube with the chorale chapter, Huron), kerangka berpikir, asumsi, hipotesis |
+| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data (variabel, melodi, generasi, instrumen with fermata zones, validitas, kontrol kualitas), analisis, alur penelitian |
 
 Each chapter file opens with its own `\thesischapter` heading. Every section and subsection heading carries a `\label{sec:...}` ID. Keep the ID when a heading is renamed or moved; `make diff` pairs revisions by these IDs. Give a new section a new ID.
 

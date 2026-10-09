@@ -52,7 +52,7 @@ from voice_leading_v2 import INSTRUMENT_VERSION
 
 RESEARCH = Path(__file__).resolve().parent
 ROOT = RESEARCH.parent
-PROTOCOL_FILE = RESEARCH / "experiments" / "protocol_v2.json"
+PROTOCOL_FILE = RESEARCH / "experiments" / "protocol_v3.json"
 RUNS_DIR = RESEARCH / "outputs" / "runs"
 MODELS_DIR = RESEARCH / "models"
 COCONET_SCRIPT = RESEARCH / "coconet" / "run_coconet_v2.js"

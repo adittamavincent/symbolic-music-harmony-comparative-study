@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Command line for protocol version 2. Run from the repository root with uv.
+"""Command line for the pipeline (protocol 3.0 by default; protocol 2.1 with --protocol). Run from the
+repository root with uv.
 
 Order of work (each step writes files the next step reads):
 
-  templates   create one typing template per Strube melody candidate (research/literature/strube-melodies/)
-  melodies    build the Bach frame and convert the typed Strube melodies -> research/outputs/melodies/manifest.csv
+  templates   create one typing template per Strube melody candidate (protocol 2.1 only; kept as history)
+  melodies    build the Bach frame (and convert typed Strube melodies, 2.1) -> research/outputs/melodies/manifest.csv
   preflight   check every eligible melody against both models' input encoding (needs make setup-v2)
   membership  estimate which Bach chorales DeepBach saw in training (needs make setup-v2)
-  select      fix the main sample (all eligible Strube melodies + seeded Bach sample) and the pilot set
+  select      fix the main sample (3.0: seeded sample of 40 Bach melodies; 2.1: all eligible Strube melodies +
+              a Bach sample of the same size) and the pilot set
   generate    run a stage: --stage pilot or --stage main (main refuses while the protocol is not frozen)
   evaluate    quality control and measurement of a run
   analyze     statistics, tables, and figures of a run
@@ -106,6 +108,36 @@ def accepted_by_all(rows, preflight_rows, models):
     return [r for r in rows if all(accepted.get(r["melody_id"], {}).get(m, False) for m in models)]
 
 
+def choose_samples(rows, settings):
+    """Main sample and pilot set from eligible manifest rows that both models accept.
+
+    Protocol 3.0 (`bach_sample_size`): a seeded sample of Bach melodies and a pilot drawn from the remaining
+    Bach melodies. Protocol 2.1: every Strube melody plus a Bach sample of the same size (at least
+    `bach_sample_minimum`), and a pilot of each origin.
+    """
+    import random
+
+    origins = settings.get("origins", ["bach", "strube"])
+    strube = [r for r in rows if r["origin"] == "strube" and "strube" in origins]
+    bach_records = [melody_sets.MelodyRecord(melody_id=r["melody_id"], origin="bach", source=r["source"], status="eligible")
+                    for r in rows if r["origin"] == "bach"]
+    if "bach_sample_size" in settings:
+        size = settings["bach_sample_size"]
+        pilot_size = settings["pilot_size"]
+    else:
+        size = max(settings["bach_sample_minimum"], len(strube))
+        pilot_size = settings["pilot_size_per_origin"]
+    chosen = set(melody_sets.sample_bach(bach_records, size, settings["bach_sample_seed"]))
+    main = strube + [r for r in rows if r["melody_id"] in chosen]
+    rest = sorted(r.melody_id for r in bach_records if r.melody_id not in chosen)
+    pilot_ids = set(random.Random(settings["pilot_seed"]).sample(rest, pilot_size))
+    if strube:
+        pilot_ids |= set(random.Random(settings["pilot_seed"]).sample(sorted(r["melody_id"] for r in strube),
+                                                                      min(pilot_size, len(strube))))
+    pilot = [r for r in rows if r["melody_id"] in pilot_ids]
+    return main, pilot, len(strube), len(chosen)
+
+
 def cmd_select(args, protocol):
     settings = protocol["melodies"]
     rows = [r for r in read_rows(MANIFEST) if r["status"] == "eligible"]
@@ -113,25 +145,12 @@ def cmd_select(args, protocol):
         rows = accepted_by_all(rows, read_rows(PREFLIGHT), args.models)
     elif not args.allow_without_preflight:
         raise SystemExit("Run preflight first (or pass --allow-without-preflight for a dry selection)")
-    strube = [r for r in rows if r["origin"] == "strube"]
-    bach_records = [melody_sets.MelodyRecord(melody_id=r["melody_id"], origin="bach", source=r["source"], status="eligible")
-                    for r in rows if r["origin"] == "bach"]
-    size = max(settings["bach_sample_minimum"], len(strube))
-    chosen = set(melody_sets.sample_bach(bach_records, size, settings["bach_sample_seed"]))
-    main = strube + [r for r in rows if r["melody_id"] in chosen]
+    main, pilot, n_strube, n_bach = choose_samples(rows, settings)
     write_rows(SELECTION["main"], main)
-    import random
-
-    rest = sorted(r.melody_id for r in bach_records if r.melody_id not in chosen)
-    pilot_bach = set(random.Random(settings["pilot_seed"]).sample(rest, settings["pilot_size_per_origin"]))
-    pilot_strube = set(random.Random(settings["pilot_seed"]).sample(sorted(r["melody_id"] for r in strube),
-                                                                    min(settings["pilot_size_per_origin"], len(strube))))
-    pilot = [r for r in rows if r["melody_id"] in pilot_bach | pilot_strube]
     write_rows(SELECTION["pilot"], pilot)
-    print(f"Main: {len(strube)} Strube + {len(chosen)} Bach (seed {settings['bach_sample_seed']}); "
-          f"pilot: {len(pilot)} melodies")
-    if len(strube) < settings["bach_sample_minimum"]:
-        print(f"NOTE: only {len(strube)} eligible Strube melodies; protocol contingency applies (use all, report MDE)")
+    print(f"Main: {n_strube} Strube + {n_bach} Bach (seed {settings['bach_sample_seed']}); pilot: {len(pilot)} melodies")
+    if "bach_sample_minimum" in settings and n_strube < settings["bach_sample_minimum"]:
+        print(f"NOTE: only {n_strube} eligible Strube melodies; protocol contingency applies (use all, report MDE)")
 
 
 def cmd_membership(args, protocol):
@@ -153,7 +172,7 @@ def cmd_membership(args, protocol):
 
 def cmd_generate(args, protocol):
     if args.stage == "main" and not protocol.get("frozen"):
-        raise SystemExit("protocol_v2.json is not frozen; agree the protocol and finish the pilot first")
+        raise SystemExit("the protocol file is not frozen; agree the protocol and finish the pilot first")
     if args.resume:
         run = generation_v2.Run(args.resume)
     else:
@@ -176,7 +195,8 @@ def cmd_evaluate(args, protocol):
 def cmd_analyze(args, protocol):
     summary = analysis_v2.analyze_run(args.run, membership_file=MEMBERSHIP if MEMBERSHIP.exists() else None)
     written = analysis_v2.plot_run(args.run)
-    print(f"Q2 rows {len(summary['q2'])}, Q3 rows {len(summary['q3'])}, figures {len(written)}")
+    print(f"Q2 rows {len(summary['q2'])}, Q3 zone rows {len(summary['q3_zone'])}, Q3 origin rows {len(summary['q3'])}, "
+          f"figures {len(written)}")
 
 
 def cmd_examples(args, protocol):
@@ -201,7 +221,9 @@ def cmd_dry_run(args, protocol):
     try:
         cmd_melodies(argparse.Namespace(update_inventory=False), protocol, out_dir=work / "melodies",
                      text_dir=fixtures, bach_limit=args.bach_limit)
-        rows = [r for r in read_rows(work / "melodies" / "manifest.csv") if r["status"] == "eligible"]
+        origins = protocol["melodies"].get("origins", ["bach", "strube"])
+        rows = [r for r in read_rows(work / "melodies" / "manifest.csv")
+                if r["status"] == "eligible" and r["origin"] in origins]
         backends = [generation_v2.FakeBackend("deepbach", offsets=(9, 15, 24)),
                     generation_v2.FakeBackend("coconet", offsets=(8, 16, 24))]
         run = generation_v2.Run.create("dry-run", {**protocol, "generations_per_melody": 2}, rows, backends,
@@ -210,7 +232,8 @@ def cmd_dry_run(args, protocol):
             print(backend.name, generation_v2.generate(run, backend, 2, protocol["root_seed"], progress=lambda m: None))
         print("evaluate:", evaluate_v2.evaluate_run(run.dir))
         summary = analysis_v2.analyze_run(run.dir, protocol={**protocol, "generations_per_melody": 2})
-        print("analysis: q2", len(summary["q2"]), "q3", len(summary["q3"]), "figures", len(analysis_v2.plot_run(run.dir)))
+        print("analysis: q2", len(summary["q2"]), "q3 zone", len(summary["q3_zone"]), "q3 origin", len(summary["q3"]),
+              "figures", len(analysis_v2.plot_run(run.dir)))
         print("examples:", len(run_checks_v2.sample_examples(run.dir, 1, 1)))
         problems = run_checks_v2.check_run(run.dir, ["deepbach", "coconet"], 2)
         print("check:", "complete" if not problems else problems)

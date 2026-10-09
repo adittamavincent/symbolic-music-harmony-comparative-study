@@ -8,7 +8,10 @@ Reads <run>/evaluation/ and writes <run>/analysis/:
     copy_share.csv         how often each model sounds Bach's own alto, tenor, and bass pitch on Bach melodies
     bach_difference.csv    model minus Bach on the same Bach melodies
     q2_wilcoxon.csv        question 2: DeepBach vs Coconet, paired by melody, Holm over five rules
-    q3_mannwhitney.csv     question 3: Strube vs Bach melodies within each model, Holm within model
+    q3_zone.csv            question 3 (protocol 3.0): fermata zone vs inside the phrase per model, paired by
+                           melody, Holm within model
+    zone_pattern.csv       pooled zone rates and shares for each model and for Bach's own harmonizations
+    q3_mannwhitney.csv     question 3 of protocol 2.1 only: Strube vs Bach melodies within each model
     sensitivity_*.csv      the same tests on the fermata and merged variants and on complete melodies
     seen_unseen.csv        DeepBach seen vs unseen Bach melodies, only when a verified membership file exists
     power.csv              minimum detectable effect for the analysed group sizes
@@ -18,6 +21,8 @@ Reads <run>/evaluation/ and writes <run>/analysis/:
 A test with no usable data (for example every paired difference zero) is
 reported with its reason instead of a p-value. Rates come from the per-melody
 means; repeated generations are never treated as independent observations.
+Which question-3 test runs follows the protocol: `zone_test` (3.0) or
+`q3_test` with Strube melodies in the run (2.1).
 """
 
 import csv
@@ -171,6 +176,50 @@ def q2_tests(per_melody, variant, rules, subset=None):
     return rows
 
 
+def zone_rate(row, variant, rule, zone):
+    """Flags divided by opportunities in one zone, from counts summed over the melody's valid generations."""
+    count = number(row.get(f"{variant}_zone_{rule}_{zone}_count"))
+    opportunities = number(row.get(f"{variant}_zone_{rule}_{zone}_opportunities"))
+    return count / opportunities if count is not None and opportunities else None
+
+
+def zone_tests(per_melody, variant, rules, subset=None):
+    """Question 3 (protocol 3.0): fermata-zone rate minus inside-phrase rate, paired by melody, per model."""
+    rows = []
+    for model in ("deepbach", "coconet"):
+        for rule in rules:
+            fermata, inside = [], []
+            for row in per_melody:
+                if row["model"] != model or (subset is not None and row["melody_id"] not in subset):
+                    continue
+                a, b = zone_rate(row, variant, rule, "F"), zone_rate(row, variant, rule, "I")
+                if a is not None and b is not None:
+                    fermata.append(a)
+                    inside.append(b)
+            rows.append({"variant": variant, "model": model, "rule": rule, **wilcoxon_paired(fermata, inside)})
+    return rows
+
+
+def zone_pattern(rows, source, variant="main"):
+    """Pooled flags, opportunities, rates, and shares per zone for one source (a model or Bach)."""
+    result = []
+    for rule in RULES:
+        totals = {}
+        for zone in ("F", "I"):
+            totals[zone] = [sum(number(r.get(f"{variant}_zone_{rule}_{zone}_{kind}")) or 0 for r in rows)
+                            for kind in ("count", "opportunities")]
+        (flags_f, opp_f), (flags_i, opp_i) = totals["F"], totals["I"]
+        rate_f = flags_f / opp_f if opp_f else None
+        rate_i = flags_i / opp_i if opp_i else None
+        result.append({"source": source, "variant": variant, "rule": rule, "flags_F": flags_f, "flags_I": flags_i,
+                       "opportunities_F": opp_f, "opportunities_I": opp_i,
+                       "flag_share_F": flags_f / (flags_f + flags_i) if flags_f + flags_i else "",
+                       "opportunity_share_F": opp_f / (opp_f + opp_i) if opp_f + opp_i else "",
+                       "rate_F": "" if rate_f is None else rate_f, "rate_I": "" if rate_i is None else rate_i,
+                       "rate_ratio": rate_f / rate_i if rate_f is not None and rate_i else ""})
+    return result
+
+
 def q3_tests(per_melody, variant, rules, one_sided, subset=None):
     rows = []
     for model in ("deepbach", "coconet"):
@@ -234,7 +283,7 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
     protocol = protocol or info["protocol"]
     settings = protocol["analysis"]
     alpha = settings["alpha"]
-    one_sided = set(settings["q3_one_sided_rules"])
+    one_sided = set(settings.get("q3_one_sided_rules", []))
     evaluation = run_dir / "evaluation"
     per_melody = read_csv(evaluation / "per_melody.csv")
     reference = read_csv(evaluation / "bach_reference.csv")
@@ -243,12 +292,15 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
     attempts = [json.loads(line) for line in (run_dir / "attempts.jsonl").read_text(encoding="utf-8").splitlines() if line]
     out = run_dir / "analysis"
     all_rules = list(RULES) + ["weighted"]
+    origins = [o for o in ("bach", "strube") if any(m["origin"] == o for m in melodies)]
+    run_origin_test = "q3_test" in settings and "strube" in origins
+    run_zone_test = "zone_test" in settings
 
     # Attempts and quality control
     summary_rows = []
     origin_of = {m["melody_id"]: m["origin"] for m in melodies}
     for model in sorted({a["model"] for a in attempts}):
-        for origin in ("bach", "strube"):
+        for origin in origins:
             cell = [a for a in attempts if a["model"] == model and a["origin"] == origin]
             passed = [q for q in qc if q["model"] == model and origin_of.get(q["melody_id"]) == origin and q["passed"] == "1"]
             reasons = {}
@@ -267,7 +319,7 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
     descriptive = []
     for variant in ("main", "fermata", "merged"):
         for model in sorted({r["model"] for r in per_melody}):
-            for origin in ("bach", "strube"):
+            for origin in origins:
                 for rule in all_rules:
                     values = [rate(r, variant, rule) for r in per_melody if r["model"] == model and r["origin"] == origin]
                     descriptive.append({"variant": variant, "model": model, "origin": origin, "rule": rule,
@@ -297,7 +349,7 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
 
     # Melody features (manipulation check)
     features = []
-    for origin in ("bach", "strube"):
+    for origin in origins:
         group = [m for m in melodies if m["origin"] == origin]
         row = {"origin": origin, "n": len(group)}
         for name in ("measures", "notes", "lowest_midi", "highest_midi", "ambitus", "largest_leap", "fermatas"):
@@ -313,9 +365,18 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
 
     # Hypothesis tests on the main variant
     q2 = apply_holm(q2_tests(per_melody, "main", all_rules))
-    q3 = apply_holm(q3_tests(per_melody, "main", all_rules, one_sided), family_key="model")
     write_csv(out / "q2_wilcoxon.csv", q2)
-    write_csv(out / "q3_mannwhitney.csv", q3)
+    q3 = apply_holm(q3_tests(per_melody, "main", all_rules, one_sided), family_key="model") if run_origin_test else []
+    if run_origin_test:
+        write_csv(out / "q3_mannwhitney.csv", q3)
+    zone, pattern = [], []
+    if run_zone_test:
+        zone = apply_holm(zone_tests(per_melody, "main", RULES), family_key="model")
+        write_csv(out / "q3_zone.csv", zone)
+        for model in ("deepbach", "coconet"):
+            pattern += zone_pattern([r for r in per_melody if r["model"] == model], model)
+        pattern += zone_pattern(reference, "bach")
+        write_csv(out / "zone_pattern.csv", pattern)
 
     # Sensitivity analyses a, c, d
     sensitivity = {}
@@ -324,10 +385,16 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
     for name, variant, subset in (("a_fermata", "fermata", None), ("c_complete", "main", complete),
                                   ("d_merged", "merged", None)):
         s2 = apply_holm(q2_tests(per_melody, variant, all_rules, subset))
-        s3 = apply_holm(q3_tests(per_melody, variant, all_rules, one_sided, subset), family_key="model")
         write_csv(out / f"sensitivity_{name}_q2.csv", s2)
-        write_csv(out / f"sensitivity_{name}_q3.csv", s3)
-        sensitivity[name] = {"q2": s2, "q3": s3, "n_melodies": len(subset) if subset is not None else None}
+        sensitivity[name] = {"q2": s2, "n_melodies": len(subset) if subset is not None else None}
+        if run_origin_test:
+            s3 = apply_holm(q3_tests(per_melody, variant, all_rules, one_sided, subset), family_key="model")
+            write_csv(out / f"sensitivity_{name}_q3.csv", s3)
+            sensitivity[name]["q3"] = s3
+        if run_zone_test and variant in ("main", "merged"):
+            sz = apply_holm(zone_tests(per_melody, variant, RULES, subset), family_key="model")
+            write_csv(out / f"sensitivity_{name}_q3_zone.csv", sz)
+            sensitivity[name]["q3_zone"] = sz
 
     # Sensitivity b: only with a verified membership file
     seen_unseen = []
@@ -352,6 +419,10 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
         if row:
             power_rows.append({"test": f"q3 Mann-Whitney ({model})", "n": f"{row['n_strube']} vs {row['n_bach']}",
                                "minimum_detectable_effect": minimum_detectable_d(row["n_strube"], row["n_bach"], alpha=alpha)})
+        row = next((r for r in zone if r["model"] == model), None)
+        if row:
+            power_rows.append({"test": f"q3 zone Wilcoxon ({model}, {RULE_LABELS[row['rule']]})", "n": row["n_pairs"],
+                               "minimum_detectable_effect": minimum_detectable_d(row["n_pairs"], alpha=alpha, paired=True)})
     write_csv(out / "power.csv", power_rows)
 
     # LaTeX tables for BAB IV
@@ -361,11 +432,23 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
                 "tab:hasil-q2", ["Kaidah", "Pasangan", "Median selisih", "p", "p Holm", "r"],
                 [[RULE_LABELS[r["rule"]], str(r["n_pairs"]), fmt(r["median_difference"]), fmt(r["p_value"]),
                   fmt(r["p_holm"]), fmt(r["effect_size"], 2)] for r in q2])
-    latex_table(tables / "q3_mannwhitney.tex",
-                "Perbandingan laju pelanggaran per birama antara melodi latihan Strube dan melodi chorale Bach pada setiap model (uji Mann--Whitney)",
-                "tab:hasil-q3", ["Model", "Kaidah", "n Strube", "n Bach", "p", "p Holm", "r"],
-                [[MODEL_LABELS[r["model"]], RULE_LABELS[r["rule"]], str(r["n_strube"]), str(r["n_bach"]),
-                  fmt(r["p_value"]), fmt(r["p_holm"]), fmt(r["effect_size"], 2)] for r in q3])
+    if run_origin_test:
+        latex_table(tables / "q3_mannwhitney.tex",
+                    "Perbandingan laju pelanggaran per birama antara melodi latihan Strube dan melodi chorale Bach pada setiap model (uji Mann--Whitney)",
+                    "tab:hasil-q3", ["Model", "Kaidah", "n Strube", "n Bach", "p", "p Holm", "r"],
+                    [[MODEL_LABELS[r["model"]], RULE_LABELS[r["rule"]], str(r["n_strube"]), str(r["n_bach"]),
+                      fmt(r["p_value"]), fmt(r["p_holm"]), fmt(r["effect_size"], 2)] for r in q3])
+    if run_zone_test:
+        latex_table(tables / "q3_zona.tex",
+                    "Perbandingan laju pelanggaran per kesempatan di zona fermata dan di dalam frasa pada setiap model (uji peringkat bertanda Wilcoxon)",
+                    "tab:hasil-q3", ["Model", "Kaidah", "Melodi", "Median selisih", "p", "p Holm", "r"],
+                    [[MODEL_LABELS[r["model"]], RULE_LABELS[r["rule"]], str(r["n_pairs"]), fmt(r["median_difference"], 4),
+                      fmt(r["p_value"]), fmt(r["p_holm"]), fmt(r["effect_size"], 2)] for r in zone])
+        latex_table(tables / "pola_zona.tex",
+                    "Laju pelanggaran per kesempatan di zona fermata dan di dalam frasa, digabung atas semua melodi",
+                    "tab:hasil-pola-zona", ["Sumber", "Kaidah", "Laju zona fermata", "Laju dalam frasa", "Rasio"],
+                    [[MODEL_LABELS[r["source"]], RULE_LABELS[r["rule"]], fmt(r["rate_F"], 4), fmt(r["rate_I"], 4),
+                      fmt(r["rate_ratio"], 2)] for r in pattern])
     main_desc = [d for d in descriptive if d["variant"] == "main"]
     latex_table(tables / "deskriptif.tex",
                 "Median dan rentang antarkuartil laju pelanggaran per birama menurut model dan asal melodi",
@@ -376,8 +459,8 @@ def analyze_run(run_dir, protocol=None, membership_file=None):
     summary = {
         "run_id": info["run_id"], "stage": info.get("stage"), "alpha": alpha,
         "software": {"numpy": np.__version__, "scipy": scipy.__version__},
-        "attempts": summary_rows, "melody_features": features, "q2": q2, "q3": q3,
-        "power": power_rows, "sensitivity": sensitivity, "seen_unseen": seen_unseen,
+        "attempts": summary_rows, "melody_features": features, "q2": q2, "q3": q3, "q3_zone": zone,
+        "zone_pattern": pattern, "power": power_rows, "sensitivity": sensitivity, "seen_unseen": seen_unseen,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
     return summary
@@ -419,6 +502,30 @@ def plot_run(run_dir):
         figure.tight_layout()
         for suffix in ("pdf", "png"):
             path = out / f"boxplot_{rule}.{suffix}"
+            figure.savefig(path, dpi=200)
+            written.append(path)
+        plt.close(figure)
+
+    # Question 3 (protocol 3.0): pooled rate in the fermata zone and inside the phrase, per source
+    pattern = read_csv(run_dir / "analysis" / "zone_pattern.csv")
+    if pattern and "rule" in pattern[0]:
+        sources = [s for s in ("deepbach", "coconet", "bach") if any(r["source"] == s for r in pattern)]
+        figure, axes = plt.subplots(1, len(RULES), figsize=(12, 3.2))
+        for axis, rule in zip(axes, RULES):
+            rows = {r["source"]: r for r in pattern if r["rule"] == rule}
+            positions = np.arange(len(sources))
+            fermata = [number(rows[s]["rate_F"]) or 0 for s in sources]
+            inside = [number(rows[s]["rate_I"]) or 0 for s in sources]
+            axis.bar(positions - 0.2, fermata, width=0.4, label="Zona fermata")
+            axis.bar(positions + 0.2, inside, width=0.4, label="Dalam frasa")
+            axis.set_xticks(positions, [MODEL_LABELS[s].split(" ")[0] for s in sources], fontsize=7)
+            axis.set_title(RULE_LABELS[rule], fontsize=8)
+            axis.tick_params(axis="y", labelsize=7)
+        axes[0].set_ylabel("Pelanggaran per kesempatan", fontsize=8)
+        axes[0].legend(fontsize=7)
+        figure.tight_layout()
+        for suffix in ("pdf", "png"):
+            path = out / f"zona_fermata.{suffix}"
             figure.savefig(path, dpi=200)
             written.append(path)
         plt.close(figure)

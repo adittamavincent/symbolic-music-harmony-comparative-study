@@ -67,15 +67,15 @@ help:
 		"  make all             Build seluruh PDF proposal dan skripsi final" \
 		"  make help            Tampilkan daftar perintah" \
 		"" \
-		"🔬 PIPELINE RISET PROTOKOL v2 (lihat research/README.md):" \
+		"🔬 PIPELINE RISET PROTOKOL 3.0 (lihat research/README.md):" \
 		"  make test              Uji perangkat lunak (instrumen v1, v2, MusicXML, pipeline v2)" \
 		"  make dry-run-v2        Seluruh rantai dengan backend palsu, tanpa model" \
 		"  make setup-v2          Pasang DeepBach (commit terkunci) dan Coconet/Magenta.js 1.23.1" \
-		"  make melody-templates  Buat templat ketik untuk 71 kandidat melodi Strube" \
-		"  make melodies          Bangun kerangka Bach dan ubah melodi Strube yang sudah diketik" \
+		"  make melody-templates  Templat ketik 71 melodi Strube (riwayat protokol 2.1)" \
+		"  make melodies          Bangun kerangka melodi chorale Bach dari korpus music21" \
 		"  make preflight         Cek setiap melodi terhadap masukan kedua model" \
 		"  make membership        Perkirakan data latih DeepBach per chorale" \
-		"  make select            Tetapkan sampel utama (seed tercatat) dan set uji coba" \
+		"  make select            Tetapkan sampel utama (40 melodi Bach, seed tercatat) dan set uji coba" \
 		"  make pilot             Jalankan uji coba (pilot)" \
 		"  make generate          Jalankan generasi utama (menolak bila protokol belum dibekukan)" \
 		"  make evaluate RUN=...  Kontrol kualitas dan pengukuran satu run" \
@@ -244,7 +244,7 @@ thesis: $(THESIS_TEX)
 	@if [ -n "$(THESIS_ARGS)" ]; then \
 		python3 scripts/compile_version.py thesis $(THESIS_ARGS); \
 	else \
-		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v4; \
+		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v5; \
 	fi
 
 map: $(MAP_TEX)

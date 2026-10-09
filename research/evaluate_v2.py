@@ -26,6 +26,12 @@ Two descriptive columns serve open decisions in PROGRESS.md: `quarters` (melody
 length in quarter notes, for rates per beat instead of per measure, decision 8)
 and, on Bach melodies, `copy_share` (share of sounding steps where the model's
 alto, tenor, and bass sound Bach's own pitch, a check on memorisation, decision 9).
+
+Protocol 3.0 (question 3) adds phrase zones (`phrase_zones.py`): for the main
+and merged variants, every rule's flags and opportunities are split into the
+fermata zone (F) and the inside of the phrase (I), in per_generation.csv,
+bach_reference.csv, and per_melody.csv (where they are summed over the valid
+generations), and every flag in flags.csv carries its zone.
 """
 
 import csv
@@ -34,6 +40,7 @@ from pathlib import Path
 
 from harmonization_io import read_melody
 from music21 import converter, corpus
+from phrase_zones import zone_columns, zone_counts
 from voice_leading_v2 import (
     GRID,
     RULES,
@@ -80,6 +87,13 @@ def measure_all(grids, measures):
         "fermata": evaluate_grids(grids, measures, exclude_fermata_motion=True),
         "merged": evaluate_grids(merged, measures),
     }
+
+
+def zone_results(grids, results):
+    """Zone columns for the main and merged variants, and the zone of each main-count flag."""
+    main, flag_zones = zone_counts(grids, results["main"]["flags"])
+    merged, _ = zone_counts([merge_repeats(g) for g in grids], results["merged"]["flags"])
+    return {**zone_columns(main, "main"), **zone_columns(merged, "merged")}, flag_zones
 
 
 def result_columns(results):
@@ -163,21 +177,22 @@ def evaluate_run(run_dir, include_reference=True):
         if reasons:
             continue
         results = measure_all(grids, melody.measure_count)
+        zones, flag_zones = zone_results(grids, results)
         extra = {"quarters": melody.total_steps / 4,
                  "copy_share": copy_share(grids, reference_of(entry["melody_id"]))
                  if include_reference and entry["origin"] == "bach" else ""}
-        generation_rows.append({**base, "measures": melody.measure_count, **extra, **result_columns(results)})
-        for flag in results["main"]["flags"]:
+        generation_rows.append({**base, "measures": melody.measure_count, **extra, **result_columns(results), **zones})
+        for flag, zone in zip(results["main"]["flags"], flag_zones):
             number, beat = location(melody, flag["step"])
             flag_rows.append({**base, "rule": flag["rule"], "pair": flag["pair"], "step": flag["step"],
-                              "measure": number, "beat": beat})
+                              "measure": number, "beat": beat, "zone": zone})
 
     out = run_dir / "evaluation"
     _write(out / "qc.csv", qc_rows, ["run_id", "model", "melody_id", "origin", "generation", "attempt", "passed",
                                      "reasons"])
     _write(out / "per_generation.csv", generation_rows)
     _write(out / "flags.csv", flag_rows, ["run_id", "model", "melody_id", "origin", "generation", "attempt", "rule",
-                                         "pair", "step", "measure", "beat"])
+                                         "pair", "step", "measure", "beat", "zone"])
 
     reference_rows = []
     if include_reference:
@@ -186,9 +201,10 @@ def evaluate_run(run_dir, include_reference=True):
                 continue
             melody, _ = melody_of(melody_id)
             results = measure_all(reference_of(melody_id), melody.measure_count)
+            zones, _ = zone_results(reference_of(melody_id), results)
             reference_rows.append({"run_id": info["run_id"], "model": "bach", "melody_id": melody_id,
                                    "origin": "bach", "measures": melody.measure_count,
-                                   "quarters": melody.total_steps / 4, **result_columns(results)})
+                                   "quarters": melody.total_steps / 4, **result_columns(results), **zones})
         _write(out / "bach_reference.csv", reference_rows)
 
     per_melody = aggregate(generation_rows, attempts, qc_rows, melodies, info.get("protocol", {}))
@@ -198,11 +214,16 @@ def evaluate_run(run_dir, include_reference=True):
 
 
 def aggregate(generation_rows, attempts, qc_rows, melodies, protocol):
-    """Mean of each rate over generations that pass QC, per model x melody, with k of n recorded."""
+    """Mean of each rate over generations that pass QC, per model x melody, with k of n recorded.
+
+    Zone counts and opportunities are summed instead, so a zone rate is pooled
+    over the melody's valid generations (protocol 3.0, question 3).
+    """
     expected = protocol.get("generations_per_melody", 5)
     models = sorted({a["model"] for a in attempts})
-    rate_columns = [c for c in (generation_rows[0] if generation_rows else {})
-                    if c.endswith("_rate") or c == "copy_share"]
+    columns = list(generation_rows[0]) if generation_rows else []
+    rate_columns = [c for c in columns if c.endswith("_rate") or c == "copy_share"]
+    zone_columns_ = [c for c in columns if "_zone_" in c]
     rows = []
     for model in models:
         for melody_id, melody in melodies.items():
@@ -216,6 +237,8 @@ def aggregate(generation_rows, attempts, qc_rows, melodies, protocol):
             for column in rate_columns:
                 values = [r[column] for r in valid if r[column] != ""]
                 row[column] = sum(values) / len(values) if values else ""
+            for column in zone_columns_:
+                row[column] = sum(r[column] for r in valid) if valid else ""
             rows.append(row)
     return rows
 

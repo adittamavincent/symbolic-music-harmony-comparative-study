@@ -67,15 +67,15 @@ Tabel~\ref{tab:posisi-penelitian} merangkum penelitian terdahulu yang paling dek
 \textcite{fang2020} & Model \textit{Transformer}; generasi bebas & Jarak sebaran ciri terhadap korpus Bach & Bagian dari sebaran ciri \\ \hline
 \textcite{leemhuis2020} & Jaringan konvolusional; melodi sopran Bach & Uji dengar mahasiswa musik dan musikolog & Dicatat dari analisis dua contoh \\ \hline
 \textcite{choi2023} & Jaringan rekuren dengan \textit{loss function} tambahan; generasi bebas & Jarak sebaran ciri menurut Fang et al. & Bagian dari sebaran ciri; gerak paralel ditekan saat pelatihan \\ \hline
-Penelitian ini & DeepBach dan Coconet; melodi sopran yang sama dari \textit{chorale} Bach dan latihan Strube & Penghitungan otomatis dengan instrumen yang diuji & Lima kaidah per birama, dengan lokasi setiap kejadian \\ \hline
+Penelitian ini & DeepBach dan Coconet; melodi sopran \textit{chorale} Bach yang sama & Penghitungan otomatis dengan instrumen yang diuji & Lima kaidah per birama, dengan lokasi setiap kejadian dan letaknya dalam frasa \\ \hline
 \end{tabularx}
 \caption{Perbandingan penelitian terdahulu dengan penelitian ini}
 \label{tab:posisi-penelitian}
 \end{table}
 
-Penelitian ini melanjutkan analisis Bach Doodle \parencite[798]{huang2019}. Ukuran utamanya sama, yaitu jumlah pelanggaran per birama yang dihitung secara otomatis, dan gagasan yang diuji juga sama, yaitu bahwa kepatuhan model dapat berubah ketika melodi masukan tidak menyerupai data latih. Penelitian ini memperluas analisis tersebut dalam empat hal. Pertama, melodi dikendalikan dan diberikan secara identik kepada DeepBach dan Coconet. Kedua, asal melodi dibedakan antara melodi \textit{chorale} Bach dan melodi latihan dalam buku harmoni Strube. Ketiga, kaidah diperluas dengan tiga kategori lain dari rubrik Yan et al.\ \parencite{yan2018}, dan setiap kaidah beserta pengecualiannya dirumuskan dari uraian Strube \parencite{strube1928}. Keempat, harmonisasi asli Bach untuk melodi yang sama diukur sebagai acuan.
+Penelitian ini melanjutkan analisis Bach Doodle \parencite[798]{huang2019}. Ukuran utamanya sama, yaitu jumlah pelanggaran per birama yang dihitung secara otomatis. Penelitian ini memperluas analisis tersebut dalam empat hal. Pertama, melodi dikendalikan dan diberikan secara identik kepada DeepBach dan Coconet. Kedua, letak setiap pelanggaran dibandingkan antara bagian di sekitar fermata dan bagian di dalam frasa. Ketiga, kaidah diperluas dengan tiga kategori lain dari rubrik Yan et al.\ \parencite{yan2018}, dan setiap kaidah beserta pengecualiannya dirumuskan dari uraian Strube \parencite{strube1928}. Keempat, harmonisasi asli Bach untuk melodi yang sama diukur sebagai acuan.
 
-Dari sumber yang ditinjau, belum ditemukan pengukuran kepatuhan DeepBach dan Coconet terhadap kaidah gerak suara dengan melodi masukan yang dikendalikan. Penelitian yang memakai kaidah buku ajar menilai keluaran melalui penilai manusia dan tugas bas tetap \parencite{yan2018}, penelitian yang menghitung secara otomatis hanya mencakup dua kaidah pada melodi pengguna yang tidak dikendalikan \parencite{huang2019}, dan penelitian yang memakai uji dengar mencatat pelanggaran gerak suara tanpa menghitungnya \parencite{hadjeres2017, leemhuis2020}.
+Dari sumber yang ditinjau, belum ditemukan pengukuran kepatuhan DeepBach dan Coconet terhadap kaidah gerak suara dengan melodi masukan yang dikendalikan, maupun pengukuran letak pelanggaran terhadap struktur frasa. Penelitian yang memakai kaidah buku ajar menilai keluaran melalui penilai manusia dan tugas bas tetap \parencite{yan2018}, penelitian yang menghitung secara otomatis hanya mencakup dua kaidah pada melodi pengguna yang tidak dikendalikan \parencite{huang2019}, dan penelitian yang memakai uji dengar mencatat pelanggaran gerak suara tanpa menghitungnya \parencite{hadjeres2017, leemhuis2020}.
 
 \section{Landasan Teori}\label{sec:landasan-teori}
 
@@ -85,13 +85,9 @@ Landasan teori penelitian ini terdiri atas teori tentang objek penelitian dan te
 
 Briot, Hadjeres, dan Pachet, dalam buku \textit{Deep Learning Techniques for Music Generation}, menyusun kerangka untuk menggambarkan sistem pembuat musik berbasis \textit{deep learning}. Mereka membedakan lima dimensi, yaitu tujuan (jenis musik yang dihasilkan dan penggunaannya), representasi (bentuk data musik yang dipelajari dan dihasilkan), arsitektur (susunan jaringan saraf tiruan), tantangan (sifat yang diharapkan dari hasil, misalnya dapat dikendalikan), dan strategi (cara arsitektur dipakai untuk menghasilkan musik). Kelima dimensi tersebut saling memengaruhi; representasi yang dipilih, misalnya, membatasi masukan dan keluaran arsitektur \parencite[11--13]{briot2020book}.
 
-Dengan kerangka tersebut, DeepBach dan Coconet memiliki tujuan yang sama dalam penelitian ini, yaitu mengisi alto, tenor, dan bas untuk melodi sopran yang ditetapkan. Kedua model berbeda pada tiga dimensi lainnya. DeepBach merepresentasikan setiap suara sebagai deretan nama nada dengan simbol penahan untuk nada yang dibunyikan terus, ditambah informasi fermata dan posisi ketukan. Arsitekturnya memakai jaringan rekuren LSTM, dan strateginya adalah \textit{pseudo-Gibbs sampling} \parencite[1364--1367]{hadjeres2017}. Implementasi resmi yang dipakai dalam penelitian ini juga menerima informasi tanda kunci. Coconet merepresentasikan partitur sebagai \textit{piano roll}, memakai jaringan konvolusional, dan menghasilkan musik melalui \textit{blocked Gibbs sampling} \parencite[213, 215]{huang2017}. Kedua model juga dilatih dengan versi data \textit{chorale} Bach yang berbeda \parencites[1366]{hadjeres2017}[212]{huang2017}. Jadi, perbedaan hasil kedua model dapat berasal dari representasi, arsitektur, strategi generasi, maupun data latihnya. Perbandingan kedua model yang sudah tersedia tidak dapat memisahkan pengaruh masing-masing dimensi, dan batas inilah yang dipegang ketika hasil pertanyaan penelitian kedua ditafsirkan.
+Dengan kerangka tersebut, DeepBach dan Coconet memiliki tujuan yang sama dalam penelitian ini, yaitu mengisi alto, tenor, dan bas untuk melodi sopran yang ditetapkan. Kedua model berbeda pada tiga dimensi lainnya. DeepBach merepresentasikan setiap suara sebagai deretan nama nada dengan simbol penahan untuk nada yang dibunyikan terus, ditambah informasi fermata dan posisi ketukan. Arsitekturnya memakai jaringan rekuren LSTM, dan strateginya adalah \textit{pseudo-Gibbs sampling} \parencite[1364--1367]{hadjeres2017}. Implementasi resmi yang dipakai dalam penelitian ini juga menerima informasi tanda kunci. Coconet merepresentasikan partitur sebagai \textit{piano roll}, memakai jaringan konvolusional, dan menghasilkan musik melalui \textit{blocked Gibbs sampling} \parencite[213, 215]{huang2017}. Kedua model juga dilatih dengan versi data \textit{chorale} Bach yang berbeda \parencites[1366]{hadjeres2017}[212]{huang2017}. Jadi, perbedaan hasil kedua model dapat berasal dari representasi, arsitektur, strategi generasi, maupun data latihnya. Perbandingan kedua model yang sudah tersedia tidak dapat memisahkan pengaruh masing-masing dimensi, dan batas inilah yang dipegang ketika hasil pertanyaan penelitian kedua ditafsirkan. Batas yang sama berlaku pada pertanyaan ketiga. DeepBach menerima letak fermata, sedangkan Coconet tidak, tetapi perbedaan pola letak pelanggaran kedua model tidak dapat dikaitkan dengan informasi itu saja.
 
 Kedua model menghasilkan musik dengan mengambil sampel secara acak dari peluang yang dipelajarinya, sehingga melodi yang sama dapat menghasilkan harmonisasi yang berbeda setiap kali model dijalankan. Itulah sebabnya setiap melodi diharmonisasi beberapa kali dalam penelitian ini.
-
-Model yang belajar dari data hanya dapat diandalkan sejauh data yang dihadapinya menyerupai data latihnya. Storkey menyebut keadaan ketika data pada saat model dipakai berbeda dari data pada saat model dilatih sebagai pergeseran \textit{dataset} (\textit{dataset shift}). Bentuk yang paling sederhana adalah pergeseran kovariat (\textit{covariate shift}), yaitu ketika hanya sebaran masukan yang berubah, sedangkan hubungan antara masukan dan keluaran yang seharusnya tetap sama \parencite{storkey2008}. Menurut Storkey, pergeseran kovariat tidak menjadi masalah bila model telah mempelajari hubungan tersebut dengan tepat. Masalah dapat muncul ketika model hanya mendekati hubungan itu, karena pendekatan tersebut dibentuk oleh data latih dan belum tentu tepat untuk masukan yang jarang muncul dalam data latih \parencite{storkey2008}.
-
-Pada tugas harmonisasi, masukan adalah melodi sopran dan keluaran adalah tiga suara lainnya. Kaidah gerak suara yang seharusnya dipenuhi tidak berubah ketika melodi berganti, tetapi melodi yang diberikan dapat berasal dari sebaran yang berbeda dari melodi sopran \textit{chorale} Bach. Penerapan konsep pergeseran kovariat pada tugas harmonisasi adalah penafsiran peneliti. Huang et al.\ memakai gagasan yang sama ketika menjelaskan peningkatan gerak paralel pada melodi pengguna Bach Doodle yang berada di luar distribusi data latih (\textit{out of distribution}), dengan wilayah nada dan lompatan melodi sebagai penandanya \parencite[798]{huang2019}. Penelitian ini memakai asal melodi sebagai variabel yang dikendalikan. Melodi \textit{chorale} Bach berasal dari jenis musik yang dipelajari kedua model, sedangkan melodi latihan Strube tidak berasal dari korpus tersebut. Asal yang berbeda belum tentu berarti melodi berada di luar wilayah yang dipelajari model, sehingga ciri setiap melodi, seperti wilayah nada, lompatan, dan panjang, diukur untuk menunjukkan seberapa jauh kedua kelompok benar-benar berbeda. Hasil pertanyaan penelitian ketiga ditafsirkan dengan teori ini.
 
 \subsection{Evaluasi Musik Hasil Model Generatif}\label{sec:teori-evaluasi}
 
@@ -107,6 +103,8 @@ Kerangka teori yang paling umum (\textit{grand theory}) dalam penelitian ini ada
 
 Strube juga menyatakan bahwa bahan harmoni mengikuti kebiasaan dan cita rasa, bukan hukum yang tidak dapat diubah, dan bahwa banyak hal yang meragukan memerlukan pertimbangan guru yang berpengalaman \parencite[Preface]{strube1928}. Karena itu, kaidah Strube dalam penelitian ini dipandang sebagai norma penulisan. Teori harmoni fungsional juga menentukan batas penafsiran hasil, karena sebagian pengecualian yang dinyatakan Strube, seperti kuint yang bersifat lewat dan kuint pada pengulangan akor, bergantung pada fungsi harmoni yang tidak ditentukan oleh program pemeriksa.
 
+Kaidah Strube juga bergantung pada tahap; kuint sejajar antara akor IV dan II, misalnya, disebut tidak berbahaya, tetapi tetap dihindari untuk sementara \parencite[45]{strube1928}. Karena itu, penelitian ini memakai satu konteks saja, yaitu bab harmonisasi \textit{chorale} di bagian akhir buku, setelah bab-bab akor. Di bab tersebut Strube mengambil melodi latihannya dari J.S. Bach dan membolehkan persilangan suara sesekali asal tidak melewati sopran \parencite[174]{strube1928}. Pedoman lain pada bab itu, seperti pemakaian akor kuart-sekst dan trinada posisi dasar berfungsi tonika pada fermata, memerlukan penentuan akor, sehingga tidak diukur.
+
 Lima kaidah yang diukur termasuk dalam rubrik Yan et al.\ \parencite{yan2018} dan diuraikan Strube \parencite{strube1928} sebagai berikut:
 
 \begin{enumerate}
@@ -121,7 +119,7 @@ Pada rubrik Yan et al., kuint dan oktaf sejajar merupakan satu kategori dengan b
 
 Kategori lain dalam rubrik Yan et al., seperti penggandaan nada penuntun, penggandaan dan resolusi septim, resolusi nada penuntun, progresi yang tidak sesuai gaya, dan akor yang tidak tersusun secara tertian, memerlukan penentuan akor, fungsi, atau tonalitas. Kategori tersebut tidak diukur karena hasilnya bergantung pada penafsiran analitis yang dapat berbeda antaranalis \parencite{conditschultz2018, koops2019}. Resolusi nada penuntun pada sopran juga tidak relevan karena sopran diberikan sebagai soal, bukan dihasilkan model. Sekon berlebih dalam melodi tidak diukur karena ejaan nada diperlukan untuk membedakannya dari terts kecil \parencite{micchi2020}, sedangkan keluaran Coconet hanya berupa nomor nada MIDI tanpa ejaan. Kuint dan oktaf tersembunyi yang diuraikan Strube \parencite[12]{strube1928} tidak termasuk rubrik Yan et al.\ dan karena itu tidak diukur.
 
-Kaidah buku ajar memiliki pengecualian. Gerak paralel dapat dimaklumi pada batas frasa atau ketika melibatkan nada nonakor \parencite[798]{huang2019}. Strube sendiri menyatakan bahwa kuint pada pengulangan akor yang sama tidak bermasalah dan bahwa nada nonakor dinilai dari sudut pandang yang berbeda \parencite[35]{strube1928}, serta menganggap fermata sebagai kadens \parencite[174]{strube1928}. Batas frasa dapat ditentukan dari tanda fermata pada melodi, sedangkan pengulangan akor dan nada nonakor memerlukan analisis akor. Karena itu, penghitungan utama mengikuti Huang et al.\ dengan menghitung semua kejadian, sedangkan penghitungan tambahan mengecualikan gerak di sekitar fermata. Pengecualian akibat pengulangan akor dan nada nonakor tidak diterapkan dan menjadi batas penafsiran hasil.
+Kaidah buku ajar memiliki pengecualian. Gerak paralel dapat dimaklumi pada batas frasa atau ketika melibatkan nada nonakor \parencite[798]{huang2019}. Strube sendiri menyatakan bahwa kuint pada pengulangan akor yang sama tidak bermasalah dan bahwa nada nonakor dinilai dari sudut pandang yang berbeda \parencite[35]{strube1928}, serta menganggap fermata sebagai kadens \parencite[174]{strube1928}. Batas frasa dapat ditentukan dari tanda fermata pada melodi, sedangkan pengulangan akor dan nada nonakor memerlukan analisis akor. Karena itu, penghitungan utama mengikuti Huang et al.\ dengan menghitung semua kejadian, dan letak setiap kejadian dibedakan antara bagian di sekitar fermata, yang selanjutnya disebut zona fermata, dan bagian di dalam frasa untuk pertanyaan ketiga. Penghitungan tambahan untuk pertanyaan kedua mengecualikan gerak yang berawal di nada berfermata. Pengecualian akibat pengulangan akor dan nada nonakor tidak diterapkan dan menjadi batas penafsiran hasil.
 
 \subsection{Penjelasan Perseptual Kaidah Gerak Suara}\label{sec:teori-huron}
 
@@ -135,7 +133,7 @@ Teori Huron dipakai untuk menafsirkan arti musikal setiap jenis pelanggaran. Kui
 
 \subsection{Kerangka Berpikir}\label{sec:kerangka-berpikir}
 
-Kerangka berpikir penelitian ini ditunjukkan pada Gambar~\ref{fig:kerangka-berpikir}. Dua variabel bebas, yaitu model generatif dan asal melodi, menentukan harmonisasi yang diperiksa. Teori Briot et al.\ menjelaskan mengapa kedua model dapat menghasilkan keluaran yang berbeda, sedangkan teori pergeseran \textit{dataset} menjelaskan mengapa asal melodi dapat memengaruhi keluaran model yang sama. Harmonisasi diukur dengan instrumen yang menerapkan lima kaidah Strube, dan hasilnya, yaitu pelanggaran per birama, menjadi variabel terikat. Teori Huron menjelaskan arti setiap jenis pelanggaran, dan kerangka evaluasi Pearce et al.\ membatasi kesimpulan pada kriteria kaidah yang diukur.
+Kerangka berpikir penelitian ini ditunjukkan pada Gambar~\ref{fig:kerangka-berpikir}. Variabel bebas pertama, yaitu model generatif, menentukan harmonisasi yang diperiksa, dan harmonisasi asli Bach untuk melodi yang sama menjadi acuan. Teori Briot et al.\ menjelaskan mengapa kedua model dapat menghasilkan keluaran yang berbeda. Harmonisasi diukur dengan instrumen yang menerapkan lima kaidah Strube, dan hasilnya, yaitu pelanggaran per birama, menjadi variabel terikat. Variabel bebas kedua, yaitu letak dalam frasa, membagi pelanggaran tersebut menurut zona fermata dan bagian di dalam frasa, berdasarkan uraian Strube tentang fermata sebagai kadens. Teori Huron menjelaskan arti setiap jenis pelanggaran, dan kerangka evaluasi Pearce et al.\ membatasi kesimpulan pada kriteria kaidah yang diukur.
 
 \begin{figure}[htbp]
 \centering
@@ -146,19 +144,21 @@ Kerangka berpikir penelitian ini ditunjukkan pada Gambar~\ref{fig:kerangka-berpi
     arrow/.style={thick,->,>=stealth}
   }
   \node (x1) [box] {Model generatif ($X_1$)\\DeepBach, Coconet};
-  \node (x2) [box, right=0.8cm of x1] {Asal melodi ($X_2$)\\\textit{chorale} Bach, latihan Strube};
-  \node (h) [box, below=1.0cm of $(x1)!0.5!(x2)$] {Harmonisasi empat suara (alto, tenor, bas dari model)};
-  \node (i) [box, below=of h] {Instrumen: lima kaidah gerak suara Strube};
+  \node (ref) [box, right=0.8cm of x1] {Harmonisasi asli Bach\\(acuan praktik)};
+  \node (h) [box, below=of x1] {Harmonisasi empat suara (alto, tenor, bas dari model)};
+  \node (i) [box, below=1.0cm of $(h)!0.5!(ref |- h)$] {Instrumen: lima kaidah gerak suara Strube};
   \node (y) [box, below=of i] {Pelanggaran per birama ($Y$)};
+  \node (x2) [box, right=0.8cm of y] {Letak dalam frasa ($X_2$)\\zona fermata, dalam frasa};
   \node (t1) [theory, left=0.35cm of x1] {Briot et al.: lima dimensi model};
-  \node (t2) [theory, right=0.35cm of x2] {Storkey; Huang et al.: pergeseran \textit{dataset}};
+  \node (t2) [theory, below=0.6cm of x2] {Strube (hlm.~174): fermata sebagai kadens};
   \node (t3) [theory, left=0.6cm of i] {Strube: kaidah dan pengecualian};
-  \node (t4) [theory, right=0.6cm of y] {Huron: arti perseptual pelanggaran};
+  \node (t4) [theory, below=0.6cm of y] {Huron: arti perseptual pelanggaran};
   \node (t5) [theory, left=0.6cm of y] {Pearce et al.: batas evaluasi model gaya};
   \draw [arrow] (x1) -- (h);
-  \draw [arrow] (x2) -- (h);
   \draw [arrow] (h) -- (i);
+  \draw [arrow] (ref) -- (i);
   \draw [arrow] (i) -- (y);
+  \draw [arrow] (x2) -- (y);
   \draw [thick, dashed] (t1) -- (x1);
   \draw [thick, dashed] (t2) -- (x2);
   \draw [thick, dashed] (t3) -- (i);
@@ -175,18 +175,15 @@ Penelitian ini bertolak dari tiga anggapan dasar. Pertama, kelima kaidah dapat d
 
 \section{Hipotesis}\label{sec:hipotesis}
 
-Hipotesis adalah jawaban sementara terhadap masalah penelitian yang kebenarannya harus diuji secara empiris \parencite{rangkuti2016}. Pertanyaan penelitian pertama dijawab dengan statistik deskriptif tanpa hipotesis. Pertanyaan kedua dan ketiga dijawab melalui hipotesis berikut. Setiap hipotesis diuji untuk setiap kaidah secara terpisah, dengan pelanggaran per birama sebagai indikator tingkat kepatuhan.
+Hipotesis adalah jawaban sementara terhadap masalah penelitian yang kebenarannya harus diuji secara empiris \parencite{rangkuti2016}. Pertanyaan penelitian pertama dijawab dengan statistik deskriptif tanpa hipotesis. Pertanyaan kedua dan ketiga dijawab melalui hipotesis berikut. Setiap hipotesis diuji untuk setiap kaidah secara terpisah, dengan pelanggaran per birama (hipotesis pertama) dan pelanggaran per kesempatan (hipotesis kedua) sebagai indikator tingkat kepatuhan. Pelanggaran per kesempatan adalah jumlah pelanggaran dibagi banyaknya gerak atau peristiwa bunyi yang diperiksa dalam satu zona.
 
 \begin{enumerate}
     \item Hipotesis pertama, untuk pertanyaan penelitian kedua, pada setiap kaidah. \\
     $H_0$: tidak terdapat perbedaan pelanggaran per birama antara harmonisasi DeepBach dan Coconet pada melodi yang sama. \\
     $H_1$: terdapat perbedaan pelanggaran per birama antara harmonisasi DeepBach dan Coconet pada melodi yang sama.
-    \item Hipotesis kedua, untuk pertanyaan penelitian ketiga, pada setiap model, untuk kuint sejajar dan oktaf sejajar. \\
-    $H_0$: pelanggaran per birama pada melodi latihan Strube tidak lebih tinggi daripada pada melodi \textit{chorale} Bach. \\
-    $H_1$: pelanggaran per birama pada melodi latihan Strube lebih tinggi daripada pada melodi \textit{chorale} Bach.
-    \item Hipotesis ketiga, untuk pertanyaan penelitian ketiga, pada setiap model, untuk jarak antarsuara atas, persilangan di atas sopran, dan tumpang tindih suara. \\
-    $H_0$: tidak terdapat perbedaan pelanggaran per birama antara melodi latihan Strube dan melodi \textit{chorale} Bach. \\
-    $H_1$: terdapat perbedaan pelanggaran per birama antara melodi latihan Strube dan melodi \textit{chorale} Bach.
+    \item Hipotesis kedua, untuk pertanyaan penelitian ketiga, pada setiap model dan setiap kaidah. \\
+    $H_0$: tidak terdapat perbedaan pelanggaran per kesempatan antara zona fermata dan bagian di dalam frasa. \\
+    $H_1$: terdapat perbedaan pelanggaran per kesempatan antara zona fermata dan bagian di dalam frasa.
 \end{enumerate}
 
-Hipotesis kedua dirumuskan dengan arah karena Huang et al.\ menemukan bahwa kuint dan oktaf sejajar meningkat ketika melodi berada di luar distribusi data latih \parencite[798]{huang2019}, dan teori pergeseran \textit{dataset} menjelaskan mengapa pendekatan model dapat kurang tepat untuk masukan yang tidak menyerupai data latihnya \parencite{storkey2008}. Arah tersebut ditetapkan sebelum data dikumpulkan. Hipotesis pertama dan ketiga dirumuskan tanpa arah karena sumber yang ditinjau belum memberikan dasar untuk memperkirakan model mana yang lebih patuh, atau arah pengaruh asal melodi terhadap kaidah selain gerak paralel. Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji, bukan perbedaan yang disebabkan oleh arsitektur model semata. Pada hipotesis kedua dan ketiga, model yang sama menerima melodi dari dua asal yang ditentukan peneliti, sehingga perbedaan dapat dibaca sebagai pengaruh asal melodi pada model dan \textit{checkpoint} yang diuji. Karena kedua kelompok melodi dapat berbeda dalam beberapa ciri sekaligus, pengaruh tersebut dibaca sebagai pengaruh asal melodi secara keseluruhan, bukan pengaruh satu ciri tertentu.
+Kedua hipotesis dirumuskan tanpa arah karena sumber yang ditinjau belum memberikan dasar untuk memperkirakan model mana yang lebih patuh, atau di zona mana model lebih sering melanggar. Penolakan $H_0$ pada hipotesis pertama menunjukkan perbedaan keluaran model pada konfigurasi yang diuji, bukan perbedaan yang disebabkan oleh arsitektur model semata. Letak dalam frasa tidak dimanipulasi peneliti, sehingga penolakan $H_0$ pada hipotesis kedua dibaca sebagai hubungan antara letak dan pelanggaran per kesempatan pada model dan \textit{checkpoint} yang diuji, bukan sebagai sebab.

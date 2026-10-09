@@ -1,7 +1,7 @@
 \documentclass{isi-proposal}
 
-% Final-thesis revision v4 continues thesis v3 (tag thesis/v3), which continued proposal v2.
-\newcommand{\thesisversion}{v4}
+% Final-thesis revision v5 continues thesis v4 (tag thesis/v4), v3 (tag thesis/v3), and proposal v2.
+\newcommand{\thesisversion}{v5}
 \renewcommand{\contentsname}{DAFTAR ISI}
 \renewcommand{\figurename}{Gambar}
 \renewcommand{\tablename}{Tabel}

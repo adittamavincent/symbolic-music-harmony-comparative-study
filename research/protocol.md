@@ -1,10 +1,74 @@
-# Protocol worksheet (thesis v3–v4)
+# Protocol worksheet (thesis v3–v5)
 
-Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Protocol version 2.1, 2026-10-04 (thesis v4): settings pinned, quality control and sensitivity analyses completed, pipeline implemented; see [Version 2.1](#version-21-2026-10-04). Status: proposed design, not yet executed and not yet agreed with the supervisor. Machine-readable settings: `research/experiments/protocol_v2.json`. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
+Current version: **protocol 3.0, 2026-10-08 (thesis v5)**, machine-readable in `research/experiments/protocol_v3.json`; see [Version 3.0](#version-30-2026-10-08). Status: proposed design for thesis v5, not yet executed and not yet agreed with the supervisors; written at the researcher's direction before the next supervision meeting (`docs/final-thesis/supervision/rancangan-kesepakatan-v5.md`). Version 3.0 keeps the models, settings, input and output, instrument 2.0, validation, and quality control of version 2.1 below, and replaces its melody sets, question 3, sample size, and pilot. The sections after Version 3.0 describe versions 2 and 2.1 (thesis v3–v4) and stay as history; `research/experiments/protocol_v2.json` is unchanged.
 
-On hold since 2026-10-06. At the first meeting, Pembimbing I questioned pooling Strube exercises written for different chapters, advised a smaller case study in Strube's chorale context, and found the two-model comparison too broad for now (`feedback.md` G02, G06, G07). Do not type the remaining Strube melodies, install models, or run the pilot until the researcher has decided the v5 direction (`docs/final-thesis/supervision/rencana-v5.md`). If the sample, conditioning, or analysis plan changes, write a new protocol version and keep version 2.1 below as history.
+Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Protocol version 2.1, 2026-10-04 (thesis v4): settings pinned, quality control and sensitivity analyses completed, pipeline implemented; see [Version 2.1](#version-21-2026-10-04). Machine-readable settings of version 2.1: `research/experiments/protocol_v2.json`. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
 
-## Design in one paragraph
+Version 2.1 was put on hold on 2026-10-06. At the first meeting, Pembimbing I questioned pooling Strube exercises written for different chapters, advised a smaller case study in Strube's chorale context, and found the two-model comparison too broad for now (`feedback.md` G02, G06, G07). Version 3.0 answers G02 by using one context and keeps both models (the reason is in Version 3.0).
+
+## Version 3.0 (2026-10-08)
+
+Thesis v5. Researcher decision of 2026-10-08: stay close to v4 and take the supervisor input that fits; not yet agreed by the supervisors.
+
+### Design in one paragraph
+
+The study still continues the Bach Doodle analysis of Huang et al. (2019, §6.3) and gives the same soprano melodies to DeepBach and Coconet. All melodies now come from one context, the harmonization of chorales: 40 Bach chorale sopranos from the music21 corpus. Strube's chorale exercises are Bach melodies by his own statement (1928, p. 174), so nothing is typed from the book, and Bach's own harmonization of each melody serves as the reference. Question 3 no longer compares melody origins; it asks where violations fall: in the fermata zone, which Strube treats as a cadence (p. 174), or inside the phrase, for each model and for Bach. No human graders, listeners, or participants are involved.
+
+### Changes from version 2.1
+
+| Element | Version 2.1 | Version 3.0 | Reason |
+| --- | --- | --- | --- |
+| Melodies | All eligible Strube melody exercises (71 candidates from ten chapters) plus an equal Bach sample, at least 30 | 40 Bach chorale sopranos from the eligible frame that both models accept, seed 20261004 | Pembimbing I: exercises from different chapters carry different contexts (G02); Strube p. 174; no typing |
+| Melody origin (X2) and question 3 | Strube vs Bach melodies; Mann–Whitney per model; one-sided for parallels | Phrase position: fermata zone vs inside the phrase per model; Wilcoxon signed-rank paired by melody, two-sided; Bach's pattern descriptive | Pembimbing I: where errors tend to occur is the useful information (G08) |
+| Hypotheses | H1 model difference; H2–H3 origin | H1 model difference (unchanged); H2 phrase position within each model | — |
+| Sample size | Two-sample power, 30 per group | Paired power, 40 melodies (d_z = 0.5 needs 38.6 after the 0.864 ARE adjustment; 40 detect d_z ≈ 0.49); the same paired figure already planned question 2 in 2.1 | Both tests are paired by melody |
+| Generations | 5 per melody per model, at least 600 | 5 per melody per model, 400 | — |
+| Pilot | 3 Bach melodies outside the sample + 3 Strube melodies | 3 Bach melodies outside the sample (seed 41004) | No Strube group |
+| Discussion examples | 3 per rule | 1 per rule (5 in all), seed 20261005 | Less manual analysis |
+| Sensitivity | a, b, c, d for questions 2 and 3 | a (question 2), b, c and d (questions 2 and 3) | a removes part of the fermata zone, so it does not apply to question 3 |
+| Theory | Storkey (dataset shift) for melody origin | Storkey dropped; Strube's Preface and chorale chapter (p. 174) added; Briot et al. used for what each model receives (DeepBach: fermatas; Coconet: none) | Follows question 3 |
+
+Unchanged: models, versions, and settings; IO version 1.0; instrument version 2.0 and its validation; quality control; attempt logging; unit of analysis (melody, five generations averaged); copy_share; the Bach reference.
+
+### Phrase zones (question 3)
+
+Defined before any generation; implemented in `research/phrase_zones.py`.
+
+- Fermata zone (F): a motion whose start or arrival step lies inside a soprano note carrying a fermata (parallel fifths, parallel octaves, overlap); for spacing and crossing, an event inside such a note.
+- Inside the phrase (I): every other motion or event.
+- Flags and opportunities are instrument 2.0 main counts; the two zones add up to the instrument's totals (software check). The instrument version does not change.
+- Per melody and model, a zone rate is the zone's flags divided by its opportunities, both summed over the valid generations. A melody without opportunities in a zone is left out of that rule's test.
+- H2 per model and rule: Wilcoxon signed-rank on rate F minus rate I, two-sided, zero_method wilcox; matched-pairs rank-biserial, positive when the fermata zone is higher; Holm over five rules within each model.
+- Bach's own harmonizations of the same melodies are measured the same way and reported descriptively, with pooled rates, rate ratios, and the share of flags and of opportunities in the fermata zone.
+- Reading: phrase position is not manipulated, so H2 describes an association. DeepBach receives fermata metadata and Coconet does not; a difference between their patterns is discussed as one possible reason among the many ways the two models differ (Briot et al.).
+
+### Motivation from Bach (exploration, not study data)
+
+`research/experiments/scripts/explore_fermata_zone_bach.py`, 2026-10-08, instrument 2.0 main count on Bach's own harmonizations of the 318 eligible melodies of the 2.1 frame (output under `research/outputs/exploration/`, Git-ignored):
+
+| Rule | Flags in F / all | Share of opportunities in F | Rate ratio F/I |
+| --- | --- | --- | --- |
+| Parallel fifths | 11 / 40 | 0.172 | 1.83 |
+| Parallel octaves | 5 / 13 | 0.172 | 3.01 |
+| Spacing | 7 / 360 | 0.097 | 0.18 |
+| Crossing above the soprano | 5 / 50 | 0.098 | 1.02 |
+| Overlap | 257 / 469 | 0.171 | 5.88 |
+
+Bach's own departures from the rules depend on phrase position. Counts for fifths and octaves are small. These numbers motivate question 3; they are not part of its answer, which uses the 40 sampled melodies.
+
+### Optional extension (not in 3.0 unless agreed)
+
+DeepBach with its fermata metadata removed, on the same 40 melodies (200 more generations), as a variable the researcher sets. It would test Pembimbing I's remark that the machine has no context unless it is given one. Not implemented.
+
+### Risks added in 3.0
+
+| Risk | Check | Contingency |
+| --- | --- | --- |
+| Pembimbing I keeps one model | Next supervision | Coconet only with the same melodies and zones (the 2026-10-08 low-effort draft) |
+| Long chorales (frame 8–57 measures, median 15) exceed what a model processes | Pilot | Record ineligibility; the sample is drawn among melodies both models accept |
+| Few flags in the fermata zone for rare rules | Analysis | Report counts and the minimum detectable effect; a zero-difference test is reported without a p-value |
+
+## Design in one paragraph (version 2)
 
 The study continues the Bach Doodle analysis of Huang et al. (2019, §6.3). Huang et al. counted parallel fifths and octaves per measure with music21 in 21.8 million Coconet harmonizations and found more of them when the user melody fell outside the training soprano limits (MIDI 60–81, largest leap one octave). This study gives the same soprano melodies to DeepBach and Coconet, varies melody origin (Bach chorale sopranos vs melody exercises from Strube's harmony textbook), and counts five voice-leading violations per measure with a fully automatic instrument. Error categories come from the Yan et al. (2018) rubric; rule wording and exceptions come from Strube. No human graders, listeners, or participants are involved.
 
