@@ -317,9 +317,9 @@ class ObjectHighlightTests(unittest.TestCase):
         self.assertIn(r"\caption{Same \inhighlight{new} caption}", right)
         self.assertNotIn("fcolorbox", left + right)
 
-    def test_changed_table_commands_and_verbatim_text_keep_whole_source_blocks(self):
+    def test_changed_table_layout_and_verbatim_text_keep_whole_source_blocks(self):
         for old, new in ((r"\begin{tabular}{ll} A & B \\ \hline \end{tabular}",
-                         r"\begin{tabular}{ll} A & B \\ \cline{1-2} \end{tabular}"),
+                         r"\begin{tabular}{lc} A & B \\ \hline \end{tabular}"),
                         ("\\begin{verbatim}\npath old_image\n\\end{verbatim}",
                          "\\begin{verbatim}\npath new_image\n\\end{verbatim}"),
                         ("\\begin{verbatim}\n  indentation\n\\end{verbatim}",

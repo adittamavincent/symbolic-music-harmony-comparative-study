@@ -63,7 +63,8 @@ def content_key(text):
 
 
 def has_highlight(text):
-    return bool(re.search(r'\\(?:delhighlight|inhighlight|delpale|inspale|diffinline|fcolorbox|diffcaptionlabel|diffequationlabel)\b'
+    return bool(re.search(r'\\(?:delhighlight|inhighlight|delpale|inspale|diffinline|fcolorbox|diffcaptionlabel|diffequationlabel'
+                          r'|diffrow|diffcell|diffrule)\b'
                           r'|\\begin\{diffmath\}', text))
 
 
@@ -1133,6 +1134,12 @@ class Comparison:
             if (side, index) in self.moved:
                 note = "dipindahkan ke posisi baru" if side == "old" else "dipindahkan dari posisi lama"
                 text = rf"\diffmoved{{{note}}}" + "\n" + text
+            # The source floats a figure or table to the next page when it does
+            # not fit. A row starts at a column sync, which paracol does not
+            # break at, so an object taller than the remaining page would run
+            # past its bottom without this break point.
+            if kind in ("figure", "table"):
+                text = r"\penalty0" + "\n" + text
             return text
         return ""
 

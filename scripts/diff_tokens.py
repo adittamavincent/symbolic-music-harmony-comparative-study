@@ -96,6 +96,7 @@ OPTIONAL_ARGUMENT = re.compile(r'\\[A-Za-z]+\*?(?:\{[^{}]*\})?\[')
 ATOMIC_BLOCK = re.compile(
     r'\\begin\{(?:tikzpicture|verbatim|Verbatim|lstlisting|minted|tabular|tabularx|longtable|array)\*?\}')
 VERBATIM_BLOCK = re.compile(r'\\begin\{(?:verbatim|Verbatim|lstlisting|minted)\*?\}')
+TABLE = re.compile(r'\\begin\{(?:tabular|tabularx|longtable|array)\*?\}')
 CONTAINER_COMMAND = re.compile(r'^\s*\\(captionof|caption|footnotetext|footnote|href|hyperref)\*?(?![A-Za-z])')
 INLINE_VISIBLE_COMMAND = re.compile(
     r'(?<!\\)\\(footnotetext|footnote|href|hyperref|ref|pageref|eqref|autoref|nameref|cref|Cref|url|nolinkurl)\*?(?![A-Za-z])')
@@ -710,8 +711,14 @@ def render_group(old_texts, new_texts, tone="strong"):
     sentence split in two, or two lines merged into one, keeps its shared words.
     """
     old_color, new_color = tone_colors(tone)
-    # Keep paths, table rules, and code intact and give a changed object a
-    # block background. Whitespace-only edits do not change its rendering.
+    # A table with an unchanged layout compares row by row and cell by cell.
+    if len(old_texts) == len(new_texts) == 1 and TABLE.search(old_texts[0]) and TABLE.search(new_texts[0]):
+        from diff_tables import render_table  # diff_tables renders its cells with this module
+        tables = render_table(old_texts[0], new_texts[0], tone)
+        if tables:
+            return [tables[0]], [tables[1]]
+    # Keep paths, changed table layouts, and code intact and give a changed
+    # object a block background. Whitespace-only edits do not change its rendering.
     if any(ATOMIC_BLOCK.search(text) for text in (*old_texts, *new_texts)):
         old_source, new_source = "".join(old_texts), "".join(new_texts)
         verbatim = VERBATIM_BLOCK.search(old_source) or VERBATIM_BLOCK.search(new_source)

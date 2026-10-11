@@ -579,6 +579,15 @@ def generate_diff_latex(tag1, tag2, outdir):
         r"\newcommand{\diffequationlabel}[1]{\def\tagform@##1{\maketag@@@{\diffinline{#1}{(\ignorespaces ##1\unskip\@@italiccorr)}}}}",
         r"\makeatother",
         r"\newcommand{\diffkey}[3]{{\setlength{\fboxsep}{1.5pt}\colorbox{#1}{\strut kiri}\,\colorbox{#2}{\strut kanan}}~#3}",
+        # Table rows, cells, and rules (diff_tables). A rule keeps its color
+        # only up to the next row, so vertical rules stay as in the source.
+        r"\usepackage{colortbl}",
+        r"\newcommand{\diffrow}[1]{\rowcolor{#1}}",
+        r"\newcommand{\diffcell}[1]{\cellcolor{#1}}",
+        r"\makeatletter",
+        (r"\newcommand{\diffrule}[2]{\noalign{\global\let\diffarc\CT@arc@\gdef\CT@arc@{\color{#1}}}#2"
+         r"\noalign{\global\let\CT@arc@\diffarc}}"),
+        r"\makeatother",
         # No inset or added caption: retain the source equation's usable width.
         r"\newtcolorbox{diffmath}[1]{enhanced,breakable,colback=#1,colframe=#1,boxrule=0pt,arc=0pt,boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=0pt,after skip=0pt}",
         rf"\addbibresource{{{bib_filename1}}}",
