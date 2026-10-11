@@ -1,0 +1,4 @@
+interface:
+  display_name: "Human Academic Writing"
+  short_description: "Tulisan akademik alami dengan klaim yang terjaga"
+  default_prompt: "Gunakan $human-academic-writing untuk menyunting bagian skripsi ini dengan menjaga makna, sitasi, dan kesinambungan argumen."
