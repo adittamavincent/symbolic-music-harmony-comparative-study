@@ -15,13 +15,17 @@ Updated: 2026-10-13. BAB I–III, title and bilingual abstracts now follow the S
 
 ## What the researcher needs to do
 
-1. Read the revised PDF and [researcher guide](study/researcher-guide.md), then check the source pages in the [rule map](study/peta-kaidah-gerak-suara-strube.md).
+1. Read the revised PDF and [learning guide](study/panduan-belajar-v5.md), explain Fig. 33, and answer the [24 supervision questions](study/latihan-bimbingan-v5.md). Use the [researcher guide](study/researcher-guide.md) for next actions and check source pages in the [rule map](study/peta-kaidah-gerak-suara-strube.md).
 2. Obtain readable MODEL 285 notation, especially the obscured bass and final soprano duration; verify transcriptions. If not recoverable, select another complete case in the same context before seeing model results.
 3. Take [the meeting handout](supervision/bimbingan-arah-v5.md) and manuscript to Bu Yoni then Pak Gathut. Record actual dates and decisions on case, one/two models, criteria, attempts, method/hypotheses and format.
 4. Read core sources and fill researcher_read_status in [reading-notes.csv](records/reading-notes.csv). Assistant source checks are not the researcher's own reading.
 5. Once scope/source/criteria are settled, request contextual pipeline implementation and a separate pilot. Then freeze the executable protocol and collect main data; add results and conclusion chapters from those data.
 
 ## Source and verification evidence
+
+After the researcher liked the revised v5, both writing skills were applied to BAB I–III with seven minimal edits. The [editorial record](records/editorial-v5-2026-10-13.md) gives the original wording, revised wording and reasons. Citation/reference/label tokens, numbers and mathematics are preserved; front matter, bibliography, protocol and evaluator are unchanged from a5129ac. This is editorial review, not evidence of authorship or instrument validation.
+
+The focused learning packet contains five study sessions, the source Fig. 33, three explicitly illustrative calculation exercises and 24 questions with answer anchors. Run make learn-v5 from the repository root to build scratch/Panduan_Belajar_v5_23104810131_Vincent.pdf. Its 14 pages and the edited manuscript's 57 pages were rendered and visually reviewed; page/glyph checks found no replacement/null glyphs or words outside pages. Verification is retained in research/outputs/writing-v5-2026-10-13/.
 
 Both supplied scans have text-OCR coverage for every PDF page: 147 English and 91 Indonesian pages. This is not whole-book proofreading or notation accuracy. All five MODEL systems and the exercise boundary have been viewed. Fourteen relevant rule families have page/stage/exception mapping, detector gaps and annotation needs.
 

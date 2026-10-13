@@ -4,7 +4,7 @@
 
 Penelitian ini menggunakan studi kasus evaluatif untuk menelaah gerak suara pada harmonisasi AI. Satu melodi dalam konteks \textit{chorale} Strube menjadi kasus musikal yang dibatasi sumber, tugas, dan kriteria pembacaannya. Flyvbjerg menjelaskan nilai pengetahuan kontekstual yang dapat diperoleh melalui studi kasus serta perlunya pemilihan kasus menurut persoalan penelitian \parencite{flyvbjerg2006}. Prinsip tersebut diterapkan di sini untuk membaca keputusan gerak suara yang sulit dijelaskan melalui hitungan tanpa konteks.
 
-Analisis partitur dipadukan dengan pencatatan komputasional dan statistik deskriptif. Pencatatan menghasilkan data numerik, seperti interval, jumlah kejadian, durasi, dan variasi antarkeluaran, yang ditafsirkan melalui kaidah Strube. Pengukuran dan analisis angka mengikuti kebutuhan penelitian kuantitatif untuk memberi definisi eksplisit atas sifat yang diukur \parencite{creswell2018}. Kedua pertanyaan dijawab dalam satu prosedur analisis kasus; pembacaan partitur menyediakan alasan bagi keputusan yang kemudian diringkas.
+Analisis partitur dipadukan dengan pencatatan komputasional dan statistik deskriptif. Pencatatan menghasilkan data numerik, seperti interval, jumlah kejadian, durasi, dan variasi antarkeluaran, yang ditafsirkan melalui kaidah Strube. Pengukuran dalam penelitian kuantitatif memerlukan definisi yang jelas tentang sifat yang diukur \parencite{creswell2018}. Kedua pertanyaan dijawab dalam satu prosedur analisis kasus; pembacaan partitur menyediakan alasan bagi keputusan yang kemudian diringkas.
 
 Perbandingan dilakukan pada DeepBach dan Coconet yang menerima sopran sama. Model, data latih, representasi, bobot, serta prosedur generasinya berbeda, sehingga hasil berlaku pada gabungan konfigurasi sistem yang diuji \parencite[11--13]{briot2020book}. Penelitian tidak mengisolasi sebab arsitektural dari perbedaan itu. \textit{Checkpoint} adalah berkas bobot hasil pelatihan yang digunakan saat menghasilkan harmonisasi.
 
@@ -30,7 +30,7 @@ Penelitian membedakan kasus musikal, keluaran harmonisasi, dan kejadian gerak su
 
 Direncanakan 20 percobaan generasi per model, sehingga terdapat 40 percobaan pada satu kasus. Jumlah ini dipilih berdasarkan beban pemeriksaan partitur secara rinci, tanpa mengklaim daya statistik untuk populasi melodi. Setiap percobaan dimulai dari inisialisasi baru dengan pengaturan yang sama. Keluaran identik dan percobaan gagal tetap disimpan; jumlah keluaran layak dapat kurang dari 20 per model.
 
-Lazic menjelaskan bahwa pengamatan berulang atau bertingkat menimbulkan pseudoreplikasi bila diperlakukan sebagai unit independen tanpa memperhatikan ketergantungannya \parencite{lazic2010}. Penerapannya pada penelitian ini adalah melaporkan jumlah kasus, percobaan, keluaran layak, dan kejadian secara terpisah. Pengulangan generator dapat memberi informasi tentang keluaran pada melodi tetap apabila dijalankan secara independen, tetapi tidak menambah jumlah melodi yang diteliti.
+Lazic menjelaskan bahwa pengamatan berulang atau bertingkat menimbulkan pseudoreplikasi bila diperlakukan sebagai unit independen tanpa memperhatikan ketergantungannya \parencite{lazic2010}. Dalam penelitian ini, jumlah kasus, percobaan, keluaran layak, dan kejadian dilaporkan secara terpisah. Pengulangan generator dapat memberi informasi tentang keluaran pada melodi tetap apabila dijalankan secara independen, tetapi tidak menambah jumlah melodi yang diteliti.
 
 \section{Metode Pengumpulan Data}\label{sec:metode-pengumpulan-data}
 
@@ -118,7 +118,7 @@ Perubahan waktu, pemetaan suara, rumusan kriteria, penyebut, atau prosedur keput
 
 \subsection{Kontrol Kualitas Keluaran}\label{sec:kontrol-kualitas-sampel}
 
-Keluaran layak dianalisis bila memuat empat suara yang terpisah dan monofonik, memiliki panjang waktu sesuai masukan, dapat dinyatakan pada kisi yang ditetapkan, serta mempertahankan tinggi nada dan waktu bunyi sopran termasuk tanda diam dan durasi. Ketiga suara yang dihasilkan harus memuat nada dalam rentang tugas. Identitas suara diperiksa dari saluran atau bagian asal; suara tidak diurutkan ulang menurut tinggi nadanya ketika bersilangan. Persilangan dan tumpang tindih dapat menyulitkan pemisahan suara \parencite{karystinaios2023}, sehingga catatan pemetaan ikut dipertahankan.
+Keluaran layak dianalisis bila memuat empat suara yang terpisah dan monofonik, memiliki panjang waktu sesuai masukan, dan dapat dinyatakan pada kisi yang ditetapkan. Tinggi nada dan waktu bunyi sopran harus dipertahankan, termasuk tanda diam dan durasinya. Ketiga suara yang dihasilkan harus memuat nada dalam rentang tugas. Identitas suara diperiksa dari saluran atau bagian asal; suara tidak diurutkan ulang menurut tinggi nadanya ketika bersilangan. Persilangan dan tumpang tindih dapat menyulitkan pemisahan suara \parencite{karystinaios2023}, sehingga catatan pemetaan ikut dipertahankan.
 
 Kelayakan teknis dipisahkan dari kesesuaian musikal. Keluaran dengan gerak menyimpang tetap masuk analisis bila memenuhi syarat teknis. Keluaran gagal atau tidak layak tetap masuk daftar percobaan, dengan alasan yang dilaporkan per model. Bila salah satu model tidak menghasilkan keluaran layak, keadaan itu dilaporkan dan perbandingan musikal terbatas pada data yang tersedia.
 

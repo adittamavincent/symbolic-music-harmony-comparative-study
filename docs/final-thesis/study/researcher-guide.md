@@ -2,6 +2,8 @@
 
 Diperbarui 13 Oktober 2026. Ini bahan belajar dan langkah kerja, di luar naskah. [Panduan 9 Oktober](researcher-guide-2026-10-09.md) menyimpan desain 40 melodi/zona fermata sebagai riwayat; angka, uji, dan perintah pengumpulan di sana tidak dipakai untuk kasus yang sekarang direncanakan.
 
+Mulai belajar dengan [panduan belajar v5](panduan-belajar-v5.md), lalu kerjakan [24 latihan bimbingan](latihan-bimbingan-v5.md). Keduanya tersedia dalam satu PDF melalui make learn-v5; berkas ini tetap menjadi panduan langkah kerja.
+
 ## Penelitianmu dalam dua menit
 
 Kamu ingin tahu bagaimana AI menyusun alto, tenor, dan bas ketika soprannya sudah diberikan. Pedoman yang kamu pelajari adalah Strube. Karena Strube memberi aturan bertahap, kamu memeriksa gerak suara beserta kondisi dan pengecualiannya. DeepBach dan Coconet belajar pola chorale Bach dari data; keluaran keduanya dapat diperiksa dengan Strube meskipun buku itu tidak terbukti menjadi bahan latih.

@@ -35,6 +35,8 @@ final-thesis/
     └── reading-notes.csv          Source verification and the researcher's own reading
 ```
 
+Focused learning material for the current v5: [the learning guide](study/panduan-belajar-v5.md) and [24 supervision questions](study/latihan-bimbingan-v5.md). Run make learn-v5 for the combined PDF. The [editorial report](records/editorial-v5-2026-10-13.md) records the seven minimal chapter edits and preserved claims.
+
 Where to start:
 
 | You want to | Open |

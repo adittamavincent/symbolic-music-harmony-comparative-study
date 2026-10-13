@@ -53,7 +53,7 @@ endif
         setup-v2 melody-templates melodies preflight membership select pilot generate \
         evaluate analyze examples check-run dry-run-v2 \
         proposal-phase docs proposal slides notes qna compile present \
-        thesis map reading final-phase thesis-slides \
+        thesis map reading learn-v5 final-phase thesis-slides \
         diff diff-clean tag-amend aux-clean clean clean-docs
 
 all: proposal-phase final-phase
@@ -101,6 +101,7 @@ help:
 		"  make reading         Gabung catatan Markdown (study, supervision, records, protokol)" \
 		"                       dari tag versi terbaru jadi satu PDF: scratch/bahan-bacaan_<versi>.pdf" \
 		"  make reading <ref>   Bahan bacaan dari revisi lain: v3, thesis/v4, head, ID commit" \
+		"  make learn-v5        Build panduan belajar kasus v5 dan 24 latihan bimbingan" \
 		"  make final-phase     Build semua artefak skripsi final" \
 		"" \
 		"🔍 VERSIONING & DIFFING:" \
@@ -253,6 +254,9 @@ map: $(MAP_TEX)
 # Needs pandoc and LuaLaTeX; the reading order is PARTS in scripts/build_reading.py.
 reading:
 	python3 scripts/build_reading.py $(READING_ARGS)
+
+learn-v5:
+	python3 scripts/build_learning_v5.py
 
 # Thesis metadata is tracked in $(THESIS_DIR)/metadata.tex; no .env.local values.
 $(THESIS_TEX): $(THESIS_TEMPLATE)
