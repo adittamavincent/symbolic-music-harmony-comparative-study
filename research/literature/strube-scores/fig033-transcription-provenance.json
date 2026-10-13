@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-13",
+  "source_pdf": "references/The Theory and Use of Chords.pdf",
+  "source_pdf_sha256": "4d97f38fdc8a3dd726affe9eee3af7b9da6e9f98dd95780ad935f28e2aa34255",
+  "pdf_page_1based": 19,
+  "printed_page": 13,
+  "figure": 33,
+  "image": "references/ocr/english/pages/019/page-1-figure-1.png",
+  "image_sha256": "9cf54193c1d11441f36b1955b80fa60875edfe7fa5ff24e844b1019474d01799",
+  "method": "manual visual transcription against source image; OMR not used for canonical notes",
+  "source_notation": "two staves with stem directions distinguishing S/A and T/B",
+  "transcription_notation": "four separate parts in concert pitch; pitches and half-note values preserved",
+  "editorial_meter": "4/4 added to serialize the two half-note sonorities; the excerpt does not print a time signature",
+  "key_signature_sharps": 1,
+  "key_mode": null,
+  "source_accuracy_status": "assistant_visual_check_complete_researcher_independent_check_pending",
+  "scope": "two panels only; second good panel not transcribed",
+  "instrument_validation_scope": "two source examples of overlap; not complete instrument validation",
+  "examples": [
+    {
+      "id": "strube-fig033-good-first",
+      "source_panel": "first of the two panels labelled good",
+      "notes": {
+        "S": [
+          "A4",
+          "B4"
+        ],
+        "A": [
+          "D4",
+          "D4"
+        ],
+        "T": [
+          "F#3",
+          "G3"
+        ],
+        "B": [
+          "D3",
+          "G3"
+        ]
+      },
+      "expected_overlap": 0,
+      "interpretation_id": "Bas D3 ke G3 melampaui F#3 tenor sebelumnya; tenor melangkah F#3 ke G3 (1 semiton). Strube menerima kasus ini."
+    },
+    {
+      "id": "strube-fig033-avoid",
+      "source_panel": "rightmost panel labelled avoid",
+      "notes": {
+        "S": [
+          "G4",
+          "A4"
+        ],
+        "A": [
+          "D4",
+          "D4"
+        ],
+        "T": [
+          "B3",
+          "F#3"
+        ],
+        "B": [
+          "G3",
+          "D3"
+        ]
+      },
+      "expected_overlap": 1,
+      "interpretation_id": "Tenor B3 ke F#3 turun 5 semiton dan bas G3 ke D3 turun 5 semiton. F#3 tenor berada di bawah G3 bas sebelumnya; kedua suara melompat. Strube menandai avoid."
+    }
+  ],
+  "verification_file": "research/outputs/transcriptions/strube-rule-examples/verification.json"
+}

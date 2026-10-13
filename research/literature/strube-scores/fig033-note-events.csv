@@ -1,0 +1,17 @@
+fixture_id,voice,event,offset_quarter,pitch,midi,duration_quarter,status
+strube-fig033-good-first,S,1,0,A4,69,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,S,2,2,B4,71,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,A,1,0,D4,62,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,A,2,2,D4,62,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,T,1,0,F#3,54,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,T,2,2,G3,55,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,B,1,0,D3,50,2,assistant_visual_check_researcher_check_pending
+strube-fig033-good-first,B,2,2,G3,55,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,S,1,0,G4,67,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,S,2,2,A4,69,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,A,1,0,D4,62,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,A,2,2,D4,62,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,T,1,0,B3,59,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,T,2,2,F#3,54,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,B,1,0,G3,55,2,assistant_visual_check_researcher_check_pending
+strube-fig033-avoid,B,2,2,D3,50,2,assistant_visual_check_researcher_check_pending

@@ -1,0 +1,16 @@
+{
+  "source_pdf": "references/The Theory and Use of Chords.pdf",
+  "source_sha256": "4d97f38fdc8a3dd726affe9eee3af7b9da6e9f98dd95780ad935f28e2aa34255",
+  "printed_page": 174,
+  "pdf_page": 136,
+  "example": 285,
+  "voice": "S",
+  "scope": "Pickup and two following measures only; not a complete transcription of MODEL 285",
+  "key_signature_sharps": 1,
+  "key_mode_assumption": null,
+  "time_signature": "C (4/4)",
+  "method": "Assistant visual reading against the unmodified notation image; not the raw Audiveris result",
+  "researcher_confirmation": "pending",
+  "note_events": 9,
+  "duration_quarter": 9
+}

@@ -23,7 +23,7 @@
 \newcommand*{\toclevel@matter}{0}
 \makeatother
 
-\addbibresource{../../proposal-phase/assets/references.bib}
+\addbibresource{references.bib}
 % Indonesian page labels in citations, e.g. (Strube, 1928, hlm. 9).
 \DefineBibliographyStrings{english}{page = {hlm\adddot}, pages = {hlm\adddot}}
 

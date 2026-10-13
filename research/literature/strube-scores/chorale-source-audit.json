@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-13",
+  "scope": "material and legibility audit for design agreement; not complete optical music recognition",
+  "spans": [
+    {
+      "source_id": "MODEL285-1",
+      "printed_page": 174,
+      "pdf_page_1based": 136,
+      "side": "left",
+      "image": "references/ocr/english/pages/136/left/page-1-figure-1.png",
+      "sha256": "3b371f50341438bbea5a697b1a0c9fefc8a5f9a07536ac38841f65e6593f81b1",
+      "finding": "S/A/T/B; opening bas partly obscured by stamp; nine-event soprano reading exists"
+    },
+    {
+      "source_id": "MODEL285-2",
+      "printed_page": 175,
+      "pdf_page_1based": 136,
+      "side": "right",
+      "image": "references/ocr/english/pages/136/right/page-1-figure-1.png",
+      "sha256": "3e4dabe04ccd71ad9a93f99495b51f79805aed72df2b6b1f047bce093b1670cb",
+      "finding": "S/A/T/B; visual source inspected; canonical full transcription not yet available"
+    },
+    {
+      "source_id": "MODEL285-3",
+      "printed_page": 175,
+      "pdf_page_1based": 136,
+      "side": "right",
+      "image": "references/ocr/english/pages/136/right/page-1-figure-2.png",
+      "sha256": "fa363c572675046b851483b92756a98c9d8fa984c0b9237d34531b050e039662",
+      "finding": "S/A/T/B; visual source inspected; canonical full transcription not yet available"
+    },
+    {
+      "source_id": "MODEL285-4",
+      "printed_page": 175,
+      "pdf_page_1based": 136,
+      "side": "right",
+      "image": "references/ocr/english/pages/136/right/page-1-figure-3.png",
+      "sha256": "45c69c8b094e28c0a7922f6eec6554fd1e8073f3c40ea5a15f162d815b114ecf",
+      "finding": "S/A/T/B; visual source inspected; canonical full transcription not yet available"
+    },
+    {
+      "source_id": "MODEL285-5",
+      "printed_page": 176,
+      "pdf_page_1based": 137,
+      "side": "left",
+      "image": "references/ocr/english/pages/137/left/page-1-figure-1.png",
+      "sha256": "6d9422b8b62433510c29ddd59c455941eb33ee0f286c736ce63fc049374b00b4",
+      "finding": "S/A/T/B; final soprano duration needs a clearer copy before freezing input"
+    },
+    {
+      "source_id": "EXERCISES286-I-II",
+      "printed_page": 176,
+      "pdf_page_1based": 137,
+      "side": "left",
+      "image": "references/ocr/english/pages/137/left/page-1-figure-2.png",
+      "sha256": "fd2d0770fdb4ff9f0afd354ec2db0e12b9cd4caa79b73167e5234c6e522c8e5f",
+      "finding": "Single melodies; not printed answer harmonizations"
+    },
+    {
+      "source_id": "EXERCISES286-II-VI",
+      "printed_page": 177,
+      "pdf_page_1based": 137,
+      "side": "right",
+      "image": "references/ocr/english/pages/137/right/page-1-figure-1.png",
+      "sha256": "35a84dcb8378177ed39c745d46dd31d6ee3aa740ece725863b50e35878bbc59a",
+      "finding": "Single melodies; not printed answer harmonizations"
+    }
+  ],
+  "missing_printed_pages": [
+    48,
+    179
+  ],
+  "model_attribution": "printed harmonization in Strube; Bach work and arranger identity unverified",
+  "closure": "source gathering for design discussion complete; full SATB reference/input not ready to freeze"
+}

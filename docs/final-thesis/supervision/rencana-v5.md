@@ -4,7 +4,9 @@ Disusun 6 Oktober 2026 dari transkrip bimbingan dengan Pak Gathut. Ini dokumen k
 
 Pilihan dan rekomendasi di bawah adalah usulan asisten setelah membaca transkrip, naskah v4, dan buku Strube. Keputusan arah ada di tanganmu (G05), lalu dikonfirmasi ke Pak Gathut.
 
-Pembaruan 8 Oktober 2026: atas arahan peneliti, pilihan A–C di bawah tidak dipakai. Usulan v5 sekarang di [rancangan-kesepakatan-v5.md](rancangan-kesepakatan-v5.md): v4 dengan empat perubahan, yaitu tetap dua model, 40 melodi *chorale* Bach dari korpus tanpa pengetikan, dan pertanyaan 3 tentang letak pelanggaran di sekitar fermata atau di dalam frasa. Lembar untuk bimbingan berikutnya ada di [bimbingan-arah-v5.md](bimbingan-arah-v5.md).
+Pembaruan 8 Oktober 2026: atas arahan peneliti, pilihan A–C di bawah tidak dipakai. Usulan v5 pada tanggal itu di [arsip rancangan 8 Oktober](rancangan-kesepakatan-v5-2026-10-08.md): v4 dengan empat perubahan, yaitu tetap dua model, 40 melodi *chorale* Bach dari korpus tanpa pengetikan, dan pertanyaan 3 tentang letak pelanggaran di sekitar fermata atau di dalam frasa. Lembar untuk bimbingan berikutnya ada di [bimbingan-arah-v5.md](bimbingan-arah-v5.md).
+
+Pembaruan 13 Oktober 2026: peneliti membuka kembali arah v5 dan meminta pembacaan sumber untuk menyusun kesepakatan. [Rancangan terkini](rancangan-kesepakatan-v5.md) mengusulkan kasus kecil dengan kaidah dan pengecualian Strube serta analisis gerak suara; fermata menjadi konteks. [Peta sumber](../study/peta-kaidah-gerak-suara-strube.md) memuat 14 keluarga kriteria dan dua panel Fig. 33 yang sudah ditranskripsi. Material MODEL 285 masih memerlukan salinan lebih jelas sebelum input/acuan lengkap dibekukan. Pilihan dan tugas bertanggal 6-8 Oktober di bawah tetap sebagai riwayat.
 
 ## 1. Inti masukan Pak Gathut
 
@@ -58,8 +60,10 @@ Bab "Harmonization of Chorales" ada di hlm. 174–179, sesudah semua bab akor, m
 
 - **Pedoman khusus *chorale* (hlm. 174).** Gaya yang khidmat (*dignified*); akor 6/4, termasuk 6/4 kadens, jarang dipakai; akor nona tidak dipakai kecuali bentuk tanpa akar (*leading-tone seventh* dan *diminished seventh*); akor alterasi dihindari kecuali *augmented triad* pada inversi pertama dan akor *augmented sixth*; pada fermata diusahakan trinada posisi dasar berfungsi tonika; setengah kadens pada dominan juga dipakai; *cross-relation* sesudah fermata dibolehkan karena fermata berfungsi sebagai kadens; persilangan suara (tidak di atas sopran) dipakai bila menghasilkan gerak suara yang lebih baik; *chorale* minor sering berakhir pada tonika mayor; modulasinya kebanyakan ke tangga nada dekat. Istilah Indonesianya ikuti terjemahan Pak Gathut bila jilid yang memuat bab ini ada.
 - **Melodinya dari Bach.** Strube menulis bahwa melodi-melodi berikutnya diambil dari J. S. Bach (hlm. 174). Judul *chorale*-nya tidak tercantum di halaman yang terpindai.
-- **Isi latihan.** Satu contoh harmonisasi empat suara berlabel *Model* (no. 235, hlm. 174–176) dan latihan no. 236 berisi sepuluh melodi bernomor romawi I–X (hlm. 176–179). Siapa penyusun harmonisasi *Model* belum diperiksa.
+- **Isi latihan.** Satu contoh harmonisasi empat suara berlabel *Model* (no. 285, hlm. 174–176) dan latihan no. 286 berisi sepuluh melodi bernomor romawi I–X (hlm. 176–179). Siapa penyusun harmonisasi *Model* belum diperiksa.
 - **Halaman hilang.** Hlm. 179 tidak ada di pindaian (hlm. 177 terpindai dua kali), jadi melodi X belum lengkap. Terjemahan Pak Gathut jilid I tidak memuat bab ini.
+
+Pemeriksaan scan pada 11 Oktober 2026 memperbaiki nomor MODEL dan EXERCISES menjadi 285 dan 286; sebelumnya catatan ini salah membacanya sebagai 235 dan 236. Kajian khusus penggunaan MODEL sebagai kasus utama ada di [studi-kasus-model-285-strube.md](../study/studi-kasus-model-285-strube.md).
 
 Di v4 bab ini dikeluarkan karena melodinya akan sama dengan kelompok Bach. Usulan Pak Gathut justru menjadikan bab ini pusat penelitian.
 
@@ -79,7 +83,7 @@ Yang tetap terpakai di pilihan mana pun: instrumen versi 2.0 (lima kaidah), pemb
 
 | | A. Studi kasus satu soal *chorale* | B. Tetap komparatif, ditambah konteks bab | C. Seluruh bab *chorale* Strube |
 | --- | --- | --- | --- |
-| Bahan | Satu melodi dari latihan 236 | 71 melodi, diberi label bab | *Model* 235 dan sepuluh melodi latihan 236 |
+| Bahan | Satu melodi dari latihan 286 | 71 melodi, diberi label bab | *Model* 285 dan sepuluh melodi latihan 286 |
 | Model | Coconet (DeepBach opsional) | DeepBach dan Coconet | Coconet (DeepBach opsional) |
 | Analisis | Frekuensi dan lokasi pelanggaran pada banyak harmonisasi; dibandingkan dengan harmonisasi Bach dan pedoman hlm. 174 | Seperti v4, ditambah analisis per bab | Seperti A untuk setiap melodi; satu atau dua melodi dibahas mendalam |
 | Sesuai masukan | Paling dekat dengan G05–G08 | Hanya menjawab G01–G02; bertentangan dengan G05 dan G07 | Dekat dengan G06; lebih lebar dari "satu sampel" |
@@ -99,7 +103,7 @@ Bayangkan memeriksa satu soal ujian yang dikerjakan seratus kali oleh murid yang
 
 Sketsa ini bahan diskusi, belum keputusan.
 
-1. **Pilih satu melodi** dari latihan 236 bersama Pak Gathut. Syarat yang masuk akal: lengkap di pindaian, sumber *chorale* Bach-nya dapat ditemukan, berada dalam wilayah nada kedua model, dan memuat fermata atau modulasi supaya konteksnya kaya.
+1. **Pilih satu melodi** dari latihan 286 bersama Pak Gathut. Syarat yang masuk akal: lengkap di pindaian, sumber *chorale* Bach-nya dapat ditemukan, berada dalam wilayah nada kedua model, dan memuat fermata atau modulasi supaya konteksnya kaya.
 2. **Lacak sumber Bach-nya** (G06). Ketik melodi Strube, lalu cocokkan urutan nadanya dengan sopran korpus music21. Catat perbedaan versi Strube dan versi Bach (nada dasar, ritme, fermata).
 3. **Harmonisasi berulang.** Melodi versi Strube diberikan kepada Coconet sebanyak N kali. Angka N ditetapkan setelah uji coba waktu generasi dan dicatat di protokol. Semua keluaran mentah disimpan.
 4. **Pemeriksaan otomatis.** Lima kaidah dihitung dengan instrumen versi 2.0, lalu dicatat lokasinya: birama, ketukan, pasangan suara, dekat fermata atau tidak.
@@ -137,7 +141,7 @@ Pertanyaan, tetap berbentuk "Bagaimana" (F04):
 | II.B Landasan Teori | Briot, Storkey, Pearce, Strube, Huron | Strube diperluas: susunan bertahap buku, Preface, pedoman *chorale* hlm. 174. Huron untuk kemandirian empat suara (G12). Pearce tetap. Storkey dan Briot dikurangi atau dihapus bila asal melodi dan perbandingan model tidak dipakai |
 | II.C–II.D Asumsi, Hipotesis | Tiga hipotesis | Kemungkinan dihapus bila studi kasus deskriptif; tunggu konfirmasi |
 | III.A Pendekatan | Kuantitatif, posisionalitas | Studi kasus; data frekuensi ditambah analisis partitur; posisionalitas tetap |
-| III.B Objek dan sampel | 71 melodi Strube dan sampel acak Bach | Satu soal latihan 236 (atau sepuluh, pilihan C); sumber Bach-nya |
+| III.B Objek dan sampel | 71 melodi Strube dan sampel acak Bach | Satu soal latihan 286 (atau sepuluh, pilihan C); sumber Bach-nya |
 | III.C Pengumpulan data | Lima generasi per melodi per model | N generasi satu melodi; instrumen tetap; lapisan konteks *chorale* |
 | III.D Analisis | Wilcoxon, Mann–Whitney, Holm, empat analisis sensitivitas | Frekuensi per lokasi, perbandingan dengan Bach, analisis partitur |
 | Protokol | Versi 2.1, belum dibekukan | Versi baru ditulis; versi 2.1 disimpan sebagai riwayat |
@@ -146,7 +150,7 @@ Pertanyaan, tetap berbentuk "Bagaimana" (F04):
 
 Dengan Pak Gathut:
 
-1. Apakah yang Bapak maksud dengan konteks *chorale* adalah bab "Harmonization of Chorales" (hlm. 174–179)? Satu melodi, atau seluruh sepuluh melodi latihan 236?
+1. Apakah yang Bapak maksud dengan konteks *chorale* adalah bab "Harmonization of Chorales" (hlm. 174–179)? Satu melodi, atau seluruh sepuluh melodi latihan 286?
 2. Satu model (Coconet) saja, atau DeepBach tetap ikut sebagai kasus kedua?
 3. Apakah studi kasus deskriptif tanpa hipotesis dapat diterima? Dosen Seminar Musikologi 2 dulu meminta variabel dan hipotesis untuk desain kuantitatif (F06, F07).
 4. Pedoman *chorale* Strube mana yang wajib dibahas, dan apakah analisis partitur oleh peneliti sendiri cukup?

@@ -5,6 +5,6 @@ strube-fig022-good,P5;P8,Strube 1928,9,Fig. 22 (good),good,,,0,,
 strube-fig030-bad,P5;P8,Strube 1928,12,Fig. 30 (bad),bad,verify,,verify (>=1),,"Parallel fifths, octaves, unisons marked with lines"
 strube-fig030-good,P5;P8,Strube 1928,12,Fig. 30 (good),good,,,0,,
 strube-fig032,OVERLAP,Strube 1928,12,"Fig. 32 a, b, c",acceptable (one voice stepwise),verify,,0,,Overlap with stepwise motion
-strube-fig033-good,OVERLAP,Strube 1928,13,Fig. 33 (good),good,,,0,,
-strube-fig033-avoid,OVERLAP,Strube 1928,13,Fig. 33 (avoid),avoid,verify,,1,,Overlap with both voices skipping
+strube-fig033-good,OVERLAP,Strube 1928,13,Fig. 33 (good),good,T-B,first good panel; two half-note sonorities,0,research/literature/strube-scores/strube-fig033-good-first.musicxml,2026-10-13: first good panel only transcribed; second good panel not included. v2 overlap 0 on this source reading; independent researcher verification pending.
+strube-fig033-avoid,OVERLAP,Strube 1928,13,Fig. 33 (avoid),avoid,T-B,avoid panel; two half-note sonorities,1,research/literature/strube-scores/strube-fig033-avoid.musicxml,2026-10-13: transcribed visually; tenor B3-F#3 and bass G3-D3 both leap; v2 overlap 1. Independent researcher verification pending.
 strube-fig076,P5,Strube 1928,35,Fig. 76,P5 to d5 acceptable,verify,,0,,Second fifth not perfect

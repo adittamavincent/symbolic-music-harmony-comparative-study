@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; v4 menambah landasan teori (Huron, Briot dkk., pergeseran dataset, metodologi evaluasi gaya) dan studi harmonisasi chorale yang diuji pendengar",
+  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; penelusuran v4 dipertahankan. Eksplorasi 11 Oktober 2026 menambah metodologi studi kasus untuk MODEL no. 285 dalam Strube, batas generalisasi, dan unit analisis generasi berulang; eksplorasi ini belum mengubah protokol penelitian.",
   "queries": [
     {
       "id": "q01-evaluation-surveys",
@@ -217,7 +217,23 @@
       "search": "kecerdasan buatan pendidikan musik",
       "from_year": 2020,
       "limit": 30
+    },
+    {
+      "id": "q28-single-case-methodology",
+      "theme": "Dasar metodologi studi kasus tunggal",
+      "purpose": "Periksa alasan pemilihan kasus, kedalaman analisis, dan batas generalisasi; jangan menganggap jumlah kasus kecil otomatis lemah atau satu kasus otomatis mewakili populasi.",
+      "search": "Five Misunderstandings About Case Study Research",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q29-repeated-generations-unit",
+      "theme": "Unit analisis dan pengulangan dalam satu kasus",
+      "purpose": "Periksa independensi, data bertingkat, dan pseudoreplikasi; bedakan variasi keluaran pada satu melodi tetap dari variasi antarmelodi sebelum mengusulkan statistik.",
+      "search": "problem of pseudoreplication neuroscientific studies analysis",
+      "from_year": null,
+      "limit": 10
     }
   ],
-  "plan_revision": "2026-10-04-v4"
+  "plan_revision": "2026-10-11-case-exploration"
 }

@@ -1,6 +1,8 @@
 # Final thesis v5
 
-v3 continued proposal v2 as the final thesis and is tagged `thesis/v3`; v4 is tagged `thesis/v4`. v5, drafted on 2026-10-08 after the first meeting with Pembimbing I, is the text in the working tree; it is not tagged and not yet agreed by the supervisors ([supervision/perubahan-v4-ke-v5.md](supervision/perubahan-v4-ke-v5.md)). Proposal v1/v2 remain in `../proposal-phase/`. The active manuscript follows the department's 2026 research-proposal outline with BAB I–III. Results and conclusions are written after main data exist; main data, analysis, and department format approval remain open.
+v3 continued proposal v2 as the final thesis; v4 followed peer feedback. v5 was drafted on 8 October and rewritten on 13 October 2026 as a Strube chorale case with contextual voice-leading analysis. The researcher requested local amendment of thesis/v5 after source/PDF review. Supervisor agreement and model data remain unrecorded. [The change record](supervision/perubahan-v4-ke-v5.md) separates the current revision from the archived October design. Proposal sources remain in ../proposal-phase/. The active manuscript has BAB I–III; results and conclusions follow actual main data.
+
+Direction reopened 13 October 2026: start with [the revised agreement](supervision/rancangan-kesepakatan-v5.md) and [the Strube rule map](study/peta-kaidah-gerak-suara-strube.md). The seven-page review packet is `scratch/kesepakatan-revisi-v5.pdf`. The 8-9 October agreement and handout are preserved in dated archive files. The manuscript now follows the case plan; the executable pipeline remains the earlier protocol 3.0.
 
 ## What is in this folder
 
@@ -20,11 +22,12 @@ final-thesis/
 │   ├── bimbingan-v3.md            Handout for the v3 supervisor meeting
 │   ├── bimbingan-v4.md            Handout for the v4 meeting with Pembimbing I
 │   ├── rencana-v5.md              Plan for v5 after that meeting: options, questions, tasks
-│   ├── rancangan-kesepakatan-v5.md v5 design (v4 with four changes), reasons, questions it must answer
+│   ├── rancangan-kesepakatan-v5.md Current source-based case proposal, reasons and agreement items
 │   └── bimbingan-arah-v5.md       Handout and agreement sheet for Pembimbing II, then Pembimbing I
 ├── study/                         For the researcher to learn and rehearse
 │   ├── persiapan-pembimbing-1.md  Strube translation, argument chain, concepts, checklist
 │   ├── defense-qa.md              All practice questions and answers (Q1–Q123, with 16a–c and 41a–b)
+│   ├── peta-kaidah-gerak-suara-strube.md  Rule stages, exceptions, notation evidence for the current agreement
 │   ├── model-dan-istilah.md       DeepBach, Coconet, and technical terms in plain Indonesian
 │   └── researcher-guide.md        Start here: the study and its five theories in plain Indonesian, study order, reading list
 └── records/                       Running records
@@ -50,6 +53,7 @@ Where to start:
 | Prepare the next meeting and reach one agreement on v5 | [supervision/rancangan-kesepakatan-v5.md](supervision/rancangan-kesepakatan-v5.md), then print [supervision/bimbingan-arah-v5.md](supervision/bimbingan-arah-v5.md) |
 | Check what the lecturers actually asked | [supervision/feedback.md](supervision/feedback.md) |
 | Find when and why something was decided | [records/research-log.md](records/research-log.md) |
+| Read the supplied Strube scans as searchable text | [Local OCR corpus](../../references/ocr/README.md): English and Indonesian transcripts, source scans, and OCR checks; ignored by Git |
 | Edit the manuscript | The table below |
 
 Research code, the protocol worksheet, and literature data live in [research/](../../research/README.md).
@@ -60,15 +64,16 @@ Research code, the protocol worksheet, and literature data live in [research/](.
 | --- | --- |
 | `main.tex.template` | Version, document order, contents lists, formatting |
 | `metadata.tex` | Title, researcher, committee, dates, institution |
+| thesis/references.bib | Active thesis bibliography; proposal bibliography preserved |
 | `layout.tex` | Chapter heading (`\thesischapter`) and front-matter page layouts: cover heading, signatures |
 | `frontmatter/01-halaman-judul.tex` to `09-abstract.tex` | One file per front-matter page, in page order: halaman judul, pengajuan, pengesahan, pernyataan, motto, persembahan, kata pengantar, abstrak, abstract |
 | `chapters/01-pendahuluan.tex` | BAB I: latar belakang, rumusan masalah, pertanyaan penelitian, tujuan, manfaat (no sistematika penulisan since v4) |
 | `chapters/02-tinjauan-pustaka.tex` | BAB II: tinjauan pustaka (with comparison table), landasan teori (Briot et al., Pearce et al., Strube with the chorale chapter, Huron), kerangka berpikir, asumsi, hipotesis |
-| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/populasi/sampel, pengumpulan data (variabel, melodi, generasi, instrumen with fermata zones, validitas, kontrol kualitas), analisis, alur penelitian |
+| `chapters/03-metode-penelitian.tex` | BAB III: metode pendekatan, objek/pemilihan kasus/pengulangan, pengumpulan data (aspek pengamatan, transkripsi, generasi, kriteria dan keputusan kontekstual, validitas, kontrol kualitas), analisis, alur penelitian |
 
 Each chapter file opens with its own `\thesischapter` heading. Every section and subsection heading carries a `\label{sec:...}` ID. Keep the ID when a heading is renamed or moved; `make diff` pairs revisions by these IDs. Give a new section a new ID.
 
-The class, logos, and bibliography remain shared with `../proposal-phase/assets/`. Thesis chapters are independent of proposal chapters. The reused class does not establish compliance with the department's final-thesis guide.
+The class and logos remain shared with ../proposal-phase/assets/. The active thesis bibliography is thesis/references.bib, with inherited entries and separately verified thesis additions. The reused class does not establish compliance with the department's final-thesis guide.
 
 ## Build from the repository root
 
@@ -80,6 +85,6 @@ make -B thesis
 
 The PDF is `scratch/thesis.pdf` from the repository root. Make removes temporary auxiliary files after compiling. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, current PDFs, and legacy build files. `make aux-clean` preserves PDFs.
 
-`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3` and `thesis/v4` exist; create `thesis/v5` after the v5 sources are committed and checked. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
+`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3`, `thesis/v4`, and `thesis/v5` exist. A tag identifies its source snapshot; supervisor agreement remains recorded separately. The 13 October manuscript follows the case agreement materials. Written protocol 4.0 is not yet implemented by the older default pipeline 3.0. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
 
 Use [eval.md](eval.md) to check writing. See [maintenance.md](../maintenance.md) for instrument and tooling issues. Do not fill absent findings with expected outcomes.

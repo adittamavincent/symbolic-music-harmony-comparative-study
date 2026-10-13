@@ -2,6 +2,8 @@
 
 This directory owns the computational research for the final thesis (v5, protocol version 3.0). Commands below run from the repository root. The academic manuscript lives in `docs/final-thesis/thesis/`; the design is in [protocol.md](protocol.md) and its machine-readable settings in `experiments/protocol_v3.json` (default). `experiments/protocol_v2.json` holds version 2.1 (thesis v4) unchanged; the pipeline still runs it with `--protocol research/experiments/protocol_v2.json`.
 
+Updated 2026-10-13: the active v5 manuscript now plans one Strube chorale case, contextual score decisions and descriptive comparison (written protocol 4.0, contextual instrument 3.0). These are not implemented in the pipeline below. Its executable default remains the historical protocol 3.0 for 40 Bach melodies and fermata zones. Read [protocol.md](protocol.md) and obtain the agreed case/source/instrument before using generation commands for the revised study.
+
 | Path | Job |
 | --- | --- |
 | `voice_leading_v2.py` | Measurement instrument (version 2.0): the five Strube rules, counted per measure |
@@ -36,7 +38,7 @@ make test
 
 Python 3.12 replaced 3.10 on 2026-10-04: SciPy 1.15.3, the last release for Python 3.10, no longer loads on this macOS. Node.js 18 or later is needed for Coconet.
 
-## Running the study
+## Running the historical protocol 3.0
 
 Each step writes files that the next step reads. Nothing below has been run with a model yet.
 

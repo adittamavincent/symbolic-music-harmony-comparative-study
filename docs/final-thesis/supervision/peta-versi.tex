@@ -43,7 +43,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\fancyfoot[L]{\footnotesize Peta versi naskah, diperbarui 9 Oktober 2026}
+\fancyfoot[L]{\footnotesize Peta versi naskah, diperbarui 13 Oktober 2026}
 \fancyfoot[R]{\footnotesize\thepage}
 
 \tikzset{
@@ -161,8 +161,8 @@ Proposal v1 sampai skripsi v4, dengan draf v5: pemicu revisi, pemberi masukan, j
     Bimbingan v4, transkrip diserahkan 6 Oktober 2026. \textbf{G01--G15}: batasi lingkup; setiap soal Strube punya konteks bab; studi kasus dalam konteks \textit{chorale} Strube; perbandingan dua model terlalu luas untuk sekarang.};
   \draw[masuk=pembimbing] (v4.south) -- (next.north);
   \node[sumberputus=tidaktercatat, anchor=north, text width=3.7cm] (v5) at (15.35,-3.15) {%
-    \textbf{v5 (draf)} \hfill \textit{belum ada tag}\\
-    Disusun 8 Oktober 2026: dua model tetap, 40 melodi \textit{chorale} Bach, letak pelanggaran dalam frasa. Belum disetujui pembimbing.};
+    \textbf{v5} \hfill \texttt{thesis/v5}\\
+    Direvisi 13 Oktober 2026: satu kasus \textit{chorale} Strube, dua model sebagai rencana, gerak suara dan pengecualian. Belum disetujui pembimbing.};
   \draw[alur, dashed] (next.west) -- (v5.east |- next.west);
 \end{tikzpicture}
 \end{center}
@@ -179,7 +179,7 @@ Proposal v1 sampai skripsi v4, dengan draf v5: pemicu revisi, pemberi masukan, j
 
 \vspace{6pt}
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \node[font=\small\bfseries, anchor=west] at (0,0) {Status bab sekarang (v4):};
+  \node[font=\small\bfseries, anchor=west] at (0,0) {Status bab sekarang (v5):};
   \node[bab, fill=sada] at (5.6,0) {BAB I\\Ada, direvisi};
   \node[bab, fill=sada] at (8.1,0) {BAB II\\Ada, direvisi};
   \node[bab, fill=sada] at (10.6,0) {BAB III\\Ada, direvisi};
@@ -250,11 +250,13 @@ Status lengkap dan gerbang penyelesaian ada di \texttt{PROGRESS.md}.
 \end{itemize}
 Tidak berubah: judul, pertanyaan penelitian, variabel, hipotesis, lima kaidah, instrumen 2.0, dan desain tanpa penilai manusia.
 
-\textbf{v4 ke v5 (draf 8 Oktober 2026, belum ada tag).} Pemicu: bimbingan pertama dengan Pembimbing I.
+\textbf{v4 ke v5 (8 Oktober, direvisi 13 Oktober 2026).} Pemicu: bimbingan pertama dengan Pembimbing I.
 \begin{itemize}
   \item \textcolor{pembimbing}{\textbf{Masukan pembimbing (G01--G15):}} batasi lingkup; soal Strube ditulis untuk tahap tertentu, sedangkan model tidak tahu konteks itu; ambil konteks \textit{chorale} Strube saja dan lacak kemiripannya dengan Bach; jadikan studi kasus; lokasi kesalahan berguna bagi pengajar; pertanyaan yang tersisa menjadi saran.
-  \item \textcolor{peneliti}{\textbf{Keputusan peneliti (8 Oktober 2026):}} tetap dekat dengan v4; dua model tetap (satu-satunya saran Pembimbing I yang tidak diikuti, perlu persetujuannya); soal Strube diganti 40 melodi \textit{chorale} Bach dari korpus; pertanyaan asal melodi diganti letak pelanggaran di sekitar fermata atau di dalam frasa; protokol 3.0. Rincian di \texttt{perubahan-v4-ke-v5.md} dan \texttt{rancangan-kesepakatan-v5.md}.
+  \item \textcolor{peneliti}{\textbf{Keputusan peneliti (8 Oktober 2026):}} tetap dekat dengan v4; dua model tetap (satu-satunya saran Pembimbing I yang tidak diikuti, perlu persetujuannya); soal Strube diganti 40 melodi \textit{chorale} Bach dari korpus; pertanyaan asal melodi diganti letak pelanggaran di sekitar fermata atau di dalam frasa; protokol 3.0. Rancangan 8 Oktober disimpan sebagai arsip; rincian awal di \texttt{perubahan-v4-ke-v5-2026-10-09.md}.
 \end{itemize}
+
+Revisi peneliti 13 Oktober 2026: fokus pada satu kasus Strube dengan MODEL 285 sebagai calon; analisis gerak melodis dan hubungan antarsuara, syarat serta pengecualian; perbandingan deskriptif dua model dan rencana 20 percobaan per model. Zona fermata bukan pertanyaan tersendiri. BAB I--III, judul dan abstrak diselaraskan. Protokol 4.0/instrumen kontekstual 3.0 masih tertulis, belum diimplementasikan; persetujuan dan data utama belum ada. Rincian di \texttt{perubahan-v4-ke-v5.md}.
 
 \section{Cara memperbarui}
 

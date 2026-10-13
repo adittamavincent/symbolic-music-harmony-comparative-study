@@ -67,7 +67,7 @@ help:
 		"  make all             Build seluruh PDF proposal dan skripsi final" \
 		"  make help            Tampilkan daftar perintah" \
 		"" \
-		"🔬 PIPELINE RISET PROTOKOL 3.0 (lihat research/README.md):" \
+		"🔬 PIPELINE RISET LAMA 3.0 (kasus 4.0 belum diimplementasikan; lihat research/README.md):" \
 		"  make test              Uji perangkat lunak (instrumen v1, v2, MusicXML, pipeline v2)" \
 		"  make dry-run-v2        Seluruh rantai dengan backend palsu, tanpa model" \
 		"  make setup-v2          Pasang DeepBach (commit terkunci) dan Coconet/Magenta.js 1.23.1" \
@@ -95,7 +95,7 @@ help:
 		"  make proposal-phase  Build semua artefak proposal" \
 		"" \
 		"🎓 DOKUMEN FASE SKRIPSI FINAL (docs/final-thesis/):" \
-		"  make thesis          Build naskah skripsi v4 (Bab I-III) PDF (working tree)" \
+		"  make thesis          Build naskah skripsi v5 (Bab I-III) PDF (working tree)" \
 		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, v4, head, ID commit" \
 		"  make map             Build peta versi: versi, pemberi masukan, status bab" \
 		"  make reading         Gabung catatan Markdown (study, supervision, records, protokol)" \

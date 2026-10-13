@@ -1,0 +1,19 @@
+{
+  "figure": "Strube 1928 Fig. 33",
+  "printed_page": 13,
+  "pdf_page_1based": 19,
+  "source_image": "references/ocr/english/source-pages/019.jpg",
+  "source_image_sha256": "9ff53aa2eb850347807ae4914bc36a3be33718f2dcc8d09cb425ef7338c8659f",
+  "source_dimensions": [
+    1446,
+    2200
+  ],
+  "crop_xyxy": [
+    270,
+    212,
+    1235,
+    575
+  ],
+  "operation": "crop only; no note restoration or redrawing",
+  "independent_researcher_source_check": "pending"
+}

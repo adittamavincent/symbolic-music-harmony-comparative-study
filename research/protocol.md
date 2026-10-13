@@ -1,6 +1,79 @@
 # Protocol worksheet (thesis v3–v5)
 
-Current version: **protocol 3.0, 2026-10-08 (thesis v5)**, machine-readable in `research/experiments/protocol_v3.json`; see [Version 3.0](#version-30-2026-10-08). Status: proposed design for thesis v5, not yet executed and not yet agreed with the supervisors; written at the researcher's direction before the next supervision meeting (`docs/final-thesis/supervision/rancangan-kesepakatan-v5.md`). Version 3.0 keeps the models, settings, input and output, instrument 2.0, validation, and quality control of version 2.1 below, and replaces its melody sets, question 3, sample size, and pilot. The sections after Version 3.0 describe versions 2 and 2.1 (thesis v3–v4) and stay as history; `research/experiments/protocol_v2.json` is unchanged.
+Active manuscript revision, 2026-10-13: **protocol 4.0 is a written case-study plan, not an implemented or frozen generation protocol**. The corresponding contextual instrument is planned as version 3.0. The executable default remains protocol 3.0 in experiments/protocol_v3.json with instrument 2.0. Existing sampling, generation and analysis commands therefore still implement the older 40-melody/fermata-zone design. They must not be described as implementing the current manuscript.
+
+The researcher requested the revised BAB I–III and a local amendment of thesis/v5. Supervisor agreement, an authoritative full case transcription, revised instrument validation, model setup, pilot and main data remain open. See [agreement](../docs/final-thesis/supervision/rancangan-kesepakatan-v5.md), [source map](../docs/final-thesis/study/peta-kaidah-gerak-suara-strube.md), and [researcher guide](../docs/final-thesis/study/researcher-guide.md). Historical protocol JSON, evaluator code and outputs are preserved.
+
+## Version 4.0 (2026-10-13, written plan)
+
+### Task, case and questions
+
+One Strube chorale case receives a fixed soprano, with generated alto, tenor and bass. MODEL 285, printed pp. 174–176, is the primary candidate because its printed SATB harmonization supplies a reference for musical choices. It is not a proven Bach original, a per-exercise answer key, or the uniquely correct harmonization.
+
+The two questions ask (1) how voice leading agrees with Strube after conditions and exceptions are examined, and (2) how the tested systems' profiles differ in recurring events, score locations and choices against the available reference. Fermata is metadata/harmonic context only. No zone comparison or metadata-removal treatment is planned.
+
+DeepBach and Coconet remain the researcher's selected comparison, pending academic agreement. G07 advised a small case and consideration of one model; no approval for two is recorded. If the agreed scope changes to one model, the manuscript and protocol must be revised before collection.
+
+### Source eligibility
+
+- Every soprano pitch, onset, duration, rest, meter and relevant symbol must be read against an authoritative source. The complete printed reference must be available for the reference claims actually made.
+- The current scan has an occluded opening bass and uncertain final soprano duration. The partial nine-event soprano and rejected OMR are not a complete input or reference.
+- Accept a clearer copy and verify transcription independently with the researcher. If necessary, select another complete chorale case before looking at generated outcomes, recording why the source failed eligibility.
+- Preserve the source transcription before conversion. Reject unsupported timing rather than silently rounding. Check model vocabulary/range, fixed soprano, voice identity and 1/16-note timing.
+- Library volume II is a possible source route, not verified restoration of occluded notation. MODEL's work identity, arranger and checkpoint training membership remain unknown.
+
+### Models and attempts
+
+| Item | Written plan |
+| --- | --- |
+| DeepBach | PyTorch commit 6d75cb940f3aa53e02f9eade34d58e472e0c95d7; record actual checkpoint hash and effective settings |
+| Coconet | @magenta/music 1.23.1; coconet/bach; record actual checkpoint and package hashes |
+| Initial settings | DeepBach 500 iterations, temperature 1.0; Coconet 96 iterations, temperature 0.99; verify these against the actual wrappers during the requested pilot |
+| Attempts | 20 per model, 40 total on one case, chosen for score-review workload; not a power calculation or supervisor-approved count |
+| Repetition | Fresh initialization for every attempt; retain identical outputs, failures and all raw data |
+| Seeds | Preserve master seed 20261004 for deterministic steps; record derived DeepBach seeds. Audit whether the Coconet interface supports a seed; otherwise save raw output and state the limit |
+| Pilot | Separate technical attempts; if using the same case, inspect encoding, fixed soprano and timing, then start main attempts afresh after freeze |
+| Additional attempts | No silent replacement of failures. Record a revised plan before a new batch and retain the full attempted count |
+
+The original paper's training-data totals do not identify the precise training history of the selected checkpoint. Domain/task alignment with Strube is not measured statistical correlation or proof of an unseen melody. The comparison concerns the tested systems and combined configurations.
+
+### Contextual instrument 3.0 (planned)
+
+The instrument includes source mapping, a symbolic reader, candidate finding and human score decisions. Existing detector 2.0 remains one historical starting component. Its P5-P5 predicate does not find every d5-P5 case; its crossing flags omit lower crossings; its spacing threshold and 1–2-semitone step proxy do not implement all Strube conditions.
+
+Five candidate families are parallel fifths, octaves/unisons, overlap, spacing and crossing. Horizontal A/T/B movement is mandatory; hidden fifth/octave approaches are supplementary. Seven other mapped families supply context: range, leading-tone resolution, seventh resolution, suspension/auxiliary tones, doubling/chord arrangement, chord/modulation material, and cadence/mode context. The 14-family concordance is an inventory relevant to this focus, not a full-book penalty score.
+
+Operational event/time plan:
+
+- Compare pitches sounding at transitions where at least one pitch changes and both voices sound at both ends. Rests interrupt a transition.
+- Use a common sounding representation with consecutive same-pitch notes merged. Preserve raw encoding and the source score; spelling-dependent decisions document inferred spelling and ambiguity.
+- Horizontal moves connect different sounding pitches in one voice without bridging a rest. Record semitone distance and direction; diatonic step/leap classification needs spelling.
+- For spacing and crossing, one episode is continuous occurrence of a condition on the same pair. A change of pitch inside the condition does not create another episode. End when the condition or a voice's sound ends.
+- Report quarter-note duration, not audio seconds. Candidate thresholds, eligible pair counts, structural spans, overlap/crossing co-occurrence and episode labels must be fixed and checked before freeze; the written plan is not a verified implementation.
+- Primary state profiles include all crossings, maximum/minimum intervals and duration. More than 12 semitones is a candidate threshold, not a categorical Strube deviation. Inspect A-T octave-wide episodes too, since p. 20's transient condition also concerns that distance.
+- Structural spans through suspensions/nonchord notes are annotated separately from immediate pitch transitions; do not divide these by an incompatible instantaneous denominator or duplicate one source event silently.
+
+Every candidate is classified as confirmed deviation, accepted under conditions/exceptions, or unresolved. Record output, rule, pair/voice, locations/times, notes, interval, harmonic context, status, source page, reason, certainty and software version. Unresolved is not zero deviations.
+
+### Review and denominators
+
+Inspect every flagged candidate and the full horizontal voice profile. Inspect possible missed d5-P5 movements and nonchord-note context. Additionally select one unflagged eligible opportunity for each of the five initial families per eligible output where available, using review seed 20261013 and preserving the selection list. Record when there is no unflagged opportunity. If an omission is found, retain it and inspect the corresponding pattern across outputs before summarizing the affected criterion.
+
+The same rule/source is applied to model outputs and the printed reference. Book examples supply checks of particular conditions; the two Fig. 33 source probes alone do not establish full validity. Repeated software readback is not source correctness; repeated self-review is not inter-rater agreement.
+
+For transition criteria, report confirmed and unresolved counts with their eligible opportunities and source decision. For spacing/crossing, report episodes and duration over time both voices sound. Avoid an index with transferred Yan weights. Event-level observations are not independent melodies.
+
+### Analysis and preservation
+
+Use per-output profiles, per-model descriptive distributions, valid-output frequencies with numerator/denominator, failures, unique-output counts and score-location maps. Compare against printed musical choices without coding every pitch difference as an error. Preserve every decision row; discussion examples include recurring, accepted and unresolved patterns with stated selection reasons.
+
+No cross-melody Wilcoxon, power claim, zone hypothesis or architecture effect is carried forward from 3.0. Independent generator attempts may describe behavior conditional on one fixed input; all-chorale inference needs additional cases and a matching design.
+
+Before a requested pilot: obtain usable notation, record scope agreement and researcher source checks, implement/version the contextual records and accounting, test time/voice/episode handling, then freeze the actual configuration. No code installation or model run was authorized by the manuscript/tag revision itself.
+
+---
+
+Historical executable version: **protocol 3.0, 2026-10-08 (earlier thesis v5 design)**, machine-readable in `research/experiments/protocol_v3.json`; see [Version 3.0](#version-30-2026-10-08). Status: proposed design for thesis v5, not yet executed and not yet agreed with the supervisors; written at the researcher's direction before the next supervision meeting (`docs/final-thesis/supervision/rancangan-kesepakatan-v5.md`). Version 3.0 keeps the models, settings, input and output, instrument 2.0, validation, and quality control of version 2.1 below, and replaces its melody sets, question 3, sample size, and pilot. The sections after Version 3.0 describe versions 2 and 2.1 (thesis v3–v4) and stay as history; `research/experiments/protocol_v2.json` is unchanged.
 
 Protocol version 2, drafted 2026-10-02; updated the same day after reading Strube (1928) and implementing instrument v2. Protocol version 2.1, 2026-10-04 (thesis v4): settings pinned, quality control and sensitivity analyses completed, pipeline implemented; see [Version 2.1](#version-21-2026-10-04). Machine-readable settings of version 2.1: `research/experiments/protocol_v2.json`. Version 1 (four conditioning levels, three models, clipped Strube Score) is superseded; see [Superseded design](#superseded-design-version-1) at the end. Link decisions to `docs/final-thesis/supervision/feedback.md` when they follow actual feedback.
 

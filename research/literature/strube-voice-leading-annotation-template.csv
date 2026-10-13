@@ -1,0 +1,1 @@
+output_id,model_id,attempt_id,rule_id,measure_start,offset_start_quarter,measure_end,offset_end_quarter,voice_pair,pitches_start,pitches_end,interval_start,interval_end,chord_context,nonchord_context,decision,source_printed_page,reason,certainty,reviewer,date
