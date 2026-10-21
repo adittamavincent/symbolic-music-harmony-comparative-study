@@ -441,6 +441,36 @@ Recorded by the assistant after the researcher liked the revised v5 and requeste
 - Versioning: this continues the same v5 under the researcher's earlier local tag-amend request; source commit and local ref completion are verified separately in the review output. Earlier revisions stay in ancestry. No remote publication is part of this editorial work.
 - Limits and next work: writing review does not validate the instrument, establish human authorship or complete the research. No model setup, pilot or main generation ran. The researcher can work through the five learning sessions, confirm the source notation and readings, and bring actual scope decisions to the supervisors before contextual implementation and a separately requested pilot.
 
+## 2026-10-21 — Seminar Musikologi 2 presentation packet
+
+Prepared at the researcher's request for the class presentation planned for this date. This records preparation, not proof that the class has taken place.
+
+- Added: [the dated presentation folder](../presentations/2026-10-21-presentation-seminar-musikologi/README.md), a 43-slide PDF (34 main, 9 appendix), extended Markdown presenter notes, source hashes, the existing Fig. 33 crop with provenance, and a rebuild command. The packet follows the active final-thesis v5 case design and distinguishes historical revisions, actual lecturer/peer notes, researcher choices, and open scope decisions. The 21 October OCR-script commit is included as a tooling update.
+- Prepared: an empty session-feedback form with speaker/role, slide, paraphrase/quotation, actual decision, follow-up and evidence columns. Linked it from the final-thesis map and supervision feedback record. No class feedback or new approval has been entered.
+- Checked: all 43 slide renders at readable size, source/plan/result boundaries and both writing checklists, PDF text completeness and page bounds, glyphs, all 43 presenter-note sections, package links, and 43 slide bookmarks. The PDF page-content streams match the reviewed conversion after metadata/bookmark publication. Native presentation package checks and Artifact Tool re-import passed. Private evidence is under research/outputs/seminar-2026-10-21/.
+- Preserved: manuscript, front matter, bibliography, research protocol, evaluator and historical designs. No model setup, generation, pilot or main analysis ran. The presentation does not advance the research completion gates. PDF output remains ignored by Git under the existing repository policy; tracked sources rebuild it.
+- Next: use the prepared feedback form for comments actually received, then record any confirmed design decision with its speaker, date, and resulting change.
+
+### Same-day follow-up: maximum ten slides
+
+The researcher requested a shorter deck with at most ten slides and detail reserved for presenter notes. Replaced the shared PDF with ten slides including the cover, with no slide appendix. Retained and regrouped the full explanations, source tables and calculation examples under ten matching presenter-note sections. Updated the live deck, build checks and presentation README. All ten PDF pages were rendered and inspected; PDF text/page-bound checks, ten bookmarks, ten note sections, package validation and re-import passed. This supersedes the 43-slide delivery above for class use. The session-feedback form remains unchanged and empty.
+
+### Same-day follow-up: classroom research essentials
+
+At the researcher's request, reorganized the ten slides around material/formal objects, problem/questions/aims, theory and operationalization, approach/hypotheses, case/output/event units, comparison conditions and indicators, instrument/positionality, changes, and current readiness. The material/formal distinction explains the existing manuscript object without changing the research design. Replaced the extended notes with one concise paragraph per slide, approximately 1,000 words including sources and navigation. All ten pages were visually reviewed; PDF text completeness, page bounds, ten bookmarks, ten note sections, package checks and Artifact Tool re-import passed. Evidence is in research/outputs/seminar-2026-10-21/ under the class revision filenames. Manuscript/protocol and the empty class-feedback form remain unchanged.
+
+### Same-day follow-up: research gap and proposed working hypotheses
+
+The researcher requested hypotheses, then explicitly requested the research gap already present in the thesis to be included in the presentation. Added a dedicated gap slide from BAB I Rumusan Masalah and BAB II Posisi Penelitian: prior Coconet parallel counting and textbook-rubric grading have not, among the reviewed sources, supplied the contextual two-system Strube-case account proposed here. Added two explicitly proposed working hypotheses about confirmed deviations in outputs of each model and differences in profiles on the fixed case. These are presentation proposals, not recorded supervisor approval, population-level statistical hypotheses, or amendments to the active manuscript/protocol; alignment and decision criteria remain to be settled before collection. Combined method/case/units to retain ten total slides, with concise notes (about 1,050 words). All ten renders, text completeness/page bounds, bookmarks, note sections, package checks and re-import passed; evidence uses the gap revision filenames in research/outputs/seminar-2026-10-21/. No model run or manuscript/protocol edit occurred.
+
+### Same-day follow-up: remove progress section
+
+Removed the progress/readiness slide and its presenter-note section at the researcher's request. The class deck now has nine slides including the cover, with the research gap, proposed working hypotheses and design-change slide retained. Removed progress wording from the opening notes; the feedback form remains available separately. Updated the build page-count check, README and live deck.
+
+### Same-day follow-up: remove slide footers
+
+Removed source-text footers and slide numbers from all nine slides at the researcher's request. Sources remain in presenter notes and PDF slide bookmarks remain available. Updated the authoring source so rebuilds preserve this choice; no research content or protocol changed.
+
 ## Entry fields for your next session
 
 Record the date and author, then what you did, what you found, what you changed and why, and what to resolve next. Include exact source pages, score/example IDs, run/artifact paths, commands, and any supervisor decision. Distinguish an observation from an interpretation or proposed action.

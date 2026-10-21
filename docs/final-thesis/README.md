@@ -1,5 +1,7 @@
 # Final thesis v5
 
+Materi kelas terpisah dari milestone skripsi: [presentasi Seminar Musikologi 2, 21 Oktober 2026](presentations/2026-10-21-presentation-seminar-musikologi/README.md), dengan slide PDF, catatan presenter, dan [formulir masukan sesi](presentations/2026-10-21-presentation-seminar-musikologi/masukan-kelas.md).
+
 v3 continued proposal v2 as the final thesis; v4 followed peer feedback. v5 was drafted on 8 October and rewritten on 13 October 2026 as a Strube chorale case with contextual voice-leading analysis. The researcher requested local amendment of thesis/v5 after source/PDF review. Supervisor agreement and model data remain unrecorded. [The change record](supervision/perubahan-v4-ke-v5.md) separates the current revision from the archived October design. Proposal sources remain in ../proposal-phase/. The active manuscript has BAB I–III; results and conclusions follow actual main data.
 
 Direction reopened 13 October 2026: start with [the revised agreement](supervision/rancangan-kesepakatan-v5.md) and [the Strube rule map](study/peta-kaidah-gerak-suara-strube.md). The seven-page review packet is `scratch/kesepakatan-revisi-v5.pdf`. The 8-9 October agreement and handout are preserved in dated archive files. The manuscript now follows the case plan; the executable pipeline remains the earlier protocol 3.0.

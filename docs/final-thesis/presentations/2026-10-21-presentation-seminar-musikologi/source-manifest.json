@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-21",
+  "timezone": "Asia/Jakarta",
+  "manuscript": "final-thesis v5, active working tree",
+  "sources": [
+    {
+      "path": "docs/final-thesis/thesis/metadata.tex",
+      "sha256": "9e4f7bfe3264acd987fb801bc9b65104490a7d95e27e1863c8dcb76eea39e86b"
+    },
+    {
+      "path": "docs/final-thesis/thesis/chapters/01-pendahuluan.tex",
+      "sha256": "4235910a5801740b414f49eb6c731fbf3a51eb9516c32a1bc18b9e5b5d277d8a"
+    },
+    {
+      "path": "docs/final-thesis/thesis/chapters/02-tinjauan-pustaka.tex",
+      "sha256": "d94fd581e47670655ee91a35b4e3be50d7390f16ef16ed5fc2ea6080cb0b2cf3"
+    },
+    {
+      "path": "docs/final-thesis/thesis/chapters/03-metode-penelitian.tex",
+      "sha256": "2fd25edeefe9eae41ba8618fd9256b74341a8746f7d5436be477370a5241e4b9"
+    },
+    {
+      "path": "docs/final-thesis/thesis/references.bib",
+      "sha256": "f24cf3c4032ea2df68ca20bf8882e93f3d23b32d82cfc4409f7a746f886037cf"
+    },
+    {
+      "path": "docs/final-thesis/PROGRESS.md",
+      "sha256": "69ab7cfa95891902d498e3b8d2d997c119f5fb7fbc6d54b7ab8c893117a47a7e"
+    },
+    {
+      "path": "research/protocol.md",
+      "sha256": "f98e2fb8d4437acf0329ff57b875bf88ac637a544c067167a5b75656f735c7cd"
+    },
+    {
+      "path": "docs/final-thesis/supervision/feedback.md",
+      "sha256": "7c53d45508bb7a65ba3241086579fa5488142d22524ee391eb431e0e863d9523"
+    },
+    {
+      "path": "docs/final-thesis/supervision/perubahan-v2-ke-v3.md",
+      "sha256": "13af8180a8761edb56068d8ef16beb1181a5a634d6a73184c9099a26f6004bb2"
+    },
+    {
+      "path": "docs/final-thesis/supervision/perubahan-v3-ke-v4.md",
+      "sha256": "256a42274a0178d1b43afa3aa8fee863f1de61d252119f7b2e566d28e44ff601"
+    },
+    {
+      "path": "docs/final-thesis/supervision/perubahan-v4-ke-v5.md",
+      "sha256": "d319f3a7b427c7eade0827687844d92f0f3bc97ed8afe63cc28fe836092323de"
+    },
+    {
+      "path": "research/scripts/ocr_strube.py",
+      "sha256": "0fccd734e31bb51e47acb0d5bd19c1a7ab40f7d588bbdb43a49c4cc9ffe91c5b"
+    },
+    {
+      "path": "research/scripts/ocr_strube_tesseract.py",
+      "sha256": "76ebcaa4b1baf2945c0b6d78b2c062fbde773a38d82180d0724d6e5e2260a867"
+    }
+  ]
+}
