@@ -1,8 +1,8 @@
 # Research workspace
 
-This directory owns the computational research for the final thesis (v5, protocol version 3.0). Commands below run from the repository root. The academic manuscript lives in `docs/final-thesis/thesis/`; the design is in [protocol.md](protocol.md) and its machine-readable settings in `experiments/protocol_v3.json` (default). `experiments/protocol_v2.json` holds version 2.1 (thesis v4) unchanged; the pipeline still runs it with `--protocol research/experiments/protocol_v2.json`.
+This directory owns the computational research for the final thesis (active manuscript v6; historical executable protocol 3.0). Commands below run from the repository root. The academic manuscript lives in `docs/final-thesis/thesis/`; the design is in [protocol.md](protocol.md) and its machine-readable settings in `experiments/protocol_v3.json` (default). `experiments/protocol_v2.json` holds version 2.1 (thesis v4) unchanged; the pipeline still runs it with `--protocol research/experiments/protocol_v2.json`.
 
-Updated 2026-10-13: the active v5 manuscript now plans one Strube chorale case, contextual score decisions and descriptive comparison (written protocol 4.0, contextual instrument 3.0). These are not implemented in the pipeline below. Its executable default remains the historical protocol 3.0 for 40 Bach melodies and fermata zones. Read [protocol.md](protocol.md) and obtain the agreed case/source/instrument before using generation commands for the revised study.
+Updated 2026-10-21: the active v6 manuscript uses one Coconet model, one Strube chorale case and qualitative contextual score decisions with numerical summaries (written protocol 5.0 / planned instrument 3.1). [V6 templates](experiments/v6/README.md) define full-review records; they are not an implementation. The executable commands below still use historical protocol 3.0 / instrument 2.0 for 40 Bach melodies and fermata zones. Main model data and a complete verified MODEL 285 transcription remain absent. Read [protocol.md](protocol.md) before using any generation command.
 
 | Path | Job |
 | --- | --- |

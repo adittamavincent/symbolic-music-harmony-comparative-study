@@ -1,8 +1,50 @@
-# Protocol worksheet (thesis v3–v5)
+# Protocol worksheet (thesis v3–v6)
 
-Active manuscript revision, 2026-10-13: **protocol 4.0 is a written case-study plan, not an implemented or frozen generation protocol**. The corresponding contextual instrument is planned as version 3.0. The executable default remains protocol 3.0 in experiments/protocol_v3.json with instrument 2.0. Existing sampling, generation and analysis commands therefore still implement the older 40-melody/fermata-zone design. They must not be described as implementing the current manuscript.
+Active written revision, 21 October 2026: **protocol 5.0 / contextual instrument 3.1 are plans for thesis v6, not implemented or frozen software**. One model, Coconet, receives one fixed soprano from a documented Strube chorale case. The executable default remains historical protocol 3.0 / instrument 2.0. Existing generation and analysis commands do not implement this design.
 
-The researcher requested the revised BAB I–III and a local amendment of thesis/v5. Supervisor agreement, an authoritative full case transcription, revised instrument validation, model setup, pilot and main data remain open. See [agreement](../docs/final-thesis/supervision/rancangan-kesepakatan-v5.md), [source map](../docs/final-thesis/study/peta-kaidah-gerak-suara-strube.md), and [researcher guide](../docs/final-thesis/study/researcher-guide.md). Historical protocol JSON, evaluator code and outputs are preserved.
+## Version 5.0 (2026-10-21, written v6 plan)
+
+### Scope and provenance
+
+The researcher reported Pak Galih’s class advice to use one model and authorized the v6 revision. Coconet is selected for continuity with the documented Bach Doodle parallel-motion problem and its fixed-part SATB task, after checking the original papers and official interface. This records a design choice; it does not establish supervisor agreement on all details. See [rationale and source roles](../docs/final-thesis/supervision/rancangan-v6.md).
+
+The approach is qualitative, using an evaluative single-case design, deductive score reading under Strube, and numerical summaries as supporting descriptions. Yin 2018 separates case design from evidence type; Maxwell 2010 supports simple numerical summaries within qualitative inquiry. There is no architecture comparison, treatment variable, population H0/H1, inferential model ranking or claimed learning outcome. Two questions concern contextual agreement with Strube and recurring/variable voice-leading patterns across outputs.
+
+### Case, configuration and attempts
+
+MODEL 285 remains the candidate, not a verified complete input/reference. Source eligibility and transcription limits from 4.0 still apply: do not guess the stamped opening bass or uncertain final soprano duration. A case switch must be recorded before inspecting generated results. The printed harmonization is a reference for choices, not a unique answer or a proven Bach original.
+
+Select Coconet through `@magenta/music` 1.23.1 with `coconet/bach`. Record the actual code/package, downloaded checkpoint hashes, backend and effective settings. Defaults proposed for technical verification are 96 iterations and temperature 0.99. Use an explicit mask for all A/T/B steps only. Validate the complete soprano sounding trajectory, including silent steps, rather than equating piano-roll steps with original repeated-note articulations. Source spelling and fermatas remain available for analysis and documented editorial display; they must not be claimed as Coconet conditioning if not encoded.
+
+Retain the researcher’s proposed 20 attempts, now on one model. This is a workload choice, not a power result, saturation result or recorded supervisor-approved count. Save raw outputs, failures, identical outputs and QC. The interface’s config has no seed parameter; do not promise bitwise repeat generation. A technical pilot is separate; main collection starts afresh after actual freeze. No setup, pilot or generation has been performed by this manuscript revision.
+
+### Contextual instrument 3.1 (planned change from 3.0)
+
+Source families, Strube conditions, horizontal A/T/B movement and supplementary hidden-interval reading remain as mapped for 3.0. Version 3.1 changes review coverage and decision accounting:
+
+- **Every eligible opportunity included in a reported denominator must be reviewed**, flagged or unflagged. The old one-unflagged-opportunity sample is replaced for this case design. Unreviewed opportunities cannot silently become clear decisions or contribute to a final ratio.
+- One transition opportunity is one eligible pair at one transition, both voices sounding at both ends with at least one sounding pitch changed. Parallel fifths/octaves use six pairs; overlap uses three adjacent pairs. Equal pitches repeated in adjacent steps are merged for the sounding analysis; rests interrupt transitions.
+- Candidate fifths use absolute pitch-distance class 7 to 7 and 6 to 7, with both voices moving in the same direction; octave/unison candidates use class 0 to 0. Classes are modulo 12 and do not establish diatonic spelling. Hidden-interval candidates move in the same direction toward class 7/0 from a different class. Overlap uses strict comparisons of the lower destination above the prior upper pitch or the upper destination below the prior lower pitch. Crossing is strict lower-identity pitch above upper-identity pitch, across all pairs. Physical spacing states are absolute S-A >12 semitones and A-T >=12 semitones, as candidate states only. These are planned operational search definitions, not universal Strube deviation rules.
+- Assign exactly one decision per eligible opportunity and criterion: C = no target pattern, A = accepted under conditions, D = confirmed deviation, U = unresolved. C makes no global harmony claim. Preserve contextual reasons, source pages, spelling alternatives and uncertainty. For each output/criterion require `O=C+A+D+U` and `reviewed=O` before final R=D/O and Q=U/O. O=0 is unavailable.
+- Locate structural spans across nonchord tones/suspensions separately, with links to relevant transitions and no duplicate inclusion in O. Report their interpretation without transferring them into an incompatible direct-transition denominator.
+- Spacing/crossing uses unique continuous physical episodes, plus decision segments when status changes inside an episode. Segment durations are disjoint and bounded by joint sounding time for the same pair; an episode may have several decision statuses, so per-status episode counts cannot be summed as unique episodes. Units are quarter-note durations.
+- Do not turn “occasional”, “temporary” or “better voice leading” into an invented numerical Strube rule. Record extent and musical reason; unresolved remains possible.
+- Keep raw semitone profiles separate from spelling-dependent diatonic classifications. Coconet does not supply original enharmonic spelling or repeated-note articulation. Generated masked lower-voice positions choose pitches; the study does not evaluate generation of rests.
+- Validate each operational condition through verified source examples and constructed edge cases, with positive/negative outcomes and inspection of omissions. The existing Fig. 33 probes support two overlap conditions only. Code checks, source accuracy, construct support, independent researcher reading, self-review and any external review must be reported separately.
+
+Existing instrument 2.0 misses some 3.1 requirements, including all lower crossings, complete contextual decisions, complete review accounting, and physical episodes/decision segments. Neither this document nor the new CSV templates implement those changes. Historical data and definitions are retained below.
+
+### Analysis and reporting
+
+Read each valid score against Strube, code all counted opportunities, then group patterns by criterion/pair/location/context/status. Report failures and unique/identical outputs before musical summaries. Unique-output identity is the complete sounding SATB trajectory on the same grid; editorial spelling does not create a new output. A pattern’s frequency is the number of valid outputs containing it divided by all valid outputs; repeated occurrences inside one output count once in that numerator. Keep all identical attempts and report their contribution.
+
+Score excerpts link to decision rows and source pages. Include recurring patterns, conditional acceptance, confirmed deviations and uncertainty where present; do not invent missing categories. The reference score uses the same criteria. Printed-note disagreement is not an error definition. Any additional summary across unique outputs has its own denominator and does not replace the attempted-output summary.
+
+[Data templates and contracts](experiments/v6/README.md) define required records. [BAB IV preparation](../docs/final-thesis/study/rancangan-bab-iv-v6.md) maps evidence to reporting. No BAB IV result can be claimed before usable source, implemented instrument, checked pilot, recorded scope decisions, frozen actual configuration, real main data and complete score decisions exist. If all outputs fail, only technical task failure is supported; if decisions remain unresolved, report the limit rather than zero deviations.
+
+---
+
+Historical written design follows. Protocol 4.0 and instrument 3.0 below belong to v5’s 13 October case plan; they were never implemented or frozen. Protocol 3.0 and instrument 2.0 remain the executable history, not the v6 implementation.
 
 ## Version 4.0 (2026-10-13, written plan)
 

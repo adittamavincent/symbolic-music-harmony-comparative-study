@@ -2,19 +2,19 @@
 
 \section{Metode Pendekatan}\label{sec:metode-pendekatan}
 
-Penelitian ini menggunakan studi kasus evaluatif untuk menelaah gerak suara pada harmonisasi AI. Satu melodi dalam konteks \textit{chorale} Strube menjadi kasus musikal yang dibatasi sumber, tugas, dan kriteria pembacaannya. Flyvbjerg menjelaskan nilai pengetahuan kontekstual yang dapat diperoleh melalui studi kasus serta perlunya pemilihan kasus menurut persoalan penelitian \parencite{flyvbjerg2006}. Prinsip tersebut diterapkan di sini untuk membaca keputusan gerak suara yang sulit dijelaskan melalui hitungan tanpa konteks.
+Penelitian ini menggunakan pendekatan kualitatif dengan desain studi kasus evaluatif. Analisis berpusat pada hubungan antara gerak suara, konteks harmoni, dan alasan penerimaan atau penyimpangannya menurut Strube. Yin membedakan desain studi kasus dari jenis bukti yang dipakai; sebuah studi kasus dapat memanfaatkan bukti kualitatif maupun kuantitatif \parencite[15--18]{yin2018}. Dalam penelitian ini, kasus dibatasi pada tugas Coconet mengharmonisasi satu melodi sopran dari konteks \textit{chorale} Strube dengan satu konfigurasi yang dicatat.
 
-Analisis partitur dipadukan dengan pencatatan komputasional dan statistik deskriptif. Pencatatan menghasilkan data numerik, seperti interval, jumlah kejadian, durasi, dan variasi antarkeluaran, yang ditafsirkan melalui kaidah Strube. Pengukuran dalam penelitian kuantitatif memerlukan definisi yang jelas tentang sifat yang diukur \parencite{creswell2018}. Kedua pertanyaan dijawab dalam satu prosedur analisis kasus; pembacaan partitur menyediakan alasan bagi keputusan yang kemudian diringkas.
+Sifat evaluatif berasal dari pemeriksaan keluaran terhadap pedoman eksternal, yaitu kaidah Strube. Data utama berupa partitur keluaran dan catatan keputusan musikal. Pembacaan dilakukan secara deduktif: peneliti membawa kriteria dari sumber ke setiap bagian yang memenuhi syarat pemeriksaan, kemudian menjelaskan kecocokan, pengecualian, dan ketidakpastiannya. Penerapan desain kasus pada tugas musikal ini merupakan keputusan peneliti; batas kasus dan prosedurnya dinyatakan agar hubungan bukti dengan kesimpulan dapat ditelusuri. Pemilihan kasus mengikuti persoalan yang memerlukan pengetahuan kontekstual \parencite{flyvbjerg2006}.
 
-Perbandingan dilakukan pada DeepBach dan Coconet yang menerima sopran sama. Model, data latih, representasi, bobot, serta prosedur generasinya berbeda, sehingga hasil berlaku pada gabungan konfigurasi sistem yang diuji \parencite[11--13]{briot2020book}. Penelitian tidak mengisolasi sebab arsitektural dari perbedaan itu. \textit{Checkpoint} adalah berkas bobot hasil pelatihan yang digunakan saat menghasilkan harmonisasi.
+Jumlah kejadian, durasi, dan sebaran antarkeluaran digunakan sebagai pendukung uraian musikal. Maxwell menjelaskan penggunaan hitungan sederhana dalam penelitian kualitatif untuk memperjelas frekuensi dan memeriksa pola \parencite[476--478]{maxwell2010}. Pendekatan penelitian ini ditentukan oleh pertanyaan dan keputusan kontekstual yang hendak dijelaskan. Ringkasan numerik tetap dikembalikan kepada lokasi, kaidah, dan alasan pada partitur; ringkasan tersebut tidak menjadi dasar pengujian pengaruh arsitektur atau generalisasi ke seluruh \textit{chorale}.
 
 Peneliti mempelajari teori harmoni Strube dan melakukan pembacaan partitur. Latar belakang tersebut dapat memengaruhi pemilihan kasus dan penafsiran kaidah \parencite{holmes2020, jamieson2023}. Untuk menjaga keterlacakan, peneliti mencatat halaman sumber, rumusan kriteria, alasan keputusan, ketidakpastian, serta perubahan protokol. Kriteria dan rencana analisis ditetapkan sebelum pengumpulan data utama; hasil yang tidak mendukung dugaan peneliti tetap dipertahankan.
 
 \section{Objek dan Subjek Penelitian}\label{sec:objek-dan-subjek}
 
-Objek penelitian adalah gerak suara pada harmonisasi simbolik empat suara hasil DeepBach \parencite{hadjeres2017} dan Coconet \parencite{huang2017}. Sopran diberikan sebagai masukan tetap, sedangkan alto, tenor, dan bas dihasilkan model. Harmonisasi yang dicetak Strube pada kasus yang sama digunakan sebagai acuan pembacaan. Perbedaan nada terhadap acuan tidak langsung diberi status menyimpang.
+Objek penelitian adalah gerak suara pada harmonisasi simbolik empat suara hasil Coconet \parencite{huang2017}. Sopran diberikan sebagai masukan tetap, sedangkan alto, tenor, dan bas dihasilkan model. Harmonisasi yang dicetak Strube pada kasus yang sama digunakan sebagai acuan pembacaan. Perbedaan nada terhadap acuan tidak langsung diberi status menyimpang.
 
-DeepBach direncanakan dijalankan melalui implementasi PyTorch pengembangnya pada commit \texttt{6d75cb940f3aa53e02f9eade34d58e472e0c95d7}, dengan bobot yang tersedia untuk implementasi tersebut. Coconet menggunakan \texttt{@magenta/music} versi 1.23.1 dan \textit{checkpoint} \texttt{coconet/bach}. Identitas kode, paket, berkas bobot, dan pengaturan efektif disimpan bersama keluaran. Penelitian tidak melibatkan partisipan atau uji dengar; penilaian konteks dilakukan peneliti melalui dokumen dan partitur.
+Coconet dipilih karena tersedia tugas pelengkapan SATB dengan bagian tetap dan terdapat analisis gerak sejajar pada publikasi Bach Doodle \parencite[798]{huang2019}. Hubungan tersebut menyediakan persoalan yang dapat diperdalam melalui Strube. Implementasi yang dipilih adalah \texttt{@magenta/music} versi 1.23.1 dengan bobot pada direktori \texttt{coconet/bach}. Identitas kode, paket, berkas bobot dan pengaturan efektif dicatat bersama keluaran. Penelitian tidak melibatkan partisipan atau uji dengar; penilaian konteks dilakukan peneliti melalui dokumen dan partitur.
 
 \subsection{Pemilihan Kasus}\label{sec:populasi}
 
@@ -28,7 +28,7 @@ Satu kasus tidak dipilih untuk mewakili populasi \textit{chorale}. Kekuatan pemb
 
 Penelitian membedakan kasus musikal, keluaran harmonisasi, dan kejadian gerak suara. Kasusnya satu melodi. Setiap percobaan model menghasilkan satu keluaran atau satu catatan kegagalan. Kejadian adalah transisi, keadaan, atau episode yang ditemukan dalam keluaran itu. Kejadian dalam satu keluaran berbagi konteks musik dan tidak dianggap sebagai sampel melodi yang independen.
 
-Direncanakan 20 percobaan generasi per model, sehingga terdapat 40 percobaan pada satu kasus. Jumlah ini dipilih berdasarkan beban pemeriksaan partitur secara rinci, tanpa mengklaim daya statistik untuk populasi melodi. Setiap percobaan dimulai dari inisialisasi baru dengan pengaturan yang sama. Keluaran identik dan percobaan gagal tetap disimpan; jumlah keluaran layak dapat kurang dari 20 per model.
+Direncanakan 20 percobaan generasi Coconet pada satu kasus. Jumlah ini merupakan keputusan beban pemeriksaan partitur secara rinci, dengan seluruh percobaan dipertahankan. Jumlah tersebut tidak diklaim sebagai hasil perhitungan daya statistik atau bukti kejenuhan; temuan dibatasi pada korpus keluaran yang terkumpul. Setiap percobaan dimulai dari inisialisasi baru dengan pengaturan yang sama. Keluaran identik dan percobaan gagal tetap disimpan; jumlah keluaran layak dapat kurang dari 20.
 
 Lazic menjelaskan bahwa pengamatan berulang atau bertingkat menimbulkan pseudoreplikasi bila diperlakukan sebagai unit independen tanpa memperhatikan ketergantungannya \parencite{lazic2010}. Dalam penelitian ini, jumlah kasus, percobaan, keluaran layak, dan kejadian dilaporkan secara terpisah. Pengulangan generator dapat memberi informasi tentang keluaran pada melodi tetap apabila dijalankan secara independen, tetapi tidak menambah jumlah melodi yang diteliti.
 
@@ -36,25 +36,25 @@ Lazic menjelaskan bahwa pengamatan berulang atau bertingkat menimbulkan pseudore
 
 Data dikumpulkan melalui studi dokumen, transkripsi sumber, generasi berulang, dan analisis gerak suara. Dokumen Strube menyediakan bahan masukan, harmonisasi acuan, dan dasar kriteria. Keluaran model menyediakan pilihan alto, tenor, serta bas yang akan dicatat dan dinilai. Setiap tahap menyimpan data asal dan data turunan dalam folder tersendiri agar perubahan pembacaan tidak menghapus sumber sebelumnya.
 
-\subsection{Variabel dan Aspek yang Diamati}\label{sec:variabel-penelitian}
+\subsection{Aspek yang Diamati dan Indikator Pencatatan}\label{sec:variabel-penelitian}
 
-Kategori pembanding adalah sistem generatif dengan dua kategori, DeepBach dan Coconet pada konfigurasi tercatat. Melodi sopran dipertahankan sebagai kondisi bersama. Aspek yang diamati meliputi gerak horizontal alto, tenor, dan bas; hubungan interval serta posisi antarsuara; keputusan menurut syarat Strube; lokasi kejadian; dan variasi antarkeluaran.
+Aspek yang diamati adalah gerak horizontal alto, tenor, dan bas; hubungan interval serta posisi antarsuara; konteks harmoni; status keputusan menurut Strube; dan lokasi serta pengulangan kejadian. Model, melodi sopran, bobot, dan pengaturan generasi ditetapkan sebagai batas kasus. Penelitian tidak membentuk kelompok perlakuan atau menguji hubungan variabel bebas dan terikat.
 
-Indikator kuantitatif terdiri atas jumlah kandidat, jumlah keputusan pada tiap kategori, kesempatan pemeriksaan, interval gerak, serta lama episode jarak atau persilangan. Setiap kriteria dilaporkan tersendiri. Penelitian tidak menggabungkan seluruh kriteria ke dalam indeks penalti berbobot, sebab bobot rubrik lain tidak langsung mengukur kesesuaian terhadap syarat Strube pada kasus ini.
+Indikator pencatatan berupa tinggi nada, interval, arah gerak, kesempatan pemeriksaan, jumlah keputusan, lokasi partitur, dan lama keadaan jarak atau persilangan. Indikator tersebut membantu mendeskripsikan aspek yang diperiksa. Kesesuaian terhadap Strube ditentukan melalui alasan musikal dengan sumber yang disebut, sehingga jumlah tanda program tidak langsung menjadi ukuran kesalahan. Setiap kriteria dilaporkan tersendiri tanpa indeks penalti gabungan.
 
 \subsection{Transkripsi dan Penyiapan Masukan}\label{sec:pengumpulan-melodi}
 
 Melodi dan harmonisasi cetak ditranskripsi ke MusicXML dengan empat bagian sopran, alto, tenor, dan bas. Berkas sumber, edisi, nomor halaman cetak dan PDF, serta gambar sistem disimpan bersama catatan transkripsi. Hasil dibaca kembali dan dibandingkan dengan sumber untuk memeriksa nama nada, tinggi nada bunyi, durasi, tanda diam, ikatan nada, birama, dan identitas suara. Pemeriksaan peneliti dicatat terpisah dari ketepatan pembacaan ulang oleh perangkat lunak.
 
-Masukan model disiapkan pada satuan waktu not seperenam belas sesuai representasi tugas. Transkripsi sumber tetap dipertahankan sebelum pengubahan representasi. Nada atau durasi yang tidak dapat dinyatakan pada kisi tersebut menyebabkan kasus tidak layak untuk prosedur yang direncanakan; data tidak dibulatkan diam-diam. Rentang teknis dan kosakata kedua model juga diperiksa sebelum generasi.
+Masukan model disiapkan pada satuan waktu not seperenam belas sesuai representasi tugas. Transkripsi sumber tetap dipertahankan sebelum pengubahan representasi. Nada atau durasi yang tidak dapat dinyatakan pada kisi tersebut menyebabkan kasus tidak layak untuk prosedur yang direncanakan; data tidak dibulatkan diam-diam. Rentang teknis Coconet, yaitu tinggi nada MIDI 36--81 pada antarmuka yang dipilih, diperiksa \parencite{magentacoconet} sebelum generasi.
 
-Sopran yang diterima kedua sistem harus sama dalam tinggi nada dan waktu bunyi, termasuk tanda diam dan durasinya. Metadata tanda kunci, posisi ketukan, dan fermata yang diperlukan DeepBach diambil dari sumber serta dicatat. Metadata itu melengkapi masukan sistem; penggunaannya tidak menjadi variabel penelitian tersendiri.
+Sopran dipertahankan sebagai deretan tinggi nada bunyi dan waktu pada seluruh langkah, termasuk bagian diam. Mask pengisian hanya mencakup alto, tenor, dan bas. Sopran asli beserta ejaan, tanda kunci dan fermata disimpan pada transkripsi sumber. Informasi ini digunakan untuk pembacaan harmoni serta tampilan partitur; Coconet tidak diasumsikan menerima informasi notasi yang tidak dimuat dalam representasi masukannya. Ketika nada sopran yang sama berulang, pembandingan dengan keluaran didasarkan pada lintasan bunyinya. Penulisan kembali artikulasi atau ejaan dari sumber pada tampilan analisis dicatat sebagai keputusan penyajian peneliti.
 
 \subsection{Generasi Harmonisasi}\label{sec:generasi-harmonisasi}
 
-Pada DeepBach, sopran ditetapkan sebagai bagian yang dipertahankan dan ketiga suara bawah diisi melalui prosedur generasi implementasinya. Pada Coconet, sopran dimasukkan ke \textit{piano roll} dan bagian alto, tenor, serta bas dikosongkan untuk diisi model. Pengaturan awal adalah 500 iterasi dan \textit{temperature} 1,0 untuk DeepBach serta 96 iterasi dan \textit{temperature} 0,99 untuk Coconet. \textit{Temperature} mengatur keacakan pemilihan dari peluang model. Pengaturan efektif yang benar-benar diterima implementasi dicatat dan ditetapkan sebelum generasi utama.
+Sopran dimasukkan ke \textit{piano roll}; tiga suara bawah diisi menggunakan daftar waktu dan suara yang boleh berubah. Pengaturan awal mengikuti nilai bawaan antarmuka yang dipilih, yaitu 96 iterasi dan \textit{temperature} 0,99 \parencite{magentacoconet}. \textit{Temperature} mengatur keacakan pemilihan dari peluang model. Pengaturan efektif diverifikasi pada uji coba dan ditetapkan sebelum pengumpulan utama, sehingga perubahan pengaturan tidak menjadi tanggapan terhadap jumlah penyimpangan yang ditemukan.
 
-Setiap percobaan DeepBach memakai \textit{seed} yang diturunkan dari bilangan awal protokol dan dicatat. Bila antarmuka Coconet tidak menyediakan kendali \textit{seed}, pembatasan itu dilaporkan dan seluruh keluaran mentah disimpan. Nomor percobaan yang sama pada kedua model digunakan untuk pencatatan; nomor tersebut tidak membentuk pasangan acak yang setara.
+Setiap percobaan dimulai kembali dari masukan tetap yang sama. Antarmuka konfigurasi Coconet yang dipilih menyediakan pengaturan iterasi, \textit{temperature}, dan mask, tanpa parameter \textit{seed} \parencite{magentacoconet}. Identitas percobaan berfungsi sebagai pencatatan, sementara seluruh keluaran mentah disimpan agar bahan yang dianalisis dapat diperiksa kembali. Penelitian tidak menjanjikan bahwa generasi ulang menghasilkan berkas identik.
 
 Uji coba teknis dilakukan sebelum pengumpulan utama untuk memeriksa apakah kasus dapat diproses, apakah sopran dipertahankan, dan apakah konversi menjaga durasi serta pembagian suara. Keluaran uji coba disimpan terpisah dari data utama. Bila kasus yang sama dipakai untuk uji coba, keputusan sesudahnya terbatas pada kelayakan teknis dan pembekuan prosedur; pengumpulan utama dimulai kembali dari inisialisasi baru.
 
@@ -62,9 +62,15 @@ Setiap percobaan dicatat dengan identitas masukan, model, bobot, pengaturan, wak
 
 \subsection{Instrumen Pencatatan dan Penilaian}\label{sec:instrumen-pengukuran}
 
-Instrumen terdiri atas peta kaidah sumber, pembaca musik simbolik berbasis music21 \parencite{cuthbert2010}, pemeriksa kandidat kejadian, dan lembar keputusan musikal. Definisi operasional disusun peneliti dari halaman, contoh, tahap, dan pengecualian Strube. Rubrik Yan et al.\ membantu membandingkan cakupan kategori \parencite{yan2018}, sedangkan penilaian dalam penelitian ini memakai syarat Strube.
+Instrumen disusun peneliti sebagai gabungan peta kaidah sumber, pembaca musik simbolik berbasis music21 \parencite{cuthbert2010}, pemeriksa kandidat kejadian, dan lembar keputusan musikal. Definisi operasional disusun peneliti dari halaman, contoh, tahap, dan pengecualian Strube. music21 menyediakan pembacaan nada dan waktu serta fungsi analisis musik; penerjemahan kaidah Strube menjadi kriteria dan keputusan tetap menjadi tanggung jawab peneliti. Rubrik Yan et al.\ membantu membandingkan cakupan kategori \parencite{yan2018}, sedangkan penilaian dalam penelitian ini memakai syarat Strube.
 
-Transisi pasangan suara dicatat ketika sedikitnya satu tinggi nada bunyi berubah dan kedua suara berbunyi pada kedua ujung transisi. Tanda diam memutus kesinambungan pemeriksaan transisi. Untuk profil horizontal, gerak dicatat antara nada bunyi yang berbeda pada suara yang sama, tanpa menghubungkan dua nada yang dipisahkan tanda diam. Nada sama yang berulang disatukan pada representasi perbandingan agar keterbatasan \textit{piano roll} Coconet tidak membedakan jumlah kejadian secara semu. Representasi mentah tetap disimpan.
+Transisi pasangan suara dicatat ketika sedikitnya satu tinggi nada bunyi berubah dan kedua suara berbunyi pada kedua ujung transisi. Tanda diam memutus kesinambungan pemeriksaan transisi. Untuk profil horizontal, gerak dicatat antara nada bunyi yang berbeda pada suara yang sama, tanpa menghubungkan dua nada yang dipisahkan tanda diam. Nada sama yang berulang disatukan pada representasi perbandingan agar keluaran satu langkah per not pada Coconet tidak menggandakan gerak yang hanya berupa nada ditahan. Representasi mentah tetap disimpan.
+
+Kesempatan transisi ditetapkan pada batas waktu ketika tinggi nada bunyi sedikitnya satu anggota pasangan berubah. Nilai yang dibandingkan adalah keadaan tepat sebelum dan sesudah batas itu; kedua anggota harus berbunyi di kedua sisi. Pergantian suara lain tidak menambah kesempatan bila pasangan yang diperiksa tetap menahan nada. Dua nada yang dipisahkan tanda diam tidak dihubungkan menjadi satu gerak.
+
+Pencarian awal kuint menandai gerak searah dengan kelas selisih tinggi nada tujuh semiton pada kedua sisi, serta enam menuju tujuh semiton untuk kandidat kuint tidak murni menuju kuint murni. Pencarian oktaf/unisono memakai kelas selisih nol pada kedua sisi. Kedua suara harus benar-benar bergerak. Nilai kelas tersebut adalah selisih absolut modulo dua belas; penamaan diatonis dan penerimaan pola tetap diperiksa melalui ejaan serta konteks sumber. Kandidat interval tersembunyi bergerak searah menuju kelas tujuh atau nol dari kelas interval lain.
+
+Tumpang tindih ditandai ketika nada tujuan suara bawah lebih tinggi daripada nada sebelumnya pada suara atas, atau nada tujuan suara atas lebih rendah daripada nada sebelumnya pada suara bawah; kesamaan nada tidak memenuhi kondisi melampaui ini. Persilangan adalah keadaan ketika suara yang beridentitas lebih bawah berbunyi lebih tinggi daripada suara atas; identitas part tetap dipertahankan. Pada jarak, kandidat S--A dicatat bila selisih absolut lebih dari dua belas semiton, sedangkan A--T mulai dari dua belas semiton untuk mencakup syarat sementara pada sumber. Jarak dan persilangan dapat terjadi bersama dan dicatat sebagai kriteria berbeda, tanpa menjumlahkannya menjadi satu penalti.
 
 Keadaan jarak atau persilangan dicatat sepanjang durasi ketika kondisi itu berlaku. Satu episode adalah rentang waktu berkesinambungan dengan pasangan suara dan kondisi yang sama, walaupun tinggi nada dapat berganti. Episode berakhir ketika kondisi hilang atau salah satu suara berhenti berbunyi. Durasi dinyatakan dalam satuan not seperempat; lama bunyi audio tidak diukur.
 
@@ -92,25 +98,26 @@ Lima pemeriksaan komputasional awal membantu mencari kuint sejajar, oktaf sejaja
 
 Ejaan nada asli dipakai ketika tersedia. Pada keluaran yang hanya menyimpan tinggi nada MIDI, ejaan untuk penentuan langkah diatonis, kemurnian interval, atau fungsi dicatat sebagai inferensi. Satu atau dua semiton tidak otomatis dijadikan definisi universal gerak melangkah. Kasus dengan lebih dari satu ejaan atau fungsi yang masuk akal tetap mencatat alternatif yang memengaruhi keputusan.
 
-Setiap kandidat mempunyai kode keluaran, kriteria, pasangan atau suara, lokasi dan waktu, nada serta interval, konteks harmoni, status, halaman dasar keputusan, dan alasan. Status penilaian terdiri atas:
+Setiap kesempatan atau rentang yang ditelaah mempunyai kode keluaran, kriteria, pasangan atau suara, lokasi dan waktu, nada serta interval, konteks harmoni, status, halaman dasar keputusan, dan alasan. Catatan keputusan meliputi:
 
 \begin{enumerate}
+    \item tanpa pola sasaran, bila pemeriksaan kesempatan tidak menemukan pola yang sedang dinilai; status ini tidak menyatakan bahwa seluruh harmoni benar;
+    \item diterima menurut syarat atau pengecualian, bila pola muncul dan kondisi sumber yang relevan dapat ditunjukkan;
     \item menyimpang terkonfirmasi, bila kejadian tidak memenuhi kaidah yang berlaku dan pengecualian relevan tidak dapat diterapkan;
-    \item diterima menurut syarat atau pengecualian, dengan kondisi dan rujukan yang mendukung;
     \item belum dapat diputuskan, bila informasi atau dasar penafsiran belum cukup.
 \end{enumerate}
 
-Konteks akor, nada penuntun, septim, nada nonakor, dan kadens dianotasi sejauh diperlukan untuk menjelaskan keputusan. Kejadian tanpa dasar keputusan yang cukup dipertahankan dalam kategori ketiga. Keluaran yang berbeda dari harmonisasi cetak diperiksa melalui prosedur yang sama dengan keluaran yang mirip acuan.
+Konteks akor, nada penuntun, septim, nada nonakor, dan kadens dianotasi sejauh diperlukan untuk menjelaskan keputusan. Dua penafsiran fungsi atau ejaan yang mengubah keputusan dicatat sebagai alternatif. Bila sumber tidak memberi dasar yang cukup untuk memilihnya, kejadian tetap belum diputuskan. Keluaran yang berbeda dari harmonisasi cetak diperiksa melalui prosedur yang sama dengan keluaran yang mirip acuan.
 
 \subsection{Pemeriksaan Instrumen dan Keterlacakan Keputusan}\label{sec:validitas-dan-reliabilitas}
 
-Validitas menyangkut kecukupan instrumen mengukur sifat yang dimaksud, sedangkan reliabilitas menyangkut konsistensi penerapannya \parencite{leedy2018}. Pemeriksaan perangkat lunak, pemeriksaan musikal, dan variasi generasi dilakukan terpisah.
+Pemeriksaan menjaga hubungan antara pertanyaan, sumber, data, dan keputusan. Yin menekankan perlunya prosedur sistematis dan pelaporan bukti secara adil dalam studi kasus \parencite[18--20]{yin2018}. Penelitian menerapkannya melalui pemetaan kaidah, pemeriksaan transkripsi, pengujian perilaku program, dan pembacaan partitur. Penerapan ini dirancang peneliti; kelulusan uji program hanya mendukung perilaku yang diuji.
 
 \begin{enumerate}
     \item Pemetaan isi mengaitkan kriteria dengan bunyi kaidah, tahap, contoh, dan pengecualian Strube. Peneliti memeriksa apakah prosedur keputusan sesuai dengan lingkup kasus.
     \item Contoh cetak diterima dan dihindari ditranskripsi dan diperiksa terhadap sumber sebelum dipakai untuk memeriksa instrumen. Fig.~33 pada halaman 13, misalnya, dapat menguji tumpang tindih dengan satu suara melangkah dan dengan kedua suara melompat. Kesesuaian pada contoh ini hanya memberi bukti bagi kondisi yang diuji.
     \item Uji perangkat lunak memeriksa interval, waktu, nada ditahan, tanda diam, pemetaan suara, episode, dan pembacaan ulang berkas. Hasil pemeriksa dasar dibandingkan dengan fungsi music21 yang relevan; perbedaan definisi dipisahkan.
-    \item Peneliti memeriksa seluruh kandidat pada partitur serta bagian yang tidak ditandai. Pemeriksaan bagian tanpa tanda mencakup gerak kuint tidak murni menuju kuint murni dan konteks nada nonakor. Untuk setiap keluaran dan masing-masing lima kriteria awal, satu kesempatan yang tidak ditandai dipilih dengan \textit{seed} tercatat apabila tersedia. Ketiadaan kesempatan tersebut juga dicatat. Temuan yang terlewat program dimasukkan ke lembar analisis.
+    \item Peneliti memeriksa seluruh kandidat dan seluruh kesempatan yang masuk penyebut, termasuk kesempatan yang tidak ditandai program. Pemeriksaan mencakup kuint tidak murni menuju kuint murni serta konteks nada nonakor. Kesempatan yang belum ditelaah dicatat sebagai belum diperiksa, sehingga ringkasan akhir suatu kriteria tidak diterbitkan sebelum cakupannya lengkap. Temuan yang terlewat program disimpan beserta perbaikan dan pemeriksaan ulang bagian terdampak.
     \item Berkas yang sama diukur ulang dengan versi yang sama. Peneliti juga membaca kembali keputusan beserta sumbernya dan mencatat perubahan alasan atau status. Pemeriksaan ulang oleh orang yang sama tidak dilaporkan sebagai kesepakatan antarpenilai.
 \end{enumerate}
 
@@ -118,30 +125,64 @@ Perubahan waktu, pemetaan suara, rumusan kriteria, penyebut, atau prosedur keput
 
 \subsection{Kontrol Kualitas Keluaran}\label{sec:kontrol-kualitas-sampel}
 
-Keluaran layak dianalisis bila memuat empat suara yang terpisah dan monofonik, memiliki panjang waktu sesuai masukan, dan dapat dinyatakan pada kisi yang ditetapkan. Tinggi nada dan waktu bunyi sopran harus dipertahankan, termasuk tanda diam dan durasinya. Ketiga suara yang dihasilkan harus memuat nada dalam rentang tugas. Identitas suara diperiksa dari saluran atau bagian asal; suara tidak diurutkan ulang menurut tinggi nadanya ketika bersilangan. Persilangan dan tumpang tindih dapat menyulitkan pemisahan suara \parencite{karystinaios2023}, sehingga catatan pemetaan ikut dipertahankan.
+Keluaran layak dianalisis bila memuat empat suara yang terpisah dan monofonik, memiliki panjang waktu sesuai masukan, dan dapat dinyatakan pada kisi yang ditetapkan. Lintasan tinggi nada bunyi sopran harus sama dengan masukan, termasuk waktu diam dan panjang keseluruhannya. Pembandingan ini tidak memulihkan artikulasi nada ulang yang hilang pada representasi \textit{piano roll}. Setiap langkah waktu yang diisi pada ketiga suara bawah harus mempunyai tepat satu tinggi nada dalam rentang tugas. Langkah hilang, suara ganda pada satu langkah, atau tambahan di luar panjang masukan menyebabkan keluaran tidak layak; bagian yang hilang tidak diisi atau dipotong diam-diam. Identitas suara diperiksa dari saluran atau bagian asal; suara tidak diurutkan ulang menurut tinggi nadanya ketika bersilangan. Persilangan dan tumpang tindih dapat menyulitkan pemisahan suara \parencite{karystinaios2023}, sehingga catatan pemetaan ikut dipertahankan.
 
-Kelayakan teknis dipisahkan dari kesesuaian musikal. Keluaran dengan gerak menyimpang tetap masuk analisis bila memenuhi syarat teknis. Keluaran gagal atau tidak layak tetap masuk daftar percobaan, dengan alasan yang dilaporkan per model. Bila salah satu model tidak menghasilkan keluaran layak, keadaan itu dilaporkan dan perbandingan musikal terbatas pada data yang tersedia.
+Kelayakan teknis dipisahkan dari kesesuaian musikal. Keluaran dengan gerak menyimpang tetap masuk analisis bila memenuhi syarat teknis. Keluaran gagal atau tidak layak tetap masuk daftar percobaan, dengan alasan yang dilaporkan untuk seluruh percobaan. Bila tidak ada keluaran layak, kesimpulan terbatas pada kegagalan pelaksanaan tugas; kesesuaian musikal tidak dapat dijawab dari berkas gagal.
 
 \section{Metode Analisis Data}\label{sec:metode-analisis-data}
 
-Pertanyaan pertama dijawab melalui profil setiap keluaran: gerak alto, tenor, dan bas; hubungan antarsuara; lokasi kejadian; keputusan dan alasan menurut Strube; serta jumlah yang belum dapat diputuskan. Seluruh keputusan tersedia dalam lembar analisis. Harmonisasi cetak dibaca dengan kriteria yang sama agar pilihan acuan dapat dibahas tanpa diasumsikan bebas penyimpangan.
+Analisis bergerak dari pembacaan partitur ke pengodean keputusan, pengelompokan pola, dan penulisan jawaban penelitian. Strube menyediakan kategori awal dan syaratnya. Temuan pada keluaran diperiksa dengan kategori itu tanpa mengharuskan hasil memenuhi dugaan bahwa AI selalu menyimpang. Ringkasan angka membantu memeriksa pernyataan tentang pengulangan pola \parencite[476--479]{maxwell2010}.
 
-Untuk kriteria berbasis transisi, jumlah penyimpangan dibaca bersama jumlah kesempatan pasangan suara yang memenuhi syarat pemeriksaan. Dengan $D_{g,r}$ jumlah penyimpangan terkonfirmasi, $U_{g,r}$ jumlah kandidat belum dapat diputuskan, dan $O_{g,r}$ jumlah kesempatan pada keluaran $g$ dan kriteria $r$, ringkasan yang dilaporkan adalah
+\subsection{Pembacaan dan Pengodean Setiap Keluaran}
 
+Keluaran yang lolos kontrol kualitas dibaca bersama sopran tetap, peta kaidah, dan harmonisasi acuan. Peneliti menelaah gerak tiap suara terlebih dahulu, kemudian hubungan keenam pasangan suara dan konteks progresinya. Program menyiapkan data nada, interval, waktu, dan kandidat. Seluruh kesempatan pada kriteria yang dihitung diperiksa pada partitur. Setiap keputusan yang menerima pola bersyarat, mengonfirmasi penyimpangan, atau menyisakan keraguan disertai halaman sumber serta penalaran musikalnya.
+
+Pertanyaan pertama dijawab melalui hubungan antara kejadian dan dasar keputusan tersebut. Perbedaan nada terhadap harmonisasi cetak digunakan untuk menjelaskan pilihan alur yang berbeda. Acuan juga diperiksa dengan kriteria yang sama; kesamaan dengan acuan tidak otomatis memberikan status diterima, dan perbedaan tidak otomatis menjadi kesalahan.
+
+\subsection{Penghitungan Pendukung dan Kelengkapan Data}
+
+Untuk kriteria berbasis transisi, satu kesempatan adalah satu transisi pada satu pasangan yang memenuhi syarat kedua suara berbunyi di kedua ujung dan sedikitnya satu tinggi nada berubah. Transisi kuint dan oktaf diperiksa pada enam pasangan; tumpang tindih pada tiga pasangan berdekatan. Setiap kesempatan mendapat tepat satu status untuk kriteria yang sama. Bila terdapat $O_{g,r}$ kesempatan pada keluaran $g$ dan kriteria $r$, pencatatan harus memenuhi
 \begin{equation}
-R_{g,r} = \frac{D_{g,r}}{O_{g,r}}, \qquad
-Q_{g,r} = \frac{U_{g,r}}{O_{g,r}}.
+O_{g,r}=C_{g,r}+A_{g,r}+D_{g,r}+U_{g,r},
 \end{equation}
+dengan $C$ jumlah kesempatan tanpa pola sasaran, $A$ jumlah pola yang diterima bersyarat, $D$ jumlah penyimpangan terkonfirmasi, dan $U$ jumlah yang belum dapat diputuskan. Persamaan tersebut merupakan pemeriksaan kelengkapan pencatatan yang ditetapkan peneliti. Kesempatan yang belum diperiksa tidak dimasukkan diam-diam ke dalam $C$; pemeriksaannya diselesaikan sebelum ringkasan akhir.
 
-Rumus ini dipakai untuk keputusan pada transisi yang termasuk dalam daftar kesempatan yang sama. Pola struktural lintas nada hias atau suspensi dicatat sebagai rentang analisis tersendiri, dengan lokasi dan keputusan; hitungannya tidak dibagi dengan penyebut transisi langsung. Kedua nilai selalu disertai pembilang dan penyebut. Bila kesempatan nol, nilai dinyatakan tidak tersedia. Nilai rendah pada $R_{g,r}$ belum cukup untuk menyatakan kepatuhan tinggi apabila $Q_{g,r}$ besar. Kejadian yang diterima dilaporkan bersama alasan pengecualiannya; jumlah yang belum diputuskan tetap terlihat.
+Dua proporsi pendukung dihitung dari daftar kesempatan yang sama:
+\begin{equation}
+R_{g,r}=\frac{D_{g,r}}{O_{g,r}},\qquad
+Q_{g,r}=\frac{U_{g,r}}{O_{g,r}}.
+\end{equation}
+Keduanya selalu disertai pembilang dan penyebut. Bila $O$ nol, proporsi dinyatakan tidak tersedia. Nilai $R$ rendah belum cukup untuk menyatakan kesesuaian tinggi bila $Q$ besar. Rentang struktural yang melampaui nada hias atau suspensi dicatat pada daftar tersendiri dan ditautkan ke kejadian terkait; rentang itu tidak dihitung lagi sebagai kesempatan transisi langsung. Penyebut dari kriteria berbeda tidak dijumlahkan menjadi skor tunggal.
 
-Untuk jarak dan persilangan, ringkasan mencakup jumlah episode serta durasi menurut status keputusan. Durasi dibandingkan dengan lama kedua suara benar-benar berbunyi bersama, bukan dengan jumlah langkah yang mengulang keadaan yang sama. Pada gerak melodis, jumlah langkah, lompatan, perubahan arah, dan contoh kelanjutan bas dilaporkan per suara. Ketika ejaan belum pasti, profil tinggi nada dalam semiton dibedakan dari kategori diatonis.
+Pada jarak dan persilangan, analisis melaporkan episode fisik berkesinambungan dan durasinya dalam satuan not seperempat. Jika konteks menyebabkan status keputusan berubah selama episode yang sama, durasinya dibagi menjadi segmen keputusan tanpa menambah jumlah episode fisik. Lama segmen menurut status dibandingkan dengan lama pasangan suara berbunyi bersama. Satu episode dapat memuat lebih dari satu status sehingga jumlah episode per status tidak dijumlahkan sebagai episode unik. Strube tidak menetapkan ambang numerik bagi istilah sesekali atau sementara; peneliti menunjukkan durasi, lokasi, kelanjutan suara, serta alasan keputusan dan mempertahankan ketidakpastian bila syaratnya belum dapat dipastikan.
 
-Pertanyaan kedua dijawab dengan membandingkan profil kedua sistem pada kasus yang sama. Statistik deskriptif mencakup jumlah percobaan, keluaran layak dan gagal, median, rentang antarkuartil, serta rentang nilai per kriteria antarkeluaran. Frekuensi suatu pola dinyatakan sebagai banyaknya keluaran yang memuat pola tersebut dibagi jumlah keluaran layak, dengan jumlah percobaan tetap dilaporkan. Hasil identik tidak dihapus; jumlah keluaran unik juga dicatat untuk menunjukkan variasi generasi.
+Pada gerak melodis, langkah, lompatan, perubahan arah, dan kelanjutan bas dicatat per suara. Profil semiton dipisahkan dari klasifikasi diatonis yang memerlukan ejaan. Ringkasan ini membantu memilih bagian yang perlu dijelaskan pada partitur, tanpa menetapkan bahwa setiap lompatan besar merupakan kesalahan.
 
-Lokasi yang berulang ditampilkan pada peta partitur, dengan kode suara, kriteria, dan status. Contoh pembahasan dipilih untuk memperlihatkan pola yang berulang, penerimaan melalui pengecualian, dan keputusan yang belum pasti; alasan pemilihannya dicatat. Kemiripan nada terhadap acuan dapat dideskripsikan tersendiri tanpa mengubah perbedaan nada menjadi kesalahan.
+\subsection{Pengelompokan Pola Antarkeluaran}
 
-Perbandingan bersifat deskriptif pada satu kasus. Pengujian berpasangan lintas melodi tidak digunakan karena hanya ada satu melodi; kejadian di dalam partitur tidak dijadikan pengganti pasangan melodi. Kesimpulan menjelaskan konfigurasi yang diuji dan konteks keputusan. Tafsiran perseptual menurut Huron dibahas sebagai penjelasan teori, sedangkan mutu estetis dan hasil belajar pengguna berada di luar pengukuran.
+Pertanyaan kedua dijawab dengan mengelompokkan kejadian menurut kriteria, pasangan suara, lokasi pada melodi tetap, konteks harmoni, dan status keputusan. Peneliti memeriksa apakah pola yang sama berulang di tempat yang sama, muncul dengan pilihan suara berbeda, atau hanya ditemukan pada satu keluaran. Ketidakpastian pembacaan dan pola yang diterima melalui pengecualian tetap masuk pembahasan.
+
+Jumlah percobaan, keluaran layak, kegagalan, dan keluaran unik dilaporkan terlebih dahulu. Frekuensi pola dinyatakan sebagai banyaknya keluaran layak yang memuat pola dibagi jumlah keluaran layak. Pengulangan pola di dalam satu keluaran tidak menambah pembilang tersebut. Identitas keluaran unik ditentukan dari lintasan tinggi nada bunyi SATB pada kisi yang sama; ejaan editorial tidak dijadikan pembeda. Keluaran identik tetap dihitung sebagai percobaan terpisah dan ditandai sebagai duplikat. Median, rentang antarkuartil, dan rentang nilai per kriteria dapat menyertai profil untuk memperlihatkan variasi dalam korpus ini. Ketiadaan pola hanya dilaporkan apabila seluruh kesempatan relevan telah diperiksa.
+
+Peta lokasi partitur menunjukkan kriteria, pasangan suara, dan status yang berulang. Contoh pembahasan mencakup pola berulang, kejadian yang diterima bersyarat, penyimpangan, dan kejadian belum diputuskan apabila kategori itu tersedia. Alasan pemilihan dicatat dan seluruh data keputusan tetap disediakan, sehingga contoh yang dipaparkan dapat diperiksa terhadap korpusnya.
+
+\subsection{Penyajian dan Penarikan Kesimpulan}
+
+Tabel~\ref{tab:alur-analisis} menghubungkan pertanyaan dengan bukti dan bentuk jawaban. Uraian hasil disusun dari identitas kasus serta kelayakan keluaran, dilanjutkan keputusan menurut kriteria, pola antarkeluaran, dan pembahasan musikal. Setiap pembahasan menghubungkan potongan partitur, data gerak, kaidah sumber, keputusan, dan alternatif tafsir bila ada.
+
+\begin{table}[htbp]
+\centering\footnotesize
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.1cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Pertanyaan} & \textbf{Bukti dan langkah analisis} & \textbf{Bentuk jawaban} \\ \hline
+Kesesuaian menurut Strube & Telaah seluruh kesempatan, konteks akor, syarat dan pengecualian; kode keputusan dan alasan & Uraian tiap kriteria dengan cuplikan partitur, halaman sumber, serta hitungan pendukung \\ \hline
+Pola antarkeluaran & Kelompokkan lokasi, suara, kriteria dan status; periksa variasi dan keluaran identik & Peta lokasi berulang, frekuensi keluaran yang memuat pola, dan penjelasan pilihan gerak \\ \hline
+\end{tabularx}
+\caption{Hubungan pertanyaan, langkah analisis, dan bentuk jawaban}
+\label{tab:alur-analisis}
+\end{table}
+
+Kesimpulan menjawab kedua pertanyaan berdasarkan bukti yang telah ditelaah, dengan ruang lingkup satu melodi, konfigurasi, dan korpus keluaran. Bila dasar keputusan masih terbatas, batas itu ikut menjadi hasil pembacaan. Pembahasan dengan Huron digunakan sebagai penjelasan teoretis; persepsi pendengar, keindahan keseluruhan, efektivitas pembelajaran, dan penyebab internal perilaku jaringan tidak disimpulkan dari pencatatan gerak suara.
 
 \section{Rancangan Alur Penelitian}\label{sec:rancangan-alur-penelitian}
 
@@ -151,11 +192,11 @@ Alur penelitian menghubungkan penyiapan sumber, pemeriksaan kriteria, generasi, 
     \item Memilih kasus pada bab \textit{chorale}, memeriksa sumber, dan memverifikasi transkripsi sopran serta harmonisasi acuan.
     \item Menetapkan peta kaidah, syarat, pengecualian, kriteria pencatatan, dan kategori keputusan.
     \item Memeriksa instrumen melalui contoh sumber, pemeriksaan perangkat lunak, dan pembacaan musikal.
-    \item Menyiapkan masukan kedua model dan melakukan uji coba teknis dengan keluaran yang terpisah dari data utama.
+    \item Menyiapkan masukan Coconet dan melakukan uji coba teknis dengan keluaran yang terpisah dari data utama.
     \item Membekukan protokol, versi instrumen, pengaturan efektif, jumlah percobaan, dan rencana analisis.
     \item Menghasilkan harmonisasi utama dari inisialisasi baru, mempertahankan keluaran mentah dan seluruh catatan kegagalan.
     \item Memeriksa kualitas, mencatat kandidat dan profil gerak, serta menentukan status melalui analisis partitur.
-    \item Membandingkan profil kedua sistem pada kasus tetap dan menjelaskan keputusan melalui sumber serta contoh partitur.
+    \item Mengelompokkan pola antarkeluaran pada kasus tetap dan menjelaskan keputusan melalui sumber serta contoh partitur.
 \end{enumerate}
 
 \begin{figure}[htbp]
@@ -171,7 +212,7 @@ Alur penelitian menghubungkan penyiapan sumber, pemeriksaan kriteria, generasi, 
   \node (generation) [process, below=of pilot] {Generasi berulang; simpan keluaran dan kegagalan};
   \node (qc) [process, below=of generation] {Kontrol kualitas; pencatatan gerak suara dan kandidat kejadian};
   \node (judgment) [process, below=of qc] {Analisis partitur dan keputusan menurut sumber};
-  \node (analysis) [process, below=of judgment] {Profil per kriteria, perbandingan deskriptif, contoh dan batas kesimpulan};
+  \node (analysis) [process, below=of judgment] {Keputusan menurut Strube, pola antarkeluaran, contoh dan batas kesimpulan};
   \draw [arrow] (source) -- (criteria);
   \draw [arrow] (criteria) -- (pilot);
   \draw [arrow] (pilot) -- (generation);

@@ -1,10 +1,12 @@
-# Final thesis v5
+# Final thesis v6
+
+Arah aktif 21 Oktober 2026: **satu model Coconet**, pendekatan kualitatif dalam studi kasus evaluatif, analisis partitur menurut Strube dan angka pendukung. Mulai dari [rancangan v6](supervision/rancangan-v6.md), [panduan aktif](study/researcher-guide.md), dan [PROGRESS.md](PROGRESS.md). BAB I–III direvisi; [persiapan BAB IV](study/rancangan-bab-iv-v6.md) dan [kontrak data](../../research/experiments/v6/README.md) tersedia, tetapi hasil utama belum ada. `make thesis` membangun PDF v6. Tag `thesis/v5` dipertahankan dan v6 belum ditag.
 
 Materi kelas terpisah dari milestone skripsi: [presentasi Seminar Musikologi 2, 21 Oktober 2026](presentations/2026-10-21-presentation-seminar-musikologi/README.md), dengan slide PDF, catatan presenter, dan [formulir masukan sesi](presentations/2026-10-21-presentation-seminar-musikologi/masukan-kelas.md).
 
 v3 continued proposal v2 as the final thesis; v4 followed peer feedback. v5 was drafted on 8 October and rewritten on 13 October 2026 as a Strube chorale case with contextual voice-leading analysis. The researcher requested local amendment of thesis/v5 after source/PDF review. Supervisor agreement and model data remain unrecorded. [The change record](supervision/perubahan-v4-ke-v5.md) separates the current revision from the archived October design. Proposal sources remain in ../proposal-phase/. The active manuscript has BAB I–III; results and conclusions follow actual main data.
 
-Direction reopened 13 October 2026: start with [the revised agreement](supervision/rancangan-kesepakatan-v5.md) and [the Strube rule map](study/peta-kaidah-gerak-suara-strube.md). The seven-page review packet is `scratch/kesepakatan-revisi-v5.pdf`. The 8-9 October agreement and handout are preserved in dated archive files. The manuscript now follows the case plan; the executable pipeline remains the earlier protocol 3.0.
+Historical v5 direction, 13 October 2026: start with [the revised agreement](supervision/rancangan-kesepakatan-v5.md) and [the Strube rule map](study/peta-kaidah-gerak-suara-strube.md). The seven-page review packet is `scratch/kesepakatan-revisi-v5.pdf`. The 8-9 October agreement and handout are preserved in dated archive files. That v5 manuscript followed the two-model case plan; the executable pipeline still remains the earlier protocol 3.0. V6 written protocol 5.0 / instrument 3.1 are not implemented.
 
 ## What is in this folder
 
@@ -37,7 +39,7 @@ final-thesis/
     └── reading-notes.csv          Source verification and the researcher's own reading
 ```
 
-Focused learning material for the current v5: [the learning guide](study/panduan-belajar-v5.md) and [24 supervision questions](study/latihan-bimbingan-v5.md). Run make learn-v5 for the combined PDF. The [editorial report](records/editorial-v5-2026-10-13.md) records the seven minimal chapter edits and preserved claims.
+Historical learning material for v5 (still describing two models): [the learning guide](study/panduan-belajar-v5.md) and [24 supervision questions](study/latihan-bimbingan-v5.md). Run make learn-v5 for the combined PDF. The [editorial report](records/editorial-v5-2026-10-13.md) records the seven minimal chapter edits and preserved claims.
 
 Where to start:
 
@@ -89,6 +91,6 @@ make -B thesis
 
 The PDF is `scratch/thesis.pdf` from the repository root. Make removes temporary auxiliary files after compiling. Edit the template and chapters; Make can overwrite generated `thesis/main.tex`. `make clean-docs` removes generated entry points, current PDFs, and legacy build files. `make aux-clean` preserves PDFs.
 
-`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3`, `thesis/v4`, and `thesis/v5` exist. A tag identifies its source snapshot; supervisor agreement remains recorded separately. The 13 October manuscript follows the case agreement materials. Written protocol 4.0 is not yet implemented by the older default pipeline 3.0. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
+`make final-phase` builds the thesis and the version map (`make map`). Final defense slides are not implemented. `thesis/v3`, `thesis/v4`, and `thesis/v5` exist. A tag identifies its source snapshot; supervisor agreement remains recorded separately. The 21 October working manuscript follows the one-model v6 plan. Written protocol 5.0 / instrument 3.1 are not implemented by the older default pipeline 3.0. Preserve a reviewed milestone using the [root version guide](../../README.md#save-a-final-thesis-milestone) once its source and PDF have been checked.
 
 Use [eval.md](eval.md) to check writing. See [maintenance.md](../maintenance.md) for instrument and tooling issues. Do not fill absent findings with expected outcomes.

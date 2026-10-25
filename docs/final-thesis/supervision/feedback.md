@@ -1,6 +1,6 @@
 # Lecturer and supervisor feedback
 
-Upcoming/session-specific record: [Seminar Musikologi 2, 21 October 2026](../presentations/2026-10-21-presentation-seminar-musikologi/masukan-kelas.md). The session form has no entered feedback yet. It does not add lecturer comments or approval to F01–F12 or G01–G15 below.
+Session-specific record: [Seminar Musikologi 2, 21 October 2026](../presentations/2026-10-21-presentation-seminar-musikologi/masukan-kelas.md). The session record contains three reported remarks, including Pak Galih’s advice to use one model, and links the researcher’s v6 revision. Earlier F01–F12 and G01–G15 remain historical records; the class advice is not blanket supervisor approval.
 
 This file holds two records: the Seminar Musikologi 2 review of proposal v2 (F01–F12) and the first meeting with Pembimbing I about thesis v4 (G01–G15, [below](#pembimbing-i-meeting-on-thesis-v4)).
 

@@ -104,7 +104,7 @@ def assemble(directory, metadata):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tool", type=Path, default=Path(
-        "/Users/vincent/code-repos/my-tools/whatsapp-llm-digester"))
+        "/Users/vincent/code-repos/projects/whatsapp-llm-digester"))
     parser.add_argument("--pages", help="Sample pages, e.g. english:51,indonesian:30")
     args = parser.parse_args()
     sys.path.insert(0, str(args.tool.resolve()))

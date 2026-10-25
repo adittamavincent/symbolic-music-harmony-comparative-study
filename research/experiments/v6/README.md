@@ -1,0 +1,22 @@
+# V6 data record templates
+
+Prepared 21 October 2026 for written protocol 5.0 / planned contextual instrument 3.1. These header-only CSVs are templates, not observations, data collection, or software implementation. Do not pass them to the historical v2/v3 pipeline. Main records belong under an isolated `research/outputs/case-v6/<run-id>/` after source verification, implementation, pilot and actual freeze.
+
+## Required provenance
+
+Each run needs `case.json` (edition, printed/PDF pages, source and complete transcription hashes, case decision and independent source check), `run.json` (protocol/instrument version, code revision, package and actual checkpoint hashes, backend, effective mask/settings, seed limitation, start/end, pilot/main distinction), raw outputs, QC and four-part score files. These manifests are not supplied as fabricated populated records.
+
+## Record contracts
+
+- `attempts.csv`: one row per attempt, including failed and identical attempts. Final status is exactly one of `valid`, `failed`, `invalid`. `pending` is allowed only while collection is open. Never silently replace a failed attempt. `duplicate_of` points to the first valid output with an identical complete sounding SATB trajectory on the same grid; hash equality is confirmed against the trajectory, and editorial spelling does not create a unique output. File paths are relative to the run.
+- `opportunities.csv`: one row per eligible direct transition, output, criterion and pair. Times are exact quarter-note offsets. Parallel fifth/octave criteria use six pairs and overlap uses S-A/A-T/T-B. Both voices sound at both ends and at least one sounding pitch changes; rests interrupt continuity. The eligible list is retained independently of candidate flags. `reviewed` must be true before final summaries. `decision` is exactly `C` (no target pattern), `A` (conditionally accepted), `D` (confirmed deviation), or `U` (unresolved). While unreviewed it is empty, never implicitly C. Context, source and reason are mandatory for A/D/U. MIDI pitches are numeric arrays serialized in quoted CSV cells. Keep spelling provenance and alternatives.
+- `episode_segments.csv`: one continuous physical episode may have several disjoint status segments. Episode identity must not change merely because a pitch or decision changes. Start < end; each segment lies inside its episode; physical episodes for the same rule/pair do not overlap; decision segments partition the full episode. Duration is in quarter notes. Record simultaneous-sounding eligibility separately when constructing summaries; never infer it from episode duration alone.
+- `melodic_moves.csv`: one move between different sounding pitches in the same A/T/B voice, never bridging a rest. Signed semitone distance and direction must agree. Spelling-dependent diatonic labels require a documented basis; uncertainty remains explicit.
+- `structural_spans.csv`: separately interpreted spans crossing passing tones/suspensions; link to direct transitions without inserting another direct-opportunity count. Same decision codes where applicable, with musical reason and source.
+- `pattern_membership.csv`: one row per pattern/output membership, with a fixed pattern definition that includes location and musical context. Each output counts at most once in a pattern-frequency numerator. Selection status/reason identify discussed excerpts; an absent category need not be invented.
+
+## Before reporting results
+
+Check referential integrity: output_ids refer to valid attempts; every source decision locates its score; no duplicated opportunity key exists. For each output/transition criterion require O=C+A+D+U and reviewed=O before final D/O and U/O. O=0 is unavailable. Do not pool denominators across criteria. Separate physical episode counts from status-segment durations; an episode may contribute to several status counts and cannot be counted as several unique episodes. Pattern frequency is unique member output_ids / all valid outputs, retaining identical attempts; a unique-output sensitivity summary uses a separate explicit denominator.
+
+The chapter plan is [BAB IV preparation](../../../docs/final-thesis/study/rancangan-bab-iv-v6.md). Source conditions remain in the [Strube concordance](../../literature/strube-voice-leading-concordance.csv). These contracts are researcher choices to be implemented and checked; they are not a validated automatic Strube evaluator.

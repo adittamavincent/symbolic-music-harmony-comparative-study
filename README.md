@@ -42,7 +42,7 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 | --- | --- |
 | Proposal | Chapters 1–3, schedule, slides, presenter notes, and Q&A are present. |
 | Saved proposal versions | `proposal/v1` and `proposal/v2` exist. |
-| Thesis v4 | Front matter and BAB I–III, following the department's 2026 research-proposal outline. Results and conclusion chapters wait for main data; the earlier five-chapter draft remains in Git history. |
+| Thesis v6 | One Coconet model; qualitative evaluative case, revised BAB I–III. BAB IV reporting plan exists outside the manuscript; results wait for real main data. See docs/final-thesis/PROGRESS.md. |
 | Thesis versions | No `thesis/v*` tags exist yet. |
 | Thesis defense slides | No template or build recipe exists. `thesis-slides` is only a phony Make target and produces nothing. |
 | Evaluator | Instrument v2 (`research/voice_leading_v2.py`) measures the five Strube rules; validation checks 3–5 have been run on the Bach chorales and the textbook fixtures are pending. Instrument v1 (`research/strube_evaluator.py`: parallel fifths/octaves and a soprano leading-tone check) is kept unchanged as the historical instrument. |
@@ -81,7 +81,7 @@ Edit chapter `.tex` files and `.tex.template` files. Generated top-level `.tex` 
 │       ├── supervision/             Lecturer notes, peer review, v2→v3 and v3→v4 changes, handouts
 │       ├── study/                   Supervisor preparation, defense Q&A, researcher guide
 │       ├── records/                 Research log and reading ledger
-│       └── thesis/                  Active v4 template, cover, BAB I–III
+│       └── thesis/                  Active v6 template, cover, BAB I–III
 ├── research/
 │   ├── README.md / protocol.md      Research commands and design decisions
 │   ├── requirements.txt            Canonical Python dependencies

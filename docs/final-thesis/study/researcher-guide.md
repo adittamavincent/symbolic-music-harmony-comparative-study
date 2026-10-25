@@ -1,60 +1,29 @@
-# Panduan peneliti untuk revisi v5
+# Panduan penelitian aktif: v6
 
-Diperbarui 13 Oktober 2026. Ini bahan belajar dan langkah kerja, di luar naskah. [Panduan 9 Oktober](researcher-guide-2026-10-09.md) menyimpan desain 40 melodi/zona fermata sebagai riwayat; angka, uji, dan perintah pengumpulan di sana tidak dipakai untuk kasus yang sekarang direncanakan.
-
-Mulai belajar dengan [panduan belajar v5](panduan-belajar-v5.md), lalu kerjakan [24 latihan bimbingan](latihan-bimbingan-v5.md). Keduanya tersedia dalam satu PDF melalui make learn-v5; berkas ini tetap menjadi panduan langkah kerja.
+Diperbarui 21 Oktober 2026 setelah peneliti melaporkan masukan Pak Galih untuk memakai satu model. Mulai dari [rancangan v6](../supervision/rancangan-v6.md), lalu baca naskah BAB I–III. Panduan belajar dan latihan berlabel v5 tetap bahan historis dan masih memuat dua model.
 
 ## Penelitianmu dalam dua menit
 
-Kamu ingin tahu bagaimana AI menyusun alto, tenor, dan bas ketika soprannya sudah diberikan. Pedoman yang kamu pelajari adalah Strube. Karena Strube memberi aturan bertahap, kamu memeriksa gerak suara beserta kondisi dan pengecualiannya. DeepBach dan Coconet belajar pola chorale Bach dari data; keluaran keduanya dapat diperiksa dengan Strube meskipun buku itu tidak terbukti menjadi bahan latih.
+Tindak lanjut 21 Oktober: [audit kuantitatif](../supervision/audit-kuantitatif-v6.md) merekomendasikan koreksi pendekatan menjadi kuantitatif deskriptif dengan desain studi kasus evaluatif. Alasan pemilihan kualitatif pada revisi awal terlalu cepat. Uraian berikut masih menjelaskan naskah/PDF yang telah dibangun; variabel, hipotesis dan kebijakan kesalahan yang diusulkan untuk koreksi tersedia dalam audit tersebut.
 
-Satu melodi dari bab chorale dipakai untuk kedua model. MODEL 285 menjadi calon karena buku mencetak harmonisasi empat suara. Harmonisasi itu memberi contoh pilihan dalam sumber, bukan satu jawaban yang harus disalin. Rencananya 20 percobaan per model. Satu melodi dengan 40 percobaan tetap satu kasus; pengulangan memperlihatkan variasi jawaban untuk masukan yang sama.
+Kamu ingin menjelaskan bagaimana Coconet menyusun alto, tenor dan bas untuk satu sopran tetap, lalu menilai gerak suaranya melalui kaidah Strube beserta syarat dan pengecualiannya. Coconet dipilih karena tugasnya sesuai dan penelitian Bach Doodle sudah mendokumentasikan gerak sejajar pada keluarannya. Kontribusi yang dituju adalah pembacaan keluaran musik pada kasus yang dapat ditelusuri, dengan alasan keputusan musikal.
 
-Program mencatat pola dan membantu mencari kejadian. Kamu membaca partitur serta menentukan apakah suatu gerak menyimpang, diterima dengan syarat, atau belum cukup jelas untuk diputuskan. Gerak horizontal suara juga masuk pembahasan: langkah, lompatan, arah, dan kelanjutan bas. Fermata tetap dapat membantu memahami kadens dan metadata, tetapi tidak menjadi pertanyaan perbandingan tersendiri.
+Pendekatannya kualitatif dengan desain studi kasus evaluatif. Peneliti membaca partitur secara deduktif dari pedoman Strube. Hitungan menunjukkan pengulangan dan variasi dalam korpus keluaran; alasan keputusan tetap menjadi dasar jawaban. Yin mendukung penjelasan batas/desain kasus, Maxwell menjelaskan kedudukan angka pendukung. Tidak ada pengujian pengaruh arsitektur atau hipotesis statistik populasi.
 
-Dua pertanyaanmu adalah bagaimana keluaran sesuai dengan kaidah Strube setelah syaratnya dibaca, dan bagaimana profil kedua sistem berbeda pada kasus yang sama. Jawabannya berupa peta kejadian, contoh partitur, alasan musikal, dan ringkasan per kriteria. Kesimpulan dibatasi pada kasus dan konfigurasi yang benar-benar diuji.
+Satu melodi tetap satu kasus meskipun ada 20 percobaan. Kejadian dalam partitur bukan melodi independen. MODEL 285 masih calon; sumber pembuka bas dan durasi sopran akhir belum cukup jelas. Acuan cetak bukan satu-satunya jawaban benar dan belum terbukti sebagai harmonisasi asli Bach.
 
-## Yang perlu kamu lakukan sekarang
+music21 membaca nada dan waktu. Pemeriksa yang disusun peneliti mencari kandidat; peneliti menilai konteks dan seluruh kesempatan yang masuk hitungan. Setiap kesempatan diberi C (tanpa pola sasaran), A (diterima bersyarat), D (menyimpang), atau U (belum diputuskan). Setelah seluruhnya diperiksa, O=C+A+D+U menjadi pemeriksaan kelengkapan sebelum D/O dan U/O dilaporkan. Angka rendah tidak otomatis berarti sesuai bila banyak keputusan belum pasti.
 
-1. **Baca BAB I–III dan tandai bagian yang belum kamu pahami.** Mulai dari dua pertanyaan, lalu [peta kaidah](peta-kaidah-gerak-suara-strube.md). Untuk tiap kaidah, baca halaman Strube yang disebut, contoh, dan pengecualiannya.
-2. **Cari salinan notasi yang lebih jelas.** Yang paling dibutuhkan adalah MODEL 285, halaman cetak 174–176: bas awal yang tertutup cap dan durasi akhir sopran. Bisa melalui buku perpustakaan atau sumber cetak pembimbing. Foto/scan perlu memperlihatkan paranada dan tanda lengkap. Jika sumber tetap tidak dapat dipastikan, gunakan kasus chorale lain yang utuh sebelum data utama diambil.
-3. **Bawa naskah dan lembar arah ke Bu Yoni lalu Pak Gathut.** [Handout bimbingan](../supervision/bimbingan-arah-v5.md) memuat butir yang perlu disepakati: satu kasus, satu atau dua model, kriteria/pengecualian, jumlah percobaan, metode deskriptif dan kebutuhan hipotesis menurut prodi. G07 menyarankan kasus kecil dan mempertimbangkan satu model; dua model belum disetujui. Catat keputusan dan tanggal sebenarnya.
-4. **Periksa transkripsi serta sumber inti sendiri.** Mulai dari dua panel Fig. 33, kemudian MODEL setelah sumbernya cukup jelas. Isi kolom researcher_read_status dalam [reading-notes.csv](../records/reading-notes.csv) hanya sesudah benar-benar membaca.
-5. **Setelah arah, kasus dan kriteria jelas, minta implementasi protokol serta pilot.** Pipeline yang tersedia masih menjalankan desain lama 3.0; protokol kasus 4.0 belum dipasang di pipeline. Keluaran uji coba dipisahkan. Data utama, BAB hasil, dan BAB kesimpulan dikerjakan sesudah prosedur dibekukan.
+## Fungsi sumber
 
-Langkah 1–4 dapat kamu kerjakan sambil menunggu jadwal bimbingan. Kasus dan instrumen belum dibekukan, sehingga generasi besar sekarang belum menyelesaikan masalah sumber dan keputusan musik.
+Strube memberi kerangka harmoni dan dasar penilaian. Briot dkk. menjelaskan model/representasinya, Pearce dkk. menjelaskan kesesuaian tujuan evaluasi, dan Huron membantu penjelasan perseptual. Penelitian tidak menguji pendengaran. Yan dkk. menjadi contoh rubrik, tetapi bobot dan validitasnya tidak dipindahkan. Sumber metode, fungsi dan batasnya dirangkum dalam rancangan v6; halaman kaidah tetap ada di [peta Strube](peta-kaidah-gerak-suara-strube.md).
 
-## Arti teori yang dipakai
+## Yang dikerjakan berikutnya
 
-| Teori | Tugasnya pada skripsi |
-| --- | --- |
-| Strube | Kerangka harmoni dan penulisan empat suara, kaidah, tahap, contoh, syarat dan pengecualian yang dipakai menilai kejadian |
-| Briot, Hadjeres, Pachet | Menjelaskan perbedaan tujuan, representasi, arsitektur, tantangan dan strategi model; membatasi klaim penyebab perbedaan |
-| Pearce, Meredith, Wiggins | Menjelaskan perlunya evaluasi sesuai tujuan; kaidah gerak suara hanya satu aspek musik |
-| Huron | Membantu menjelaskan keterpisahan suara secara teori; penelitianmu tidak mengukur persepsi pendengar |
-| Flyvbjerg; Lazic | Mendukung alasan kasus kontekstual dan pembedaan kasus, keluaran, serta kejadian; penerapannya pada musik adalah penalaran penelitian ini |
+1. Pastikan sumber kasus yang dapat dibaca dan periksa transkripsi lengkap. Bila memilih pengganti, catat alasan sebelum melihat keluaran.
+2. Baca sumber inti dan catat pembacaanmu sendiri pada [reading-notes.csv](../records/reading-notes.csv). Pembacaan asisten tidak mewakili pembacaanmu.
+3. Bawa pendekatan, pemilihan kasus, kriteria, jumlah percobaan dan format akhir ke pembimbing; catat keputusan sebenarnya. Arahan kelas satu model tidak sama dengan persetujuan rancangan lengkap.
+4. Setelah sumber dan lingkup siap, implementasikan protokol 5.0/instrumen 3.1, periksa perilakunya, lakukan pilot, lalu bekukan konfigurasi aktual sebelum data utama. Program bawaan masih menjalankan desain historis.
+5. Isi [catatan data v6](../../../research/experiments/v6/README.md) dari percobaan dan analisis aktual. [Persiapan BAB IV](rancangan-bab-iv-v6.md) menunjukkan bukti dan bentuk penyajian yang diperlukan; belum ada hasil utama untuk mengisi bab itu.
 
-Fungsi akor berarti peran seperti tonika, subdominan, dominan, dan tujuan resolusi nada. Strube menjelaskannya pada Preface dan halaman 6. Istilah itu membantu membaca gerak suara; judul grand theory tidak menambah variabel baru. Susunan kerangka umum → kaidah → definisi operasional dibuat peneliti.
-
-## Bacaan inti dengan tugas singkat
-
-| Bacaan | Baca dan tulis |
-| --- | --- |
-| Strube, Preface; hlm. 6–13, 20, 23, 34–35, 45, 83, 96, 109, 174–176 | Satu kaidah, syaratnya, contoh, dan halaman pengecualian; cocokkan istilah terjemahan yang tersedia |
-| Hadjeres et al. 2017, [DeepBach](https://proceedings.mlr.press/v70/hadjeres17a.html), §2 | Data asli 352 → 2.503, representasi, kendali sopran, sampling; bedakan makalah asli dan bobot PyTorch yang akan diuji |
-| Huang et al. 2017, [Counterpoint by Convolution](https://archives.ismir.net/ismir2017/paper/000187.pdf), §3 dan §6 | Piano roll, data chorale, pelengkapan partitur dan batas representasi |
-| Huang et al. 2019, Bach Doodle §6.3 hlm. 798; Yan et al. 2018 §4 dan rubrik | Bedakan hitungan kandidat, keputusan penilai, bobot sumber dan adaptasi penelitianmu |
-| [Flyvbjerg 2006](https://arxiv.org/abs/1304.1186); [Lazic 2010](https://link.springer.com/article/10.1186/1471-2202-11-5) | Mengapa satu kasus dapat dibaca mendalam; mengapa 40 keluaran bukan 40 melodi |
-| Briot et al. hlm. 11–13; Pearce et al. 2002; Huron 2001 hlm. 2–5, 18–37 | Satu kalimat tentang peran setiap teori dan batas bukti yang diberikannya |
-
-Untuk istilah model, gunakan [model-dan-istilah.md](model-dan-istilah.md). Bahan tanya-jawab lama dalam defense-qa.md dan persiapan-pembimbing-1.md perlu dibaca menurut tanggal/desainnya; rumus, hipotesis zona dan jumlah sampel lama bukan metode kasus saat ini.
-
-## Yang sudah ada dan yang masih terbuka
-
-BAB I–III, judul dan abstrak sudah mengikuti arah kasus. Peta 14 keluarga kaidah, syarat dan pengecualian tersedia; dua panel Fig. 33 mempunyai MusicXML dan provenance. Hasil 0/1 overlap pada dua panel hanya bukti kondisi itu, bukan validasi semua kaidah. Teks kedua scan sudah di-OCR seluruh halaman PDF; notasi MODEL belum lengkap.
-
-Persetujuan pembimbing, salinan jelas MODEL, pemeriksaan mandiri peneliti, implementasi instrumen kontekstual, pilot, dan data utama masih terbuka. [PROGRESS.md](../PROGRESS.md) mencatat kemajuan saat ini; [protocol.md](../../../research/protocol.md) memisahkan protokol kasus 4.0 tertulis dari pipeline 3.0 lama.
-
-## Catatan yang perlu kamu simpan
-
-Sesudah membaca, isi sumber, halaman, klaim yang didukung, batasnya, dan keputusan desain dalam reading-notes.csv. Sesudah bimbingan, catat siapa mengatakan apa dan kapan di feedback.md. Sesudah sesi riset, isi apa yang dilakukan, ditemukan, diubah, dan harus diselesaikan pada research-log.md. Pemeriksaan asisten, bacaanmu, persetujuan dosen dan hasil model adalah empat bukti berbeda.
+[PROGRESS.md](../PROGRESS.md) mencatat kesiapan. [research-log.md](../records/research-log.md) menyimpan riwayat. Jangan menjadikan hasil pengujian program, dua contoh Fig. 33, atau analisis korpus Bach lama sebagai hasil keluaran Coconet v6.

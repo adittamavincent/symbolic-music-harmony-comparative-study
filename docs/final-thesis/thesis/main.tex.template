@@ -1,7 +1,7 @@
 \documentclass{isi-proposal}
 
-% Final-thesis revision v5 continues thesis v4 (tag thesis/v4), v3 (tag thesis/v3), and proposal v2.
-\newcommand{\thesisversion}{v5}
+% Final-thesis revision v6 continues the preserved thesis/v5 milestone.
+\newcommand{\thesisversion}{v6}
 \renewcommand{\contentsname}{DAFTAR ISI}
 \renewcommand{\figurename}{Gambar}
 \renewcommand{\tablename}{Tabel}
@@ -103,6 +103,9 @@
 \phantomsection
 \addtocontents{toc}{\protect\addvspace{2.25em}}
 \addcontentsline{toc}{matter}{DAFTAR PUSTAKA}
+\begingroup
+\raggedright
 \printbibliography[title={DAFTAR PUSTAKA}]
+\endgroup
 
 \end{document}

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "research_focus": "Evaluasi operasional gerak suara DeepBach dan Coconet pada melodi Bach dan latihan Strube; penelusuran v4 dipertahankan. Eksplorasi 11 Oktober 2026 menambah metodologi studi kasus untuk MODEL no. 285 dalam Strube, batas generalisasi, dan unit analisis generasi berulang; eksplorasi ini belum mengubah protokol penelitian.",
+  "research_focus": "V6: evaluasi kontekstual satu model harmonisasi SATB pada satu kasus chorale Strube. Penelusuran lama dipertahankan untuk provenance; penelusuran baru memeriksa relevansi Coconet/DeepBach pada tugas sopran tetap, metode studi kasus evaluatif, serta kedudukan hitungan deskriptif dalam analisis kualitatif. Audit lanjutan 21 Oktober: bedakan evaluasi kuantitatif deskriptif dari pengujian hipotesis inferensial; telusuri variabel hasil, rencana analisis, pengulangan stokastik dan penanganan kegagalan. Penelusuran ini belum mengganti pendekatan pada naskah. Audit 22 Oktober: periksa NotaGen/NotaGen-X, kemampuan tugas SATB/sopran tetap, data latih, evaluasi musikal, dan kemungkinan kontribusi kontekstual berbasis Strube; belum mengganti model atau tugas pada naskah. Tindak lanjut: peneliti kini mencari kontribusi teknis/matematis; periksa evaluasi kontekstual dengan abstention, batas ketidakpastian dan pengujian invariansi. Ini eksplorasi kandidat kontribusi, bukan klaim kebaruan atau migrasi naskah.",
   "queries": [
     {
       "id": "q01-evaluation-surveys",
@@ -233,7 +233,159 @@
       "search": "problem of pseudoreplication neuroscientific studies analysis",
       "from_year": null,
       "limit": 10
+    },
+    {
+      "id": "q30-single-model-bach-doodle",
+      "theme": "Pemilihan satu model untuk v6",
+      "purpose": "Periksa kesinambungan persoalan gerak sejajar Coconet dan tugas harmonisasi sopran tetap; relevansi diputuskan dari teks asli dan antarmuka, bukan jenis arsitektur.",
+      "search": "The Bach Doodle Approachable Music Composition Machine Learning Scale",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q31-qualitative-numbers-maxwell",
+      "theme": "Angka dalam penelitian kualitatif",
+      "purpose": "Periksa alasan memakai frekuensi deskriptif sebagai pendukung analisis kualitatif; jangan menyebut mixed methods hanya karena ada hitungan.",
+      "search": "Using Numbers in Qualitative Research Maxwell",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q32-qualitative-document-analysis",
+      "theme": "Analisis dokumen dalam studi kasus",
+      "purpose": "Periksa definisi pemeriksaan dokumen yang sistematis serta batas penerapannya pada partitur.",
+      "search": "Document Analysis as a Qualitative Research Method Bowen",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q33-case-study-yin",
+      "theme": "Dasar desain studi kasus",
+      "purpose": "Periksa pemisahan desain kasus dari jenis data serta penelusuran bukti dan batas inferensi.",
+      "search": "Case Study Research and Applications Design Methods Yin",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q34-quantitative-reporting-standards",
+      "theme": "Standar pelaporan kuantitatif",
+      "purpose": "Periksa dasar pelaporan kuantitatif non-eksperimental, definisi variabel, missing data dan batas hipotesis; standar psikologi diadaptasi pada pelaporan, bukan validasi musik.",
+      "search": "Reporting Standards Quantitative Research Psychology Appelbaum 2018",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q35-simulation-failures-monte-carlo",
+      "theme": "Pengulangan stokastik dan kegagalan",
+      "purpose": "Periksa penetapan sasaran, pengulangan, kegagalan dan ketidakpastian Monte Carlo; bedakan simulasi metode statistik dari tugas generasi musik.",
+      "search": "Using simulation studies evaluate statistical methods Morris White Crowther",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q36-quantitative-harmonization-grading",
+      "theme": "Penilaian harmonisasi berbasis angka",
+      "purpose": "Periksa rubrik, unit keluaran, penilai dan reliabilitas dalam penelitian Yan; jangan memindahkan validitas/bobotnya ke Strube.",
+      "search": "\"Part-invariant Model for Music Generation and Harmonization\"",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q37-notagen-primary-model",
+      "theme": "NotaGen dan paradigma pelatihan",
+      "purpose": "Temukan artikel primer NotaGen untuk memeriksa data, objektif pelatihan, evaluasi dan batas conditioning.",
+      "search": "\"NotaGen\"",
+      "from_year": null,
+      "limit": 20
+    },
+    {
+      "id": "q38-voice-leading-evaluation-benchmarks",
+      "theme": "Evaluasi gerak suara model simbolik",
+      "purpose": "Periksa apakah kebaruan rubrik kontekstual atau benchmark sudah ditangani penelitian terdahulu; hasil metadata perlu full text.",
+      "search": "symbolic music generation voice leading evaluation benchmark",
+      "from_year": null,
+      "limit": 20
+    },
+    {
+      "id": "q39-contextual-harmony-evaluation",
+      "theme": "Evaluasi harmoni kontekstual",
+      "purpose": "Telusuri pembacaan aturan dan pengecualian dalam evaluasi harmoni; jangan mengasumsikan tujuh detektor adalah kebaruan.",
+      "search": "tonal harmony rule based evaluation contextual",
+      "from_year": null,
+      "limit": 15
+    },
+    {
+      "id": "q40-notagen-x",
+      "theme": "NotaGen-X",
+      "purpose": "Periksa rekam publikasi varian X; ketiadaan hasil bukan bukti tidak ada model; konfirmasi ke repo/kartu resmi.",
+      "search": "\"NotaGen-X\"",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q41-chorale-musical-evaluation",
+      "theme": "Rubrik dan evaluasi chorale",
+      "purpose": "Temukan pembanding primer evaluasi chorale berbasis teori musik.",
+      "search": "chorale harmonization benchmark music theory evaluation",
+      "from_year": null,
+      "limit": 15
+    },
+    {
+      "id": "q42-voice-leading-evaluation-formal",
+      "theme": "Evaluasi formal gerak suara",
+      "purpose": "Periksa evaluator dan benchmark terdahulu sebelum mengklaim kebaruan konteks/pengecualian.",
+      "search": "\"voice leading\" evaluation",
+      "from_year": null,
+      "limit": 20
+    },
+    {
+      "id": "q43-music-rule-uncertainty",
+      "theme": "Ketidakpastian aturan musik",
+      "purpose": "Temukan penelitian yang mengaitkan aturan, ambiguitas dan evaluasi musik; metadata bukan bukti isi.",
+      "search": "music rule evaluation uncertainty",
+      "from_year": null,
+      "limit": 15
+    },
+    {
+      "id": "q44-selective-classification-reject",
+      "theme": "Keputusan dengan abstention",
+      "purpose": "Periksa dasar matematis risk-coverage dan reject option; konsep sudah ada dan bukan temuan baru penelitian ini.",
+      "search": "\"selective classification\" reject",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q45-music-metamorphic-testing",
+      "theme": "Invariansi representasi musik",
+      "purpose": "Periksa pengujian metamorfik/invariansi untuk membatasi klaim kontribusi pengujian evaluator.",
+      "search": "music metamorphic testing",
+      "from_year": null,
+      "limit": 10
+    },
+    {
+      "id": "q46-chorale-constraint-evaluation",
+      "theme": "Feasibility dan evaluasi chorale",
+      "purpose": "Periksa preseden pemrograman kendala dan evaluasi model pada masukan yang terbukti memiliki harmonisasi; jangan mengklaim solver sebagai metode baru.",
+      "search": "chorale constraint programming evaluation",
+      "from_year": null,
+      "limit": 15
+    },
+    {
+      "id": "q47-harmonization-satisfiability",
+      "theme": "Keterpenuhan kendala harmonisasi",
+      "purpose": "Temukan preseden satisfiability dan konstruksi pasangan melodi-harmonisasi untuk membatasi klaim benchmark baru.",
+      "search": "harmonization satisfiability constraints",
+      "from_year": null,
+      "limit": 15
+    },
+    {
+      "id": "q48-strasheela-primary",
+      "theme": "Sumber primer Strasheela",
+      "purpose": "Periksa dasar pemrograman kendala musik dan certificate/witness sebagai konstruksi desain; bukan validasi Strube.",
+      "search": "Strasheela composing music constraints Anders",
+      "from_year": null,
+      "limit": 10
     }
   ],
-  "plan_revision": "2026-10-11-case-exploration"
+  "plan_revision": "2026-10-22-feasibility-controlled-stress-test"
 }

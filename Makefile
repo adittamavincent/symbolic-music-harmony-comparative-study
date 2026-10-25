@@ -95,7 +95,7 @@ help:
 		"  make proposal-phase  Build semua artefak proposal" \
 		"" \
 		"🎓 DOKUMEN FASE SKRIPSI FINAL (docs/final-thesis/):" \
-		"  make thesis          Build naskah skripsi v5 (Bab I-III) PDF (working tree)" \
+		"  make thesis          Build naskah skripsi v6 (Bab I-III; hasil menunggu data utama) PDF (working tree)" \
 		"  make thesis <ref>    Build revisi tersimpan: v3, thesis/v3, v4, head, ID commit" \
 		"  make map             Build peta versi: versi, pemberi masukan, status bab" \
 		"  make reading         Gabung catatan Markdown (study, supervision, records, protokol)" \
@@ -245,7 +245,7 @@ thesis: $(THESIS_TEX)
 	@if [ -n "$(THESIS_ARGS)" ]; then \
 		python3 scripts/compile_version.py thesis $(THESIS_ARGS); \
 	else \
-		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v5; \
+		$(PDF_BUILD) $< $(THESIS_PDF) $(PDF_BUILD_FLAGS) --submission thesis v6; \
 	fi
 
 map: $(MAP_TEX)

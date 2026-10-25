@@ -1,78 +1,66 @@
-# v5: final-thesis progress
+# V6: kesiapan skripsi
 
-Updated: 2026-10-13. BAB I–III, title and bilingual abstracts now follow the Strube chorale case design. The researcher requested local amendment of thesis/v5 after manuscript/PDF review. Versioning does not record supervisor approval: no agreement on the revised scope, pilot, or main model data exists.
+Diperbarui 22 Oktober 2026. Peneliti meminta v6 memakai satu model setelah melaporkan masukan Pak Galih di Seminar Musikologi 2. Naskah BAB I–III direvisi untuk Coconet dan pendekatan kualitatif dalam studi kasus evaluatif, dengan hitungan deskriptif pendukung. Target BAB I–IV belum terpenuhi karena data utama belum tersedia. Tag `thesis/v5` tetap dipertahankan; v6 belum ditag atau dikomit.
 
-## Current manuscript and design
+## Audit arah, 22 Oktober
 
-- Title, 15 words: *Evaluasi Musik Hasil AI DeepBach dan Coconet Berdasarkan Kaidah Gerak Suara Strube dalam Harmonisasi Chorale*.
-- Two questions: contextual agreement with Strube and descriptive comparison of voice-leading profiles on the same case. Fermata is metadata/cadence context only.
-- One chorale case; MODEL 285 is the primary candidate. Its printed harmonization is a reference for choices, not proven Bach authorship or a per-exercise answer key. A clearer copy is required for the occluded opening bass and uncertain final soprano duration.
-- DeepBach and Coconet remain the researcher's plan, with 20 attempts per model proposed for score-review workload. Two models and the final count require academic agreement; G07 advised a small case and consideration of one model.
-- Seven families organize main/supplementary reading: fifths, octaves, overlap, spacing, crossing, melodic movement and hidden-interval approaches. Seven other mapped families provide harmonic context.
-- Program flags are candidate events. Score decisions distinguish confirmed deviations, conditional acceptance and unresolved cases. Horizontal A/T/B profiles, per-criterion denominators, state episodes/durations and repeated locations are included.
-- The general music framework is Strube's harmony theory of chord functions and four-part writing. Model description, evaluation purpose and perceptual interpretation have distinct supporting sources.
-- Written protocol 4.0 and contextual instrument 3.0 are plans in [research/protocol.md](../../research/protocol.md), not implemented software. Executable defaults still belong to historical protocol 3.0/instrument 2.0. Main collection commands must not be used as if they implemented this revision.
+Tindak lanjut permintaan kontribusi teknis/matematis: [kandidat stress test dengan bukti kelayakan](supervision/kontribusi-teknis-stress-test-2026-10-22.md) merumuskan himpunan solusi, harmonisasi saksi per sopran, perturbasi dan ukuran keberhasilan/ketidakpastian. Ini usulan eksperimen komputasional dengan validasi instrumen, belum migrasi naskah/protokol. Klaim kebaruan global belum terbukti; pemrograman kendala musik dan benchmark infilling sudah mempunyai preseden. Tidak ada solver atau data baru dihasilkan.
 
-## What the researcher needs to do
+Peneliti meminta pemilihan arah menurut alasan ilmiah dan kelayakan. [Audit Strube, NotaGen dan music21](supervision/arah-evaluasi-strube-2026-10-22.md) merekomendasikan tetap satu Coconet untuk sopran tetap, cakupan beberapa masukan yang dipilih menurut kondisi musikal, dan kontribusi utama berupa analisis keluaran beserta anotasi keputusan kontekstual. MODEL 285 tidak disarankan menjadi satu-satunya jalan karena sumber belum lengkap. Jumlah masukan/percobaan baru belum ditetapkan. Usulan ini belum dimigrasikan ke naskah atau protokol.
 
-1. Read the revised PDF and [learning guide](study/panduan-belajar-v5.md), explain Fig. 33, and answer the [24 supervision questions](study/latihan-bimbingan-v5.md). Use the [researcher guide](study/researcher-guide.md) for next actions and check source pages in the [rule map](study/peta-kaidah-gerak-suara-strube.md).
-2. Obtain readable MODEL 285 notation, especially the obscured bass and final soprano duration; verify transcriptions. If not recoverable, select another complete case in the same context before seeing model results.
-3. Take [the meeting handout](supervision/bimbingan-arah-v5.md) and manuscript to Bu Yoni then Pak Gathut. Record actual dates and decisions on case, one/two models, criteria, attempts, method/hypotheses and format.
-4. Read core sources and fill researcher_read_status in [reading-notes.csv](records/reading-notes.csv). Assistant source checks are not the researcher's own reading.
-5. Once scope/source/criteria are settled, request contextual pipeline implementation and a separate pilot. Then freeze the executable protocol and collect main data; add results and conclusion chapters from those data.
+Sumber primer memperlihatkan music21 sudah mempunyai overlap, crossing dan hidden intervals selain P5/P8; klaim kebaruan berupa tujuh detektor yang sebelumnya tidak ada tidak didukung. Ekstensi khusus tetap mungkin, dengan menggunakan primitif yang ada. NotaGen-X tersedia di repositori resmi tetapi belum dibuktikan dapat menjaga sopran masukan atau menghasilkan SATB pada tugas penelitian. Tidak ada instalasi, pilot, generasi, atau pengujian perangkat lunak dalam audit ini. Batch 41 kueri OpenAlex selesai dengan 791 karya unik; reading-notes dan audit menyimpan dukungan serta batasnya.
 
-## Source and verification evidence
+## Keputusan dan hasil revisi
 
-After the researcher liked the revised v5, both writing skills were applied to BAB I–III with seven minimal edits. The [editorial record](records/editorial-v5-2026-10-13.md) gives the original wording, revised wording and reasons. Citation/reference/label tokens, numbers and mathematics are preserved; front matter, bibliography, protocol and evaluator are unchanged from a5129ac. This is editorial review, not evidence of authorship or instrument validation.
+**Tindak lanjut audit metode:** peneliti menanyakan kembali variabel, hipotesis, dan kesalahan dalam penelitian kuantitatif. [Audit kuantitatif v6](supervision/audit-kuantitatif-v6.md) mengoreksi alasan pemilihan kualitatif yang terlalu cepat dan merekomendasikan kuantitatif deskriptif dalam studi kasus evaluatif. Dokumen itu berisi variabel hasil, calon hipotesis deskriptif, batas H0/H1 inferensial, serta kebijakan kegagalan dan ketidakpastian. Naskah/PDF saat ini masih memuat pendekatan kualitatif; penyelarasan ke rekomendasi kuantitatif belum dilakukan. Daftar di bawah mencatat isi revisi awal, bukan keputusan bahwa metode tersebut sudah final.
 
-The focused learning packet contains five study sessions, the source Fig. 33, three explicitly illustrative calculation exercises and 24 questions with answer anchors. Run make learn-v5 from the repository root to build scratch/Panduan_Belajar_v5_23104810131_Vincent.pdf. Its 14 pages and the edited manuscript's 57 pages were rendered and visually reviewed; page/glyph checks found no replacement/null glyphs or words outside pages. Verification is retained in research/outputs/writing-v5-2026-10-13/.
+- Model: Coconet, dipilih karena kesinambungan masalah gerak sejajar pada publikasi Bach Doodle dan tugas pelengkapan SATB dengan sopran tetap. DeepBach tetap penelitian terdahulu. Perbandingan arsitektur dihapus dari tujuan.
+- Judul: Evaluasi Musik Hasil AI Coconet Berdasarkan Kaidah Gerak Suara Strube dalam Harmonisasi Chorale (13 kata).
+- Dua pertanyaan: kesesuaian kontekstual menurut Strube; pola gerak yang berulang dan bervariasi antarkeluaran Coconet.
+- Pendekatan: kualitatif; desain studi kasus evaluatif; analisis partitur deduktif menurut sumber; angka untuk mendukung pola. Alasan dan batas Yin/Maxwell sudah dijelaskan. Variabel perlakuan dan H0/H1 populasi tidak digunakan.
+- Satu chorale; MODEL 285 masih calon. Bas pembuka dan durasi sopran akhir memerlukan sumber yang jelas sebelum input/acuan lengkap dapat dibekukan. Identitas sebagai karya asli Bach belum dibuktikan.
+- Rencana 20 percobaan Coconet tetap keputusan beban kerja peneliti, bukan persetujuan dosen atau perhitungan daya/kejenuhan.
+- Instrumen disusun peneliti: peta sumber, pembaca music21, pencari kandidat, dan lembar keputusan. music21 tidak otomatis menerapkan Strube. Setiap kesempatan yang dihitung harus diperiksa; pemeriksaan sampel tanpa tanda pada v5 diganti dengan cakupan menyeluruh.
+- Akuntansi keputusan O=C+A+D+U; D/O dan U/O memakai kesempatan sama dan hanya diringkas setelah seluruh O diperiksa. Episode fisik jarak/persilangan dibedakan dari segmen status dan durasi. Gerak horizontal dan rentang struktural tetap dijelaskan.
+- Protokol tertulis 5.0 dan instrumen 3.1 masih rencana. Program bawaan tetap protokol historis 3.0 / instrumen 2.0; belum mengimplementasikan v6.
 
-Both supplied scans have text-OCR coverage for every PDF page: 147 English and 91 Indonesian pages. This is not whole-book proofreading or notation accuracy. All five MODEL systems and the exercise boundary have been viewed. Fourteen relevant rule families have page/stage/exception mapping, detector gaps and annotation needs.
+Penjelasan lengkap dan sumber: [rancangan v6](supervision/rancangan-v6.md). Penyiapan hasil: [rancangan BAB IV](study/rancangan-bab-iv-v6.md). [Templat data](../../research/experiments/v6/README.md) berisi kontrak dan header tanpa hasil rekaan.
 
-Two Fig. 33 panels have manually entered MusicXML, 16 note events and provenance. Readback preserves the entered pitches/durations; v2 overlap counts are 0 for the first good panel and 1 for avoid. This supports two overlap conditions only; independent researcher confirmation and broader validation remain open. Full MODEL SATB transcription is incomplete and failed/partial OMR remains retained as such.
+## Kesiapan per bagian
 
-The manuscript adds the source Fig. 33 illustration. Thesis-only bibliography additions Flyvbjerg (2006) and Lazic (2010) were checked from primary author/publisher sources and the prior reading ledger. Proposal bibliography and all proposal manuscript sources are unchanged.
-
-make thesis passed with 57 pages; all page images and key tables/notation/diagrams were reviewed, 32 citation keys resolve, and the delivery copy is byte-identical. Verification and the local tag request are recorded in [research-log.md](records/research-log.md); the local ref check is kept in research/outputs/manuscript-v5-review/. Main model setup, pilot, training-membership verification, generation, main analysis and research results have not been run.
-
-## Continuity and feedback
-
-| Revision | Academic phase | Status |
+| Bagian | Keadaan | Bukti atau kebutuhan |
 | --- | --- | --- |
-| v1–v2 | Proposal | proposal/v1 and proposal/v2; v2 review in Seminar Musikologi 2, F01–F12 |
-| v3 | Final thesis | thesis/v3; BAB I–III and earlier audit/defense materials |
-| v4 | Final thesis | thesis/v4; revision after peer feedback P01–P17 |
-| v5 | Final thesis | Rewritten 13 October following source reading and the researcher's direction; academic approval and research data open |
+| BAB I | Direvisi ke satu model | Masalah, dua pertanyaan, tujuan dan manfaat selaras |
+| BAB II | Direvisi ke Coconet dan peran sumber | Strube, teori pendukung, alasan model, posisi pertanyaan/hipotesis |
+| BAB III | Rencana analisis ditulis rinci | Pendekatan, unit, data, kategori, pemeriksaan penuh, penyebut dan bentuk jawaban; pelaksanaan belum terbukti |
+| BAB IV | Struktur dan kontrak data disiapkan di dokumen kerja; hasil belum dapat ditulis | Belum ada data utama yang sah untuk mengisi bab |
+| Sumber kasus | Belum lengkap | MODEL 285 belum dapat dibekukan |
+| Pemeriksaan instrumen | Bukti terbatas dua kondisi Fig. 33 | Belum mewakili seluruh kriteria/konteks |
+| Implementasi instrumen 3.1 | Belum ada | Termasuk episode/segmen dan akuntansi seluruh kesempatan |
+| Bobot dan korpus publik | Bobot coconet/bach serta korpus SATB publik telah diunduh | Belum ada pemuatan/inferensi; 382 urutan pada korpus bukan bukti identitas seluruh data latih checkpoint |
+| Lingkungan model | Paket/dependensi Coconet belum terpasang | Unduhan bobot belum membuktikan model dapat dijalankan |
+| Pilot dan data utama | Belum ada | Uji program/korpus Bach historis bukan data Coconet v6 |
+| Persetujuan akademik | Belum dicatat atas rancangan lengkap | Masukan satu model dari Pak Galih tidak merupakan persetujuan seluruh pembimbing |
+| Pemeriksaan naskah/PDF | Kompilasi dan tinjauan 60 halaman selesai | 33 kunci sitasi tersedia, tanpa penanda ??/glyph rusak/kata di luar halaman; rincian di catatan editorial |
 
-G01–G15 record Pembimbing I's comments on v4; the first meeting date still needs confirmation. F01–F12 are lecturer comments from the seminar course; P01–P17 are peer comments. Keeping two models is a researcher choice, not recorded supervisor approval. No new lecturer feedback is invented.
+## Urutan penyelesaian penelitian
 
-Older designs and evidence stay in the dated [9 October change record](supervision/perubahan-v4-ke-v5-2026-10-09.md), [old guide](study/researcher-guide-2026-10-09.md), protocol versions 2.1/3.0, historical JSON and research-log. The old 318-melody frame, software tests, corpus probes and fake-model runs do not provide results for the revised case design.
+1. Periksa [rancangan v6](supervision/rancangan-v6.md), khususnya alasan metode dan penggunaan angka. Bawa poin yang memerlukan keputusan prodi/pembimbing, termasuk format final BAB IV.
+2. Pastikan kasus dan transkripsi lengkap terhadap sumber. Gunakan salinan lebih jelas atau pilih kasus lain pada konteks sama sebelum melihat keluaran model.
+3. Lakukan pembacaan sumber oleh peneliti dan catat di reading-notes.csv. Pemeriksaan asisten tidak menggantikan pembacaan mandiri.
+4. Implementasikan instrumen/protokol yang cocok dengan v6 dan periksa kondisi yang diukur; lakukan pilot tersendiri sesudahnya. Bekukan konfigurasi aktual dan jumlah percobaan sebelum pengumpulan utama.
+5. Kumpulkan data utama, catat semua percobaan dan kegagalan, selesaikan keputusan partitur, lalu tulis BAB IV dari bukti tersebut. Kesiapan hasil baru dapat dinyatakan pada tahap ini.
 
-## Completion gates
+## Penelusuran dan preservasi
 
-| Gate | Current evidence | Remaining work |
-| --- | --- | --- |
-| Scope and department requirements | Revised manuscript/handout and G01–G15 | Agree case, models, criteria, count, approach/hypotheses, title and formatting; record dates |
-| Sources and literature | Source map and assistant checks | Read sources independently; obtain clear notation and verify complete input/reference |
-| Contextual instrument | Five historical detectors and two source probes | Implement/version episodes, all crossings, contextual records, spelling limits, denominators and missed-event checks; validate beyond two panels |
-| Executable protocol | Written plan 4.0; older software preserved | Align implementation with agreed plan; check settings and freeze after requested pilot |
-| Pilot | Not run | Technical encoding, fixed soprano, timing, runtime and quality checks, stored separately |
-| Main data | Not run | New initialized attempts, raw artifacts, all failures, score decisions and descriptive analysis |
-| Results and final thesis | BAB I–III only | Results/conclusion from collected data; abstracts updated from actual findings |
-| Submission/defense | Forms and earlier practice material | Confirm department checklist and consultation requirements; update form title and defense answers |
+Rencana OpenAlex diperbarui sebelum seluruh 33 kueri dijalankan. Manifest batch `20261021T054123948242Z-batch` menyimpan 731 karya unik. Kueri metodologi tidak selalu menemukan karya sasaran; sumber dipastikan langsung pada penerbit, bukan dari judul atau sitasi tertinggi. Yin (sampel bab resmi), Maxwell (PDF penerbit melalui web), dokumentasi resmi Coconet dan kode distribusi paket 1.23.1 diperiksa. Dukungan dan keterbatasan ada di [reading-notes.csv](records/reading-notes.csv).
 
-## Other researcher checks
+Naskah proposal dan tag v3/v4/v5 dipertahankan. Hasil, protokol dan program lama tetap historis; tidak diganti dengan pengukuran v6. Model setup, pilot, generasi dan penilaian utama belum dijalankan dalam revisi ini.
 
-Confirm the first meeting date and keep the supervision transcript in permanent storage. Verify source-page citations in the printed Briot book, since the previous content check used its author version. Confirm committee roles, applicable final-thesis format and current consultation-form requirements with the supervisors. Review personal front-matter details; these were preserved. Record any new requirements rather than attributing them to existing feedback.
+## Bukti pemeriksaan revisi
 
-The following earlier citation limitations remain useful to check. Rangkuti, Cohen, Mehta, Roberts and Dwyer are no longer cited in the current manuscript.
+`make thesis` menghasilkan `scratch/Skripsi_v6_23104810131_Vincent.pdf` (60 halaman). Seluruh halaman ditinjau pada contact sheet, dengan pemeriksaan detail pada abstrak, metode, tabel, rumus dan bibliografi. [Catatan editorial](records/editorial-v6-2026-10-21.md) menjelaskan perubahan, sumber yang diperiksa, serta batasnya. `git diff --check`, resolusi 33 kunci sitasi, tautan lokal dokumen baru, glyph dan koordinat halaman diperiksa. Salinan pengiriman dibandingkan dengan PDF kerja. Ini pemeriksaan naskah, bukan validasi instrumen atau bukti data penelitian.
 
-### Citation checks before submission
+## Tindak lanjut kesiapan BAB IV
 
-- Books not opened: `leedy2018`, `rangkuti2016` (both as cited in the department template), `creswell2018`, `cohen1988`. `sugiyono2019` is no longer cited in v5.
-- Abstract-level support only: `civit2022`, `mycka2025`, `lerch2025`, `louie2020`, `zacharakis2021`, `huang2020contest`, `koops2019`, `micchi2020`, `harrison2020`, `karystinaios2023`, `mehta2025`, `roberts2025`, `holmes2020`, `dwyer2009`, `jamieson2023`, `wang2025`, `yang2020` (abstract on the publisher page). Their sentences claim only what the abstracts state.
-- `fang2020` (ICML workshop paper) has no page numbers.
-
-## Manuscript presentation preference
-
-The version identifies revision status. The manuscript uses ordinary academic prose without draft labels, readiness reports or writing instructions. Readiness stays in this file and the protocol. No absent research findings are replaced with expected results.
+Peneliti meminta seluruh data pendukung disiapkan dan kekurangannya dijelaskan. [Inventaris kebutuhan](study/kebutuhan-data-bab-iv-v6.md) mencatat pekerjaan, bukti selesai dan dependensinya. Pada tindak lanjut 21 Oktober, bobot publik coconet/bach diunduh dan di-hash; korpus SATB publik penulis diambil dari commit tetap dan memuat 229 train, 76 valid, 77 test. Ini korpus rujukan publik, belum bukti riwayat pelatihan persis checkpoint Magenta.js. Tidak ada pemuatan model atau generasi pada tindak lanjut audit ini. Sumber kasus, instrumen, pilot, data utama dan keputusan partitur masih diperlukan.

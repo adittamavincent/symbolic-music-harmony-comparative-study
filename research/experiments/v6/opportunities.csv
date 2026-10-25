@@ -1,0 +1,1 @@
+run_id,output_id,opportunity_id,rule_id,pair,t_start_quarter,t_end_quarter,measure_start,measure_end,pitches_start_midi,pitches_end_midi,spelling_basis,interval_start,interval_end,harmonic_context,nonchord_context,candidate_flag,reviewed,decision,source_printed_pages,reason,alternative_reading,reviewer,review_date,instrument_version

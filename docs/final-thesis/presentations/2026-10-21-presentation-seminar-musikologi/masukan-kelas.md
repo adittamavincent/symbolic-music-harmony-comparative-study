@@ -2,7 +2,7 @@
 
 Sesi presentasi: 21 Oktober 2026. Materi: naskah final-thesis v5 yang aktif, dengan revisi arah 13 Oktober 2026. Paket ini terpisah dari naskah utama dan milestone skripsi.
 
-Status catatan: satu fragmen masukan telah dicatat dari laporan peneliti di percakapan pada 21 Oktober 2026. Identitas dosen dan konteks lengkapnya belum diketahui.
+Status catatan: tiga pokok masukan dicatat dari laporan peneliti pada 21 Oktober 2026. Masukan ketiga diatribusikan peneliti kepada Pak Galih; identitas penyampai dua fragmen awal belum dipastikan.
 
 ## Konteks sesi
 
@@ -22,12 +22,17 @@ Gunakan ID S20261021-01 dan seterusnya ketika ada masukan nyata. Tulis nama hany
 | S20261021-01 | Dosen; nama belum diketahui | Hipotesis dan variabel (bagian/slide belum dipastikan) | Fragmen kutipan yang dilaporkan peneliti: “saya ngelihat hipotesis sama variabel”. Belum cukup konteks untuk menentukan apakah ini pengantar, pertanyaan, atau arahan revisi. | Kalimat sebelum/sesudahnya dan apa yang diminta dosen terkait hipotesis atau variabel. | Laporan lisan peneliti di percakapan ini, 2026-10-21; belum ada rekaman atau catatan pendukung lain. |
 | S20261021-02 | Dosen; nama belum diketahui | Analisis data v5 | Parafrasa laporan peneliti: “analisis datanya belum kelihatan.” Belum jelas apakah dosen meminta rincian prosedur, bentuk penyajian, atau keduanya. | Bentuk analisis atau contoh hasil seperti apa yang diharapkan dosen terlihat. | Laporan lisan peneliti di percakapan ini, 2026-10-21; belum ada rekaman atau catatan pendukung lain. |
 
+| S20261021-03 | Pak Galih, dosen Seminar Musikologi 2; dilaporkan peneliti | Lingkup model v6 | Parafrasa laporan peneliti: cukup memakai satu model. Peneliti juga menyampaikan bahwa alasan membandingkan arsitektur belum relevan dan meminta penelusuran untuk memilih satu model yang sesuai analisis. | Pemilihan model spesifik dan metode tidak dicatat sebagai persetujuan dosen pada laporan ini. | Pesan peneliti dalam percakapan, 2026-10-21. |
+
 ## Keputusan dan tindak lanjut
 
 Pisahkan usulan diskusi dari keputusan yang benar-benar disepakati. Persetujuan satu orang tidak otomatis menjadi persetujuan seluruh pembimbing. Tanggal dan pihak yang menyepakati perlu dicatat.
 
 | ID masukan | Usulan atau keputusan aktual | Pihak dan tanggal kesepakatan | Tindakan serta berkas sasaran | Status | Bukti perubahan/pemeriksaan |
 | --- | --- | --- | --- | --- | --- |
+| S20261021-03 | Peneliti meminta v6 memakai satu model; Coconet dipilih dalam revisi berdasarkan penelusuran sumber | Arahan peneliti, 2026-10-21; persetujuan Pembimbing I/II belum dicatat | BAB I–III, judul/abstrak terkait lingkup, dan [rancangan v6](../../supervision/rancangan-v6.md) | Naskah dan rencana direvisi; data belum tersedia | Sumber dan batas ada dalam rancangan v6; pemeriksaan PDF dicatat di PROGRESS.md |
+
+Arahan kerja peneliti pada tanggal yang sama: pendekatan, teori dan alur analisis harus jelas; target BAB I–IV siap. Ini permintaan peneliti, bukan tambahan kutipan dosen. BAB IV hasil masih memerlukan data utama.
 
 ## Hal yang dibawa untuk konfirmasi pembimbing
 
